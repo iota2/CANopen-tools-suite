@@ -8,6 +8,10 @@ A collection of **CANopen utilities** for development and debugging:
 
 ---
 
+## Details info wiki
+
+https://github.com/iota2/CANopen-tools-suite/wiki
+
 ## Tools Overview
 
 ### CANopen Sniffer (GUI / CLI)
