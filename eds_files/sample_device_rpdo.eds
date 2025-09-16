@@ -352,7 +352,7 @@ ParameterName=COB-ID used by RPDO2
 ObjectType=0x7
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x202
+DefaultValue=0x301
 
 [1401sub2]
 ParameterName=Transmission Type
@@ -405,7 +405,7 @@ ParameterName=COB-ID used by RPDO3
 ObjectType=0x7
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x203
+DefaultValue=0x401
 
 [1402sub2]
 ParameterName=Transmission Type
@@ -458,7 +458,7 @@ ParameterName=COB-ID used by RPDO4
 ObjectType=0x7
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x204
+DefaultValue=0x501
 
 [1403sub2]
 ParameterName=Transmission Type

@@ -4,10 +4,6 @@ CANopen CLI Sniffer (Rich-based)
 ================================
 
 Features:
-CANopen CLI Sniffer (Rich-based)
-================================
-
-Features:
  - Parses PDO mappings and ParameterNames from EDS.
  - Displays PDO and SDO traffic with human-readable names.
  - Uses rich tables for live updates.
@@ -285,7 +281,6 @@ class CANopenSniffer:
         except Exception as e:
             log.error("CSV export failed: %s", e)
 
-    # --- message handling ---
     # --- message handling ---
     def handle_msg(self, msg: can.Message):
         """

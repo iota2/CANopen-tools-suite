@@ -351,7 +351,7 @@ ParameterName=COB-ID used by TPDO2
 ObjectType=0x7
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x182
+DefaultValue=0x281
 
 [1801sub2]
 ParameterName=Transmission Type
@@ -403,7 +403,7 @@ ParameterName=COB-ID used by TPDO3
 ObjectType=0x7
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x183
+DefaultValue=0x381
 
 [1802sub2]
 ParameterName=Transmission Type
@@ -455,7 +455,7 @@ ParameterName=COB-ID used by TPDO4
 ObjectType=0x7
 DataType=0x0007
 AccessType=rw
-DefaultValue=0x184
+DefaultValue=0x481
 
 [1803sub2]
 ParameterName=Transmission Type
