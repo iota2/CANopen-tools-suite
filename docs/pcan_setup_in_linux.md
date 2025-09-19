@@ -1,3 +1,17 @@
+> `iota2` - Making Imaginations, Real
+>
+> <i2.iotasquare@gmail.com>
+
+
+```
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+```
+
 # Installing Drivers for Linux
 
 - Check if `CAN` drivers part of your Linux environment

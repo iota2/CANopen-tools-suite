@@ -1,3 +1,17 @@
+> `iota2` - Making Imaginations, Real
+>
+> <i2.iotasquare@gmail.com>
+
+
+```
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+```
+
 # CANopen Node Monitor
 
 **canopen_node_monitor_cli.py** — A live CANopen node sniffer and OD variable monitor with interactive Rich TUI.

@@ -1,3 +1,17 @@
+> `iota2` - Making Imaginations, Real
+>
+> <i2.iotasquare@gmail.com>
+
+
+```
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+```
+
 # CANopen Sniffer
 
 **A CANopen bus sniffer with a PyQt GUI or CLI option.**

@@ -1,3 +1,19 @@
+> `iota2` - Making Imaginations, Real
+>
+> <i2.iotasquare@gmail.com>
+
+
+```
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+```
+
+[![BSD licensed](https://img.shields.io/badge/license-GPL3-blue.svg)](https://raw.githubusercontent.com/iota2/dev-setup/master/LICENSE)
+
 # CANopen Tools Suite
 
 A collection of **CANopen utilities** for development and debugging:

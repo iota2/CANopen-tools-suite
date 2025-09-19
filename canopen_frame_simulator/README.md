@@ -1,3 +1,17 @@
+> `iota2` - Making Imaginations, Real
+>
+> <i2.iotasquare@gmail.com>
+
+
+```
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+```
+
 # CANopen Frame Simulator
 
 **canopen_frame_simulator.py** — A flexible CANopen frame simulator aligned with EDS content.
