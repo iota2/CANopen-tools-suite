@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 """
+iota2 - Making Imaginations, Real
+<i2.iotasquare@gmail.com>
+
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+
 CANopen Sniffer — Features & Run Instructions
+=============================================
 
 Features:
 - PyQt5 GUI: scrolling, searchable table of CAN frames (PDO, SDO, Heartbeat, Emergency, Time)

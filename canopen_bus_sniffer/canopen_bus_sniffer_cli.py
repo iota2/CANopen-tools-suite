@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """
-CANopen CLI Sniffer (Rich-based)
-================================
+iota2 - Making Imaginations, Real
+<i2.iotasquare@gmail.com>
+
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+
+CANopen Sniffer — CLI (Rich-based)
+==================================
 
 Features:
  - Parses PDO mappings and ParameterNames from EDS.

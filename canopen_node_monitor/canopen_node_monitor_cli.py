@@ -1,4 +1,33 @@
 #!/usr/bin/env python3
+"""
+iota2 - Making Imaginations, Real
+<i2.iotasquare@gmail.com>
+
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+
+CANopen Monitor — Monitor data for a CAN node
+=============================================
+
+Node monitor aligned with EDS content:
+
+Features:
+ - Show raw received SDO and PDO.
+ - Display node data from passed EDS file.
+ - Send SDOs.
+
+Usage examples:
+---------------
+# Run to display node information
+python canopen_node_monitor_cli.py --interface vcan0 --local-id LOCAL_NODE_ID --local-eds LOCAL_EDS --remote-id REMOTE_NODE_ID --remote-eds REMOTE_EDS
+
+# Run to display node information and export to CSV FileNotFoundError
+python canopen_node_monitor_cli.py --interface vcan0 --local-id LOCAL_NODE_ID --local-eds LOCAL_EDS --remote-id REMOTE_NODE_ID --remote-eds REMOTE_EDS --export
+"""
 
 import can
 import canopen

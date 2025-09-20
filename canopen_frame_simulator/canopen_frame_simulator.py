@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """
-canopen_frame_simulator.py
-======================
+iota2 - Making Imaginations, Real
+<i2.iotasquare@gmail.com>
+
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+
+CANopenSimulator - Create and send CAN messages
+===============================================
 
 Frame simulator aligned with EDS content:
 
