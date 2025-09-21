@@ -83,10 +83,18 @@ except ImportError:
         PcapWriter = None
 from PyQt5 import QtWidgets, QtCore, QtGui
 
+
+import logging
+logging.basicConfig(
+    filename="canopen_bus_sniffer_gui.log",
+    filemode="w",
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+
 # ---------------- constants ----------------
 APP_ORG = "iota2"
 APP_NAME = "CANopenSnifferGUI"
-DEFAULT_LOG_CSV = "od_changes.csv"
 DECODED_CHAR_LIMIT = 40
 BUFFER_MAX = 20000
 LOAD_WINDOW = 5.0
@@ -535,6 +543,78 @@ def parse_pdo_sections_from_eds(eds_path: str):
     tpdos = parse_group("180", "1A0", 512)
     return rpdos, tpdos
 
+def _clean_int_with_comment(val: str) -> int:
+    if val is None:
+        raise ValueError("None passed to _clean_int_with_comment")
+    core = str(val).split(";", 1)[0].strip()
+    return int(core, 0)
+
+def build_name_map(eds_path: str) -> dict:
+    name_map = {}
+    cfg = configparser.ConfigParser(strict=False)
+    cfg.optionxform = str
+    cfg.read(eds_path)
+    parents = {}
+    for sec in cfg.sections():
+        m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)$', sec)
+        if m:
+            idx = int(m.group(1), 16)
+            pname = cfg[sec].get("ParameterName", "").strip()
+            if pname:
+                parents[idx] = pname
+    for sec in cfg.sections():
+        m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)sub([0-9A-Fa-f]+)$', sec, re.I)
+        if not m:
+            continue
+        idx = int(m.group(1), 16); sub = int(m.group(2), 16)
+        pname = cfg[sec].get("ParameterName", "").strip()
+        parent = parents.get(idx, f"0x{idx:04X}")
+        if pname and "highest" not in pname.lower():
+            name_map[(idx, sub)] = f"{parent}.{pname}"
+        else:
+            name_map[(idx, sub)] = parent
+    for idx, parent in parents.items():
+        name_map.setdefault((idx, 0), parent)
+    return name_map
+
+def parse_pdo_map(eds_path: str, name_map: dict):
+    cfg = configparser.ConfigParser(strict=False)
+    cfg.optionxform = str
+    cfg.read(eds_path)
+    pdo_map = {}
+    cob_name_overrides = {}
+    for sec in cfg.sections():
+        su = sec.upper()
+        if su.startswith("1A") and "SUB" not in su:
+            try:
+                entries = []
+                subidx = 1
+                while True:
+                    map_sec = f"{sec}sub{subidx}"
+                    if map_sec not in cfg:
+                        break
+                    raw = cfg[map_sec].get("DefaultValue", cfg[map_sec].get("Value", ""))
+                    raw_int = _clean_int_with_comment(raw)
+                    index = (raw_int >> 16) & 0xFFFF
+                    sub = (raw_int >> 8) & 0xFF
+                    size = raw_int & 0xFF
+                    entries.append((index, sub, size))
+                    subidx += 1
+                comm_sec = sec.replace("1A", "18", 1)
+                comm_sub1 = f"{comm_sec}sub1"
+                if comm_sub1 in cfg:
+                    v = cfg[comm_sub1].get("DefaultValue", cfg[comm_sub1].get("Value", ""))
+                    cob_id = _clean_int_with_comment(v)
+                    pdo_map[cob_id] = entries
+                    names = []
+                    for (idx, sub, _) in entries:
+                        pname = name_map.get((idx, sub)) or name_map.get((idx, 0)) or f"0x{idx:04X}:{sub}"
+                        names.append(pname)
+                    cob_name_overrides[cob_id] = names
+            except Exception:
+                continue
+    return pdo_map, cob_name_overrides
+
 # ---------------- decode helper ----------------
 def decode_using_od(odmap: Optional[ODVariableMapper], index: int, sub: int, raw: bytes,
                     apply_units: bool = True, decimals: int = 3) -> Tuple[str, Optional[int], Optional[int]]:
@@ -849,6 +929,40 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.pdo_rx_map[cob] = mapping
             except Exception:
                 pass
+
+        self.name_map = {}             # (index, sub) -> ParameterName string
+        self.pdo_map = {}              # cob_id -> [(index, sub, size_bits), ...]
+        self.cob_name_overrides = {}   # cob_id -> [ParameterName strings in mapping order]
+        if eds_path:
+            try:
+                try:
+                    nm = build_name_map(eds_path)
+                    pm, pm_names = parse_pdo_map(eds_path, nm)
+                    if nm:
+                        self.name_map.update(nm)
+                    if pm:
+                        self.pdo_map.update(pm)
+                        for cob_id, mapping in pm.items():
+                            if cob_id not in self.pdo_tx_map:
+                                self.pdo_tx_map[cob_id] = mapping
+
+                        for cob_id, mapping in pm.items():
+                            self.pdo_tx_map[cob_id] = mapping
+                    if pm_names:
+                        self.cob_name_overrides.update(pm_names)
+
+                    logging.info("[NP] Final pdo_tx_map: %s",
+                             {hex(c): m for c, m in self.pdo_tx_map.items()})
+                except Exception:
+                    pass
+            except Exception:
+                pass
+
+        logging.info("EDS loaded: %s", eds_path)
+        logging.info("name_map entries: %d", len(self.name_map))
+        logging.info("pdo_map entries: %d", len(self.pdo_map))
+        logging.info("cob_name_overrides keys: %s", list(self.cob_name_overrides.keys()))
+
 
         # central layout
         central = QtWidgets.QWidget(); self.setCentralWidget(central)
@@ -1238,23 +1352,56 @@ class MainWindow(QtWidgets.QMainWindow):
                 frame["decoded"] = raw_hex
 
         # PDO handling
-        else:
+        elif 0x180 <= cob <= 0x4FF:
+            logging.debug("[NP] Received PDO, cob = 0x%X", cob)
             frame["type"] = "PDO"
             mapping = None
             if cob in self.pdo_tx_map:
                 mapping = self.pdo_tx_map[cob]
+                logging.debug("[NP] cob in self.pdo_tx_map")
             else:
+                logging.debug("[NP] cob not in self.pdo_tx_map")
                 base = cob & ~0x7F
                 if base in self.pdo_tx_map:
+                    logging.debug("[NP] base in self.pdo_tx_map")
                     mapping = self.pdo_tx_map[base]
+
             if mapping:
+                logging.debug("[NP] in mapping")
                 offset = 0; parts = []; names = []; idxs = []; subs = []; dtypes = []
                 for (index, sub, bits) in mapping:
                     size = (bits + 7) // 8
                     field = data[offset:offset+size]; offset += size
                     if index == 0x0000:
                         continue
-                    fullname = self.od_mapper.get_full_name(index, sub) if self.od_mapper else f"0x{index:04X}:{sub}"
+                    fullname = None
+                    try:
+                        if getattr(self, "name_map", None):
+                            fullname = self.name_map.get((index, sub))
+                    except Exception:
+                        fullname = None
+                    try:
+                        if not fullname and getattr(self, "cob_name_overrides", None):
+                            overrides = self.cob_name_overrides.get(cob) or self.cob_name_overrides.get(cob & ~0x7F)
+                            if overrides:
+                                try:
+                                    pos = len(names)
+                                except Exception:
+                                    pos = 0
+                                if 0 <= pos < len(overrides):
+                                    fullname = overrides[pos]
+                    except Exception:
+                        pass
+                    if not fullname and getattr(self, "od_mapper", None):
+                        try:
+                            fullname = self.od_mapper.get_full_name(index, sub)
+                        except Exception:
+                            fullname = None
+                    if not fullname:
+                        fullname = f"0x{index:04X}:{sub}"
+
+                    logging.debug("COB=0x%X idx=0x%04X sub=0x%02X -> name='%s'", cob, index, sub, fullname)
+
                     dec, _, _ = decode_using_od(self.od_mapper, index, sub, field, apply_units, decimals)
                     names.append(fullname)
                     parts.append(dec)
@@ -1276,10 +1423,17 @@ class MainWindow(QtWidgets.QMainWindow):
                             self.od_mapper.update_value(index, sub, val, field)
                         except Exception:
                             pass
-                frame["name"] = ", ".join(names) if names else "<Unknown>"
-                frame["decoded"] = ", ".join(parts) if parts else raw_hex
+
+                decoded_str = ", ".join(f"{n}={v}" for n,v in zip(names, parts))
+                frame["name"] = "; ".join(names)
+                frame["index"] = ";".join(idxs)
+                frame["sub"]   = ";".join(subs)
+                frame["decoded"] = decoded_str
+
                 frame["index_list"] = idxs; frame["sub_list"] = subs
                 frame["dtype"] = ", ".join([t for t in dtypes if t]) if any(dtypes) else ""
+
+
             else:
                 if len(data) == 4:
                     try:

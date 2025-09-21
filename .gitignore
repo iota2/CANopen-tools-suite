@@ -8,7 +8,9 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-tags/
+*.csv
+*.log
+tags
 build/
 develop-eggs/
 dist/
