@@ -991,8 +991,8 @@ class MainWindow(QtWidgets.QMainWindow):
         can_label.setStyleSheet("font-weight: bold; font-size: 14px; padding: 4px;")
         can_layout.addWidget(can_label)
 
-        self.table = QtWidgets.QTableWidget(0, 10)
-        headers = ["Time", "Node ID", "COB-ID", "Type", "Name", "Index", "Subindex", "Data Type", "Raw Data", "Decoded Data"]
+        self.table = QtWidgets.QTableWidget(0, 11)
+        headers = ["Time", "Node ID", "COB-ID", "Type", "Name", "Index", "Subindex", "Data Type", "Raw Data", "Decoded Data", "Count"]
         self.table.setHorizontalHeaderLabels(headers)
         self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.table.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
@@ -1009,7 +1009,7 @@ class MainWindow(QtWidgets.QMainWindow):
         sdo_label.setStyleSheet("font-weight: bold; font-size: 14px; padding: 4px;")
         sdo_layout.addWidget(sdo_label)
 
-        self.sdo_table = QtWidgets.QTableWidget(0, 10)
+        self.sdo_table = QtWidgets.QTableWidget(0, 11)
         self.sdo_table.setHorizontalHeaderLabels(headers)
         self.sdo_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.sdo_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
@@ -1518,7 +1518,9 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.frame_matches_filter(frame) and self.frame_matches_follow(frame):
                 self.insert_or_update_row(frame)
 
-    def append_sdo_response(self, time_str: str, cob: int, ftype: str, name: str, idx_list: List[str], sub_list: List[str], dtype: str, raw_bytes: bytes, decoded: str):
+    def append_sdo_response(self, time_str: str, cob: int, ftype: str, name: str,
+                             idx_list: List[str], sub_list: List[str], dtype: str,
+                             raw_bytes: bytes, decoded: str):
         """
         Add or update a row in the SDO response table. In Fixed mode (when possible)
         SDO rows represent unique (index,subindex) and are updated in-place.
@@ -1579,6 +1581,43 @@ class MainWindow(QtWidgets.QMainWindow):
         if item and decoded_shown != decoded:
             item.setToolTip(decoded)
 
+        # --- Handle Count column ---
+        shown_value = decoded
+        try:
+            if dtype.upper() == "BOOLEAN":
+                shown_value = str(raw_bytes[0])
+            elif dtype.upper() in ("UNSIGNED8", "INTEGER8"):
+                shown_value = str(raw_bytes[0])
+            elif dtype.upper() in ("UNSIGNED16", "INTEGER16"):
+                shown_value = str(int.from_bytes(raw_bytes[:2], "little", signed="INTEGER" in dtype.upper()))
+            elif dtype.upper() in ("UNSIGNED32", "INTEGER32"):
+                shown_value = str(int.from_bytes(raw_bytes[:4], "little", signed="INTEGER" in dtype.upper()))
+            elif dtype.upper() in ("UNSIGNED64", "INTEGER64"):
+                shown_value = str(int.from_bytes(raw_bytes[:8], "little", signed="INTEGER" in dtype.upper()))
+            else:
+                shown_value = decoded
+        except Exception:
+            shown_value = decoded
+
+        shown_trim = shown_value if len(shown_value) <= DECODED_CHAR_LIMIT else shown_value[:DECODED_CHAR_LIMIT-1] + "…"
+        setcell(9, shown_trim, bold=True)
+        item = self.sdo_table.item(r, 9)
+        if item and shown_trim != shown_value:
+            item.setToolTip(shown_value)
+
+        # --- Handle Count column ---
+        count_item = self.sdo_table.item(r, 10)
+        if count_item is None:
+            count_item = QtWidgets.QTableWidgetItem("1")
+            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.sdo_table.setItem(r, 10, count_item)
+        else:
+            try:
+                val = int(count_item.text())
+            except ValueError:
+                val = 0
+            count_item.setText(str(val + 1))
+
     def frame_matches_filter(self, frame: dict) -> bool:
         txt = self.filter_edit.text().strip()
         if not txt:
@@ -1638,15 +1677,37 @@ class MainWindow(QtWidgets.QMainWindow):
                     continue
                 if idx_item and sub_item and idx_item.text() == idx_text and sub_item.text() == sub_text:
                     self.update_row(r, frame)
+                    # --- Increment Count column ---
+                    count_item = self.table.item(r, 10)
+                    if count_item is None:
+                        count_item = QtWidgets.QTableWidgetItem("1")
+                        count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        self.table.setItem(r, 10, count_item)
+                    else:
+                        try:
+                            val = int(count_item.text())
+                        except ValueError:
+                            val = 0
+                        count_item.setText(str(val + 1))
                     return
 
             # If no exact match, insert a new row
             row = self.table.rowCount()
             self.table.insertRow(row)
             self.set_row(row, frame)
+            # Initialize Count column
+            count_item = QtWidgets.QTableWidgetItem("1")
+            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.table.setItem(row, 10, count_item)
         else:
-            row = self.table.rowCount(); self.table.insertRow(row)
+            row = self.table.rowCount()
+            self.table.insertRow(row)
             self.set_row(row, frame)
+            # Initialize Count column for sequential rows
+            count_item = QtWidgets.QTableWidgetItem("1")
+            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.table.setItem(row, 10, count_item)
+
         if self.table.rowCount() > 50000:
             self.table.removeRow(0)
 
@@ -1677,6 +1738,27 @@ class MainWindow(QtWidgets.QMainWindow):
         if decoded_shown != decoded_full:
             dec_item.setToolTip(decoded_full)
         self.table.setItem(row, 9, dec_item)
+
+        # --- Handle Count column for CAN-Traces ---
+        count_item = self.table.item(row, 10)
+        mode = self.mode_combo.currentText()
+        if mode == "Fixed":
+            if count_item is None:
+                count_item = QtWidgets.QTableWidgetItem("1")
+                count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.table.setItem(row, 10, count_item)
+            else:
+                try:
+                    val = int(count_item.text())
+                except ValueError:
+                    val = 0
+                count_item.setText(str(val + 1))
+        else:
+            # Sequential mode → always start at 1
+            count_item = QtWidgets.QTableWidgetItem("1")
+            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.table.setItem(row, 10, count_item)
+
         for c in (1,2,3,5,6):
             it = self.table.item(row, c)
             if it: it.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -1741,8 +1823,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table.setRowCount(0)
         self.sdo_table.setRowCount(0)
         self.buffer_frames.clear()
+        self.pause = False
+        self.timestamps.clear()
+        self.peak_rate = 0.0
         self.last_values_by_cob.clear()
-        self.hist.timestamps_by_cob.clear()
+        self.follow_mode = None
         self.cob_seen.clear()
         self.legend_list.clear()
         # clear SDO mapping if present
@@ -1750,6 +1835,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.sdo_row_map.clear()
         except Exception:
             self.sdo_row_map = {}
+        # Reset counts by clearing Count column
+        for t in (self.table, self.sdo_table):
+            for r in range(t.rowCount()):
+                item = t.item(r, 10)
+                if item:
+                    item.setText("0")
 
     def clear_filter(self):
         self.filter_edit.clear()
