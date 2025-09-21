@@ -951,8 +951,6 @@ class MainWindow(QtWidgets.QMainWindow):
                     if pm_names:
                         self.cob_name_overrides.update(pm_names)
 
-                    logging.info("[NP] Final pdo_tx_map: %s",
-                             {hex(c): m for c, m in self.pdo_tx_map.items()})
                 except Exception:
                     pass
             except Exception:
@@ -1315,6 +1313,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # SDO (responses) or special-case 0x601 treated as SDO-like per request
         elif 0x580 <= cob <= 0x5FF or cob == 0x601:
+            # Handle SDO frames separately: do not add them to CAN trace table, only to SDO response table
             frame["type"] = "SDO"
             if len(data) >= 4:
                 index = data[1] | (data[2] << 8)
@@ -1322,10 +1321,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 payload_bytes = data[4:]
                 dtype = self.od_mapper.get_type(index, sub) if self.od_mapper else None
                 dec, _, _ = decode_using_od(self.od_mapper, index, sub, payload_bytes, apply_units, decimals)
-                frame["decoded"] = dec
-                frame["dtype"] = dtype or ""
-                frame["name"] = self.od_mapper.get_full_name(index, sub) if self.od_mapper else f"0x{index:04X}:{sub}"
-                frame["index_list"] = [f"0x{index:04X}"]; frame["sub_list"] = [f"0x{sub:02X}"]
                 # update mapper
                 try:
                     val = None
@@ -1346,28 +1341,24 @@ class MainWindow(QtWidgets.QMainWindow):
                 except Exception:
                     pass
 
-                # append to SDO response table (same columns as main)
-                self.append_sdo_response(time_str, cob, frame["type"], frame["name"], frame["index_list"], frame["sub_list"], frame["dtype"], payload_bytes, dec)
-            else:
-                frame["decoded"] = raw_hex
+                # append only to SDO response table (not CAN traces)
+                self.append_sdo_response(time_str, cob, "SDO",
+                                         self.od_mapper.get_full_name(index, sub) if self.od_mapper else f"0x{index:04X}:{sub}",
+                                         [f"0x{index:04X}"], [f"0x{sub:02X}"],
+                                         dtype or "", payload_bytes, dec)
 
         # PDO handling
         elif 0x180 <= cob <= 0x4FF:
-            logging.debug("[NP] Received PDO, cob = 0x%X", cob)
             frame["type"] = "PDO"
             mapping = None
             if cob in self.pdo_tx_map:
                 mapping = self.pdo_tx_map[cob]
-                logging.debug("[NP] cob in self.pdo_tx_map")
             else:
-                logging.debug("[NP] cob not in self.pdo_tx_map")
                 base = cob & ~0x7F
                 if base in self.pdo_tx_map:
-                    logging.debug("[NP] base in self.pdo_tx_map")
                     mapping = self.pdo_tx_map[base]
 
             if mapping:
-                logging.debug("[NP] in mapping")
                 offset = 0; parts = []; names = []; idxs = []; subs = []; dtypes = []
                 for (index, sub, bits) in mapping:
                     size = (bits + 7) // 8
@@ -1424,16 +1415,36 @@ class MainWindow(QtWidgets.QMainWindow):
                         except Exception:
                             pass
 
-                decoded_str = ", ".join(f"{n}={v}" for n,v in zip(names, parts))
-                frame["name"] = "; ".join(names)
-                frame["index"] = ";".join(idxs)
-                frame["sub"]   = ";".join(subs)
-                frame["decoded"] = decoded_str
-
-                frame["index_list"] = idxs; frame["sub_list"] = subs
-                frame["dtype"] = ", ".join([t for t in dtypes if t]) if any(dtypes) else ""
-
-
+                if len(names) > 1:
+                    # create one frame per variable
+                    for fullname, dec, idx, sub, dtype in zip(names, parts, idxs, subs, dtypes):
+                        single_frame = frame.copy()
+                        single_frame["name"] = fullname
+                        single_frame["index"] = idx
+                        single_frame["sub"] = sub
+                        single_frame["decoded"] = dec
+                        single_frame["index_list"] = [idx]
+                        single_frame["sub_list"] = [sub]
+                        single_frame["dtype"] = dtype or ""
+                        self.buffer_frames.append(single_frame)
+                        if len(self.buffer_frames) > BUFFER_MAX:
+                            self.buffer_frames.pop(0)
+                        if self.frame_matches_filter(single_frame) and self.frame_matches_follow(single_frame):
+                            self.insert_or_update_row(single_frame)
+                else:
+                    # single variable PDO (or mapping gave only one entry)
+                    frame["name"] = names[0] if names else "<Unknown>"
+                    frame["index"] = idxs[0] if idxs else ""
+                    frame["sub"]   = subs[0] if subs else ""
+                    frame["decoded"] = parts[0] if parts else raw_hex
+                    frame["index_list"] = idxs
+                    frame["sub_list"] = subs
+                    frame["dtype"] = dtypes[0] if dtypes else ""
+                    self.buffer_frames.append(frame)
+                    if len(self.buffer_frames) > BUFFER_MAX:
+                        self.buffer_frames.pop(0)
+                    if self.frame_matches_filter(frame) and self.frame_matches_follow(frame):
+                        self.insert_or_update_row(frame)
             else:
                 if len(data) == 4:
                     try:
@@ -1441,14 +1452,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     except Exception:
                         frame["decoded"] = raw_hex
 
-        # push to buffer
-        self.buffer_frames.append(frame)
-        if len(self.buffer_frames) > BUFFER_MAX:
-            self.buffer_frames.pop(0)
-
-        # decide to display based on filter & follow mode
-        if self.frame_matches_filter(frame) and self.frame_matches_follow(frame):
-            self.insert_or_update_row(frame)
+        # push to buffer and display for non-PDO frames
+        if frame["type"] != "PDO":
+            self.buffer_frames.append(frame)
+            if len(self.buffer_frames) > BUFFER_MAX:
+                self.buffer_frames.pop(0)
+            if self.frame_matches_filter(frame) and self.frame_matches_follow(frame):
+                self.insert_or_update_row(frame)
 
     def append_sdo_response(self, time_str: str, cob: int, ftype: str, name: str, idx_list: List[str], sub_list: List[str], dtype: str, raw_bytes: bytes, decoded: str):
         """
@@ -1525,13 +1535,24 @@ class MainWindow(QtWidgets.QMainWindow):
         mode = self.mode_combo.currentText()
         cob = frame["cob"]
         if mode == "Fixed":
-            # update first matching row by COB-ID
+            cob_text = f"0x{cob:03X}".lower()
+            idx_text = frame.get("index", "")
+            sub_text = frame.get("sub", "")
+
+            # Look for an exact match (COB + index + sub)
             for r in range(self.table.rowCount()):
-                it = self.table.item(r, 2)
-                if it and it.text().lower() == f"0x{cob:03X}".lower():
+                cob_item = self.table.item(r, 2)
+                idx_item = self.table.item(r, 5)
+                sub_item = self.table.item(r, 6)
+                if not cob_item or cob_item.text().lower() != cob_text:
+                    continue
+                if idx_item and sub_item and idx_item.text() == idx_text and sub_item.text() == sub_text:
                     self.update_row(r, frame)
                     return
-            row = self.table.rowCount(); self.table.insertRow(row)
+
+            # If no exact match, insert a new row
+            row = self.table.rowCount()
+            self.table.insertRow(row)
             self.set_row(row, frame)
         else:
             row = self.table.rowCount(); self.table.insertRow(row)
