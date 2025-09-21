@@ -900,7 +900,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, eds_path: Optional[str], channel: str):
         super().__init__()
         self.setWindowTitle("CANopen Sniffer")
-        self.resize(1400, 920)
+        # Always start in full screen maximized mode
+        self.showMaximized()
         self.settings = QtCore.QSettings(APP_ORG, APP_NAME)
 
         # CANopen local/remote nodes
@@ -1126,11 +1127,18 @@ class MainWindow(QtWidgets.QMainWindow):
         view_menu = menubar.addMenu("View")
         options_menu = view_menu.addMenu("Options")
         self.show_special_action = QtWidgets.QAction("Show special frames", self, checkable=True)
+        self.show_special_action.setChecked(True)  # default enabled
         self.apply_units_action = QtWidgets.QAction("Apply unit scaling", self, checkable=True)
+        self.apply_units_action.setChecked(True)   # default enabled
         self.show_dtype_action = QtWidgets.QAction("Show Data Type column", self, checkable=True)
+        self.show_dtype_action.setChecked(True)    # default enabled
+        self.sdo_autopop_action = QtWidgets.QAction("Auto-populate SDO Table", self, checkable=True)
+        self.sdo_autopop_action.setChecked(False)  # default disabled
+        self.sdo_autopop_action.toggled.connect(self.toggle_sdo_autopop)
         options_menu.addAction(self.show_special_action)
         options_menu.addAction(self.apply_units_action)
         options_menu.addAction(self.show_dtype_action)
+        options_menu.addAction(self.sdo_autopop_action)
         follow_menu = view_menu.addMenu("Follow")
         self.clear_follow_action = QtWidgets.QAction("Clear Follow", self)
         follow_menu.addAction(self.clear_follow_action)
@@ -1186,6 +1194,56 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sdo_table.setColumnWidth(9, decoded_px)
         sh.setSectionResizeMode(9, QtWidgets.QHeaderView.Fixed)
         sh.setStretchLastSection(False)
+        # Map of (index, sub) -> row for Fixed-mode updates in SDO table
+        self.sdo_row_map: Dict[Tuple[int,int], int] = {}
+
+        # Pre-populate SDO table only if option is enabled
+        if self.sdo_autopop_action.isChecked():
+            self.populate_sdo_table()
+
+    def toggle_sdo_autopop(self, enabled: bool):
+        if enabled:
+            self.populate_sdo_table()
+        else:
+            # clear table if disabling auto-populate
+            self.sdo_table.setRowCount(0)
+            self.sdo_row_map.clear()
+
+    def populate_sdo_table(self):
+        if not self.od_mapper:
+            return
+        try:
+            keys = sorted(self.od_mapper._values.keys())
+            for (idx, sub) in keys:
+                if (idx, sub) in self.sdo_row_map:
+                    continue
+                r = self.sdo_table.rowCount()
+                self.sdo_table.insertRow(r)
+                ftype = "SDO"
+                def mkitem(text, bold=False, center=False):
+                    it = QtWidgets.QTableWidgetItem(str(text) if text is not None else "")
+                    if bold:
+                        f = it.font(); f.setBold(True); it.setFont(f)
+                    if center:
+                        it.setTextAlignment(QtCore.Qt.AlignCenter)
+                    it.setBackground(color_for_type(ftype))
+                    return it
+
+                name = self.od_mapper.get_full_name(idx, sub)
+                dtype = self.od_mapper.get_type(idx, sub) or ""
+                self.sdo_table.setItem(r, 0, mkitem(""))               # Time (empty initially)
+                self.sdo_table.setItem(r, 1, mkitem(""))               # Node
+                self.sdo_table.setItem(r, 2, mkitem(""))               # COB-ID
+                self.sdo_table.setItem(r, 3, mkitem(ftype, center=True))
+                self.sdo_table.setItem(r, 4, mkitem(name))
+                self.sdo_table.setItem(r, 5, mkitem(f"0x{idx:04X}", center=True))
+                self.sdo_table.setItem(r, 6, mkitem(f"0x{sub:02X}", center=True))
+                self.sdo_table.setItem(r, 7, mkitem(dtype))
+                self.sdo_table.setItem(r, 8, mkitem(""))               # Raw
+                self.sdo_table.setItem(r, 9, mkitem("", bold=True))    # Decoded (empty)
+                self.sdo_row_map[(idx, sub)] = r
+        except Exception:
+            pass
 
         # restore settings
         self.load_settings()
@@ -1462,32 +1520,64 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def append_sdo_response(self, time_str: str, cob: int, ftype: str, name: str, idx_list: List[str], sub_list: List[str], dtype: str, raw_bytes: bytes, decoded: str):
         """
-        Add a row to the SDO response table with same columns/formatting as main table.
+        Add or update a row in the SDO response table. In Fixed mode (when possible)
+        SDO rows represent unique (index,subindex) and are updated in-place.
+        In Sequential mode, rows are appended as before.
         """
-        r = self.sdo_table.rowCount(); self.sdo_table.insertRow(r)
+        # Determine index/subindex integers if available
+        idx_int = None; sub_int = None
+        try:
+            if idx_list and len(idx_list) > 0:
+                idx_int = int(idx_list[0], 0)
+            if sub_list and len(sub_list) > 0:
+                sub_int = int(sub_list[0], 0)
+        except Exception:
+            idx_int = sub_int = None
+
+        mode = self.mode_combo.currentText() if hasattr(self, "mode_combo") else "Sequential"
+        # Choose row: if Fixed and we can key by (idx,sub) then reuse that row
+        r = None
+        if mode == "Fixed" and (idx_int is not None) and (sub_int is not None):
+            key = (idx_int, sub_int)
+            # If row already exists for this OD key, update it
+            if key in getattr(self, "sdo_row_map", {}):
+                r = self.sdo_row_map[key]
+            else:
+                r = self.sdo_table.rowCount(); self.sdo_table.insertRow(r)
+                self.sdo_row_map[key] = r
+        else:
+            r = self.sdo_table.rowCount(); self.sdo_table.insertRow(r)
+
         node_id = cob - 0x580 if 0x580 <= cob <= 0x5FF else (cob & 0x7F)
-        def mkitem(text, bold=False, center=False):
-            it = QtWidgets.QTableWidgetItem(str(text))
+        # helper to set/update a cell on row r
+        def setcell(col, text, bold=False, center=False):
+            it = self.sdo_table.item(r, col)
+            if it is None:
+                it = QtWidgets.QTableWidgetItem()
+                self.sdo_table.setItem(r, col, it)
+            it.setText(str(text) if text is not None else "")
             if bold:
                 f = it.font(); f.setBold(True); it.setFont(f)
             if center:
                 it.setTextAlignment(QtCore.Qt.AlignCenter)
+            # keep coloring consistent
             it.setBackground(color_for_type(ftype))
-            return it
-        self.sdo_table.setItem(r, 0, mkitem(time_str))
-        self.sdo_table.setItem(r, 1, mkitem(str(node_id), bold=True, center=True))
-        self.sdo_table.setItem(r, 2, mkitem(f"0x{cob:03X}", center=True))
-        self.sdo_table.setItem(r, 3, mkitem(ftype, center=True))
-        self.sdo_table.setItem(r, 4, mkitem(name))
-        self.sdo_table.setItem(r, 5, mkitem(", ".join(idx_list), center=True))
-        self.sdo_table.setItem(r, 6, mkitem(", ".join(sub_list), center=True))
-        self.sdo_table.setItem(r, 7, mkitem(dtype))
-        self.sdo_table.setItem(r, 8, mkitem(bytes_to_hex_str(raw_bytes)))
+
+        setcell(0, time_str)
+        setcell(1, str(node_id), bold=True, center=True)
+        setcell(2, f"0x{cob:03X}", center=True)
+        setcell(3, ftype, center=True)
+        # If we pre-populated this row with OD name, don't overwrite unless name provided
+        setcell(4, name)
+        setcell(5, ", ".join(idx_list), center=True)
+        setcell(6, ", ".join(sub_list), center=True)
+        setcell(7, dtype)
+        setcell(8, bytes_to_hex_str(raw_bytes))
         decoded_shown = decoded if len(decoded) <= DECODED_CHAR_LIMIT else decoded[:DECODED_CHAR_LIMIT-1] + "…"
-        dec_item = mkitem(decoded_shown, bold=True)
-        if decoded_shown != decoded:
-            dec_item.setToolTip(decoded)
-        self.sdo_table.setItem(r, 9, dec_item)
+        setcell(9, decoded_shown, bold=True)
+        item = self.sdo_table.item(r, 9)
+        if item and decoded_shown != decoded:
+            item.setToolTip(decoded)
 
     def frame_matches_filter(self, frame: dict) -> bool:
         txt = self.filter_edit.text().strip()
@@ -1655,6 +1745,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.hist.timestamps_by_cob.clear()
         self.cob_seen.clear()
         self.legend_list.clear()
+        # clear SDO mapping if present
+        try:
+            self.sdo_row_map.clear()
+        except Exception:
+            self.sdo_row_map = {}
 
     def clear_filter(self):
         self.filter_edit.clear()
