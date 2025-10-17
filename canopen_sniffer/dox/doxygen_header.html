@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Documentation</title>
+  <!-- Local mermaid loader (placed into HTML_EXTRA_FILES) -->
+  <script src="mermaid.min.js"></script>
+  <script>
+    // Ensure mermaid runs after Doxygen content is added.
+    function renderMermaidContainers() {
+      try {
+        // Initialize mermaid if available
+        if (typeof mermaid !== 'undefined' && mermaid) {
+          mermaid.initialize({ startOnLoad: false, theme: 'default' });
+        }
+        // Find any containers with class 'mermaid' and initialize rendering
+        var elems = document.querySelectorAll('.mermaid');
+        if (elems.length && typeof mermaid !== 'undefined' && mermaid) {
+          mermaid.init(undefined, elems);
+        }
+      } catch (err) {
+        console.error('Mermaid render error:', err);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      // Delay rendering slightly to allow Doxygen injected HTML to settle
+      setTimeout(renderMermaidContainers, 250);
+    });
+  </script>
+</head>
+<body>
+<!-- Doxygen will insert its own header/navigation here -->

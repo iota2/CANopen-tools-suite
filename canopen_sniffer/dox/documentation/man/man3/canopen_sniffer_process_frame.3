@@ -1,0 +1,184 @@
+.TH "process_frame" 3 "Sat Oct 18 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+process_frame \- Processor thread that consumes CAN frames and updates statistics\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Thread\&.
+.SH "Detailed Description"
+.PP 
+Processor thread that consumes CAN frames and updates statistics\&. 
+
+Consumes frames produced by the CAN sniffer, classifies them, updates \fBbus_stats\fP, optionally exports processed rows to CSV, and handles SDO/SDO-response bookkeeping using an EDS map\&.
+.PP
+The processor reads frame dictionaries from \fCraw_frame\fP, performs:
+.IP "\(bu" 2
+frame classification (NMT, SYNC, EMCY, TIME, PDO, SDO_REQ, SDO_RES, HB, UNKNOWN),
+.IP "\(bu" 2
+top-talker and node tracking,
+.IP "\(bu" 2
+SDO request/response timing and success/abort accounting,
+.IP "\(bu" 2
+payload-size accounting,
+.IP "\(bu" 2
+optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC\fBstop()\fP\fP and will close CSV resources on exit\&. 
+.PP
+
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, \fBeds_map\fP, bool \fBexport\fP=False)"
+.br
+.RI "Initialize the processor thread\&. "
+.ti -1c
+.RI "def \fBrun\fP (self)"
+.br
+.RI "Main processing loop\&. "
+.ti -1c
+.RI "def \fBsave_frame_to_csv\fP (self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.br
+.RI "Save a processed frame row to the processed CSV file\&. "
+.ti -1c
+.RI "def \fBstop\fP (self)"
+.br
+.RI "Request the processor thread to stop\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBeds_map\fP"
+.br
+.RI "EDS map/parser used to resolve (index, subindex) -> name strings\&. "
+.ti -1c
+.RI "\fBexport\fP"
+.br
+.RI "Flag indicating whether processed CSV export is enabled\&. "
+.ti -1c
+.RI "\fBexport_file\fP"
+.br
+.RI "File object for processed CSV export (or None)\&. "
+.ti -1c
+.RI "\fBexport_filename\fP"
+.br
+.RI "Output filename for processed CSV export\&. "
+.ti -1c
+.RI "\fBexport_serial_number\fP"
+.br
+.RI "Serial number for exported rows (increments each write)\&. "
+.ti -1c
+.RI "\fBexport_writer\fP"
+.br
+.RI "csv\&.writer instance for processed CSV rows (or None)\&. "
+.ti -1c
+.RI "\fBlog\fP"
+.br
+.RI "Logger instance scoped to this processor\&. "
+.ti -1c
+.RI "\fBraw_frame\fP"
+.br
+.RI "Queue from which raw frame dictionaries are consumed\&. "
+.ti -1c
+.RI "\fBstats\fP"
+.br
+.RI "Reference to the \fBbus_stats\fP instance used for recording metrics\&. "
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue raw_frame,  eds_map, bool  export = \fCFalse\fP)"
+
+.PP
+Initialize the processor thread\&. The constructor stores references to required helpers, initializes a stop event and logging, sets up CSV export if requested, and ensures statistics collection start time is set\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstats\fP Instance of \fBbus_stats\fP used to record statistics\&. 
+.br
+\fIraw_frame\fP \fCqueue\&.Queue\fP providing raw frames (dict) from the sniffer\&. 
+.br
+\fIeds_map\fP EDS parser / map object providing name_map lookups\&. 
+.br
+\fIexport\fP If True, enable CSV export of processed frames\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "def run ( self)"
+
+.PP
+Main processing loop\&. Non-blocking, interruptable loop that pulls frame dicts from \fCraw_frame\fP, classifies frames, updates \fCself\&.stats\fP, resolves names via \fCself\&.eds_map\fP, decodes simple SDO payloads (expedited/data), exports CSV rows (if enabled), and logs the processed frame details\&. Ensures resources are closed on exit\&. 
+.SS "def save_frame_to_csv ( self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+
+.PP
+Save a processed frame row to the processed CSV file\&. Writes a CSV row with serial number, timestamp, frame classification, OD address, name, raw hex payload and decoded value\&. Periodically flushes and fsyncs the file according to FSYNC_EVERY\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcob\fP COB-ID of the frame\&. 
+.br
+\fIftype\fP \fBframe_type\fP enumeration value describing frame class\&. 
+.br
+\fIindex\fP Object dictionary index (for SDO/decoded frames)\&. 
+.br
+\fIsub\fP Object dictionary subindex\&. 
+.br
+\fIname\fP Human-readable name for the mapped OD entry (from EDS)\&. 
+.br
+\fIraw\fP Hex string of the raw payload\&. 
+.br
+\fIdecoded\fP Human-readable decoded payload (or empty string)\&. 
+.RE
+.PP
+
+.SS "def stop ( self)"
+
+.PP
+Request the processor thread to stop\&. Signals the internal stop event so the processing loop exits at the next opportunity\&. This method does not block waiting for thread exit; call \fCjoin()\fP on the thread object if synchronous shutdown is required\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "eds_map"
+
+.PP
+EDS map/parser used to resolve (index, subindex) -> name strings\&. 
+.SS "export"
+
+.PP
+Flag indicating whether processed CSV export is enabled\&. 
+.SS "export_file"
+
+.PP
+File object for processed CSV export (or None)\&. 
+.SS "export_filename"
+
+.PP
+Output filename for processed CSV export\&. 
+.SS "export_serial_number"
+
+.PP
+Serial number for exported rows (increments each write)\&. 
+.SS "export_writer"
+
+.PP
+csv\&.writer instance for processed CSV rows (or None)\&. 
+.SS "log"
+
+.PP
+Logger instance scoped to this processor\&. 
+.SS "raw_frame"
+
+.PP
+Queue from which raw frame dictionaries are consumed\&. 
+.SS "stats"
+
+.PP
+Reference to the \fBbus_stats\fP instance used for recording metrics\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Sniffer from the source code\&.
