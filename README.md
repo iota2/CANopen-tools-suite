@@ -13,6 +13,7 @@
 ```
 
 [![BSD licensed](https://img.shields.io/badge/license-GPL3-blue.svg)](https://raw.githubusercontent.com/iota2/dev-setup/master/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite?ref=badge_shield)
 
 # CANopen Tools Suite
 
@@ -118,3 +119,7 @@ sudo ip link set can0 up
 ---
 
 ⚡ This suite is designed for **testing, debugging, and visualizing CANopen networks** with minimal setup.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite?ref=badge_large)
