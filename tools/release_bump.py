@@ -11,6 +11,7 @@ Behavior:
      <!-- VERSION:START -->...<!-- VERSION:END -->
    in both README.md and CHANGELOG.md with the new tag (e.g. v1.3.0)
  - Regenerates trailing version reference block (compare/tree links) using the repo (owner/repo)
+ - Writes the new release section to `release_notes.md` so workflow can use it as release body
  - Uses in-memory transformations so --dry-run prints the final file contents exactly as they would be
  - Prints final tag (vX.Y.Z) as last line for CI capture
 """
@@ -48,33 +49,18 @@ def write_or_preview(path: Path, content: str, dry_run: bool):
         path.write_text(content, encoding='utf-8')
 
 def ensure_marker_in_text(original: str, marker_content: str = None) -> str:
-    """
-    Ensure the START/END markers exist in the text. If missing, insert them near the top.
-    Returns the updated text.
-    marker_content: optional initial content to place between markers (if None, keep empty).
-    """
     if START_MARKER in original and END_MARKER in original:
         return original
-    # try to insert after top-level title "# Changelog" or at top
     insert_block = f"{START_MARKER}{marker_content or ''}{END_MARKER}"
     if "# Changelog" in original:
-        # insert after the first '# Changelog' line
         parts = original.splitlines(True)
         for i, line in enumerate(parts):
             if line.strip().lower().startswith("# changelog"):
-                # insert after this line
                 parts.insert(i+1, "\n" + insert_block + "\n\n")
                 return "".join(parts)
-    # fallback: insert at top
     return insert_block + "\n\n" + original
 
 def replace_between_markers_in_text(original: str, new_tag: str) -> (str, bool):
-    """
-    Replace the content between START_MARKER and END_MARKER with new_tag.
-    If markers not present, returns original and False.
-    Returns (new_text, changed_bool).
-    """
-    # compile non-greedy DOTALL pattern
     pattern = re.compile(re.escape(START_MARKER) + r'(.*?)' + re.escape(END_MARKER), flags=re.DOTALL)
     m = pattern.search(original)
     if not m:
@@ -82,28 +68,24 @@ def replace_between_markers_in_text(original: str, new_tag: str) -> (str, bool):
     replaced = pattern.sub(f"{START_MARKER}{new_tag}{END_MARKER}", original, count=1)
     return replaced, (replaced != original)
 
-def process_changelog_in_memory(original: str, new_tag: str, date_str: str) -> str:
+def process_changelog_in_memory(original: str, new_tag: str, date_str: str) -> (str, str):
     """
-    Move Unreleased -> new version section (if Unreleased has content).
-    Then replace the markers in the changelog with the new_tag (marker preserved).
-    Finally return the modified changelog text (marker replaced).
+    Returns (new_changelog_text, moved_section_text).
+    moved_section_text is the newly created release section (header + body),
+    e.g. "## [v1.3.0] - 2025-10-19\n\n- something\n\n"
     """
-    # Ensure markers exist (if not, insert them under the top of changelog)
     original_with_marker = ensure_marker_in_text(original, marker_content="")
 
-    # Find Unreleased header
     m = re.search(r'^(##\s*\[Unreleased\].*?)\r?\n', original_with_marker, flags=re.MULTILINE)
     if not m:
-        # No Unreleased header; still replace markers and return
         text_after_marker_repl, _ = replace_between_markers_in_text(original_with_marker, new_tag)
-        return text_after_marker_repl
+        return text_after_marker_repl, ""
 
     parts = re.split(r'^(##\s*\[Unreleased\].*?)\r?\n', original_with_marker, maxsplit=1, flags=re.MULTILINE)
     before = parts[0]
-    header = parts[1]  # '## [Unreleased]'
+    header = parts[1]
     rest = parts[2] if len(parts) > 2 else ""
 
-    # find next version header in rest
     m_next = re.search(r'(^##\s*\[)', rest, flags=re.MULTILINE)
     if m_next:
         unreleased_body = rest[:m_next.start()]
@@ -115,17 +97,15 @@ def process_changelog_in_memory(original: str, new_tag: str, date_str: str) -> s
     unreleased_body = unreleased_body.rstrip("\r\n")
 
     if not unreleased_body.strip():
-        # nothing under Unreleased; just replace markers
         text_after_marker_repl, _ = replace_between_markers_in_text(original_with_marker, new_tag)
-        return text_after_marker_repl
+        return text_after_marker_repl, ""
 
-    # Build new version section with Unreleased body
     new_section = f"## [{new_tag}] - {date_str}\n\n{unreleased_body}\n\n"
     new_changelog = before + header + "\n\n" + new_section + after.lstrip("\r\n")
 
-    # Now replace markers in this new_changelog so marker in changelog gets new_tag
+    # replace markers in the new changelog so its marker block shows new_tag
     new_changelog_with_marker, _ = replace_between_markers_in_text(new_changelog, new_tag)
-    return new_changelog_with_marker
+    return new_changelog_with_marker, new_section
 
 def collect_versions_from_changelog_text(changelog_text: str) -> list[str]:
     found = HEADING_VER_RE.findall(changelog_text)
@@ -137,7 +117,6 @@ def collect_versions_from_changelog_text(changelog_text: str) -> list[str]:
     return seen  # newest -> older
 
 def remove_existing_reference_block(changelog_text: str) -> str:
-    # Remove trailing reference lines like: [v1.2.3]: ...
     cleaned = re.sub(r'(?m)^\s*\[v?\d+\.\d+\.\d+\]:.*\n?', '', changelog_text)
     return cleaned
 
@@ -156,18 +135,10 @@ def rewrite_reference_block_text(changelog_text_no_refs: str, versions: list[str
     return changelog_text_no_refs.rstrip() + "\n\n" + block
 
 def prepare_readme_text(original: str, new_tag: str) -> (str, bool):
-    """
-    Ensure markers exist in README (insert near top if absent),
-    then replace between markers with new_tag.
-    Returns (final_text, changed_bool).
-    """
     text_with_marker = original
     if START_MARKER not in original or END_MARKER not in original:
-        # Insert marker near top (after first header or at top)
         if original.startswith('#'):
-            # insert after first line
             parts = original.splitlines(True)
-            # find first non-empty line to place marker after
             insert_at = 1
             parts.insert(insert_at, "\n" + START_MARKER + END_MARKER + "\n\n")
             text_with_marker = "".join(parts)
@@ -175,6 +146,18 @@ def prepare_readme_text(original: str, new_tag: str) -> (str, bool):
             text_with_marker = START_MARKER + END_MARKER + "\n\n" + original
     final_text, changed = replace_between_markers_in_text(text_with_marker, new_tag)
     return final_text, changed
+
+def write_release_notes_file(release_section: str, dry_run: bool, path: Path = Path("release_notes.md")):
+    if not release_section.strip():
+        if dry_run:
+            print("[dry-run] No Unreleased content to include as release notes.")
+        return False
+    content = release_section.strip() + "\n"
+    if dry_run:
+        print(f"[dry-run] Would write release notes to {path}:\n---\n{content}\n---\n")
+    else:
+        path.write_text(content, encoding='utf-8')
+    return True
 
 def main():
     p = argparse.ArgumentParser()
@@ -203,46 +186,37 @@ def main():
     print(f"Bumped to numeric: {new_numeric} → tag: {new_tag}")
     print(f"Dry-run: {args.dry_run}")
 
-    # ---------- CHANGELOG: in-memory processing ----------
     changelog_original_text = changelog_path.read_text(encoding='utf-8') if changelog_path.exists() else "# Changelog\n\n## [Unreleased]\n\n"
-    changelog_after_marker_and_move = process_changelog_in_memory(changelog_original_text, new_tag, date_str)
+    changelog_after_move, moved_section = process_changelog_in_memory(changelog_original_text, new_tag, date_str)
 
-    # remove existing reference block (in-memory) and collect versions
-    changelog_no_refs = remove_existing_reference_block(changelog_after_marker_and_move)
+    changelog_no_refs = remove_existing_reference_block(changelog_after_move)
     versions = collect_versions_from_changelog_text(changelog_no_refs)
-    # ensure new_tag at top
     if versions and versions[0] != new_tag:
         if new_tag not in versions:
             versions.insert(0, new_tag)
     elif not versions:
         versions = [new_tag]
-
     final_changelog_text = rewrite_reference_block_text(changelog_no_refs, versions, repo)
 
-    # ---------- README: ensure marker and replace ----------
     readme_original_text = readme_path.read_text(encoding='utf-8') if readme_path.exists() else ""
     final_readme_text, readme_changed = ("", False)
     if readme_original_text != "":
         final_readme_text, readme_changed = prepare_readme_text(readme_original_text, new_tag)
 
-    # ---------- VERSION content ----------
     final_version_text = f"{new_tag}\n"
 
-    # ---------- Write or preview ----------
-    # VERSION
+    # Write preview/write files
     write_or_preview(version_path, final_version_text, args.dry_run)
-
-    # CHANGELOG
     write_or_preview(changelog_path, final_changelog_text, args.dry_run)
-
-    # README: this helper already writes or previews inside; but we need to call write_or_preview for consistency:
     if readme_original_text != "":
         write_or_preview(readme_path, final_readme_text, args.dry_run)
 
-    # ---------- Summary ----------
+    # Write release notes file (only the moved section)
+    wrote_release_notes = write_release_notes_file(moved_section, args.dry_run, path=Path("release_notes.md"))
+
+    # Summary
     print("Summary:")
     print(f" - VERSION -> {final_version_text.strip()}")
-    # detect if Unreleased had content originally
     had_unreleased = False
     if re.search(r'##\s*\[Unreleased\]', changelog_original_text):
         parts = re.split(r'^(##\s*\[Unreleased\].*?)\r?\n', changelog_original_text, maxsplit=1, flags=re.MULTILINE)
@@ -256,6 +230,7 @@ def main():
     print(f" - CHANGELOG Unreleased moved: {'yes' if had_unreleased else 'no (empty)'}")
     print(f" - README marker replaced: {'yes' if readme_changed else 'none or file missing'}")
     print(f" - Version refs regenerated: {'yes' if repo and versions else 'no (repo missing or no versions)'}")
+    print(f" - Release notes written to release_notes.md: {'yes' if wrote_release_notes else 'no (empty)'}")
 
     # final output: new tag for CI
     print(new_tag)

@@ -5,7 +5,7 @@ on:
     types: [closed]
 
 permissions:
-  contents: write
+  contents: write   # allow pushing commits & creating tags
   pull-requests: read
 
 jobs:
@@ -19,6 +19,11 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
+
+      - name: Install deps (jq)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
 
       - name: Set up Python 3
         uses: actions/setup-python@v4
@@ -39,8 +44,9 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          # Remove --dry-run to actually apply changes (this is the normal path)
+          # run script (no --dry-run in real runs)
           python3 tools/release_bump.py --version-file VERSION --changelog CHANGELOG.md --readme README.md --repo "${GITHUB_REPOSITORY}" | tee bump_output.txt
+          # get last line -> new tag (vX.Y.Z)
           NEW_TAG=$(tail -n1 bump_output.txt | tr -d '[:space:]')
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
@@ -84,13 +90,23 @@ jobs:
           git push origin HEAD:main
           git push --tags
 
-      - name: Create GitHub Release from tag
+      - name: Read release notes into output (for release body)
+        id: release_body
+        run: |
+          if [ -f release_notes.md ]; then
+            echo "body<<'EOF'" >> "$GITHUB_OUTPUT"
+            cat release_notes.md >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            echo "body=Automated release for ${{ steps.bump.outputs.new_tag }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release from tag (with changelog body)
         uses: actions/create-release@v1
         with:
           tag_name: "${{ steps.bump.outputs.new_tag }}"
           release_name: "${{ steps.bump.outputs.new_tag }}"
-          body: |
-            Automated release for ${{ steps.bump.outputs.new_tag }}
+          body: "${{ steps.release_body.outputs.body }}"
           draft: false
           prerelease: false
         env:
