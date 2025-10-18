@@ -14,7 +14,7 @@
 
 # Changelog
 
-Version: <!-- VERSION:START -->v0.2.0<!-- VERSION:END -->
+Version: <!-- VERSION:START -->v0.3.0<!-- VERSION:END -->
 
 All notable changes to this project will be documented in this file.
 
@@ -51,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     - Interactive command input panel
     - CSV export of OD changes + logging
 
+[v0.3.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.0.1...v0.1.0
 [v0.0.1]: https://github.com/iota2/CANopen-tools-suite/tree/v0.0.1
