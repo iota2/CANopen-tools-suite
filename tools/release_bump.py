@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 """
-release_bump.py
+release_bump.py — in-memory changelog processing and reliable --dry-run.
 
-Usage:
-  python tools/release_bump.py [--version-file VERSION] [--changelog CHANGELOG.md] [--readme README.md] [--repo owner/repo] [--dry-run]
-
-Behavior:
- - reads semver from VERSION (X.Y.Z)
- - bumps minor -> X.(Y+1).0
- - updates VERSION file (stores plain X.Y.Z)
- - moves content under "## [Unreleased]" into a new "## [X.Y.Z] - YYYY-MM-DD" section
- - replaces __VERSION__ placeholders in README.md and CHANGELOG.md with plain X.Y.Z
- - rewrites trailing reference block:
-     [1.3.0]: https://github.com/owner/repo/compare/1.2.0...1.3.0
-     [1.2.0]: https://github.com/owner/repo/compare/1.1.0...1.2.0
-     [1.1.0]: https://github.com/owner/repo/tree/1.1.0
- - prints summary and final new version (last line) for CI capture
- - with --dry-run, prints intended changes but does not write files
+Behavior summary:
+ - accepts VERSION with or without leading 'v'
+ - bumps minor: X.(Y+1).0
+ - writes VERSION as 'vX.Y.Z'
+ - moves Unreleased content into "## [vX.Y.Z] - YYYY-MM-DD"
+ - replaces __VERSION__ placeholders in README.md and CHANGELOG.md (on the final content)
+ - rewrites trailing reference block into descending order with compare/tree URLs (labels use leading v)
+ - with --dry-run: prints what WOULD be written for each file (final content)
+ - prints final tag (vX.Y.Z) as last line (for CI capture)
 """
 from __future__ import annotations
 import argparse
@@ -26,42 +20,51 @@ import sys
 from pathlib import Path
 import os
 
-SEMVER_RE = re.compile(r'^(\d+)\.(\d+)\.(\d+)$')
+SEMVER_RE = re.compile(r'^v?(\d+)\.(\d+)\.(\d+)$', re.IGNORECASE)
+HEADING_VER_RE = re.compile(r'^##\s*\[?v?(\d+\.\d+\.\d+)\]?\s*(?:-.*)?$', re.MULTILINE)
 
-def read_version(path: Path) -> str:
-    text = path.read_text(encoding='utf-8').strip()
-    if not SEMVER_RE.match(text):
-        raise SystemExit(f"VERSION file '{path}' does not contain a valid semver: '{text}'")
-    return text
+def normalize_strip_v(version: str) -> str:
+    v = version.strip()
+    m = SEMVER_RE.match(v)
+    if not m:
+        raise SystemExit(f"VERSION '{version}' is not valid semver (expected X.Y.Z or vX.Y.Z)")
+    return f"{m.group(1)}.{m.group(2)}.{m.group(3)}"
 
-def bump_minor(semver: str) -> str:
-    m = SEMVER_RE.match(semver)
-    major, minor, patch = map(int, m.groups())
+def bump_minor_numeric(numeric: str) -> str:
+    major, minor, patch = map(int, numeric.split('.'))
     minor += 1
     patch = 0
     return f"{major}.{minor}.{patch}"
 
-def write_text(path: Path, content: str, dry_run: bool):
+def write_or_preview(path: Path, content: str, dry_run: bool):
     if dry_run:
         print(f"[dry-run] Would write to {path}:\n---\n{content}\n---\n")
     else:
         path.write_text(content, encoding='utf-8')
 
-def update_version_file(path: Path, new_version: str, dry_run: bool):
-    write_text(path, new_version + "\n", dry_run)
-
-def move_unreleased_to_version(changelog_path: Path, new_tag: str, date_str: str, dry_run: bool) -> bool:
-    txt = changelog_path.read_text(encoding='utf-8')
-    # Find the Unreleased header
-    m = re.search(r'^(##\s*\[Unreleased\].*?)\r?\n', txt, flags=re.MULTILINE)
+def process_changelog_in_memory(original: str, new_tag: str, date_str: str) -> str:
+    """
+    original: original changelog text (string)
+    new_tag: 'vX.Y.Z'
+    returns: new changelog text (string) with:
+      - Unreleased moved under new version heading
+      - placeholder __VERSION__ replaced by new_tag
+      - trailing version reference block removed (for later rewrite)
+    """
+    # Split out the Unreleased section: find "## [Unreleased]" header
+    m = re.search(r'^(##\s*\[Unreleased\].*?)\r?\n', original, flags=re.MULTILINE)
     if not m:
-        return False
+        # No Unreleased header; still replace placeholders and return
+        replaced = original.replace('__VERSION__', new_tag)
+        return replaced
 
-    parts = re.split(r'^(##\s*\[Unreleased\].*?)\r?\n', txt, maxsplit=1, flags=re.MULTILINE)
+    # Extract three parts: before, unreleased header, rest
+    parts = re.split(r'^(##\s*\[Unreleased\].*?)\r?\n', original, maxsplit=1, flags=re.MULTILINE)
     before = parts[0]
-    header = parts[1]
+    header = parts[1]      # the Unreleased header line itself
     rest = parts[2] if len(parts) > 2 else ""
 
+    # In rest, find next "## [" header to bound the Unreleased body
     m_next = re.search(r'(^##\s*\[)', rest, flags=re.MULTILINE)
     if m_next:
         unreleased_body = rest[:m_next.start()]
@@ -71,56 +74,71 @@ def move_unreleased_to_version(changelog_path: Path, new_tag: str, date_str: str
         after = ""
 
     unreleased_body = unreleased_body.rstrip("\r\n")
-    if unreleased_body.strip() == "":
-        return False
 
+    if not unreleased_body.strip():
+        # nothing under Unreleased → we still keep Unreleased heading, replace placeholders and return
+        reconstructed = before + header + "\n\n" + after.lstrip("\r\n")
+        return reconstructed.replace('__VERSION__', new_tag)
+
+    # Build new version section with the Unreleased body
     new_section = f"## [{new_tag}] - {date_str}\n\n{unreleased_body}\n\n"
+
+    # Reconstruct changelog: before + Unreleased header (left empty) + new_section + remaining content (after)
     new_changelog = before + header + "\n\n" + new_section + after.lstrip("\r\n")
 
-    write_text(changelog_path, new_changelog, dry_run)
-    return True
+    # Replace placeholders in the new changelog
+    new_changelog = new_changelog.replace('__VERSION__', new_tag)
 
-def replace_version_placeholder(path: Path, new_tag: str, dry_run: bool):
-    if not path.exists():
-        return False
-    txt = path.read_text(encoding='utf-8')
-    new_txt = txt.replace('__VERSION__', new_tag)
-    if new_txt != txt:
-        write_text(path, new_txt, dry_run)
-        return True
-    return False
+    return new_changelog
 
-def collect_versions_from_changelog(changelog_path: Path):
-    txt = changelog_path.read_text(encoding='utf-8')
-    found = re.findall(r'^##\s*\[?v?(\d+\.\d+\.\d+)\]?', txt, flags=re.MULTILINE)
-    return found  # newest -> older (top to bottom)
+def collect_versions_from_changelog_text(changelog_text: str) -> list[str]:
+    """
+    Returns list of versions in order of appearance (top->bottom), normalized with leading 'v'
+    """
+    found = HEADING_VER_RE.findall(changelog_text)
+    # keep order, dedupe contiguous duplicates
+    seen = []
+    for v in found:
+        tag = f"v{v}"
+        if not seen or seen[-1] != tag:
+            seen.append(tag)
+    return seen  # newest -> older
 
-def rewrite_version_reference_block(changelog_path: Path, versions: list[str], repo: str, dry_run: bool):
+def rewrite_reference_block_text(changelog_text_no_refs: str, versions: list[str], repo: str) -> str:
+    """
+    Append the reference block for versions list (descending).
+    Expects versions like ['v1.3.0','v1.2.0',...]
+    Returns changelog_text_no_refs + appended block string.
+    """
     if not repo or not versions:
-        return False
-    txt = changelog_path.read_text(encoding='utf-8')
-    # remove existing reference lines of form: [x.y.z]: ...
-    txt_no_refs = re.sub(r'(?m)^\[\d+\.\d+\.\d+\]:.*\n?', '', txt).rstrip() + "\n\n"
+        return changelog_text_no_refs
+
     lines = []
-    for i in range(len(versions)):
-        cur = versions[i]
+    for i, cur in enumerate(versions):
         if i + 1 < len(versions):
             prev = versions[i+1]
+            # compare prev...cur
             url = f"https://github.com/{repo}/compare/{prev}...{cur}"
         else:
+            # oldest: tree
             url = f"https://github.com/{repo}/tree/{cur}"
         lines.append(f"[{cur}]: {url}")
-    new_txt = txt_no_refs + "\n".join(lines) + "\n"
-    write_text(changelog_path, new_txt, dry_run)
-    return True
+    block = "\n".join(lines) + "\n"
+    # Ensure one blank line between content and block
+    return changelog_text_no_refs.rstrip() + "\n\n" + block
+
+def remove_existing_reference_block(changelog_text: str) -> str:
+    # Remove any trailing reference lines like: [v1.2.3]: ...
+    cleaned = re.sub(r'(?m)^\s*\[v?\d+\.\d+\.\d+\]:.*\n?', '', changelog_text)
+    return cleaned
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--version-file', default='VERSION')
     p.add_argument('--changelog', default='CHANGELOG.md')
     p.add_argument('--readme', default='README.md')
-    p.add_argument('--repo', default=None, help='owner/repo (e.g. navalprashar/canopen-tools-suite). If omitted, will use env GITHUB_REPOSITORY if present.')
-    p.add_argument('--dry-run', action='store_true', help='Do not modify files; print intended changes instead.')
+    p.add_argument('--repo', default=None, help='owner/repo (e.g. iota2/CANopen-tools-suite). If omitted, uses GITHUB_REPOSITORY env var.')
+    p.add_argument('--dry-run', action='store_true')
     args = p.parse_args()
 
     version_path = Path(args.version_file)
@@ -128,47 +146,93 @@ def main():
     readme_path = Path(args.readme)
     repo = args.repo or os.environ.get('GITHUB_REPOSITORY')
 
-    current = read_version(version_path)
-    new = bump_minor(current)
+    # Read & normalize current version
+    if not version_path.exists():
+        raise SystemExit(f"VERSION file '{version_path}' not found")
+    current_raw = version_path.read_text(encoding='utf-8').strip()
+    current_numeric = normalize_strip_v(current_raw)
+    new_numeric = bump_minor_numeric(current_numeric)
+    new_tag = f"v{new_numeric}"
     date_str = datetime.date.today().isoformat()
 
-    print(f"Current version: {current}")
-    print(f"Bumped to: {new}")
+    print(f"Current version raw: {current_raw}")
+    print(f"Normalized numeric: {current_numeric}")
+    print(f"Bumped to: {new_numeric} → tag: {new_tag}")
     print(f"Dry-run: {args.dry_run}")
 
-    # Update VERSION
-    update_version_file(version_path, new, args.dry_run)
-
-    # Move Unreleased -> new version section (if content)
-    moved = False
+    # ========= process changelog entirely in memory =========
+    changelog_original_text = ""
     if changelog_path.exists():
-        moved = move_unreleased_to_version(changelog_path, new, date_str, args.dry_run)
+        changelog_original_text = changelog_path.read_text(encoding='utf-8')
+    else:
+        # initialize minimal changelog if missing
+        changelog_original_text = "# Changelog\n\n## [Unreleased]\n\n"
 
-    # Replace placeholders
-    replaced_readme = False
-    replaced_changelog = False
+    # 1) Move Unreleased content into new version section and replace placeholders in-memory
+    changelog_after_move = process_changelog_in_memory(changelog_original_text, new_tag, date_str)
+
+    # 2) Remove existing trailing reference lines from the in-memory text (so we can regenerate)
+    changelog_no_refs = remove_existing_reference_block(changelog_after_move)
+
+    # 3) Collect versions from the in-memory changelog (after move)
+    versions = collect_versions_from_changelog_text(changelog_no_refs)
+
+    # Ensure the new tag is at the top of versions (if move created it)
+    if versions and versions[0] != new_tag:
+        # If the move didn't create a new heading (e.g., Unreleased empty), still ensure new_tag appears
+        if new_tag not in versions:
+            versions.insert(0, new_tag)
+    elif not versions:
+        versions = [new_tag]
+
+    # 4) Rebuild reference block text and append to changelog_no_refs (in-memory)
+    final_changelog_text = rewrite_reference_block_text(changelog_no_refs, versions, repo)
+
+    # ========= prepare README replacement in-memory =========
+    readme_original_text = ""
     if readme_path.exists():
-        replaced_readme = replace_version_placeholder(readme_path, new, args.dry_run)
-    if changelog_path.exists():
-        replaced_changelog = replace_version_placeholder(changelog_path, new, args.dry_run)
+        readme_original_text = readme_path.read_text(encoding='utf-8')
+        final_readme_text = readme_original_text.replace('__VERSION__', new_tag)
+    else:
+        final_readme_text = None
 
-    # Rebuild reference block
-    wrote_refs = False
-    if changelog_path.exists() and repo:
-        versions = collect_versions_from_changelog(changelog_path)
-        if versions:
-            wrote_refs = rewrite_version_reference_block(changelog_path, versions, repo, args.dry_run)
+    # ========= prepare VERSION file content (v-prefixed) =========
+    final_version_text = f"{new_tag}\n"
 
-    # Summary
-    print("Actions performed:")
-    print(f" - VERSION updated to: {new}")
-    print(f" - CHANGELOG Unreleased moved: {'yes' if moved else 'no changes'}")
-    print(f" - README placeholders replaced: {'yes' if replaced_readme else 'none'}")
-    print(f" - CHANGELOG placeholders replaced: {'yes' if replaced_changelog else 'none'}")
-    print(f" - CHANGELOG version refs updated: {'yes' if wrote_refs else 'no (repo missing or nothing to update)'}")
+    # ========= write or preview =========
+    # VERSION
+    write_or_preview(version_path, final_version_text, args.dry_run)
 
-    # final line: new semver for CI
-    print(new)
+    # CHANGELOG
+    write_or_preview(changelog_path, final_changelog_text, args.dry_run)
+
+    # README
+    if final_readme_text is not None:
+        write_or_preview(readme_path, final_readme_text, args.dry_run)
+
+    # ========= summary =========
+    print("Summary of actions (in-memory):")
+    print(f" - VERSION -> {final_version_text.strip()}")
+    # Did Unreleased have content?
+    had_unreleased = False
+    m_unr = re.search(r'##\s*\[Unreleased\]', changelog_original_text)
+    if m_unr:
+        # check if there was content
+        # extract body like earlier to check
+        parts = re.split(r'^(##\s*\[Unreleased\].*?)\r?\n', changelog_original_text, maxsplit=1, flags=re.MULTILINE)
+        rest = parts[2] if len(parts) > 2 else ""
+        m_next = re.search(r'(^##\s*\[)', rest, flags=re.MULTILINE)
+        if m_next:
+            unreleased_body = rest[:m_next.start()].strip()
+        else:
+            unreleased_body = rest.strip()
+        had_unreleased = bool(unreleased_body)
+    print(f" - CHANGELOG Unreleased moved: {'yes' if had_unreleased else 'no (empty)'}")
+    print(f" - README placeholder replaced: {'yes' if final_readme_text is not None and '__VERSION__' not in final_readme_text else 'none or file missing'}")
+    print(f" - Version refs regenerated: {'yes' if repo and versions else 'no (repo missing or no versions)'}")
+
+    # final line: print the tag for CI capture (vX.Y.Z)
+    print(new_tag)
     return 0
 
 if __name__ == "__main__":
