@@ -10,6 +10,7 @@ import os
 import re
 import csv
 import time
+import struct
 import logging
 import argparse
 import configparser
@@ -667,7 +668,6 @@ class can_sniffer(threading.Thread):
                     os.fsync(self.export_file.fileno())
             except Exception:
                 pass
-            self.log.debug("CSV wrote raw row #%d", self.export_serial_number - 1)
         except Exception as e:
             self.log.error("CSV export failed: %s", e)
 
@@ -691,7 +691,8 @@ class can_sniffer(threading.Thread):
         self.raw_frame.put(frame)
 
         self.log.debug(f"Raw frame: [{now_str()}] [0x{cob:03X}] [{error}] [{bytes_to_hex(raw)}]")
-        # --- export to CSV ---
+
+        # Export to CSV
         self.save_frame_to_csv(cob, error, bytes_to_hex(raw))
 
     def run(self):
@@ -786,7 +787,7 @@ class process_frame(threading.Thread):
     The thread is stoppable via `stop()` and will close CSV resources on exit.
     """
 
-    def __init__(self, stats: bus_stats, raw_frame: queue.Queue, eds_map, export: bool = False):
+    def __init__(self, stats: bus_stats, raw_frame: queue.Queue, eds_map: eds_parser, export: bool = False):
         """! Initialize the processor thread.
         @details
         The constructor stores references to required helpers, initializes a
@@ -794,7 +795,7 @@ class process_frame(threading.Thread):
         statistics collection start time is set.
         @param stats Instance of @ref bus_stats used to record statistics.
         @param raw_frame `queue.Queue` providing raw frames (dict) from the sniffer.
-        @param eds_map EDS parser / map object providing name_map lookups.
+        @param eds_map @ref eds_parser providing name_map lookups.
         @param export If True, enable CSV export of processed frames.
         """
         super().__init__(daemon=True)
@@ -847,12 +848,44 @@ class process_frame(threading.Thread):
                 self.log.exception("Failed to open CSV export file: %s", e)
                 self.export = False
 
+    def save_frame(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
+        """! Save a processed CANopen frame for downstream use or logging.
+        @details
+        Constructs a dictionary representing a fully decoded CANopen frame and appends it
+        to the internal list of processed frames. Each stored frame includes timestamp,
+        COB-ID, frame type, Object Dictionary indices, and decoded payload.
+        A debug log entry is also generated with formatted frame details.
+        @param cob      The CANopen COB-ID of the frame.
+        @param ftype    The frame type as an instance of @ref frame_type.
+        @param index    The CANopen Object Dictionary index associated with the frame.
+        @param sub      The Object Dictionary subindex.
+        @param name     Human-readable parameter name resolved via the EDS file.
+        @param raw      Raw frame data represented as a hexadecimal or byte string.
+        @param decoded  Decoded frame payload in human-readable form.
+        """
+
+        frame = {
+            "time": now_str(),
+            "cob": cob,
+            "type": ftype,
+            "index": index,
+            "sub": sub,
+            "name": name,
+            "raw": raw,
+            "decoded": decoded
+        }
+
+        self.log.debug(
+            "Processed frame: [%s] [%s] [0x%03X] [0x%04X] [0x%02X] [%s] [%s] [%s]",
+            now_str(), ftype.name, cob, index, sub, name, raw, decoded
+        )
+
     def save_frame_to_csv(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
         """! Save a processed frame row to the processed CSV file.
         @details
         Writes a CSV row with serial number, timestamp, frame classification,
         OD address, name, raw hex payload and decoded value. Periodically flushes
-        and fsyncs the file according to FSYNC_EVERY.
+        and `fsyncs` the file according to `FSYNC_EVERY`.
         @param cob COB-ID of the frame.
         @param ftype frame_type enumeration value describing frame class.
         @param index Object dictionary index (for SDO/decoded frames).
@@ -882,10 +915,34 @@ class process_frame(threading.Thread):
                     os.fsync(self.export_file.fileno())
             except Exception:
                 pass
-            self.log.debug("CSV wrote processed row #%d", self.export_serial_number - 1)
         except Exception as e:
             self.log.error("CSV export failed: %s", e)
 
+    def save_processed_frame(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
+        """! Save a fully processed CANopen frame in memory and export it to CSV.
+        @details
+        Converts the raw and decoded payloads into hexadecimal string representations if necessary,
+        then delegates the storage of the processed frame to @ref save_frame and its CSV export
+        to @ref save_frame_to_csv.
+        This function ensures consistent formatting for both in-memory data and CSV output.
+        @param cob      The CANopen COB-ID of the processed frame.
+        @param ftype    The frame type as an instance of @ref frame_type.
+        @param index    The Object Dictionary index associated with the frame.
+        @param sub      The Object Dictionary subindex.
+        @param name     Human-readable parameter name resolved from the EDS map.
+        @param raw      Raw frame data in bytes or string format.
+        @param decoded  Decoded frame payload, which may be a string or byte sequence.
+        """
+
+        # Render decoded possibly already a string — only hex raw bytes
+        raw_hex = bytes_to_hex(raw)
+        decoded_hex = decoded if isinstance(decoded, str) else bytes_to_hex(decoded)
+
+        # Save frame for downstream use
+        self.save_frame(cob, ftype, index, sub, name, raw_hex, decoded_hex)
+
+        # Export to CSV
+        self.save_frame_to_csv(cob, ftype, index, sub, name, raw_hex, decoded_hex)
 
     def run(self):
         """! Main processing loop.
@@ -906,7 +963,6 @@ class process_frame(threading.Thread):
                     continue
 
                 # Extract fields (defensive)
-                ts = frame.get("time")
                 cob = frame.get("cob")
                 error = frame.get("error")
                 raw = frame.get("raw")
@@ -967,9 +1023,6 @@ class process_frame(threading.Thread):
                         pass
                     self.log.warning("Error frame detected: %s", raw)
 
-                index, sub = 0, 0
-                name = ""
-                decoded = ""
                 # SDO request (client->server)
                 if ftype == frame_type.SDO_REQ and raw and len(raw) >= 4:
                     try:
@@ -977,6 +1030,9 @@ class process_frame(threading.Thread):
                         sub = raw[3]
                         self.stats.update_sdo_request_time(index, sub)
                         name = self.eds_map.name_map.get((index, sub), f"0x{index:04X}:{sub}")
+
+                        # Save the frame
+                        self.save_processed_frame(cob, ftype, index, sub, name, raw, decoded="")
                     except Exception:
                         self.log.warning("Malformed SDO request frame while recording req time")
 
@@ -1012,31 +1068,39 @@ class process_frame(threading.Thread):
                     # update response latency if request recorded
                     self.stats.update_sdo_response_time(index, sub)
 
+                    # Get name from EDS map
                     name = self.eds_map.name_map.get((index, sub), f"0x{index:04X}:{sub}")
 
-                # Build processed frame for possible downstream use / logging
-                processed_frame = {
-                    "time": now_str(),
-                    "cob": cob,
-                    "index": index,
-                    "sub": sub,
-                    "name": name,
-                    "raw": raw,
-                    "decoded": decoded,
-                    "type": ftype
-                }
+                    # Save the frame
+                    self.save_processed_frame(cob, ftype, index, sub, name, raw, decoded)
 
-                # Render decoded possibly already a string — only hex raw bytes
-                raw_hex = bytes_to_hex(raw)
-                decoded_logged = decoded if isinstance(decoded, str) else bytes_to_hex(decoded)
+                # PDO frame
+                elif ftype == frame_type.PDO:
+                    payload_len = len(raw)
+                    self.stats.increment_payload(frame_type.SDO_RES, payload_len)
+                    if cob in self.eds_map.pdo_map:
+                        entries = self.eds_map.pdo_map[cob]
+                        offset = 0
+                        for (index, sub, size) in entries:
+                            size_bytes = max(1, size // 8)
+                            chunk = raw[offset:offset + size_bytes]
+                            offset += size_bytes
+                            try:
+                                if size_bytes == 4:
+                                    decoded = struct.unpack("<f", chunk)[0]
+                                else:
+                                    decoded = int.from_bytes(chunk, "little") if chunk else 0
+                            except Exception:
+                                decoded = int.from_bytes(chunk, "little") if chunk else 0
 
-                self.log.debug(
-                    "Processed frame: [%s] [%s] [0x%03X] [0x%04X] [0x%02X] [%s] [%s] [%s]",
-                    now_str(), ftype.name, cob, index, sub, name, raw_hex, decoded_logged
-                )
+                            name = self.eds_map.name_map.get((index, sub), f"0x{index:04X}:{sub}")
 
-                # --- export to CSV ---
-                self.save_frame_to_csv(cob, ftype, index, sub, name, raw_hex, decoded_logged)
+                            # Save the frame
+                            self.save_processed_frame(cob, ftype, index, sub, name, raw, decoded)
+                    else:
+                        decoded = "No reference in EDS"
+                        # Save the frame
+                        self.save_processed_frame(cob, ftype, index=0, sub=0, name="", raw=raw, decoded=decoded)
 
                 # optionally mark task done if using task tracking
                 try:

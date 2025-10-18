@@ -1,6 +1,7 @@
 <map id="save_frame_to_csv" name="save_frame_to_csv">
-<area shape="rect" id="node1" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="323,35,471,61"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1can__sniffer.html#a90d7c754b31a88d68fa2debe477261e8" title="Handle a received CAN message." alt="" coords="119,5,251,32"/>
-<area shape="rect" id="node4" href="$classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="96,57,275,98"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1can__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,5,48,32"/>
+<area shape="rect" id="node1" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="503,35,651,61"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1can__sniffer.html#a90d7c754b31a88d68fa2debe477261e8" title="Handle a received CAN message." alt="" coords="277,5,409,32"/>
+<area shape="rect" id="node4" href="$classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="232,57,455,98"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1can__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="73,5,116,32"/>
+<area shape="rect" id="node5" href="$classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,57,184,98"/>
 </map>

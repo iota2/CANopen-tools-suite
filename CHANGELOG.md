@@ -13,7 +13,6 @@
 ```
 
 ## Unified Sniffer
-[18-10-2025]
 - Created README.
 - CANOpen message sniffer class.
 - Export raw CANOpen messages to CSV file.
@@ -23,6 +22,7 @@
 - Export processed CANOpen messages to CSV file.
 - SDO request messages.
 - SDO response messages.
+- PDO messages support.
 - Added logger with user enabled flag.
 - Added Doxygen documentation.
 

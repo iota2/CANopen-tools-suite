@@ -125,15 +125,21 @@ Collaboration diagram for process_frame:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3bfde1996fb99b55021db0c85318cc18"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a3bfde1996fb99b55021db0c85318cc18">__init__</a> (self, <a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, bool <a class="el" href="classcanopen__sniffer_1_1process__frame.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=False)</td></tr>
-<tr class="memdesc:a3bfde1996fb99b55021db0c85318cc18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classcanopen__sniffer_1_1process__frame.html#a3bfde1996fb99b55021db0c85318cc18">More...</a><br /></td></tr>
-<tr class="separator:a3bfde1996fb99b55021db0c85318cc18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abee69d75d0c083a4c5da12fe3b1b91d5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#abee69d75d0c083a4c5da12fe3b1b91d5">__init__</a> (self, <a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, <a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, bool <a class="el" href="classcanopen__sniffer_1_1process__frame.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=False)</td></tr>
+<tr class="memdesc:abee69d75d0c083a4c5da12fe3b1b91d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classcanopen__sniffer_1_1process__frame.html#abee69d75d0c083a4c5da12fe3b1b91d5">More...</a><br /></td></tr>
+<tr class="separator:abee69d75d0c083a4c5da12fe3b1b91d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad22709b2e67308af35f55680d5a026e0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0">run</a> (self)</td></tr>
 <tr class="memdesc:ad22709b2e67308af35f55680d5a026e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main processing loop.  <a href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0">More...</a><br /></td></tr>
 <tr class="separator:ad22709b2e67308af35f55680d5a026e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a330d0aa4e889583805485fc069b8d7e3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3">save_frame</a> (self, int cob, <a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a> ftype, int index, int sub, str name, str raw, str decoded)</td></tr>
+<tr class="memdesc:a330d0aa4e889583805485fc069b8d7e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed CANopen frame for downstream use or logging.  <a href="classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3">More...</a><br /></td></tr>
+<tr class="separator:a330d0aa4e889583805485fc069b8d7e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43c1277547b2e3a9db6631c8134c28f6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6">save_frame_to_csv</a> (self, int cob, <a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a> ftype, int index, int sub, str name, str raw, str decoded)</td></tr>
 <tr class="memdesc:a43c1277547b2e3a9db6631c8134c28f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed CSV file.  <a href="classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6">More...</a><br /></td></tr>
 <tr class="separator:a43c1277547b2e3a9db6631c8134c28f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a398b1c620b611b45d8da94d9d35e6c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c">save_processed_frame</a> (self, int cob, <a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a> ftype, int index, int sub, str name, str raw, str decoded)</td></tr>
+<tr class="memdesc:a8a398b1c620b611b45d8da94d9d35e6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a fully processed CANopen frame in memory and export it to CSV.  <a href="classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c">More...</a><br /></td></tr>
+<tr class="separator:a8a398b1c620b611b45d8da94d9d35e6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26ca7c1c7fcdd35378e7be97727047a6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a26ca7c1c7fcdd35378e7be97727047a6">stop</a> (self)</td></tr>
 <tr class="memdesc:a26ca7c1c7fcdd35378e7be97727047a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request the processor thread to stop.  <a href="classcanopen__sniffer_1_1process__frame.html#a26ca7c1c7fcdd35378e7be97727047a6">More...</a><br /></td></tr>
 <tr class="separator:a26ca7c1c7fcdd35378e7be97727047a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,8 +175,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aa57ebe01934de43865125819a3c4af74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3bfde1996fb99b55021db0c85318cc18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bfde1996fb99b55021db0c85318cc18">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="abee69d75d0c083a4c5da12fe3b1b91d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abee69d75d0c083a4c5da12fe3b1b91d5">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +202,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype"><a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a>&#160;</td>
           <td class="paramname"><em>eds_map</em>, </td>
         </tr>
         <tr>
@@ -218,7 +224,7 @@ Public Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">stats</td><td>Instance of <a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a> used to record statistics. </td></tr>
     <tr><td class="paramname">raw_frame</td><td><code>queue.Queue</code> providing raw frames (dict) from the sniffer. </td></tr>
-    <tr><td class="paramname">eds_map</td><td>EDS parser / map object providing name_map lookups. </td></tr>
+    <tr><td class="paramname">eds_map</td><td><a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a> providing name_map lookups. </td></tr>
     <tr><td class="paramname">export</td><td>If True, enable CSV export of processed frames. </td></tr>
   </table>
   </dd>
@@ -250,11 +256,110 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1process__frame_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1process__frame_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1process__frame_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclasscanopen__sniffer_1_1process__frame_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Main processing loop." alt="" coords="5,105,48,131"/>
-<area shape="rect" href="namespacecanopen__sniffer.html#a4c58a43ad71454c2d1775bfd6b821aa4" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="96,5,260,47"/>
-<area shape="rect" href="namespacecanopen__sniffer.html#a8e3ff526c04831e4b712bf09284cff6d" title="Return current time string." alt="" coords="308,137,487,163"/>
-<area shape="rect" href="classcanopen__sniffer_1_1can__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="103,122,253,178"/>
-<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6" title="Save a processed frame row to the processed CSV file." alt="" coords="104,202,252,229"/>
+<area shape="rect" title="Main processing loop." alt="" coords="5,51,48,78"/>
+<area shape="rect" href="namespacecanopen__sniffer.html#a8e3ff526c04831e4b712bf09284cff6d" title="Return current time string." alt="" coords="528,143,707,170"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,110,268,137"/>
+<area shape="rect" href="namespacecanopen__sniffer.html#a4c58a43ad71454c2d1775bfd6b821aa4" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="316,44,480,85"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="349,110,447,137"/>
+<area shape="rect" href="classcanopen__sniffer_1_1can__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="323,161,473,217"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6" title="Save a processed frame row to the processed CSV file." alt="" coords="324,241,472,267"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a330d0aa4e889583805485fc069b8d7e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a330d0aa4e889583805485fc069b8d7e3">&#9670;&nbsp;</a></span>save_frame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def save_frame </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a>&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sub</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>decoded</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Save a processed CANopen frame for downstream use or logging. </p>
+<p>Constructs a dictionary representing a fully decoded CANopen frame and appends it to the internal list of processed frames. Each stored frame includes timestamp, COB-ID, frame type, Object Dictionary indices, and decoded payload. A debug log entry is also generated with formatted frame details. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cob</td><td>The CANopen COB-ID of the frame. </td></tr>
+    <tr><td class="paramname">ftype</td><td>The frame type as an instance of <a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a>. </td></tr>
+    <tr><td class="paramname">index</td><td>The CANopen Object Dictionary index associated with the frame. </td></tr>
+    <tr><td class="paramname">sub</td><td>The Object Dictionary subindex. </td></tr>
+    <tr><td class="paramname">name</td><td>Human-readable parameter name resolved via the EDS file. </td></tr>
+    <tr><td class="paramname">raw</td><td>Raw frame data represented as a hexadecimal or byte string. </td></tr>
+    <tr><td class="paramname">decoded</td><td>Decoded frame payload in human-readable form. </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_cgraph" id="aclasscanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_cgraph">
+<area shape="rect" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="5,5,104,32"/>
+<area shape="rect" href="namespacecanopen__sniffer.html#a8e3ff526c04831e4b712bf09284cff6d" title="Return current time string." alt="" coords="152,5,331,32"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_icgraph" id="aclasscanopen__sniffer_1_1process__frame_a330d0aa4e889583805485fc069b8d7e3_icgraph">
+<area shape="rect" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="316,5,415,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
 </map>
 </div>
 
@@ -323,7 +428,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Save a processed frame row to the processed CSV file. </p>
-<p>Writes a CSV row with serial number, timestamp, frame classification, OD address, name, raw hex payload and decoded value. Periodically flushes and fsyncs the file according to FSYNC_EVERY. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Writes a CSV row with serial number, timestamp, frame classification, OD address, name, raw hex payload and decoded value. Periodically flushes and <code>fsyncs</code> the file according to <code>FSYNC_EVERY</code>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cob</td><td>COB-ID of the frame. </td></tr>
     <tr><td class="paramname">ftype</td><td><a class="el" href="classcanopen__sniffer_1_1frame__type.html" title="Types of CANopen messages.">frame_type</a> enumeration value describing frame class. </td></tr>
@@ -351,8 +456,109 @@ Here is the caller graph for this function:</div>
 <map name="aclasscanopen__sniffer_1_1process__frame_a43c1277547b2e3a9db6631c8134c28f6_icgraph" id="aclasscanopen__sniffer_1_1process__frame_a43c1277547b2e3a9db6631c8134c28f6_icgraph">
 <area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="435,42,583,69"/>
 <area shape="rect" href="classcanopen__sniffer_1_1can__sniffer.html#a90d7c754b31a88d68fa2debe477261e8" title="Handle a received CAN message." alt="" coords="204,5,387,47"/>
-<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="274,71,317,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="209,71,381,98"/>
 <area shape="rect" href="classcanopen__sniffer_1_1can__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,5,156,47"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="59,71,102,98"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8a398b1c620b611b45d8da94d9d35e6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a398b1c620b611b45d8da94d9d35e6c">&#9670;&nbsp;</a></span>save_processed_frame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def save_processed_frame </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a>&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sub</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>decoded</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Save a fully processed CANopen frame in memory and export it to CSV. </p>
+<p>Converts the raw and decoded payloads into hexadecimal string representations if necessary, then delegates the storage of the processed frame to <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3">save_frame</a> and its CSV export to <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6">save_frame_to_csv</a>. This function ensures consistent formatting for both in-memory data and CSV output. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cob</td><td>The CANopen COB-ID of the processed frame. </td></tr>
+    <tr><td class="paramname">ftype</td><td>The frame type as an instance of <a class="el" href="classcanopen__sniffer_1_1frame__type.html">frame_type</a>. </td></tr>
+    <tr><td class="paramname">index</td><td>The Object Dictionary index associated with the frame. </td></tr>
+    <tr><td class="paramname">sub</td><td>The Object Dictionary subindex. </td></tr>
+    <tr><td class="paramname">name</td><td>Human-readable parameter name resolved from the EDS map. </td></tr>
+    <tr><td class="paramname">raw</td><td>Raw frame data in bytes or string format. </td></tr>
+    <tr><td class="paramname">decoded</td><td>Decoded frame payload, which may be a string or byte sequence. </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_cgraph" id="aclasscanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_cgraph">
+<area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="5,105,177,131"/>
+<area shape="rect" href="namespacecanopen__sniffer.html#a4c58a43ad71454c2d1775bfd6b821aa4" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="225,5,389,47"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="258,71,357,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1can__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="232,122,383,178"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6" title="Save a processed frame row to the processed CSV file." alt="" coords="233,202,381,229"/>
+<area shape="rect" href="namespacecanopen__sniffer.html#a8e3ff526c04831e4b712bf09284cff6d" title="Return current time string." alt="" coords="437,137,616,163"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_icgraph" id="aclasscanopen__sniffer_1_1process__frame_a8a398b1c620b611b45d8da94d9d35e6c_icgraph">
+<area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
 </map>
 </div>
 
