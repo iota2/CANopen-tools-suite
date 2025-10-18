@@ -18,6 +18,7 @@ permissions:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout (full history and tags)
         uses: actions/checkout@v4
@@ -48,22 +49,26 @@ jobs:
           set -euo pipefail
           INPUT_BASE="${{ github.event.inputs.base_tag }}"
           TAG="${{ steps.tagpick.outputs.tag }}"
+
           if [ -n "$INPUT_BASE" ]; then
             BASE="$INPUT_BASE"
             echo "Using provided base_tag: $BASE"
           else
-            # Find previous tag (by semver sort). We want the tag immediately after TAG in descending order.
-            # Build ordered list and find the item after TAG.
+            # Build a semver-sorted list and find the tag after TAG (previous in time)
             TAG_LIST=$(git tag --sort=-v:refname)
-            PREV=$(echo "$TAG_LIST" | awk -v t="$TAG" '{
-              arr[NR] = $0
-            }
-            END {
-              for(i=1;i<=NR;i++){
-                if(arr[i]==t && i<NR){ print arr[i+1]; exit }
-              }
-            }')
-            BASE="$PREV"
+            BASE=""
+            found=0
+            while IFS= read -r t; do
+              if [ "$found" -eq 1 ]; then
+                BASE="$t"
+                break
+              fi
+              if [ "$t" = "$TAG" ]; then
+                found=1
+              fi
+            done <<EOF
+            $TAG_LIST
+            EOF
             if [ -z "$BASE" ]; then
               echo "No previous tag found; base will be empty (release will include full history up to $TAG)"
             else
@@ -79,7 +84,11 @@ jobs:
           TAG="${{ steps.tagpick.outputs.tag }}"
           BASE="${{ steps.basepick.outputs.base }}"
           echo "Selected tag: $TAG"
-          echo "Base tag: ${BASE:-<none>}"
+          if [ -n "$BASE" ]; then
+            echo "Base tag: $BASE"
+          else
+            echo "Base tag: <none>"
+          fi
 
           TAG_STRIPPED="${TAG#v}"
           BASE_STRIPPED="${BASE#v}"
@@ -88,22 +97,20 @@ jobs:
           COMPARE_URL=""
 
           if [ -f CHANGELOG.md ]; then
-            # Find start line of the TAG section (matches "## [vX.Y.Z]" or "## [X.Y.Z]") :
+            # find start line for TAG in changelog (matches "## [vX.Y.Z]" or "## [X.Y.Z]")
             START_LINE=$(grep -n -E "^##\s*\[?v?${TAG_STRIPPED}\]?" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
             if [ -n "$START_LINE" ]; then
               echo "Found changelog section start for ${TAG} at line ${START_LINE}"
-              # If BASE is provided/found in changelog, find its start line; we'll extract from START_LINE..(START_BASE-1)
+
               if [ -n "$BASE" ]; then
                 START_BASE_LINE=$(grep -n -E "^##\s*\[?v?${BASE_STRIPPED}\]?" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
                 if [ -n "$START_BASE_LINE" ]; then
-                  echo "Found changelog section start for base ${BASE} at line ${START_BASE_LINE}"
                   END_LINE=$(( START_BASE_LINE - 1 ))
                 else
                   echo "Base tag ${BASE} not found in CHANGELOG.md; will extract until EOF"
                   END_LINE=$(wc -l < CHANGELOG.md)
                 fi
               else
-                # no base specified: find next '## [' header after START_LINE to end extraction
                 NEXT_REL=$(tail -n +"$((START_LINE+1))" CHANGELOG.md | grep -n -E '^##\s*\[' | head -n1 | cut -d: -f1 || true)
                 if [ -n "$NEXT_REL" ]; then
                   END_LINE=$(( START_LINE + NEXT_REL - 1 ))
@@ -115,7 +122,6 @@ jobs:
               echo "Extracting CHANGELOG lines ${START_LINE}..${END_LINE}"
               sed -n "${START_LINE},${END_LINE}p" CHANGELOG.md > release_body.txt
 
-              # Build compare URL
               if [ -n "$BASE" ]; then
                 COMPARE_URL="https://github.com/${{ github.repository }}/compare/${BASE}...${TAG}"
               else
@@ -138,7 +144,6 @@ jobs:
             echo "CHANGELOG.md not found; will fallback to git log"
           fi
 
-          # Fallback to git log if no changelog section was found or file missing
           if [ -z "${RELEASE_BODY}" ]; then
             if [ -n "$BASE" ]; then
               RANGE="${BASE}..${TAG}"
@@ -156,15 +161,15 @@ jobs:
             else
               BODY="Changes in ${TAG}\n\n${COMPARE_URL}\n\n${NOTES}"
             fi
-            echo -e "$BODY" > release_body.txt
+            printf "%s\n" "$BODY" > release_body.txt
           fi
 
-          # Emit the multiline body as a step output
+          # Emit the multiline body as step output
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
           cat release_body.txt >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
-          # export summary outputs
+          # additional outputs for debugging/links
           echo "notes_written=true" >> "$GITHUB_OUTPUT"
           echo "compare_url=${COMPARE_URL}" >> "$GITHUB_OUTPUT"
 
@@ -178,3 +183,4 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
