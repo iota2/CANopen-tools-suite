@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 - Updated `manual-create-release.yml` to pick release notes from CHANGELOG file.
+- Fixed missing versions from CHANGELOG.
 
 ## [v0.6.0] - 2025-10-18
 
