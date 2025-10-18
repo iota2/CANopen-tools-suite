@@ -5,7 +5,7 @@ on:
     types: [closed]
 
 permissions:
-  contents: write   # allow pushing commits & creating tags
+  contents: write
   pull-requests: read
 
 jobs:
@@ -44,9 +44,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          # run script (no --dry-run in real runs)
           python3 tools/release_bump.py --version-file VERSION --changelog CHANGELOG.md --readme README.md --repo "${GITHUB_REPOSITORY}" | tee bump_output.txt
-          # get last line -> new tag (vX.Y.Z)
           NEW_TAG=$(tail -n1 bump_output.txt | tr -d '[:space:]')
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
@@ -94,7 +92,8 @@ jobs:
         id: release_body
         run: |
           if [ -f release_notes.md ]; then
-            echo "body<<'EOF'" >> "$GITHUB_OUTPUT"
+            # set multiline output 'body' using $GITHUB_OUTPUT heredoc syntax
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
             cat release_notes.md >> "$GITHUB_OUTPUT"
             echo "EOF" >> "$GITHUB_OUTPUT"
           else
