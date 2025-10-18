@@ -12,9 +12,13 @@
  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
 ```
 
-[![BSD licensed](https://img.shields.io/badge/license-GPL3-blue.svg)](https://raw.githubusercontent.com/iota2/dev-setup/master/LICENSE)
+[![MIT licensed](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite?ref=badge_shield&issueType=license)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite.svg?type=shield&issueType=security)](https://app.fossa.com/projects/git%2Bgithub.com%2Fiota2%2FCANopen-tools-suite?ref=badge_shield&issueType=security)
 
 # CANopen Tools Suite
+
+Version: <!-- VERSION:START -->v0.0.1<!-- VERSION:END -->
 
 A collection of **CANopen utilities** for development and debugging:
 
