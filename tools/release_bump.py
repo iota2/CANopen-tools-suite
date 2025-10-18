@@ -2,18 +2,11 @@
 """
 release_bump.py — marker-based version updates for README & CHANGELOG, in-memory processing, --dry-run.
 
-Behavior:
- - Reads VERSION (accepts "1.2.3" or "v1.2.3")
- - Bumps minor: X.(Y+1).0
- - Writes VERSION as "vX.Y.Z"
- - Moves CHANGELOG's Unreleased content into "## [vX.Y.Z] - YYYY-MM-DD"
- - Replaces the content BETWEEN markers:
-     <!-- VERSION:START -->...<!-- VERSION:END -->
-   in both README.md and CHANGELOG.md with the new tag (e.g. v1.3.0)
- - Regenerates trailing version reference block (compare/tree links) using the repo (owner/repo)
- - Writes the new release section to `release_notes.md` so workflow can use it as release body
- - Uses in-memory transformations so --dry-run prints the final file contents exactly as they would be
- - Prints final tag (vX.Y.Z) as last line for CI capture
+New CLI flag:
+  --no-release-notes   : do not write release_notes.md (useful if you only want to tag on merge)
+
+Other behavior same as before: writes VERSION (vX.Y.Z), updates markers in README/CHANGELOG,
+moves Unreleased -> new version section, regenerates reference block, supports --dry-run.
 """
 from __future__ import annotations
 import argparse
@@ -69,23 +62,15 @@ def replace_between_markers_in_text(original: str, new_tag: str) -> (str, bool):
     return replaced, (replaced != original)
 
 def process_changelog_in_memory(original: str, new_tag: str, date_str: str) -> (str, str):
-    """
-    Returns (new_changelog_text, moved_section_text).
-    moved_section_text is the newly created release section (header + body),
-    e.g. "## [v1.3.0] - 2025-10-19\n\n- something\n\n"
-    """
     original_with_marker = ensure_marker_in_text(original, marker_content="")
-
     m = re.search(r'^(##\s*\[Unreleased\].*?)\r?\n', original_with_marker, flags=re.MULTILINE)
     if not m:
         text_after_marker_repl, _ = replace_between_markers_in_text(original_with_marker, new_tag)
         return text_after_marker_repl, ""
-
     parts = re.split(r'^(##\s*\[Unreleased\].*?)\r?\n', original_with_marker, maxsplit=1, flags=re.MULTILINE)
     before = parts[0]
     header = parts[1]
     rest = parts[2] if len(parts) > 2 else ""
-
     m_next = re.search(r'(^##\s*\[)', rest, flags=re.MULTILINE)
     if m_next:
         unreleased_body = rest[:m_next.start()]
@@ -93,17 +78,12 @@ def process_changelog_in_memory(original: str, new_tag: str, date_str: str) -> (
     else:
         unreleased_body = rest
         after = ""
-
     unreleased_body = unreleased_body.rstrip("\r\n")
-
     if not unreleased_body.strip():
         text_after_marker_repl, _ = replace_between_markers_in_text(original_with_marker, new_tag)
         return text_after_marker_repl, ""
-
     new_section = f"## [{new_tag}] - {date_str}\n\n{unreleased_body}\n\n"
     new_changelog = before + header + "\n\n" + new_section + after.lstrip("\r\n")
-
-    # replace markers in the new changelog so its marker block shows new_tag
     new_changelog_with_marker, _ = replace_between_markers_in_text(new_changelog, new_tag)
     return new_changelog_with_marker, new_section
 
@@ -114,7 +94,7 @@ def collect_versions_from_changelog_text(changelog_text: str) -> list[str]:
         tag = f"v{v}"
         if not seen or seen[-1] != tag:
             seen.append(tag)
-    return seen  # newest -> older
+    return seen
 
 def remove_existing_reference_block(changelog_text: str) -> str:
     cleaned = re.sub(r'(?m)^\s*\[v?\d+\.\d+\.\d+\]:.*\n?', '', changelog_text)
@@ -166,6 +146,7 @@ def main():
     p.add_argument('--readme', default='README.md')
     p.add_argument('--repo', default=None, help='owner/repo (e.g. iota2/CANopen-tools-suite). If omitted, uses GITHUB_REPOSITORY env var.')
     p.add_argument('--dry-run', action='store_true')
+    p.add_argument('--no-release-notes', action='store_true', help='Do not write release_notes.md (only tag/commit).')
     args = p.parse_args()
 
     version_path = Path(args.version_file)
@@ -185,12 +166,13 @@ def main():
     print(f"Normalized numeric: {current_numeric}")
     print(f"Bumped to numeric: {new_numeric} → tag: {new_tag}")
     print(f"Dry-run: {args.dry_run}")
+    print(f"No release notes flag: {args.no_release_notes}")
 
     changelog_original_text = changelog_path.read_text(encoding='utf-8') if changelog_path.exists() else "# Changelog\n\n## [Unreleased]\n\n"
     changelog_after_move, moved_section = process_changelog_in_memory(changelog_original_text, new_tag, date_str)
 
     changelog_no_refs = remove_existing_reference_block(changelog_after_move)
-    versions = collect_versions_from_changelog_text(changelog_no_refs)
+    versions = collect_versions_from_changelog_text(changelog_after_move)
     if versions and versions[0] != new_tag:
         if new_tag not in versions:
             versions.insert(0, new_tag)
@@ -211,10 +193,14 @@ def main():
     if readme_original_text != "":
         write_or_preview(readme_path, final_readme_text, args.dry_run)
 
-    # Write release notes file (only the moved section)
-    wrote_release_notes = write_release_notes_file(moved_section, args.dry_run, path=Path("release_notes.md"))
+    # Write release_notes.md only if not skipped
+    wrote_release_notes = False
+    if not args.no_release_notes:
+        wrote_release_notes = write_release_notes_file(moved_section, args.dry_run, path=Path("release_notes.md"))
+    else:
+        if args.dry_run:
+            print("[dry-run] Skipping creation of release_notes.md due to --no-release-notes")
 
-    # Summary
     print("Summary:")
     print(f" - VERSION -> {final_version_text.strip()}")
     had_unreleased = False
@@ -230,7 +216,7 @@ def main():
     print(f" - CHANGELOG Unreleased moved: {'yes' if had_unreleased else 'no (empty)'}")
     print(f" - README marker replaced: {'yes' if readme_changed else 'none or file missing'}")
     print(f" - Version refs regenerated: {'yes' if repo and versions else 'no (repo missing or no versions)'}")
-    print(f" - Release notes written to release_notes.md: {'yes' if wrote_release_notes else 'no (empty)'}")
+    print(f" - Release notes written to release_notes.md: {'yes' if wrote_release_notes else 'no (skipped/empty)'}")
 
     # final output: new tag for CI
     print(new_tag)

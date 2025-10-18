@@ -1,0 +1,129 @@
+name: Create release from tag (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. v0.2.0). Leave empty to use latest tag.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history and tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Determine tag to release
+        id: tagpick
+        run: |
+          INPUT_TAG="${{ github.event.inputs.tag }}"
+          if [ -n "$INPUT_TAG" ]; then
+            TAG="$INPUT_TAG"
+          else
+            TAG=$(git tag --sort=-v:refname | head -n1)
+          fi
+          if [ -z "$TAG" ]; then
+            echo "No tags found in repository" >&2
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Selected tag: $TAG"
+
+      - name: Determine previous tag
+        id: prev
+        run: |
+          TAG="${{ steps.tagpick.outputs.tag }}"
+          PREV=$(git tag --sort=-v:refname | awk -v t="$TAG" 'NR==1{first=$0} NR>1{print prev} {prev=$0} END{}' | awk -v t="$TAG" 'BEGIN{found=0} {if($0==t){found=1; next} if(found){print $0; exit}}')
+          # Robust fallback: build ordered list and find next after TAG
+          if [ -z "$PREV" ]; then
+            prev_list=$(git tag --sort=-v:refname)
+            PREV=$(echo "$prev_list" | awk -v t="$TAG" 'NR>0{arr[NR]=$0} END{for(i=1;i<=NR;i++){if(arr[i]==t && i<NR){print arr[i+1]; exit}}}')
+          fi
+          # If still empty, PREV will be empty
+          echo "prev=${PREV}" >> "$GITHUB_OUTPUT"
+          echo "Previous tag: ${PREV}"
+
+      - name: Generate release notes from CHANGELOG.md (fallback to git log)
+        id: gen_notes
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tagpick.outputs.tag }}"
+          PREV="${{ steps.prev.outputs.prev }}"
+          echo "Selected tag: $TAG"
+          echo "Previous tag: $PREV"
+
+          TAG_STRIPPED="${TAG#v}"
+          RELEASE_BODY=""
+          COMPARE_URL=""
+
+          if [ -f CHANGELOG.md ]; then
+            START_LINE=$(grep -n -E "^##\s*\[?v?${TAG_STRIPPED}\]?" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
+            if [ -n "$START_LINE" ]; then
+              NEXT_REL=$(tail -n +"$((START_LINE+1))" CHANGELOG.md | grep -n -E '^##\s*\[' | head -n1 | cut -d: -f1 || true)
+              if [ -n "$NEXT_REL" ]; then
+                END_LINE=$(( START_LINE + NEXT_REL - 1 ))
+              else
+                END_LINE=$(wc -l < CHANGELOG.md)
+              fi
+              sed -n "${START_LINE},${END_LINE}p" CHANGELOG.md > release_body.txt
+              if [ -n "$PREV" ]; then
+                COMPARE_URL="https://github.com/${{ github.repository }}/compare/${PREV}...${TAG}"
+              else
+                COMPARE_URL="https://github.com/${{ github.repository }}/tree/${TAG}"
+              fi
+              {
+                echo "Changes in ${TAG}"
+                echo
+                echo "${COMPARE_URL}"
+                echo
+                cat release_body.txt
+              } > release_body.txt.tmp
+              mv release_body.txt.tmp release_body.txt
+              RELEASE_BODY="$(cat release_body.txt)"
+            else
+              echo "No matching ## [${TAG}] section found in CHANGELOG.md"
+            fi
+          else
+            echo "CHANGELOG.md not found; falling back to git log"
+          fi
+
+          if [ -z "${RELEASE_BODY}" ]; then
+            if [ -n "$PREV" ]; then
+              RANGE="${PREV}..${TAG}"
+              COMPARE_URL="https://github.com/${{ github.repository }}/compare/${PREV}...${TAG}"
+              NOTES=$(git log --pretty=format:'- %s (%an)' "${RANGE}")
+            else
+              COMPARE_URL="https://github.com/${{ github.repository }}/tree/${TAG}"
+              NOTES=$(git log --pretty=format:'- %s (%an)' "${TAG}")
+            fi
+            if [ -z "$NOTES" ]; then
+              BODY="No changelog entries (no commits between tags)."
+            else
+              BODY="Changes in ${TAG}\n\n${COMPARE_URL}\n\n${NOTES}"
+            fi
+            echo -e "$BODY" > release_body.txt
+          fi
+
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          cat release_body.txt >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "notes_written=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        with:
+          tag_name: "${{ steps.tagpick.outputs.tag }}"
+          release_name: "${{ steps.tagpick.outputs.tag }}"
+          body: "${{ steps.gen_notes.outputs.body }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
