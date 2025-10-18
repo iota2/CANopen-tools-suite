@@ -1,0 +1,98 @@
+name: Bump minor on PR merge to main
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  bump-minor:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Ensure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Make tools script executable
+        run: chmod +x tools/release_bump.py || true
+
+      - name: Run release bump script
+        id: bump
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # for debugging/dry-run locally you can add --dry-run (uncomment the next line)
+          # python3 tools/release_bump.py --version-file VERSION --changelog CHANGELOG.md --readme README.md --repo "${GITHUB_REPOSITORY}" --dry-run | tee bump_output.txt
+          python3 tools/release_bump.py --version-file VERSION --changelog CHANGELOG.md --readme README.md --repo "${GITHUB_REPOSITORY}" | tee bump_output.txt
+          NEW_VERSION=$(tail -n1 bump_output.txt | tr -d '[:space:]')
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Gather PR metadata
+        id: prmeta
+        run: |
+          PR_NUMBER=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
+          PR_AUTHOR=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH")
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Stage updated files and commit atomically (includes PR info)
+        run: |
+          set -euo pipefail
+          git add VERSION CHANGELOG.md README.md || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            NEW="${{ steps.bump.outputs.new_version }}"
+            PRNUM="${{ steps.prmeta.outputs.pr_number }}"
+            PRAUTH="${{ steps.prmeta.outputs.pr_author }}"
+            git commit -m "chore(release): bump version to ${NEW} (from PR #${PRNUM} by @${PRAUTH})"
+          fi
+
+      - name: Create tag X.Y.Z (local annotated, skip if exists)
+        run: |
+          set -euo pipefail
+          NEW="${{ steps.bump.outputs.new_version }}"
+          if git rev-parse "$NEW" >/dev/null 2>&1; then
+            echo "Tag $NEW already exists, skipping creation"
+          else
+            git tag -a "$NEW" -m "Release ${NEW}"
+            echo "Created tag $NEW"
+          fi
+
+      - name: Push commit and tags to origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git push origin HEAD:main
+          git push --tags
+
+      - name: Create GitHub Release from tag
+        uses: actions/create-release@v1
+        with:
+          tag_name: "${{ steps.bump.outputs.new_version }}"
+          release_name: "${{ steps.bump.outputs.new_version }}"
+          body: |
+            Automated release for ${{ steps.bump.outputs.new_version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

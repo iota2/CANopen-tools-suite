@@ -16,6 +16,8 @@
 
 # CANopen Tools Suite
 
+Version: __VERSION__
+
 A collection of **CANopen utilities** for development and debugging:
 
 - **Sniffer (GUI/CLI):** capture and decode PDO/SDO traffic using EDS files
