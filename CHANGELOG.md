@@ -14,13 +14,16 @@
 
 # Changelog
 
-Version: <!-- VERSION:START -->v0.3.0<!-- VERSION:END -->
+Version: <!-- VERSION:START -->v0.4.0<!-- VERSION:END -->
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v0.4.0] - 2025-10-18
+
 ### Added
 - Added `--no-release-notes` option to not release all tags on merge.
 - Added `manual-create-release.yml` workflow for creating releases manually.
@@ -59,6 +62,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
     - Interactive command input panel
     - CSV export of OD changes + logging
 
+[v0.4.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/iota2/CANopen-tools-suite/compare/v0.0.1...v0.1.0
