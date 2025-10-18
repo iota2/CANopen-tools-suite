@@ -161,4 +161,14 @@ To regenerate the doxygen documentation, run following command in this scripts r
 doxygen dox/config
 ```
 
+| Doxygen config | File path |
+|------|--------------|
+| Configurations | `./dox/config` |
+| Pages Layout formatting | `./dox/layout.xml` |
+| HTML header style | `./dox/doxygen_header.html` |
+| HTML footer style | `./dox/doxygen_header.html` |
+| Mermaid loader | `./dox/mermaid.min.js/` |
+| Mermaid diagrams | `./dox/diagrams/` |
+| Generated documentation | `./dox/documentation/` |
+
 ---
