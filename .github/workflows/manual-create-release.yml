@@ -54,10 +54,10 @@ jobs:
             BASE="$INPUT_BASE"
             echo "Using provided base_tag: $BASE"
           else
-            # Build a semver-sorted list and find the tag after TAG (previous in time)
             TAG_LIST=$(git tag --sort=-v:refname)
             BASE=""
             found=0
+            # iterate over TAG_LIST line-by-line using a here-string so variables persist
             while IFS= read -r t; do
               if [ "$found" -eq 1 ]; then
                 BASE="$t"
@@ -66,16 +66,16 @@ jobs:
               if [ "$t" = "$TAG" ]; then
                 found=1
               fi
-            done <<EOF
-            $TAG_LIST
-            EOF
+            done <<< "$TAG_LIST"
+
             if [ -z "$BASE" ]; then
               echo "No previous tag found; base will be empty (release will include full history up to $TAG)"
             else
               echo "Auto-detected previous tag: $BASE"
             fi
           fi
-          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+
+          echo "base=${BASE:-}" >> "$GITHUB_OUTPUT"
 
       - name: Generate release notes from CHANGELOG.md (range: base_tag..tag) — fallback to git log
         id: gen_notes
@@ -97,7 +97,7 @@ jobs:
           COMPARE_URL=""
 
           if [ -f CHANGELOG.md ]; then
-            # find start line for TAG in changelog (matches "## [vX.Y.Z]" or "## [X.Y.Z]")
+            # find start line for TAG in CHANGELOG.md (matches "## [vX.Y.Z]" or "## [X.Y.Z]")
             START_LINE=$(grep -n -E "^##\s*\[?v?${TAG_STRIPPED}\]?" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
             if [ -n "$START_LINE" ]; then
               echo "Found changelog section start for ${TAG} at line ${START_LINE}"
@@ -183,4 +183,3 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
