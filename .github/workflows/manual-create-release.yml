@@ -57,6 +57,7 @@ jobs:
             TAG_LIST=$(git tag --sort=-v:refname)
             BASE=""
             found=0
+            # iterate over TAG_LIST line-by-line using a here-string (safe)
             while IFS= read -r t; do
               if [ "$found" -eq 1 ]; then
                 BASE="$t"
@@ -76,7 +77,7 @@ jobs:
 
           echo "base=${BASE:-}" >> "$GITHUB_OUTPUT"
 
-      - name: Generate release notes from CHANGELOG.md (range: base_tag..tag) — fallback to git log
+      - name: Generate release notes from CHANGELOG.md (range: base_tag..tag) - fallback to git log
         id: gen_notes
         run: |
           set -euo pipefail
@@ -97,7 +98,7 @@ jobs:
           COMPARE_URL=""
 
           if [ -f CHANGELOG.md ]; then
-            # robust header matcher: supports
+            # robust header matcher: supports these forms:
             #   ## [v0.1.0] - ...
             #   ## [0.1.0] - ...
             #   ## v0.1.0 - ...
