@@ -21,6 +21,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added `--no-release-notes` option to not release all tags on merge.
+- Added `manual-create-release.yml` workflow for creating releases manually.
+
+## [v0.3.0] - 2025-10-18
+
+### Added
+- Fixed CI/CD Pipeline with release notes.
 
 ## [v0.2.0] - 2025-10-18
 
