@@ -1,3 +1,14 @@
+```
+ ██╗ ██████╗ ████████╗ █████╗ ██████╗
+ ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+ ██║██║   ██║   ██║   ███████║ █████╔╝
+ ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+ ██║╚██████╔╝   ██║   ██║  ██║███████╗
+ ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+ Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+ Licensed under the MIT License. See LICENSE file in the project root for details.
+```
+
 ---
 name: Bug report
 about: Create a report to help us improve

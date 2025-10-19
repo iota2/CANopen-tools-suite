@@ -1,8 +1,3 @@
-> `iota2` - Making Imaginations, Real
->
-> <i2.iotasquare@gmail.com>
-
-
 ```
  ██╗ ██████╗ ████████╗ █████╗ ██████╗
  ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
@@ -10,17 +5,22 @@
  ██║██║   ██║   ██║   ██╔══██║██╔═══╝
  ██║╚██████╔╝   ██║   ██║  ██║███████╗
  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+ Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+ Licensed under the MIT License. See LICENSE file in the project root for details.
 ```
 
 # Changelog
 
-Version: <!-- VERSION:START -->v0.8.0<!-- VERSION:END -->
+**🟢 Version:** <code><!-- VERSION:START -->v0.8.0<!-- VERSION:END --></code>
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Added `tools/add_license_header.sh` script to automatically add header to `.py`, `.md`, `.sh` and `.yml` files.
+- Added `pre-commit` and ci `workflow` support to check license headers.
+- Added CHANGELOG check for ci pipeline to pass.
 
 ## [v0.8.0] - 2025-10-19
 

@@ -1,0 +1,32 @@
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: check-license-headers
+        name: Check license headers (iota2)
+        entry: python3 tools/check_license_headers.py
+        language: system
+        files: '\.(py|sh|yml|yaml|md)$'
+        pass_filenames: true
+        args: ["--verbose"]
+
+      - id: fix-license-headers
+        name: Fix license headers (runs add_license_headers.sh)
+        entry: bash tools/add_license_headers.sh
+        language: system
+        files: |
+          \.(py|sh|yml|yaml|md)$
+        pass_filenames: false
+        always_run: false
+        # This is an optional hook; run manually with:
+        #   pre-commit run fix-license-headers --all-files
+
