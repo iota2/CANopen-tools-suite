@@ -23,11 +23,74 @@ A collection of **CANopen utilities** for development and debugging:
 - **Frame Simulator:** generate CANopen traffic aligned with EDS mappings
 - **Node Monitor:** live OD variable monitor with Rich TUI and command panel
 
+Check [wiki pages](https://github.com/iota2/CANopen-tools-suite/wiki) for more details regarding setup and tools.
+
 ---
 
-## Details info wiki
+# Dependencies
 
-https://github.com/iota2/CANopen-tools-suite/wiki
+Install required Python dependencies:
+
+```bash
+pip install python-can canopen rich PyQt5 tqdm pytest pre-commit
+```
+
+---
+
+### Pre-Commit Setup
+
+This project uses **[pre-commit](https://pre-commit.com/)** hooks to automatically verify that
+license headers are present in all files before committing.
+
+To enable it, install the hooks once in your local clone:
+
+```bash
+pre-commit install
+```
+
+After this, the license header check will run automatically every time you commit code.
+If any files are missing headers, the commit will be blocked with a helpful message.
+
+---
+
+### Manual Checks (optional)
+
+You can also run the checks manually at any time:
+
+```bash
+# Check all files in the repository
+pre-commit run check-license-headers --all-files
+
+# Check only specific files
+pre-commit run check-license-headers --files path/to/file.py path/to/README.md
+```
+
+To automatically add missing headers (for maintainers):
+
+```bash
+pre-commit run fix-license-headers --all-files
+```
+
+This will run the internal `tools/add_license_headers.sh` script to fix headers automatically.
+
+---
+
+## SocketCAN Setup
+
+### Virtual CAN
+```bash
+sudo modprobe vcan
+sudo ip link add dev vcan0 type vcan
+sudo ip link set vcan0 up
+```
+
+### Physical CAN
+```bash
+sudo ip link set can0 type can bitrate 1000000
+sudo ip link set can0 up
+```
+
+---
 
 ## Tools Overview
 
@@ -72,31 +135,6 @@ python canopen_frame_simulator.py --interface vcan0 --count 20 --eds sample_devi
 Run:
 ```bash
 python canopen_node_monitor_cli.py --interface vcan0 --local-eds local.eds --remote-eds remote.eds --export --log
-```
-
----
-
-## Dependencies
-
-```bash
-pip install python-can canopen rich PyQt5 tqdm pytest
-```
-
----
-
-## SocketCAN Setup
-
-### Virtual CAN
-```bash
-sudo modprobe vcan
-sudo ip link add dev vcan0 type vcan
-sudo ip link set vcan0 up
-```
-
-### Physical CAN
-```bash
-sudo ip link set can0 type can bitrate 1000000
-sudo ip link set can0 up
 ```
 
 ---
