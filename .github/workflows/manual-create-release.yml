@@ -57,7 +57,6 @@ jobs:
             TAG_LIST=$(git tag --sort=-v:refname)
             BASE=""
             found=0
-            # iterate over TAG_LIST line-by-line using a here-string
             while IFS= read -r t; do
               if [ "$found" -eq 1 ]; then
                 BASE="$t"
@@ -77,7 +76,7 @@ jobs:
 
           echo "base=${BASE:-}" >> "$GITHUB_OUTPUT"
 
-      - name: Generate release notes from CHANGELOG.md or git log
+      - name: Generate compact release notes from CHANGELOG.md - fallback to git log
         id: gen_notes
         run: |
           set -euo pipefail
@@ -98,13 +97,15 @@ jobs:
           COMPARE_URL=""
 
           if [ -f CHANGELOG.md ]; then
-            # find start line for TAG in CHANGELOG.md (matches "## [vX.Y.Z]" or "## [X.Y.Z]")
-            START_LINE=$(grep -n -E "^##\s*\[?v?${TAG_STRIPPED}\]?" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
+            HEADER_RE="^##[[:space:]]*(?:\\[v?${TAG_STRIPPED}\\]|v?${TAG_STRIPPED})"
+            START_LINE=$(grep -n -E "$HEADER_RE" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
+
             if [ -n "$START_LINE" ]; then
               echo "Found CHANGELOG section start for ${TAG} at line ${START_LINE}"
 
               if [ -n "$BASE" ]; then
-                START_BASE_LINE=$(grep -n -E "^##\s*\[?v?${BASE_STRIPPED}\]?" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
+                BASE_HEADER_RE="^##[[:space:]]*(?:\\[v?${BASE_STRIPPED}\\]|v?${BASE_STRIPPED})"
+                START_BASE_LINE=$(grep -n -E "$BASE_HEADER_RE" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
                 if [ -n "$START_BASE_LINE" ]; then
                   END_LINE=$(( START_BASE_LINE - 1 ))
                 else
@@ -112,7 +113,7 @@ jobs:
                   END_LINE=$(wc -l < CHANGELOG.md)
                 fi
               else
-                NEXT_REL=$(tail -n +"$((START_LINE+1))" CHANGELOG.md | grep -n -E '^##\s*\[' | head -n1 | cut -d: -f1 || true)
+                NEXT_REL=$(tail -n +"$((START_LINE+1))" CHANGELOG.md | grep -n -E '^##[[:space:]]*' | head -n1 | cut -d: -f1 || true)
                 if [ -n "$NEXT_REL" ]; then
                   END_LINE=$(( START_LINE + NEXT_REL - 1 ))
                 else
@@ -121,23 +122,16 @@ jobs:
               fi
 
               echo "Extracting CHANGELOG lines ${START_LINE}..${END_LINE}"
-              sed -n "${START_LINE},${END_LINE}p" CHANGELOG.md > release_body.txt
 
-              if [ -n "$BASE" ]; then
-                COMPARE_URL="https://github.com/${{ github.repository }}/compare/${BASE}...${TAG}"
-              else
-                COMPARE_URL="https://github.com/${{ github.repository }}/tree/${TAG}"
-              fi
+              sed -n "${START_LINE},${END_LINE}p" CHANGELOG.md > release_body_raw.txt
 
-              {
-                echo "Changes in ${TAG}"
-                echo
-                echo "${COMPARE_URL}"
-                echo
-                cat release_body.txt
-              } > release_body.txt.tmp
-              mv release_body.txt.tmp release_body.txt
-              RELEASE_BODY="$(cat release_body.txt)"
+              # Remove version headers, section headers, and all blank lines
+              awk '{
+                if ($0 ~ /^##[[:space:]]*/ || $0 ~ /^###[:space:]]*/ || $0 ~ /^[[:space:]]*$/) next;
+                print $0
+              }' release_body_raw.txt > release_body.txt
+
+              RELEASE_BODY="$(cat release_body.txt || true)"
             else
               echo "No matching section found for ${TAG} in CHANGELOG.md"
             fi
@@ -145,34 +139,26 @@ jobs:
             echo "CHANGELOG.md not found; will fallback to git log"
           fi
 
+          # Fallback to git log if empty
           if [ -z "${RELEASE_BODY}" ]; then
             if [ -n "$BASE" ]; then
               RANGE="${BASE}..${TAG}"
               COMPARE_URL="https://github.com/${{ github.repository }}/compare/${BASE}...${TAG}"
-              echo "Generating notes from git log for range: ${RANGE}"
               NOTES=$(git log --pretty=format:'- %s (%an)' "${RANGE}" || true)
             else
               COMPARE_URL="https://github.com/${{ github.repository }}/tree/${TAG}"
-              echo "Generating notes from git log up to tag: ${TAG}"
               NOTES=$(git log --pretty=format:'- %s (%an)' "${TAG}" || true)
             fi
 
-            if [ -z "$NOTES" ]; then
-              BODY="No changelog entries (no commits in range)."
-            else
-              BODY="Changes in ${TAG}\n\n${COMPARE_URL}\n\n${NOTES}"
-            fi
-            printf "%s\n" "$BODY" > release_body.txt
+            RELEASE_BODY="${NOTES:-No changelog entries (no commits in range).}"
           fi
 
-          # Emit the multiline body as step output using $GITHUB_OUTPUT heredoc
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
-          cat release_body.txt >> "$GITHUB_OUTPUT"
+          echo "${RELEASE_BODY}" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
-          # extra debugging outputs
           echo "notes_written=true" >> "$GITHUB_OUTPUT"
-          echo "compare_url=${COMPARE_URL}" >> "$GITHUB_OUTPUT"
+          echo "compare_url=${COMPARE_URL:-}" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub release
         uses: actions/create-release@v1
