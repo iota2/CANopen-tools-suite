@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 - Added `tools/add_license_header.sh` script to automatically add header to `.py`, `.md`, `.sh` and `.yml` files.
 - Added `pre-commit` and ci `workflow` support to check license headers.
-- Added CHANGELOG check for ci pipeline to pass.
+- Added CHANGELOG check for ci pipeline to pass. [REMOVED]
 
 ## [v0.8.0] - 2025-10-19
 
