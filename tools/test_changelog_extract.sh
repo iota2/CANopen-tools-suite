@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
 # tools/test_changelog_extract.sh
 # Usage:
 #   ./tools/test_changelog_extract.sh [tag] [base_tag]

@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
 """
 release_bump.py — marker-based version updates for README & CHANGELOG, in-memory processing, --dry-run.
 

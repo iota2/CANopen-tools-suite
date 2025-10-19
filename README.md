@@ -1,8 +1,3 @@
-> `iota2` - Making Imaginations, Real
->
-> <i2.iotasquare@gmail.com>
-
-
 ```
  ██╗ ██████╗ ████████╗ █████╗ ██████╗
  ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
@@ -10,6 +5,8 @@
  ██║██║   ██║   ██║   ██╔══██║██╔═══╝
  ██║╚██████╔╝   ██║   ██║  ██║███████╗
  ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+ Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+ Licensed under the MIT License. See LICENSE file in the project root for details.
 ```
 
 [![MIT licensed](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
@@ -18,7 +15,7 @@
 
 # CANopen Tools Suite
 
-Version: <!-- VERSION:START -->v0.8.0<!-- VERSION:END -->
+**🟢 Version:** <code><!-- VERSION:START -->v0.8.0<!-- VERSION:END --></code>
 
 A collection of **CANopen utilities** for development and debugging:
 
