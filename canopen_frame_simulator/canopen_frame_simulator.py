@@ -44,8 +44,7 @@ import configparser
 import logging
 import re
 from tqdm import tqdm
-from datetime import datetime
-
+from datetime import datetime, timezone
 
 # ---------------- Logging ----------------
 log = logging.getLogger("simulator")
@@ -170,12 +169,12 @@ def get_node_id_from_eds(eds_path):
 # ---------------- CANopen Services ----------------
 def send_heartbeat(bus, node_id):
     """Send heartbeat (0x700 + NodeID)."""
-    send_frame(bus, 0x700 + node_id, bytes([0x05]))  # 0x05 = Operational
+    send_frame(bus, 0x700 + node_id, bytes([0x05]))  # 0x05 means Operational
 
 
 def send_timestamp(bus):
     """Send Time Stamp (COB-ID 0x100)."""
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     seconds = int(now.timestamp())
     msec = int(now.microsecond / 1000)  # convert to ms (0-999)
     data = seconds.to_bytes(4, "little") + msec.to_bytes(2, "little")
@@ -189,8 +188,8 @@ def send_emcy(bus, node_id, error_code=0x1000, error_reg=0x01):
 
 
 # ---------------- Main ----------------
-def main(interface="vcan0", count=5, eds_path=None, enable_log=False,
-         with_timestamp=False, with_emcy=False):
+def main(interface="vcan0", count=5, delay:int=0, eds_path=None,
+         enable_log=False, with_timestamp=False, with_emcy=False):
 
     if enable_log:
         enable_logging()
@@ -238,15 +237,17 @@ def main(interface="vcan0", count=5, eds_path=None, enable_log=False,
             ]) + default.to_bytes(4, "little", signed=False)
             send_frame(bus, 0x580 + node_id, sdo_resp)
 
+        time.sleep(delay / 1000)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--interface", default="vcan0", help="socketcan interface (default: vcan0)")
     parser.add_argument("--count", type=int, default=5, help="number of update cycles to send")
+    parser.add_argument("--delay", type=int, default=0, help="enable delay in milli-seconds between CAN frames (default: 0)")
     parser.add_argument("--eds", help="EDS file path")
     parser.add_argument("--log", action="store_true", help="enable logging to canopen_frame_simulator.log")
     parser.add_argument("--with-timestamp", action="store_true", help="send Time Stamp (0x100)")
     parser.add_argument("--with-emcy", action="store_true", help="send Emergency (0x80 + NodeID)")
     args = parser.parse_args()
-    main(args.interface, args.count, args.eds, args.log,
+    main(args.interface, args.count, args.delay, args.eds, args.log,
          args.with_timestamp, args.with_emcy)

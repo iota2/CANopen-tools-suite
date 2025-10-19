@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> Initializing
+    Initializing --> Running : resources opened
+    Running --> Exporting : export enabled
+    Running --> Stopping : stop requested
+    Exporting --> Stopping : stop requested
+    Running --> Error : unrecoverable exception
+    Error --> Stopping
+    Stopping --> Stopped : resources closed
+    Stopped --> [*]

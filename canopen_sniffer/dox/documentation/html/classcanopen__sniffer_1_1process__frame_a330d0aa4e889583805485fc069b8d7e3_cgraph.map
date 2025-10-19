@@ -1,0 +1,4 @@
+<map id="save_frame" name="save_frame">
+<area shape="rect" id="node1" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="5,5,104,32"/>
+<area shape="rect" id="node2" href="$namespacecanopen__sniffer.html#a8e3ff526c04831e4b712bf09284cff6d" title="Return current time string." alt="" coords="152,5,331,32"/>
+</map>

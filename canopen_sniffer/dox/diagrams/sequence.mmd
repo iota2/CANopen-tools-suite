@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant User
+    participant Main as main()
+    participant Sniffer as can_sniffer
+    participant Queue as raw_frame (Queue)
+    participant Processor as process_frame
+    participant EDS as eds_parser
+    participant Stats as BusStats
+    participant CSV as CSV File
+
+    User->>Main: start tool (args)
+    Main->>Sniffer: start()
+    Main->>Processor: start()
+    Sniffer->>Sniffer: open socketcan interface
+    Sniffer->>Queue: push(frame)
+    Queue-->>Processor: pop(frame)
+    Processor->>Stats: increment_frame / count_talker / add_node
+    Processor->>EDS: lookup name_map(index, sub)
+    Processor->>CSV: write processed row (if export)
+    Sniffer->>CSV: write raw row (if export)
+    User->>Main: Ctrl+C (SIGINT)
+    Main->>Sniffer: stop()
+    Main->>Processor: stop()

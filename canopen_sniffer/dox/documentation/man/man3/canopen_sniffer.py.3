@@ -1,0 +1,140 @@
+.TH "canopen_sniffer.py" 3 "Sat Oct 18 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+canopen_sniffer.py \- CANopen bus sniffer\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SH "Detailed Description"
+.PP 
+CANopen bus sniffer\&. 
+
+This module defines default settings, constants, and enumerations used by the CANopen bus sniffer application\&. It also sets up logging for the module\&. 
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBbus_stats\fP"
+.br
+.RI "Container class for all CANopen bus statistics\&. "
+.ti -1c
+.RI "class \fBcan_sniffer\fP"
+.br
+.RI "CAN bus sniffer thread\&. "
+.ti -1c
+.RI "class \fBeds_parser\fP"
+.br
+.RI "Parser for CANopen EDS (Electronic Data Sheet) files\&. "
+.ti -1c
+.RI "class \fBbus_stats\&.error_stats\fP"
+.br
+.RI "Tracks error-related information observed on the CANopen bus\&. "
+.ti -1c
+.RI "class \fBbus_stats\&.frame_count\fP"
+.br
+.RI "Tracks the number of frames by CANopen message type\&. "
+.ti -1c
+.RI "class \fBframe_type\fP"
+.br
+.RI "Types of CANopen messages\&. "
+.ti -1c
+.RI "class \fBbus_stats\&.payload_size\fP"
+.br
+.RI "Tracks cumulative payload sizes for key CANopen message types\&. "
+.ti -1c
+.RI "class \fBprocess_frame\fP"
+.br
+.RI "Processor thread that consumes CAN frames and updates statistics\&. "
+.ti -1c
+.RI "class \fBbus_stats\&.sdo_stats\fP"
+.br
+.RI "Records SDO (Service Data Object) communication statistics\&. "
+.ti -1c
+.RI "class \fBbus_stats\&.stats_data\fP"
+.br
+.RI "Consolidated data record for overall bus statistics\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBcanopen_sniffer\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "str \fBbytes_to_hex\fP (data)"
+.br
+.RI "Convert bytes or bytearray to a space-separated hex string safely\&. "
+.ti -1c
+.RI "int \fBclean_int_with_comment\fP (str val)"
+.br
+.RI "Get value after splitting the string\&. "
+.ti -1c
+.RI "def \fBenable_logging\fP ()"
+.br
+.RI "Attaches a NullHandler to suppress warnings if no logging configuration is provided\&. "
+.ti -1c
+.RI "def \fBmain\fP ()"
+.br
+.RI "Main entry point for the CANopen bus sniffer application\&. "
+.ti -1c
+.RI "str \fBnow_str\fP ()"
+.br
+.RI "Return current time string\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "string \fBAPP_NAME\fP = 'CANopen\-Sniffer'"
+.br
+.RI "Application name\&. "
+.ti -1c
+.RI "string \fBAPP_ORG\fP = 'iota2'"
+.br
+.RI "Application organization name\&. "
+.ti -1c
+.RI "int \fBCLI_DATA_TABLE_HEIGHT\fP = 30"
+.br
+.RI "Height of the data table in the CLI interface (number of rows)\&. "
+.ti -1c
+.RI "int \fBCLI_GRAPH_WIDTH\fP = 20"
+.br
+.RI "Width of the graphs in the CLI interface (in characters)\&. "
+.ti -1c
+.RI "int \fBCLI_PROTOCOL_TABLE_HEIGHT\fP = 15"
+.br
+.RI "Height of the protocol table in the CLI interface (number of rows)\&. "
+.ti -1c
+.RI "int \fBDEFAULT_BAUD_RATE\fP = 1000000"
+.br
+.RI "Default CAN bus baud rate (in bits per second)\&. "
+.ti -1c
+.RI "string \fBDEFAULT_INTERFACE\fP = 'vcan0'"
+.br
+.RI "Default CAN interface to be loaded\&. "
+.ti -1c
+.RI "\fBFILENAME\fP = os\&.path\&.splitext(os\&.path\&.basename(__file__))[0]"
+.br
+.RI "Script file name used as a reference for other system-generated files\&. "
+.ti -1c
+.RI "int \fBFSYNC_EVERY\fP = 50"
+.br
+.RI "Frequency of filesystem synchronization (every N rows)\&. "
+.ti -1c
+.RI "\fBlog\fP = logging\&.getLogger(f'{FILENAME}')"
+.br
+.RI "Logger instance for the CANopen bus sniffer\&. "
+.ti -1c
+.RI "int \fBMAX_FRAMES\fP = 500"
+.br
+.RI "Maximum number of CANopen frames to be cached\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Sniffer from the source code\&.
