@@ -1,0 +1,76 @@
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
+name: Enforce CHANGELOG on PR
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  changelog-check:
+    name: Check CHANGELOG.md is updated and Unreleased has content
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need full history/tags if scripts use git tag
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Make scripts executable
+        run: |
+          chmod +x ./tools/check_changelog.py || true
+          chmod +x ./tools/add_license_headers.sh || true
+          chmod +x ./tools/check_license_headers.py || true
+
+      - name: Determine changed files in PR
+        id: changed
+        run: |
+          # Determine base branch for comparison
+          BASE="${{ github.event.pull_request.base.ref }}"
+          echo "Base branch: ${BASE}"
+          # fetch the base ref to ensure it exists locally
+          git fetch origin "${BASE}:${BASE}" --depth=1 || true
+
+          # List files changed between base and PR head
+          CHANGED=$(git diff --name-only "origin/${BASE}" HEAD || true)
+          echo "changed_files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "Changed files:"
+          echo "$CHANGED"
+
+      - name: Fail if CHANGELOG.md not modified in PR
+        id: require_changelog
+        run: |
+          CHANGED="${{ steps.changed.outputs.changed_files }}"
+          echo "Changed files (raw):"
+          echo "$CHANGED"
+          if ! printf "%s\n" "$CHANGED" | grep -q -x -e "CHANGELOG.md" -e "CHANGELOG.MD" -e "CHANGELOG.md"; then
+            echo "::error::CHANGELOG.md was not modified in this PR. Please update the '## [Unreleased]' section with release notes (at least one bullet)."
+            exit 1
+          fi
+        # if this step fails the job, the PR will be blocked
+
+      - name: Verify Unreleased block has content
+        id: verify_unreleased
+        run: |
+          set -euo pipefail
+          python3 ./tools/check_changelog.py --verbose
+        shell: bash
+
