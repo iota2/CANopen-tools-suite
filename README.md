@@ -18,7 +18,7 @@
 
 # CANopen Tools Suite
 
-Version: <!-- VERSION:START -->v0.7.0<!-- VERSION:END -->
+Version: <!-- VERSION:START -->v0.8.0<!-- VERSION:END -->
 
 A collection of **CANopen utilities** for development and debugging:
 
