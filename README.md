@@ -27,15 +27,13 @@ Check [wiki pages](https://github.com/iota2/CANopen-tools-suite/wiki) for more d
 
 ---
 
-# Dependencies
+## Dependencies
 
 Install required Python dependencies:
 
 ```bash
 pip install python-can canopen rich PyQt5 tqdm pytest pre-commit
 ```
-
----
 
 ### Pre-Commit Setup
 
@@ -48,14 +46,32 @@ To enable it, install the hooks once in your local clone:
 pre-commit install
 ```
 
-After this, the license header check will run automatically every time you commit code.
-If any files are missing headers, the commit will be blocked with a helpful message.
+After running pre-commit install, the hooks defined in `.pre-commit-config.yaml` run automatically on every git commit (they operate on the staged files).
+If any hook fails or reports missing headers, it will block the commit.
 
----
+### Keep hooks up-to-date
 
-### Manual Checks (optional)
+To update the local hook versions defined in `.pre-commit-config.yaml`:
 
-You can also run the checks manually at any time:
+```bash
+pre-commit autoupdate
+```
+
+### Run all hooks locally (manual / troubleshooting)
+
+You can run all configured hooks against all tracked files (useful for CI parity or repo-wide fixes):
+
+```bash
+# Run all configured hooks against all files in the repo
+pre-commit run --all-files
+
+# Run a specific hook across all files (e.g. the auto-fix)
+pre-commit run fix-license-headers --all-files -v
+```
+
+If a hook auto-fixes files (for example, the license header fixer), it will modify and re-stage them; you will then need to git add and commit the changes.
+
+#### Check license headers
 
 ```bash
 # Check all files in the repository
@@ -65,7 +81,7 @@ pre-commit run check-license-headers --all-files
 pre-commit run check-license-headers --files path/to/file.py path/to/README.md
 ```
 
-To automatically add missing headers (for maintainers):
+#### Automatically add missing headers (for maintainers):
 
 ```bash
 pre-commit run fix-license-headers --all-files
