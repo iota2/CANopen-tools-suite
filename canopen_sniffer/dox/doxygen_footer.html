@@ -1,0 +1,50 @@
+<!-- docs/doxygen_footer.html -->
+<!-- Only inject scripts — do NOT replace head/body. Keeps default Doxygen layout intact. -->
+
+<!-- Load mermaid (local copy included via HTML_EXTRA_FILES) -->
+<script src="mermaid.min.js"></script>
+
+<script>
+/* Render Mermaid blocks after Doxygen finished inserting its HTML.
+   This footer is safe — it does not change CSS, fonts or layout.
+*/
+(function () {
+  function renderMermaidContainers() {
+    try {
+      if (typeof mermaid !== 'undefined' && mermaid) {
+        mermaid.initialize({ startOnLoad: false, theme: 'default' });
+      }
+      var elems = document.querySelectorAll('.mermaid, code.language-mermaid, code.mermaid');
+      // If the code blocks are in <pre><code> form, convert them to div.mermaid
+      elems.forEach(function (el) {
+        // If it's a <code> element, replace its parent <pre> with a div.mermaid
+        if (el.tagName.toLowerCase() === 'code') {
+          var pre = el.closest('pre');
+          var txt = el.textContent;
+          var wrapper = document.createElement('div');
+          wrapper.className = 'mermaid';
+          wrapper.textContent = txt;
+          if (pre && pre.parentNode) {
+            pre.parentNode.replaceChild(wrapper, pre);
+          } else {
+            el.parentNode.replaceChild(wrapper, el);
+          }
+        }
+      });
+      // Initialize mermaid on any div.mermaid
+      var divs = document.querySelectorAll('.mermaid');
+      if (divs.length && typeof mermaid !== 'undefined' && mermaid) {
+        mermaid.init(undefined, divs);
+      }
+    } catch (err) {
+      // Don't break the page; log to console for debugging only.
+      console.error('Mermaid render error:', err);
+    }
+  }
+
+  // Wait for the DOM and a small delay so Doxygen's JS has finished
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(renderMermaidContainers, 200);
+  });
+})();
+</script>
