@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 - Added feature and bug GIT issue templates.
+- Added CHANGELOG check job to through a warning if no logs present under `Unreleased`.
 
 ## [v0.11.0] - 2025-10-19
 

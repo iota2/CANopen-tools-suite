@@ -1,0 +1,98 @@
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
+# Emits warnings in the PR run instead of failing the job when CHANGELOG is missing/empty.
+
+name: Check CHANGELOG on PR (warn only)
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  changelog-check:
+    name: Check CHANGELOG.md is updated and Unreleased has content (warn only)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need full history/tags if scripts use git tag
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Make scripts executable
+        run: |
+          chmod +x ./tools/check_changelog.py || true
+          chmod +x ./tools/add_license_headers.sh || true
+          chmod +x ./tools/check_license_headers.py || true
+
+      - name: Determine changed files in PR
+        id: changed
+        run: |
+          BASE="${{ github.event.pull_request.base.ref }}"
+          echo "Base branch: ${BASE}"
+          # fetch the base ref (best-effort)
+          git fetch origin "${BASE}:${BASE}" --depth=1 || true
+
+          CHANGED=$(git diff --name-only "origin/${BASE}" HEAD || true)
+          echo "changed_files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "Changed files:"
+          echo "$CHANGED"
+
+      - name: Warn if CHANGELOG.md not modified in PR
+        id: require_changelog
+        run: |
+          CHANGED="${{ steps.changed.outputs.changed_files }}"
+          echo "Changed files (raw):"
+          echo "$CHANGED"
+          if ! printf "%s\n" "$CHANGED" | grep -q -x -e "CHANGELOG.md" -e "CHANGELOG.MD" -e "CHANGELOG.md"; then
+            # Emit a GitHub Actions workflow annotation-level warning (does not fail job)
+            echo "::warning::CHANGELOG.md was NOT modified in this PR. Please add changes under the '## [Unreleased]' section (at least one bullet)."
+            # Also set an output flag for later steps if desired
+            echo "changelog_modified=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "CHANGELOG.md is modified in this PR."
+            echo "changelog_modified=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify Unreleased block has content (warn, do not fail)
+        id: verify_unreleased
+        run: |
+          set -o pipefail
+          # Run the check script but do not fail the job if it returns non-zero.
+          # Capture its output so we can show it as a warning annotation.
+          TMP_OUT="changelog_check_output.txt"
+          set +e
+          python3 ./tools/check_changelog.py --verbose 2>&1 | tee "$TMP_OUT"
+          RC=${PIPESTATUS[0]}
+          set -e
+          if [ "$RC" -ne 0 ]; then
+            # Emit a warning annotation and show script output
+            echo "::warning file=CHANGELOG.md::CHANGELOG 'Unreleased' section appears missing or empty. See details below."
+            echo "---- BEGIN changelog check output ----"
+            sed -n '1,200p' "$TMP_OUT"
+            echo "---- END changelog check output ----"
+            # optionally set an output so other workflows/steps can see it
+            echo "unreleased_ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "OK: Unreleased section in CHANGELOG.md contains content."
+            echo "unreleased_ok=true" >> "$GITHUB_OUTPUT"
+          fi
+        shell: bash
+
