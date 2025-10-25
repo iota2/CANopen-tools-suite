@@ -23,10 +23,29 @@ repos:
         name: Fix license headers (runs add_license_headers.sh)
         entry: bash tools/add_license_headers.sh
         language: system
-        files: |
-          \.(py|sh|yml|yaml|md)$
+        files: '\.(py|sh|yml|yaml|md)$'
         pass_filenames: false
         always_run: false
-        # This is an optional hook; run manually with:
-        #   pre-commit run fix-license-headers --all-files
+        # To run manually:
+        # pre-commit run fix-license-headers --all-files
+
+      - id: check-changelog
+        name: Check CHANGELOG Unreleased section (iota2)
+        entry: python3 tools/check_changelog.py
+        language: system
+        files: '^CHANGELOG\.md$'
+        pass_filenames: false
+        always_run: false
+        args: ["--verbose"]
+        # This hook runs when CHANGELOG.md is staged; it will block the commit if the Unreleased section is missing/empty.
+
+      - id: fix-changelog
+        name: Fix CHANGELOG Unreleased (populate from git log) (maintainer)
+        entry: python3 tools/check_changelog.py --fix
+        language: system
+        files: '^CHANGELOG\.md$'
+        pass_filenames: false
+        always_run: false
+        # Run manually:
+        # pre-commit run fix-changelog --all-files
 
