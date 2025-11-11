@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
 """!
 @file canopen_sniffer.py
 @brief CANopen bus sniffer.
@@ -8,6 +18,7 @@ the CANopen bus sniffer application. It also sets up logging for the module.
 
 import os
 import re
+import sys
 import csv
 import time
 import struct
@@ -25,6 +36,7 @@ import threading
 import queue
 
 import can
+from can import exceptions as can_exceptions
 import canopen
 
 
@@ -56,6 +68,10 @@ FILENAME = os.path.splitext(os.path.basename(__file__))[0]
 ## Setting this to 1 performs fsync after every row, which is safer but slower.
 FSYNC_EVERY = 50
 
+## Default Logging level.
+## @details
+## Set default log level to INFO.
+LOG_LEVEL = logging.DEBUG
 
 # --------------------------------------------------------------------------
 # ----- Constants -----
@@ -114,37 +130,40 @@ class frame_type(Enum):
 # --------------------------------------------------------------------------
 # ----- Logging -----
 # --------------------------------------------------------------------------
-
-## @brief Logger instance for the CANopen bus sniffer.
+## @brief Logger instance
 ## @details
-## If no handlers are attached by the application using this module,
-## a NullHandler ensures that no warnings are emitted.
+## Default behavior: log to console only (stdout). No file is created.
+root = logging.getLogger()
+if not root.handlers:
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(LOG_LEVEL)
+    ch.setFormatter(logging.Formatter("%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s"))
+    root.addHandler(ch)
+    root.setLevel(LOG_LEVEL)
+
+## @brief Module-level convenience logger (will propagate to root handler).
+## @details
+## Create logger instance.
 log = logging.getLogger(f"{FILENAME}")
 
-## @brief Attaches a NullHandler to suppress warnings if no logging configuration is provided.
-## @details
-## This prevents "No handler found" errors when the module is imported
-## without the application setting up its own logging configuration.
-log.addHandler(logging.NullHandler())
-
 def enable_logging():
-    """! Enable System logging"""
+    """! Enable file-only logging, enabled through argument."""
     filename = f"{FILENAME}.log"
+
+    # Remove existing handlers (console) and configure file handler only.
     logging.basicConfig(
         filename=filename,
         format="%(asctime)s [%(levelname)-8s] [%(name)-15s] %(message)s",
-        filemode="w",            # overwrite instead of append
-        level=logging.DEBUG,
-        force=True               # overwrite any existing handlers
+        filemode="w",           # overwrite instead of append
+        level=LOG_LEVEL,
+        force=True,             # overwrite any existing handlers
     )
+
+    # Do NOT add a StreamHandler here — we want file-only logging when enabled through argument.
     global log
     log = logging.getLogger(f"{FILENAME}")
-    log.setLevel(logging.DEBUG)
+    log.setLevel(LOG_LEVEL)
     log.info(f"Logging enabled → {filename}")
-    # Optionally also log to console:
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    log.addHandler(console)
 
 
 # ----- helpers -----
@@ -572,7 +591,7 @@ class can_sniffer(threading.Thread):
         CANopen Network (non-fatal). If CSV export is enabled, the CSV file
         and writer are created and a header row is persisted.
         @param interface CAN interface name as string (e.g., "can0" or "vcan0").
-        @param raw_frame Optional queue.Queue instance to push received frames to.
+        @param raw_frame `queue.Queue` instance to push received frames for processing.
         @param export If True, enable CSV export of raw frames to a file.
         """
         super().__init__(daemon=True)
@@ -609,7 +628,7 @@ class can_sniffer(threading.Thread):
                 self.export_file = open(self.export_filename, "w", newline="")
                 self.export_writer = csv.writer(self.export_file)
                 self.export_writer.writerow(
-                    ["S.No.", "Time", "COB-ID", "Type", "Raw"]
+                    ["S.No.", "Time", "COB-ID", "Error", "Raw"]
                 )
                 # persist header
                 try:
@@ -705,36 +724,54 @@ class can_sniffer(threading.Thread):
         """
         self.log.info("Sniffer thread started (interface=%s)", self.interface)
         recv_timeout = 0.1
+
         try:
             while not self._stop_event.is_set():
                 try:
                     msg = self.bus.recv(timeout=recv_timeout)
                 except (InterruptedError, KeyboardInterrupt):
-                    # check stop_event and continue/exit
+                    # signal interruption — re-check stop flag and continue/exit
                     if self._stop_event.is_set():
                         break
                     continue
+                except can_exceptions.CanOperationError as e:
+                    # Happens when the underlying socket is closed during shutdown.
+                    # If we are stopping, treat silently; otherwise warn and break.
+                    if self._stop_event.is_set():
+                        self.log.debug("CanOperationError during shutdown: %s", e)
+                        break
+                    self.log.warning("CAN operation error (recv): %s", e)
+                    break
                 except OSError as e:
-                    self.log.warning("CAN recv OSError: %s", e)
+                    # OSError like "Bad file descriptor" can also occur when socket is closed.
+                    if self._stop_event.is_set():
+                        self.log.debug("OSError during shutdown: %s", e)
+                        break
+                    self.log.warning("OSError from CAN recv: %s", e)
                     # short sleep but wake on stop
                     if self._stop_event.wait(0.2):
                         break
                     continue
-                except Exception:
+                except Exception as e:
+                    # Unexpected error — log at debug level and backoff to avoid tight loop.
+                    # Do not log full traceback when shutdown is in progress to avoid noisy output.
+                    if self._stop_event.is_set():
+                        self.log.debug("Unexpected exception during shutdown: %s", e)
+                        break
                     self.log.exception("Unexpected error in CAN recv")
                     if self._stop_event.wait(0.2):
                         break
                     continue
 
+                # Received message, handle it
                 if msg:
                     try:
                         self.handle_message(msg)
                     except Exception:
-                        self.log.exception("Handling received message")
-
+                        self.log.exception("Exception while handling message")
         finally:
-            # close CSV file safely
-            if self.export_file:
+            # Always attempt to flush/close CSV (if any) and shutdown bus safely.
+            if getattr(self, "export_file", None):
                 try:
                     try:
                         self.export_file.flush()
@@ -745,13 +782,19 @@ class can_sniffer(threading.Thread):
                     self.log.info("Raw CSV export file closed")
                 except Exception:
                     self.log.exception("Failed to close raw CSV file")
+
             # shutdown bus
             try:
                 if getattr(self, "bus", None) is not None:
-                    self.bus.shutdown()
+                    # bus.shutdown() may raise if socket is already closed; ignore such errors
+                    try:
+                        self.bus.shutdown()
+                    except Exception:
+                        pass
                     self.log.info("CAN bus shutdown completed")
             except Exception:
                 self.log.exception("Exception while shutting down CAN bus")
+
             self.log.info("Sniffer thread exiting")
 
     def stop(self, shutdown_bus: bool = True):
@@ -766,9 +809,12 @@ class can_sniffer(threading.Thread):
         if shutdown_bus:
             try:
                 if getattr(self, "bus", None) is not None:
+                    # bus.shutdown() may raise "Bad file descriptor" if socket already closed;
+                    # that's fine — we swallow exceptions here.
                     self.bus.shutdown()
-            except Exception:
-                self.log.exception("Error calling bus.shutdown() during stop()")
+                    self.log.debug("bus.shutdown() called from stop()")
+            except Exception as e:
+                self.log.debug("bus.shutdown() raised during stop(): %s", e)
 
 
 
@@ -787,7 +833,7 @@ class process_frame(threading.Thread):
     The thread is stoppable via `stop()` and will close CSV resources on exit.
     """
 
-    def __init__(self, stats: bus_stats, raw_frame: queue.Queue, eds_map: eds_parser, export: bool = False):
+    def __init__(self, stats: bus_stats, raw_frame: queue.Queue, processed_frame: queue.Queue, eds_map: eds_parser, export: bool = False):
         """! Initialize the processor thread.
         @details
         The constructor stores references to required helpers, initializes a
@@ -795,6 +841,7 @@ class process_frame(threading.Thread):
         statistics collection start time is set.
         @param stats Instance of @ref bus_stats used to record statistics.
         @param raw_frame `queue.Queue` providing raw frames (dict) from the sniffer.
+        @param processed_frame `queue.Queue` instance to push processed frames for display.
         @param eds_map @ref eds_parser providing name_map lookups.
         @param export If True, enable CSV export of processed frames.
         """
@@ -802,6 +849,9 @@ class process_frame(threading.Thread):
 
         ## Queue from which raw frame dictionaries are consumed.
         self.raw_frame = raw_frame
+
+        ## Queue from which raw frame dictionaries are consumed.
+        self.processed_frame = processed_frame
 
         ## Internal event used to signal the run loop to stop.
         self._stop_event = threading.Event()
@@ -879,6 +929,9 @@ class process_frame(threading.Thread):
             "Processed frame: [%s] [%s] [0x%03X] [0x%04X] [0x%02X] [%s] [%s] [%s]",
             now_str(), ftype.name, cob, index, sub, name, raw, decoded
         )
+
+        # push frame to queue
+        self.processed_frame.put(frame)
 
     def save_frame_to_csv(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
         """! Save a processed frame row to the processed CSV file.
@@ -1133,6 +1186,104 @@ class process_frame(threading.Thread):
         self.log.debug("Stop requested for processor thread")
 
 
+# -----------------------------
+# Display thread implementations
+# -----------------------------
+class DisplayCLI(threading.Thread):
+    """Simple CLI display thread that consumes processed_frame queue and prints rows."""
+
+    def __init__(self, processed_frame: queue.Queue):
+        super().__init__(daemon=True)
+        self.processed_frame = processed_frame
+        self._stop_event = threading.Event()
+        self.log = logging.getLogger(self.__class__.__name__)
+
+    def run(self):
+        self.log.info("DisplayCLI started")
+        get_timeout = 0.1
+        try:
+            while not self._stop_event.is_set():
+                try:
+                    pframe = self.processed_frame.get(timeout=get_timeout)
+                except queue.Empty:
+                    continue
+
+                # format and print a single line (tweak as desired)
+                t = pframe.get("time", now_str())
+                cob = pframe.get("cob")
+                ftype = pframe.get("type")
+                idx = pframe.get("index", 0)
+                sub = pframe.get("sub", 0)
+                name = pframe.get("name", "")
+                raw = pframe.get("raw", "")
+                decoded = pframe.get("decoded", "")
+
+                # human friendly formatting
+                line = (
+                    f"{t} | {ftype.name if isinstance(ftype, frame_type) else str(ftype):6} "
+                    f"| COB=0x{cob:03X} | {name} | raw={raw} | decoded={decoded}"
+                )
+                # print to console and also debug-log
+                # print(line)
+                self.log.debug("CLI Frame: %s", line)
+
+                # optionally mark task done if using task tracking
+                try:
+                    self.processed_frame.task_done()
+                except Exception:
+                    pass
+
+        finally:
+            self.log.info("DisplayCLI exiting")
+
+    def stop(self):
+        self._stop_event.set()
+        self.log.debug("DisplayCLI stop requested")
+
+
+class DisplayGUI(threading.Thread):
+    """Placeholder GUI display thread — for now consume queue and log the frames.
+       Replace this run() with actual Qt event integration later if needed.
+    """
+
+    def __init__(self, processed_frame: queue.Queue):
+        super().__init__(daemon=True)
+        self.processed_frame = processed_frame
+        self._stop_event = threading.Event()
+        self.log = logging.getLogger(self.__class__.__name__)
+
+    def run(self):
+        self.log.info("DisplayGUI started (placeholder)")
+        get_timeout = 0.1
+        try:
+            while not self._stop_event.is_set():
+                try:
+                    pframe = self.processed_frame.get(timeout=get_timeout)
+                except queue.Empty:
+                    continue
+
+                # Inside DisplayGUI.run(), where you currently do:
+                self.log.info("GUI frame: type=%s cob=0x%03X name=%s raw=%s decoded=%s", ...)
+
+                # Replace with:
+                msg = (f"GUI frame: type={(pframe.get('type').name if isinstance(pframe.get('type'), frame_type) else str(pframe.get('type')))} "
+                    f"cob=0x{pframe.get('cob'):03X} name={pframe.get('name')} raw={pframe.get('raw')} decoded={pframe.get('decoded')}")
+                # print(msg)              # immediate console feedback
+                self.log.info(msg)     # still log to logger (file/handlers)
+
+                try:
+                    self.processed_frame.task_done()
+                except Exception:
+                    pass
+
+        finally:
+            self.log.info("DisplayGUI exiting")
+
+    def stop(self):
+        self._stop_event.set()
+        self.log.debug("DisplayGUI stop requested")
+
+
 def main():
     """! Main entry point for the CANopen bus sniffer application.
     @details
@@ -1177,6 +1328,9 @@ def main():
     ## Shared queue for communication between sniffer and processor threads.
     raw_frame = queue.Queue()
 
+    # Shared queue for processed frames
+    processed_frame = queue.Queue()
+
     ## Create CAN sniffer thread for raw CAN frame capture.
     sniffer = can_sniffer(interface=args.interface,
                           raw_frame=raw_frame,
@@ -1185,18 +1339,27 @@ def main():
     ## Create frame processor thread for classification and stats update.
     processor = process_frame(stats=stats,
                               raw_frame=raw_frame,
+                              processed_frame=processed_frame,
                               eds_map=eds_map,
                               export=args.export)
+
+    # create chosen display thread
+    if args.mode == "cli":
+        display = DisplayCLI(processed_frame=processed_frame)
+    else:
+        display = DisplayGUI(processed_frame=processed_frame)
 
     ## Start background threads.
     sniffer.start()
     processor.start()
+    display.start()
 
     ## Signal handler for graceful termination (Ctrl+C).
     def _stop_all(signum, frame):
         log.warning("Signal %s received — stopping threads...", signum)
         sniffer.stop(shutdown_bus=True)
         processor.stop()
+        display.stop()
 
     ## Register signal handlers.
     signal.signal(signal.SIGINT, _stop_all)   # Ctrl+C → graceful stop
@@ -1221,6 +1384,7 @@ def main():
         ## Ensure both threads terminate and join gracefully.
         sniffer.join(timeout=2.0)
         processor.join(timeout=2.0)
+        display.join(timeout=2.0)
 
         ## Attempt final CAN bus shutdown if still open.
         try:
@@ -1229,6 +1393,12 @@ def main():
         except Exception:
             pass
         log.info(f"Terminating {APP_NAME}...")
+
+        # Shutdown logging now that threads have been joined\n"
+        try:
+            logging.shutdown()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
