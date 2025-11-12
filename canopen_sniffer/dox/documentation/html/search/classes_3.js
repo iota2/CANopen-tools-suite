@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['frame_5fcount_88',['frame_count',['../classcanopen__sniffer_1_1bus__stats_1_1frame__count.html',1,'canopen_sniffer::bus_stats']]],
-  ['frame_5ftype_89',['frame_type',['../classcanopen__sniffer_1_1frame__type.html',1,'canopen_sniffer']]]
+  ['eds_5fparser_111',['eds_parser',['../classcanopen__sniffer_1_1eds__parser.html',1,'canopen_sniffer']]],
+  ['error_5fstats_112',['error_stats',['../classcanopen__sniffer_1_1bus__stats_1_1error__stats.html',1,'canopen_sniffer::bus_stats']]]
 ];

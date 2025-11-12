@@ -2,12 +2,15 @@ var canopen__sniffer_8py =
 [
     [ "bus_stats", "classcanopen__sniffer_1_1bus__stats.html", "classcanopen__sniffer_1_1bus__stats" ],
     [ "can_sniffer", "classcanopen__sniffer_1_1can__sniffer.html", "classcanopen__sniffer_1_1can__sniffer" ],
+    [ "DisplayCLI", "classcanopen__sniffer_1_1DisplayCLI.html", "classcanopen__sniffer_1_1DisplayCLI" ],
+    [ "DisplayGUI", "classcanopen__sniffer_1_1DisplayGUI.html", "classcanopen__sniffer_1_1DisplayGUI" ],
     [ "eds_parser", "classcanopen__sniffer_1_1eds__parser.html", "classcanopen__sniffer_1_1eds__parser" ],
     [ "error_stats", "classcanopen__sniffer_1_1bus__stats_1_1error__stats.html", null ],
     [ "frame_count", "classcanopen__sniffer_1_1bus__stats_1_1frame__count.html", null ],
     [ "frame_type", "classcanopen__sniffer_1_1frame__type.html", null ],
     [ "payload_size", "classcanopen__sniffer_1_1bus__stats_1_1payload__size.html", null ],
     [ "process_frame", "classcanopen__sniffer_1_1process__frame.html", "classcanopen__sniffer_1_1process__frame" ],
+    [ "rates_stats", "classcanopen__sniffer_1_1bus__stats_1_1rates__stats.html", null ],
     [ "sdo_stats", "classcanopen__sniffer_1_1bus__stats_1_1sdo__stats.html", null ],
     [ "stats_data", "classcanopen__sniffer_1_1bus__stats_1_1stats__data.html", null ],
     [ "bytes_to_hex", "canopen__sniffer_8py.html#a4c58a43ad71454c2d1775bfd6b821aa4", null ],
@@ -20,10 +23,12 @@ var canopen__sniffer_8py =
     [ "CLI_DATA_TABLE_HEIGHT", "canopen__sniffer_8py.html#a7efe84abab5551614e0621ca15cee0ec", null ],
     [ "CLI_GRAPH_WIDTH", "canopen__sniffer_8py.html#aa46a1dd1fb2dd11e460a3472c7c6b7ad", null ],
     [ "CLI_PROTOCOL_TABLE_HEIGHT", "canopen__sniffer_8py.html#adb2fef007c95e5c7bad348938406dc9b", null ],
-    [ "DEFAULT_BAUD_RATE", "canopen__sniffer_8py.html#a103859a1dddc0923cb7ced9ecafffe94", null ],
+    [ "DEFAULT_CAN_BIT_RATE", "canopen__sniffer_8py.html#a1c22777dfecff81d656d3c48e0a18187", null ],
     [ "DEFAULT_INTERFACE", "canopen__sniffer_8py.html#a9313201603fcc86a7436c761ac54a0af", null ],
     [ "FILENAME", "canopen__sniffer_8py.html#ae4e6f99e1b73b1f62bb9ed8ced355214", null ],
     [ "FSYNC_EVERY", "canopen__sniffer_8py.html#abd5e97aaf326e2debb2e68277808c957", null ],
     [ "log", "canopen__sniffer_8py.html#ab09a63eb35b270b5cdbead1983ebdccb", null ],
-    [ "MAX_FRAMES", "canopen__sniffer_8py.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ]
+    [ "LOG_LEVEL", "canopen__sniffer_8py.html#aa5a9053636a30269210c54e734e0d583", null ],
+    [ "MAX_FRAMES", "canopen__sniffer_8py.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
+    [ "root", "canopen__sniffer_8py.html#ab4b8daf4b8ea9d39568719e1e320076f", null ]
 ];

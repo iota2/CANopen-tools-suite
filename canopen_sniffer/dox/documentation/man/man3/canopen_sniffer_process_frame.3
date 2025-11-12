@@ -1,4 +1,4 @@
-.TH "process_frame" 3 "Sat Oct 18 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "process_frame" 3 "Wed Nov 12 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -32,7 +32,7 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, \fBeds_parser\fP \fBeds_map\fP, bool \fBexport\fP=False)"
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, queue\&.Queue \fBprocessed_frame\fP, \fBeds_parser\fP \fBeds_map\fP, bool \fBexport\fP=False)"
 .br
 .RI "Initialize the processor thread\&. "
 .ti -1c
@@ -88,6 +88,10 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .br
 .RI "Logger instance scoped to this processor\&. "
 .ti -1c
+.RI "\fBprocessed_frame\fP"
+.br
+.RI "Queue from which raw frame dictionaries are consumed\&. "
+.ti -1c
 .RI "\fBraw_frame\fP"
 .br
 .RI "Queue from which raw frame dictionaries are consumed\&. "
@@ -98,7 +102,7 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue raw_frame, \fBeds_parser\fP eds_map, bool  export = \fCFalse\fP)"
+.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue raw_frame, queue\&.Queue processed_frame, \fBeds_parser\fP eds_map, bool  export = \fCFalse\fP)"
 
 .PP
 Initialize the processor thread\&. The constructor stores references to required helpers, initializes a stop event and logging, sets up CSV export if requested, and ensures statistics collection start time is set\&. 
@@ -108,6 +112,8 @@ Initialize the processor thread\&. The constructor stores references to required
 \fIstats\fP Instance of \fBbus_stats\fP used to record statistics\&. 
 .br
 \fIraw_frame\fP \fCqueue\&.Queue\fP providing raw frames (dict) from the sniffer\&. 
+.br
+\fIprocessed_frame\fP \fCqueue\&.Queue\fP instance to push processed frames for display\&. 
 .br
 \fIeds_map\fP \fBeds_parser\fP providing name_map lookups\&. 
 .br
@@ -224,6 +230,10 @@ csv\&.writer instance for processed CSV rows (or None)\&.
 
 .PP
 Logger instance scoped to this processor\&. 
+.SS "processed_frame"
+
+.PP
+Queue from which raw frame dictionaries are consumed\&. 
 .SS "raw_frame"
 
 .PP

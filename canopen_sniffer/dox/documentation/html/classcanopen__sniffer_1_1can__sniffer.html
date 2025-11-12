@@ -210,7 +210,7 @@ Public Attributes</h2></td></tr>
 <p>The constructor opens the socketcan Bus and attempts to connect a CANopen Network (non-fatal). If CSV export is enabled, the CSV file and writer are created and a header row is persisted. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">interface</td><td>CAN interface name as string (e.g., "can0" or "vcan0"). </td></tr>
-    <tr><td class="paramname">raw_frame</td><td>Optional queue.Queue instance to push received frames to. </td></tr>
+    <tr><td class="paramname">raw_frame</td><td><code>queue.Queue</code> instance to push received frames for processing. </td></tr>
     <tr><td class="paramname">export</td><td>If True, enable CSV export of raw frames to a file. </td></tr>
   </table>
   </dd>

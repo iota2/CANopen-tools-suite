@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added CLI display capabilities.
 - Added dummy display processes for GUI and handled processed frame queue in them.
 - Updated logger module, to log in file if `--log` is passed, else print on console.
+- Added Doxygen documentation generation to pre-commit
 
 ## [v0.12.0] - 2025-10-25
 
