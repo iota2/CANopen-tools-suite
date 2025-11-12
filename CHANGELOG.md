@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Added dummy display processes for CLI and GUI and handled processed frame queue in them.
+- Updated BUS-STATS class to calculate bus transfer rates.
+- Added CLI display capabilities.
+- Added dummy display processes for GUI and handled processed frame queue in them.
 - Updated logger module, to log in file if `--log` is passed, else print on console.
 
 ## [v0.12.0] - 2025-10-25
