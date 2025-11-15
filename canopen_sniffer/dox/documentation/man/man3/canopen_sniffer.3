@@ -102,7 +102,7 @@ canopen_sniffer
 .ti -1c
 .RI "\fBlog\fP = logging\&.getLogger(f'{FILENAME}')"
 .br
-.RI "Module-level convenience logger (will propagate to root handler)\&. "
+.RI "Module-level convenience logger (will propagate to root_logger handler)\&. "
 .ti -1c
 .RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
 .br
@@ -116,7 +116,7 @@ canopen_sniffer
 .br
 .RI "Maximum number of values to be shown in Bus stats window\&. "
 .ti -1c
-.RI "\fBroot\fP = logging\&.getLogger()"
+.RI "\fBroot_logger\fP = logging\&.getLogger()"
 .br
 .RI "Logger instance\&. "
 .in -1c
@@ -228,7 +228,7 @@ Frequency of filesystem synchronization (every N rows)\&. Setting this to 1 perf
 .SS "log = logging\&.getLogger(f'{FILENAME}')"
 
 .PP
-Module-level convenience logger (will propagate to root handler)\&. Create logger instance\&. 
+Module-level convenience logger (will propagate to root_logger handler)\&. Create logger instance\&. 
 .SS "LOG_LEVEL = logging\&.DEBUG"
 
 .PP
@@ -241,7 +241,7 @@ Maximum number of CANopen frames to be cached\&.
 
 .PP
 Maximum number of values to be shown in Bus stats window\&. 
-.SS "root = logging\&.getLogger()"
+.SS "root_logger = logging\&.getLogger()"
 
 .PP
 Logger instance\&. Default behavior: No console or file logs until explicitly enabled\&. 

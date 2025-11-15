@@ -143,13 +143,13 @@ class frame_type(Enum):
 ## @brief Logger instance
 ## @details
 ## Default behavior: No console or file logs until explicitly enabled.
-root = logging.getLogger()
+root_logger = logging.getLogger()
 # Remove any inherited handlers to keep console quiet
-for h in root.handlers[:]:
-    root.removeHandler(h)
-root.setLevel(LOG_LEVEL)
+for h in root_logger.handlers[:]:
+    root_logger.removeHandler(h)
+root_logger.setLevel(LOG_LEVEL)
 
-## @brief Module-level convenience logger (will propagate to root handler).
+## @brief Module-level convenience logger (will propagate to root_logger handler).
 ## @details
 ## Create logger instance.
 log = logging.getLogger(f"{FILENAME}")

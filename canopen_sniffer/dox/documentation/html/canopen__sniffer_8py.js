@@ -31,5 +31,5 @@ var canopen__sniffer_8py =
     [ "LOG_LEVEL", "canopen__sniffer_8py.html#aa5a9053636a30269210c54e734e0d583", null ],
     [ "MAX_FRAMES", "canopen__sniffer_8py.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
     [ "MAX_STATS_SHOW", "canopen__sniffer_8py.html#aa6fda8207dcce3b56fd8ed0ff3ec827e", null ],
-    [ "root", "canopen__sniffer_8py.html#ab4b8daf4b8ea9d39568719e1e320076f", null ]
+    [ "root_logger", "canopen__sniffer_8py.html#af2fe9aec0484a8d331ffcbc182d64af3", null ]
 ];

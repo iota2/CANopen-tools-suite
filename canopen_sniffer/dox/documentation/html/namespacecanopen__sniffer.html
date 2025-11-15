@@ -162,7 +162,7 @@ Variables</h2></td></tr>
 <tr class="memdesc:abd5e97aaf326e2debb2e68277808c957"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frequency of filesystem synchronization (every N rows).  <a href="namespacecanopen__sniffer.html#abd5e97aaf326e2debb2e68277808c957">More...</a><br /></td></tr>
 <tr class="separator:abd5e97aaf326e2debb2e68277808c957"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a> = logging.getLogger(f&quot;{FILENAME}&quot;)</td></tr>
-<tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module-level convenience logger (will propagate to root handler).  <a href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
+<tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module-level convenience logger (will propagate to root_logger handler).  <a href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5a9053636a30269210c54e734e0d583"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#aa5a9053636a30269210c54e734e0d583">LOG_LEVEL</a> = logging.DEBUG</td></tr>
 <tr class="memdesc:aa5a9053636a30269210c54e734e0d583"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Logging level.  <a href="namespacecanopen__sniffer.html#aa5a9053636a30269210c54e734e0d583">More...</a><br /></td></tr>
@@ -173,9 +173,9 @@ Variables</h2></td></tr>
 <tr class="memitem:aa6fda8207dcce3b56fd8ed0ff3ec827e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#aa6fda8207dcce3b56fd8ed0ff3ec827e">MAX_STATS_SHOW</a> = 5</td></tr>
 <tr class="memdesc:aa6fda8207dcce3b56fd8ed0ff3ec827e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of values to be shown in Bus stats window.  <a href="namespacecanopen__sniffer.html#aa6fda8207dcce3b56fd8ed0ff3ec827e">More...</a><br /></td></tr>
 <tr class="separator:aa6fda8207dcce3b56fd8ed0ff3ec827e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4b8daf4b8ea9d39568719e1e320076f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#ab4b8daf4b8ea9d39568719e1e320076f">root</a> = logging.getLogger()</td></tr>
-<tr class="memdesc:ab4b8daf4b8ea9d39568719e1e320076f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance.  <a href="namespacecanopen__sniffer.html#ab4b8daf4b8ea9d39568719e1e320076f">More...</a><br /></td></tr>
-<tr class="separator:ab4b8daf4b8ea9d39568719e1e320076f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2fe9aec0484a8d331ffcbc182d64af3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#af2fe9aec0484a8d331ffcbc182d64af3">root_logger</a> = logging.getLogger()</td></tr>
+<tr class="memdesc:af2fe9aec0484a8d331ffcbc182d64af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance.  <a href="namespacecanopen__sniffer.html#af2fe9aec0484a8d331ffcbc182d64af3">More...</a><br /></td></tr>
+<tr class="separator:af2fe9aec0484a8d331ffcbc182d64af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a4c58a43ad71454c2d1775bfd6b821aa4"></a>
@@ -511,7 +511,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Module-level convenience logger (will propagate to root handler). </p>
+<p>Module-level convenience logger (will propagate to root_logger handler). </p>
 <p>Create logger instance. </p>
 
 </div>
@@ -565,14 +565,14 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ab4b8daf4b8ea9d39568719e1e320076f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4b8daf4b8ea9d39568719e1e320076f">&#9670;&nbsp;</a></span>root</h2>
+<a id="af2fe9aec0484a8d331ffcbc182d64af3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2fe9aec0484a8d331ffcbc182d64af3">&#9670;&nbsp;</a></span>root_logger</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">root = logging.getLogger()</td>
+          <td class="memname">root_logger = logging.getLogger()</td>
         </tr>
       </table>
 </div><div class="memdoc">
