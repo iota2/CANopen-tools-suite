@@ -23,6 +23,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added dummy display processes for GUI and handled processed frame queue in them.
 - Updated logger module, to log in file if `--log` is passed, else print on console.
 - Added Doxygen documentation generation to pre-commit
+- Fixed TIME frame in frame_simulator.
+- Added ERROR frame to frame_simulator.
+- In Sniffer Added decoding for TIME, HB and EMCY messages.
 
 ## [v0.12.0] - 2025-10-25
 

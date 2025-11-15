@@ -29,7 +29,7 @@ import configparser
 import signal
 
 from enum import Enum, auto
-from datetime import datetime
+from datetime import datetime, timedelta, UTC
 from dataclasses import dataclass, field
 from collections import Counter, deque
 
@@ -92,6 +92,9 @@ CLI_PROTOCOL_TABLE_HEIGHT = 15
 
 ## Width of the graphs in the CLI interface (in characters).
 CLI_GRAPH_WIDTH = 20
+
+## Maximum number of values to be shown in Bus stats window.
+MAX_STATS_SHOW = 5
 
 ## Maximum number of CANopen frames to be cached.
 MAX_FRAMES = 500
@@ -274,10 +277,13 @@ class bus_stats:
         Tracks last update time and last frame counts for rate computations.
         """
         # List of rate keys we track. Keep this small & canonical.
-        keys: list = field(default_factory=lambda: ['total', 'nmt', 'pdo', 'sdo_res', 'sdo_req', 'peak'])
+        keys: list = field(default_factory=lambda: ['total', 'hb', 'emcy', 'pdo', 'sdo_res', 'sdo_req'])
 
         # Bus utilization (percent)
         bus_util_percent: float = 0.0
+
+        # Peak frames per seconds
+        peak_fps: float = 0.0
 
         # Last update timestamp
         last_update_time: float = field(default_factory=time.time)
@@ -355,6 +361,10 @@ class bus_stats:
 
         ## CAN communication bit rate
         self.bitrate = bitrate
+
+        # Reset rates status
+        self._stats.rates.bus_util_percent = 0.0
+        self._stats.rates.peak_fps = 0.0
 
         # Use canonical keys from the rates_stats dataclass
         keys = self._stats.rates.keys
@@ -489,13 +499,8 @@ class bus_stats:
             # collect current cumulative counts into a dict keyed same as rates.keys
             counts = {}
             counts['total'] = self._stats.frame_count.total
-            counts['nmt'] = (
-                self._stats.frame_count.counts.get(frame_type.HB, 0)
-                + self._stats.frame_count.counts.get(frame_type.EMCY, 0)
-                + self._stats.frame_count.counts.get(frame_type.NMT, 0)
-                + self._stats.frame_count.counts.get(frame_type.SYNC, 0)
-                + self._stats.frame_count.counts.get(frame_type.TIME, 0)
-            )
+            counts['hb'] = self._stats.frame_count.counts.get(frame_type.HB, 0)
+            counts['emcy'] = self._stats.frame_count.counts.get(frame_type.EMCY, 0)
             counts['pdo'] = self._stats.frame_count.counts.get(frame_type.PDO, 0)
             counts['sdo_res'] = self._stats.frame_count.counts.get(frame_type.SDO_RES, 0)
             counts['sdo_req'] = self._stats.frame_count.counts.get(frame_type.SDO_REQ, 0)
@@ -525,9 +530,28 @@ class bus_stats:
                 self._stats.rates.last_frame_counts[k] = cur
 
             # maintain peak explicitly
-            if "peak" not in rh:
-                rh["peak"] = deque(maxlen=CLI_GRAPH_WIDTH)
-            rh["peak"].append(max(rh["peak"][-1] if rh["peak"] else 0.0, self._stats.rates.latest.get("total", 0.0)))
+            # if "peak" not in rh:
+            #     rh["peak"] = deque(maxlen=CLI_GRAPH_WIDTH)
+            # rh["peak"].append(max(rh["peak"][-1] if rh["peak"] else 0.0, self._stats.rates.latest.get("total", 0.0)))
+            # update peak_fps (single float) as max(prev_peak, max(history['total']) or latest total)
+            try:
+                prev_peak = float(getattr(self._stats.rates, "peak_fps", 0.0))
+                # prefer max of history if available (reflects observed peaks over the kept window)
+                if 'total' in rh and len(rh['total']) > 0:
+                    hist_max = max(rh['total'])
+                    new_peak = max(prev_peak, hist_max)
+                else:
+                    # fallback to latest total rate
+                    cur_total_rate = float(self._stats.rates.latest.get('total', 0.0))
+                    new_peak = max(prev_peak, cur_total_rate)
+                self._stats.rates.peak_fps = new_peak
+            except Exception:
+                # be defensive: don't break rates update if peak logic fails
+                try:
+                    self._stats.rates.peak_fps = max(float(getattr(self._stats.rates, "peak_fps", 0.0)),
+                                                    float(self._stats.rates.latest.get('total', 0.0)))
+                except Exception:
+                    pass
 
             # update timestamp
             self._stats.rates.last_update_time = now
@@ -593,6 +617,7 @@ class bus_stats:
             self._stats.rates.last_frame_counts = dict.fromkeys(keys, 0)
             self._stats.rates.latest = dict.fromkeys(keys, 0.0)
             self._stats.rates.history = {k: deque(maxlen=CLI_GRAPH_WIDTH) for k in keys}
+            self._stats.rates.peak_fps = 0.0
 
             # Reset utilization and timestamps
             self._stats.rates.bus_util_percent = 0.0
@@ -1358,7 +1383,100 @@ class process_frame(threading.Thread):
                         # Save the frame
                         self.save_processed_frame(cob, ftype, index=0, sub=0, name="", raw=raw, decoded=decoded)
 
-                # Other network frames
+                # TIME frame
+                elif ftype == frame_type.TIME:
+                    # CiA-301 TIME: 4 bytes = ms after midnight (LE), 2 bytes = days since 1984-01-01 (LE)
+                    try:
+                        if raw and len(raw) >= 6:
+                            ms = int.from_bytes(raw[0:4], "little")
+                            days = int.from_bytes(raw[4:6], "little")
+
+                            # compute time-of-day safely (wrap ms into 24 h)
+                            tod_ms = ms % 86_400_000
+                            hours = tod_ms // 3_600_000
+                            minutes = (tod_ms % 3_600_000) // 60_000
+                            seconds = (tod_ms % 60_000) // 1000
+                            ms_rem = tod_ms % 1000
+                            tod = f"{hours:02d}:{minutes:02d}:{seconds:02d}.{ms_rem:03d}"
+
+                            # convert days since 1984-01-01 → date (with sanity check)
+                            base = datetime(1984, 1, 1, tzinfo=UTC)
+                            derived_date = (base + timedelta(days=days)).date()
+
+                            current_year = datetime.now(UTC).year
+                            if 1990 <= derived_date.year <= current_year + 1:
+                                date_str = derived_date.isoformat()
+                            else:
+                                date_str = f"{derived_date.isoformat()} (likely-invalid)"
+
+                            decoded = f"[{date_str} {tod}], Days={days}"
+                        else:
+                            decoded = "Malformed (need ≥ 6 bytes)"
+                    except Exception as e:
+                        decoded = f"Decode error ({e})"
+
+                    # Save processed frame
+                    self.save_processed_frame(cob, ftype, index=0, sub=0, name="TIME", raw=raw, decoded=decoded)
+
+                # Emergency (EMCY) frame — generic decoding (no vendor-specific interpretation)
+                elif ftype == frame_type.EMCY:
+                    # EMCY format (generic): bytes 0..1 = 16-bit error code (LE),
+                    # byte 2 = error register (bitfield), bytes 3..7 = manufacturer-specific bytes (raw hex)
+                    try:
+                        if raw and len(raw) >= 3:
+                            # 0..1 = 16-bit error code (little-endian)
+                            error_code = int.from_bytes(raw[0:2], "little")
+                            # byte 2 = error register (bitfield)
+                            error_reg = raw[2]
+                            # bytes 3..7 = up to 5 bytes manufacturer-specific
+                            manuf_bytes = raw[3:8] if len(raw) > 3 else b""
+
+                            # error register as 8-bit binary string (MSB..LSB)
+                            err_bits = f"{error_reg:08b}"
+
+                            # manufact bytes -> printable ASCII (replace non-printable with '.'),
+                            # strip trailing NULs for neatness
+                            def bytes_to_printable(b: bytes) -> str:
+                                if not b:
+                                    return ""
+                                s = "".join((chr(x) if 32 <= x <= 126 else ".") for x in b)
+                                # strip trailing dots that came from NULs (0x00)
+                                s = s.rstrip(".")
+                                return s
+
+                            manuf_ascii = bytes_to_printable(manuf_bytes)
+
+                            # final compact output: hex error code, binary error register, manuf ASCII
+                            decoded = f"[0x{error_code:04X}], reg=0x{error_reg:02X}[{err_bits}], manuf={manuf_ascii}"
+                        else:
+                            decoded = "Malformed (need >=3 bytes)"
+                    except Exception as e:
+                        decoded = f"Decode error ({e})"
+
+                    self.save_processed_frame(cob, ftype, index=0, sub=0, name="EMCY", raw=raw, decoded=decoded)
+
+                # Heartbeat (HB) frame
+                elif ftype == frame_type.HB:
+                    # Heartbeat: single status byte. COB-ID = 0x700 + nodeID
+                    try:
+                        if raw and len(raw) >= 1:
+                            state = raw[0]
+                            state_map = {
+                                0x00: "Bootup",
+                                0x04: "Stopped",
+                                0x05: "Operational",
+                                0x7F: "Pre-operational",
+                            }
+                            node = cob & 0x7F
+                            decoded = f"Node={node}, state=0x{state:02X} [{state_map.get(state, 'Unknown')}]"
+                        else:
+                            decoded = "Malformed (need >=1 byte)"
+                    except Exception as e:
+                        decoded = f"Decode error ({e})"
+
+                    self.save_processed_frame(cob, ftype, index=0, sub=0, name="HB", raw=raw, decoded=decoded)
+
+                # Other frames type
                 else:
                     self.save_processed_frame(cob, ftype, index=0, sub=0, name="", raw=raw, decoded="")
 
@@ -1459,10 +1577,21 @@ class DisplayCLI(threading.Thread):
         """Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)."""
         snapshot = self.stats.get_snapshot()
 
+        metric_labels = [
+            "State", "Active Nodes", "PDO Frames/s", "SDO Frames/s",
+            "HB Frames/s", "EMCY Frames/s", "Total Frames/s", "Peak Frames/s",
+            "Bus Util %", "Bus Idle %", "SDO OK/Abort",
+            "SDO resp time", "Last Error Frame", "Top Talkers", "Frame Dist."
+        ]
+        # Max label length + padding
+        metric_col_width = max(len(label) for label in metric_labels) + 2
+        graph_col_width = self.GRAPH_WIDTH
+
+        # Build table: Metric & Graph fixed width, Value expands
         t = Table(title="Bus Stats", expand=True, box=box.SQUARE, style="yellow")
-        t.add_column("Metric", no_wrap=True, width=16)
-        t.add_column("Value", justify="right", width=16)
-        t.add_column("Graph", justify="left", width=self.GRAPH_WIDTH)
+        t.add_column("Metric", no_wrap=True, width=metric_col_width)
+        t.add_column("Value", justify="right", ratio=1)  # fill remaining width
+        t.add_column("Graph", justify="left", width=graph_col_width)
 
         # Basic fields
         total_frames = getattr(snapshot.frame_count, "total", 0)
@@ -1498,19 +1627,24 @@ class DisplayCLI(threading.Thread):
             sdo_hist = list(sdo_hist_res) if sdo_hist_res else list(sdo_hist_req) if sdo_hist_req else []
         t.add_row("SDO Frames/s", f"{sdo_val:.1f}", self.sparkline(sdo_hist, "magenta") if sdo_hist else "")
 
-        # NMT
-        pdo_val = float(rates_latest.get("nmt", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("nmt", []) if isinstance(rates_hist, dict) else []
-        t.add_row("NMT Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
+        # Heart beat
+        pdo_val = float(rates_latest.get("hb", 0.0)) if isinstance(rates_latest, dict) else 0.0
+        pdo_hist = rates_hist.get("hb", []) if isinstance(rates_hist, dict) else []
+        t.add_row("HB Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
 
-        # Total & Peak
+        # Emergency Messages
+        pdo_val = float(rates_latest.get("emcy", 0.0)) if isinstance(rates_latest, dict) else 0.0
+        pdo_hist = rates_hist.get("emcy", []) if isinstance(rates_hist, dict) else []
+        t.add_row("EMCY Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
+
+        # Total frames/s
         total_val = float(rates_latest.get("total", 0.0)) if isinstance(rates_latest, dict) else 0.0
         total_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
         t.add_row("Total Frames/s", f"{total_val:.1f}", self.sparkline(total_hist, "yellow") if total_hist else "")
 
-        peak_val = float(rates_latest.get("peak", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        peak_hist = rates_hist.get("peak", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Peak Frames/s", f"{peak_val:.1f}", self.sparkline(peak_hist, "red") if peak_hist else "")
+        # Peak frames/s
+        peak_val = float(getattr(snapshot.rates, "peak_fps", 0.0))
+        t.add_row("Peak Frames/s", f"{peak_val:.1f}", "")
 
         # Bus utilization (computed by bus_stats)
         util = None
@@ -1527,30 +1661,6 @@ class DisplayCLI(threading.Thread):
         t.add_row("Bus Util %", f"{util:.2f}%" if util is not None else "-", self.sparkline(util_hist, "grey") if util_hist else "")
         t.add_row("Bus Idle %", f"{idle:.2f}%" if util is not None else "-", "")
 
-        # Frame distribution
-        # try:
-        #     dist_pairs = ", ".join(f"{k.name}:{v}" for k, v in snapshot.frame_count.counts.items())
-        # except Exception:
-        #     dist_pairs = "-"
-        # t.add_row("Frame Dist.", dist_pairs or "-", "")
-        # Frame distribution — show top-N kinds sorted by count (descending)
-        try:
-            counts = snapshot.frame_count.counts  # mapping: frame_type -> int
-            # build list of (name, count) and sort by count desc
-            items = sorted(((k.name, v) for k, v in counts.items()), key=lambda kv: kv[1], reverse=True)
-            # choose how many to show inline
-            MAX_SHOW = 8
-            shown = items[:MAX_SHOW]
-            remaining = len(items) - len(shown)
-            dist_pairs = ", ".join(f"{name}:{cnt}" for name, cnt in shown)
-            if remaining > 0:
-                dist_pairs += f", +{remaining} more"
-            if not dist_pairs:
-                dist_pairs = "-"
-        except Exception:
-            dist_pairs = "-"
-        t.add_row("Frame Dist.", dist_pairs, "")
-
         # SDO stats & response time
         try:
             t.add_row("SDO OK/Abort", f"{snapshot.sdo.success}/{snapshot.sdo.abort}", "")
@@ -1560,22 +1670,36 @@ class DisplayCLI(threading.Thread):
             t.add_row("SDO OK/Abort", "-", "")
             t.add_row("SDO resp time", "-", "")
 
+        # Last error frame
+        last_err = "-"
+        try:
+            if snapshot.error.last_time or snapshot.error.last_frame:
+                last_err = f"[{snapshot.error.last_time}] <{snapshot.error.last_frame}>"
+        except Exception:
+            last_err = "-"
+        t.add_row("Last Error Frame", last_err, "")
+
         # Top talkers
         try:
-            top = snapshot.top_talkers.most_common(3)
+            top = snapshot.top_talkers.most_common(MAX_STATS_SHOW)
             top_str = ", ".join(f"0x{c:03X}:{cnt}" for c, cnt in top) if top else "-"
             t.add_row("Top Talkers", top_str, "")
         except Exception:
             t.add_row("Top Talkers", "-", "")
 
-        # Last error
-        last_err = "-"
+        # Frame distribution — show top-N kinds sorted by count (descending)
         try:
-            if snapshot.error.last_time or snapshot.error.last_frame:
-                last_err = f"{snapshot.error.last_time} {snapshot.error.last_frame}"
+            counts = snapshot.frame_count.counts  # mapping: frame_type -> int
+            # build list of (name, count) and sort by count desc
+            items = sorted(((k.name, v) for k, v in counts.items()), key=lambda kv: kv[1], reverse=True)
+            # choose how many to show inline
+            shown = items[:MAX_STATS_SHOW]
+            dist_pairs = ", ".join(f"{name}:{cnt}" for name, cnt in shown)
+            if not dist_pairs:
+                dist_pairs = "-"
         except Exception:
-            last_err = "-"
-        t.add_row("Last Error", last_err, "")
+            dist_pairs = "-"
+        t.add_row("Frame Dist.", dist_pairs, "")
 
         return t
 

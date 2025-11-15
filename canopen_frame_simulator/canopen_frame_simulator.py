@@ -137,15 +137,18 @@ def parse_sdos_from_eds(eds_path, pdos):
     return sdos
 
 
-def send_frame(bus, arb_id, data_bytes, delay=0.05):
-    """Send one CAN frame (max 8 bytes)."""
+def send_frame(bus, arb_id, data_bytes, delay=0.05, error=False):
+    """Send one CAN frame (max 8 bytes).
+    If error=True, set is_error_frame so receivers can detect a bus error.
+    """
     if len(data_bytes) > 8:
         data_bytes = data_bytes[:8]
     msg = can.Message(arbitration_id=arb_id,
                       data=bytes(data_bytes),
-                      is_extended_id=False)
+                      is_extended_id=False,
+                      is_error_frame=bool(error))
     bus.send(msg)
-    log.info(f"Sent frame COB=0x{arb_id:X}, data={data_bytes.hex(' ')}")
+    log.info(f"Sent frame COB=0x{arb_id:X}, data={data_bytes.hex(' ')}, error={error}")
     time.sleep(delay)
 
 
@@ -167,29 +170,80 @@ def get_node_id_from_eds(eds_path):
 
 
 # ---------------- CANopen Services ----------------
+def get_manufacturer_from_eds(eds_path):
+    """Extract a short manufacturer string from EDS. Return up to 5 ASCII bytes.
+    If none found or file missing, return None.
+    """
+    if not eds_path:
+        return None
+    try:
+        cfg = configparser.ConfigParser(strict=False, delimiters=("="))
+        cfg.optionxform = str
+        cfg.read(eds_path)
+        # look for common keys in likely sections
+        for sec in cfg.sections():
+            for key in cfg[sec]:
+                if key.lower() in ("manufacturer", "manufacturername", "vendor", "vendorname"):
+                    raw = cfg[sec][key].split(";")[0].strip()
+                    if raw:
+                        b = raw.encode('ascii', errors='replace')[:5]
+                        if len(b) < 5:
+                            b = b.ljust(5, b"\x00")
+                        return b
+    except Exception:
+        return None
+    return None
+
+
 def send_heartbeat(bus, node_id):
     """Send heartbeat (0x700 + NodeID)."""
     send_frame(bus, 0x700 + node_id, bytes([0x05]))  # 0x05 means Operational
 
 
 def send_timestamp(bus):
-    """Send Time Stamp (COB-ID 0x100)."""
+    """Send Time Stamp (COB-ID 0x100) in CiA-301 format:
+       4 bytes LE = milliseconds after midnight,
+       2 bytes LE = days since 1984-01-01.
+    """
+    # use UTC so logs are consistent and deterministic
     now = datetime.now(timezone.utc)
-    seconds = int(now.timestamp())
-    msec = int(now.microsecond / 1000)  # convert to ms (0-999)
-    data = seconds.to_bytes(4, "little") + msec.to_bytes(2, "little")
+
+    # milliseconds after midnight
+    midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    ms_after_midnight = int((now - midnight).total_seconds() * 1000) + int(now.microsecond / 1000)
+
+    # days since 1984-01-01
+    base = datetime(1984, 1, 1, tzinfo=timezone.utc)
+    days_since_base = (now.date() - base.date()).days
+
+    # guard (ms must fit in 4 bytes, days in 2 bytes)
+    ms_after_midnight = ms_after_midnight % 86_400_000  # ensure inside a day
+    days_since_base = max(0, min(days_since_base, 0xFFFF))
+
+    data = ms_after_midnight.to_bytes(4, "little") + days_since_base.to_bytes(2, "little")
     send_frame(bus, 0x100, data)
 
 
-def send_emcy(bus, node_id, error_code=0x1000, error_reg=0x01):
-    """Send Emergency (EMCY)."""
-    data = error_code.to_bytes(2, "little") + bytes([error_reg]) + b"\x00\x00\x00\x00\x00"
-    send_frame(bus, 0x80 + node_id, data)
+def send_emcy(bus, node_id, error_code=0x1000, error_reg=0x01, manuf_bytes=None, error_frame=False):
+    """Send Emergency (EMCY).
+    manuf_bytes: optional bytes (<=5) to include as manufacturer-specific data. If None, 'DUMMY' used.
+    error_frame: if True, send as an error-frame (is_error_frame=True)
+    """
+    if manuf_bytes is None:
+        manuf = b'DUMMY'[:5]
+    else:
+        manuf = bytes(manuf_bytes)[:5]
+        if len(manuf) < 5:
+            manuf = manuf.ljust(5, b"\x00")
+    data = int(error_code).to_bytes(2, "little") + bytes([int(error_reg) & 0xFF]) + manuf
+    if len(data) < 8:
+        data = data + b"\x00" * (8 - len(data))
+    send_frame(bus, 0x80 + node_id, data, error=error_frame)
 
 
 # ---------------- Main ----------------
 def main(interface="vcan0", count=5, delay:int=0, eds_path=None,
-         enable_log=False, with_timestamp=False, with_emcy=False):
+         enable_log=False, with_timestamp=False, with_emcy=False, with_err=False):
 
     if enable_log:
         enable_logging()
@@ -199,8 +253,10 @@ def main(interface="vcan0", count=5, delay:int=0, eds_path=None,
     pdos = parse_pdos_from_eds(eds_path) if eds_path else []
     sdos = parse_sdos_from_eds(eds_path, pdos) if eds_path else []
     node_id = get_node_id_from_eds(eds_path) if eds_path else 1
+    manuf_bytes = get_manufacturer_from_eds(eds_path) if eds_path else None
 
     for i in tqdm(range(count), desc="Sending frames"):
+
         # Heartbeat
         send_heartbeat(bus, node_id)
 
@@ -208,9 +264,16 @@ def main(interface="vcan0", count=5, delay:int=0, eds_path=None,
         if with_timestamp:
             send_timestamp(bus)
 
-        # EMCY (if enabled, every 5th cycle for demo)
-        if with_emcy and (i % 5 == 0):
-            send_emcy(bus, node_id)
+        # EMCY (if enabled): send every cycle. Every 10th iteration increment error_code and shift error register bit.
+        if with_emcy:
+            # base error code increments every 10th iteration
+            cycles = i // 10
+            error_code = 0x1000 + cycles
+            # compute err_reg as a single bit that shifts every 10th iteration
+            # bit_pos cycles through 0..7
+            bit_pos = cycles % 8
+            err_reg = (1 << bit_pos) & 0xFF
+            send_emcy(bus, node_id, error_code=error_code, error_reg=err_reg, manuf_bytes=manuf_bytes, error_frame=with_err)
 
         # PDOs
         for cob_id, mappings in pdos:
@@ -229,12 +292,15 @@ def main(interface="vcan0", count=5, delay:int=0, eds_path=None,
 
         # SDOs
         for (idx, sub, default) in sdos:
+            if i % 10 == 0:
+                cycles = i // 10
+            val = default + cycles
             sdo_resp = bytes([
-                0x4B if default <= 0xFF else 0x4F,
+                0x4B if val <= 0xFF else 0x4F,
                 idx & 0xFF,
                 (idx >> 8) & 0xFF,
                 sub,
-            ]) + default.to_bytes(4, "little", signed=False)
+            ]) + int(val).to_bytes(4, "little", signed=False)
             send_frame(bus, 0x580 + node_id, sdo_resp)
 
         time.sleep(delay / 1000)
@@ -248,6 +314,7 @@ if __name__ == "__main__":
     parser.add_argument("--log", action="store_true", help="enable logging to canopen_frame_simulator.log")
     parser.add_argument("--with-timestamp", action="store_true", help="send Time Stamp (0x100)")
     parser.add_argument("--with-emcy", action="store_true", help="send Emergency (0x80 + NodeID)")
+    parser.add_argument("--with-err", action="store_true", help="send ERROR-flag on EMCY frames (is_error_frame) to simulate bus error")
     args = parser.parse_args()
     main(args.interface, args.count, args.delay, args.eds, args.log,
-         args.with_timestamp, args.with_emcy)
+         args.with_timestamp, args.with_emcy, args.with_err)

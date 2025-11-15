@@ -30,5 +30,6 @@ var canopen__sniffer_8py =
     [ "log", "canopen__sniffer_8py.html#ab09a63eb35b270b5cdbead1983ebdccb", null ],
     [ "LOG_LEVEL", "canopen__sniffer_8py.html#aa5a9053636a30269210c54e734e0d583", null ],
     [ "MAX_FRAMES", "canopen__sniffer_8py.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
+    [ "MAX_STATS_SHOW", "canopen__sniffer_8py.html#aa6fda8207dcce3b56fd8ed0ff3ec827e", null ],
     [ "root", "canopen__sniffer_8py.html#ab4b8daf4b8ea9d39568719e1e320076f", null ]
 ];

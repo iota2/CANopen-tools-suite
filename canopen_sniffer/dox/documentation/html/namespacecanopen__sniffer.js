@@ -24,5 +24,6 @@ var namespacecanopen__sniffer =
     [ "log", "namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb", null ],
     [ "LOG_LEVEL", "namespacecanopen__sniffer.html#aa5a9053636a30269210c54e734e0d583", null ],
     [ "MAX_FRAMES", "namespacecanopen__sniffer.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
+    [ "MAX_STATS_SHOW", "namespacecanopen__sniffer.html#aa6fda8207dcce3b56fd8ed0ff3ec827e", null ],
     [ "root", "namespacecanopen__sniffer.html#ab4b8daf4b8ea9d39568719e1e320076f", null ]
 ];

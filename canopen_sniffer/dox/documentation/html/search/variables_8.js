@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['int_188',['int',['../classcanopen__sniffer_1_1bus__stats_1_1sdo__stats.html#a61569f2965b7a369eb10b6d75d410d11',1,'canopen_sniffer::bus_stats::sdo_stats']]],
-  ['interface_189',['interface',['../classcanopen__sniffer_1_1can__sniffer.html#ae6deea6e7d03b5d4db98ea209159e57f',1,'canopen_sniffer::can_sniffer']]]
+  ['int_189',['int',['../classcanopen__sniffer_1_1bus__stats_1_1sdo__stats.html#a61569f2965b7a369eb10b6d75d410d11',1,'canopen_sniffer::bus_stats::sdo_stats']]],
+  ['interface_190',['interface',['../classcanopen__sniffer_1_1can__sniffer.html#ae6deea6e7d03b5d4db98ea209159e57f',1,'canopen_sniffer::can_sniffer']]]
 ];
