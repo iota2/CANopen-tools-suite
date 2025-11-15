@@ -92,13 +92,7 @@ $(document).ready(function(){initNavTree('canopen__sniffer_8py.html',''); initRe
 <div class="title">canopen_sniffer.py File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>CANopen bus sniffer.  
-<a href="#details">More...</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>CANopen bus sniffer. </p>
-<p>This module defines default settings, constants, and enumerations used by the CANopen bus sniffer application. It also sets up logging for the module. </p>
-</div><table class="memberdecls">
+<table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a></td></tr>
@@ -106,6 +100,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1can__sniffer.html">can_sniffer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CAN bus sniffer thread.  <a href="classcanopen__sniffer_1_1can__sniffer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1DisplayCLI.html">DisplayCLI</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1DisplayGUI.html">DisplayGUI</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parser for CANopen EDS (Electronic Data Sheet) files.  <a href="classcanopen__sniffer_1_1eds__parser.html#details">More...</a><br /></td></tr>
@@ -124,6 +122,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html">process_frame</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processor thread that consumes CAN frames and updates statistics.  <a href="classcanopen__sniffer_1_1process__frame.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1bus__stats_1_1rates__stats.html">bus_stats.rates_stats</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Records frame rate statistics (PDO, SDO, total, etc.)  <a href="classcanopen__sniffer_1_1bus__stats_1_1rates__stats.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1bus__stats_1_1sdo__stats.html">bus_stats.sdo_stats</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Records SDO (Service Data Object) communication statistics.  <a href="classcanopen__sniffer_1_1bus__stats_1_1sdo__stats.html#details">More...</a><br /></td></tr>
@@ -146,7 +147,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a008ae5eaab322c012ff6eb87cca572c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get value after splitting the string.  <a href="namespacecanopen__sniffer.html#a008ae5eaab322c012ff6eb87cca572c6">More...</a><br /></td></tr>
 <tr class="separator:a008ae5eaab322c012ff6eb87cca572c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a857c863247193b47a357f1c5c1533ec8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#a857c863247193b47a357f1c5c1533ec8">enable_logging</a> ()</td></tr>
-<tr class="memdesc:a857c863247193b47a357f1c5c1533ec8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches a NullHandler to suppress warnings if no logging configuration is provided.  <a href="namespacecanopen__sniffer.html#a857c863247193b47a357f1c5c1533ec8">More...</a><br /></td></tr>
+<tr class="memdesc:a857c863247193b47a357f1c5c1533ec8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable file-only logging, enabled through argument.  <a href="namespacecanopen__sniffer.html#a857c863247193b47a357f1c5c1533ec8">More...</a><br /></td></tr>
 <tr class="separator:a857c863247193b47a357f1c5c1533ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a355f06d5ba7ea264dc3e2e128349c130"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#a355f06d5ba7ea264dc3e2e128349c130">main</a> ()</td></tr>
 <tr class="memdesc:a355f06d5ba7ea264dc3e2e128349c130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main entry point for the CANopen bus sniffer application.  <a href="namespacecanopen__sniffer.html#a355f06d5ba7ea264dc3e2e128349c130">More...</a><br /></td></tr>
@@ -172,9 +173,9 @@ Variables</h2></td></tr>
 <tr class="memitem:adb2fef007c95e5c7bad348938406dc9b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#adb2fef007c95e5c7bad348938406dc9b">CLI_PROTOCOL_TABLE_HEIGHT</a> = 15</td></tr>
 <tr class="memdesc:adb2fef007c95e5c7bad348938406dc9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Height of the protocol table in the CLI interface (number of rows).  <a href="namespacecanopen__sniffer.html#adb2fef007c95e5c7bad348938406dc9b">More...</a><br /></td></tr>
 <tr class="separator:adb2fef007c95e5c7bad348938406dc9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a103859a1dddc0923cb7ced9ecafffe94"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#a103859a1dddc0923cb7ced9ecafffe94">DEFAULT_BAUD_RATE</a> = 1000000</td></tr>
-<tr class="memdesc:a103859a1dddc0923cb7ced9ecafffe94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default CAN bus baud rate (in bits per second).  <a href="namespacecanopen__sniffer.html#a103859a1dddc0923cb7ced9ecafffe94">More...</a><br /></td></tr>
-<tr class="separator:a103859a1dddc0923cb7ced9ecafffe94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c22777dfecff81d656d3c48e0a18187"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#a1c22777dfecff81d656d3c48e0a18187">DEFAULT_CAN_BIT_RATE</a> = 1000000</td></tr>
+<tr class="memdesc:a1c22777dfecff81d656d3c48e0a18187"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default CAN bus bit rate (in bits per second).  <a href="namespacecanopen__sniffer.html#a1c22777dfecff81d656d3c48e0a18187">More...</a><br /></td></tr>
+<tr class="separator:a1c22777dfecff81d656d3c48e0a18187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9313201603fcc86a7436c761ac54a0af"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#a9313201603fcc86a7436c761ac54a0af">DEFAULT_INTERFACE</a> = &quot;vcan0&quot;</td></tr>
 <tr class="memdesc:a9313201603fcc86a7436c761ac54a0af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default CAN interface to be loaded.  <a href="namespacecanopen__sniffer.html#a9313201603fcc86a7436c761ac54a0af">More...</a><br /></td></tr>
 <tr class="separator:a9313201603fcc86a7436c761ac54a0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,11 +186,20 @@ Variables</h2></td></tr>
 <tr class="memdesc:abd5e97aaf326e2debb2e68277808c957"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frequency of filesystem synchronization (every N rows).  <a href="namespacecanopen__sniffer.html#abd5e97aaf326e2debb2e68277808c957">More...</a><br /></td></tr>
 <tr class="separator:abd5e97aaf326e2debb2e68277808c957"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a> = logging.getLogger(f&quot;{FILENAME}&quot;)</td></tr>
-<tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance for the CANopen bus sniffer.  <a href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
+<tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module-level convenience logger (will propagate to root_logger handler).  <a href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a9053636a30269210c54e734e0d583"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#aa5a9053636a30269210c54e734e0d583">LOG_LEVEL</a> = logging.DEBUG</td></tr>
+<tr class="memdesc:aa5a9053636a30269210c54e734e0d583"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Logging level.  <a href="namespacecanopen__sniffer.html#aa5a9053636a30269210c54e734e0d583">More...</a><br /></td></tr>
+<tr class="separator:aa5a9053636a30269210c54e734e0d583"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90270d61ef5cbcf52b1f4e63ee96cfbc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#a90270d61ef5cbcf52b1f4e63ee96cfbc">MAX_FRAMES</a> = 500</td></tr>
 <tr class="memdesc:a90270d61ef5cbcf52b1f4e63ee96cfbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of CANopen frames to be cached.  <a href="namespacecanopen__sniffer.html#a90270d61ef5cbcf52b1f4e63ee96cfbc">More...</a><br /></td></tr>
 <tr class="separator:a90270d61ef5cbcf52b1f4e63ee96cfbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6fda8207dcce3b56fd8ed0ff3ec827e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#aa6fda8207dcce3b56fd8ed0ff3ec827e">MAX_STATS_SHOW</a> = 5</td></tr>
+<tr class="memdesc:aa6fda8207dcce3b56fd8ed0ff3ec827e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of values to be shown in Bus stats window.  <a href="namespacecanopen__sniffer.html#aa6fda8207dcce3b56fd8ed0ff3ec827e">More...</a><br /></td></tr>
+<tr class="separator:aa6fda8207dcce3b56fd8ed0ff3ec827e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2fe9aec0484a8d331ffcbc182d64af3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecanopen__sniffer.html#af2fe9aec0484a8d331ffcbc182d64af3">root_logger</a> = logging.getLogger()</td></tr>
+<tr class="memdesc:af2fe9aec0484a8d331ffcbc182d64af3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance.  <a href="namespacecanopen__sniffer.html#af2fe9aec0484a8d331ffcbc182d64af3">More...</a><br /></td></tr>
+<tr class="separator:af2fe9aec0484a8d331ffcbc182d64af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

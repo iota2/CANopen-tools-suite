@@ -3,9 +3,10 @@ var classcanopen__sniffer_1_1bus__stats =
     [ "error_stats", "classcanopen__sniffer_1_1bus__stats_1_1error__stats.html", null ],
     [ "frame_count", "classcanopen__sniffer_1_1bus__stats_1_1frame__count.html", null ],
     [ "payload_size", "classcanopen__sniffer_1_1bus__stats_1_1payload__size.html", null ],
+    [ "rates_stats", "classcanopen__sniffer_1_1bus__stats_1_1rates__stats.html", null ],
     [ "sdo_stats", "classcanopen__sniffer_1_1bus__stats_1_1sdo__stats.html", null ],
     [ "stats_data", "classcanopen__sniffer_1_1bus__stats_1_1stats__data.html", null ],
-    [ "__init__", "classcanopen__sniffer_1_1bus__stats.html#ae64f0875afe3067b97ba370b354b9213", null ],
+    [ "__init__", "classcanopen__sniffer_1_1bus__stats.html#ad212cbd35ff7a4473c5f4251bd8c5887", null ],
     [ "add_node", "classcanopen__sniffer_1_1bus__stats.html#ac8f70966bf334462b64f0bcf6e1f7474", null ],
     [ "count_talker", "classcanopen__sniffer_1_1bus__stats.html#a1bdcbcf5c0482abf7e2de86096f8e6c0", null ],
     [ "get_frame_count", "classcanopen__sniffer_1_1bus__stats.html#a04a08b7d5a675eaddf9ac350966183c4", null ],
@@ -17,7 +18,10 @@ var classcanopen__sniffer_1_1bus__stats =
     [ "increment_sdo_success", "classcanopen__sniffer_1_1bus__stats.html#a7c7516bb467048357bf00810b17341bb", null ],
     [ "reset", "classcanopen__sniffer_1_1bus__stats.html#a51829b63adb24ac48d350dee60181002", null ],
     [ "set_start_time", "classcanopen__sniffer_1_1bus__stats.html#a09ae5bd534d8dbec99a913ed75fe9848", null ],
+    [ "stop", "classcanopen__sniffer_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
+    [ "update_rates", "classcanopen__sniffer_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced", null ],
     [ "update_sdo_request_time", "classcanopen__sniffer_1_1bus__stats.html#a2a6107d8e745cc7e16919053c332fea7", null ],
     [ "update_sdo_response_time", "classcanopen__sniffer_1_1bus__stats.html#a4d50a0e52bf7775a3c7b0906a4b8868a", null ],
+    [ "bitrate", "classcanopen__sniffer_1_1bus__stats.html#a9ba628ef53aa2760ee08afab49765d42", null ],
     [ "log", "classcanopen__sniffer_1_1bus__stats.html#ab09a63eb35b270b5cdbead1983ebdccb", null ]
 ];

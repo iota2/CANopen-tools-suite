@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['pdo_157',['PDO',['../classcanopen__sniffer_1_1frame__type.html#a87829395911f4d6b937b0fe7ea9af3d2',1,'canopen_sniffer::frame_type']]],
-  ['pdo_5fmap_158',['pdo_map',['../classcanopen__sniffer_1_1eds__parser.html#ac960737f47148af2dd1db69a47a9c803',1,'canopen_sniffer::eds_parser']]]
+  ['name_5fmap_196',['name_map',['../classcanopen__sniffer_1_1eds__parser.html#a379b3d2f78238184664fb872f44c6f96',1,'canopen_sniffer::eds_parser']]],
+  ['network_197',['network',['../classcanopen__sniffer_1_1can__sniffer.html#a6b288a470bcb2fd5f321915ef4045b8b',1,'canopen_sniffer::can_sniffer']]],
+  ['nmt_198',['NMT',['../classcanopen__sniffer_1_1frame__type.html#afe42a7d0be74bd0dfbd7e16d43c87591',1,'canopen_sniffer::frame_type']]]
 ];

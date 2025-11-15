@@ -49,3 +49,9 @@ repos:
         # Run manually:
         # pre-commit run fix-changelog --all-files
 
+      - id: generate-doxygen
+        name: Generate and Stage Doxygen Documentation
+        entry: bash tools/generate_doxygen.sh
+        language: system
+        pass_filenames: false
+        always_run: true

@@ -125,9 +125,9 @@ Collaboration diagram for process_frame:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abee69d75d0c083a4c5da12fe3b1b91d5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#abee69d75d0c083a4c5da12fe3b1b91d5">__init__</a> (self, <a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, <a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, bool <a class="el" href="classcanopen__sniffer_1_1process__frame.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=False)</td></tr>
-<tr class="memdesc:abee69d75d0c083a4c5da12fe3b1b91d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classcanopen__sniffer_1_1process__frame.html#abee69d75d0c083a4c5da12fe3b1b91d5">More...</a><br /></td></tr>
-<tr class="separator:abee69d75d0c083a4c5da12fe3b1b91d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9017521a9672251ad6a11dcd1d6103d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#ae9017521a9672251ad6a11dcd1d6103d">__init__</a> (self, <a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a>, <a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a> <a class="el" href="classcanopen__sniffer_1_1process__frame.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, bool <a class="el" href="classcanopen__sniffer_1_1process__frame.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=False)</td></tr>
+<tr class="memdesc:ae9017521a9672251ad6a11dcd1d6103d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classcanopen__sniffer_1_1process__frame.html#ae9017521a9672251ad6a11dcd1d6103d">More...</a><br /></td></tr>
+<tr class="separator:ae9017521a9672251ad6a11dcd1d6103d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad22709b2e67308af35f55680d5a026e0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0">run</a> (self)</td></tr>
 <tr class="memdesc:ad22709b2e67308af35f55680d5a026e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main processing loop.  <a href="classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0">More...</a><br /></td></tr>
 <tr class="separator:ad22709b2e67308af35f55680d5a026e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,6 +167,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a></td></tr>
 <tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance scoped to this processor.  <a href="classcanopen__sniffer_1_1process__frame.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e5acd6f2030a04dbe189a2b21363c3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a></td></tr>
+<tr class="memdesc:a5e5acd6f2030a04dbe189a2b21363c3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue from which raw frame dictionaries are consumed.  <a href="classcanopen__sniffer_1_1process__frame.html#a5e5acd6f2030a04dbe189a2b21363c3a">More...</a><br /></td></tr>
+<tr class="separator:a5e5acd6f2030a04dbe189a2b21363c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a></td></tr>
 <tr class="memdesc:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue from which raw frame dictionaries are consumed.  <a href="classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051">More...</a><br /></td></tr>
 <tr class="separator:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,8 +178,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aa57ebe01934de43865125819a3c4af74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abee69d75d0c083a4c5da12fe3b1b91d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abee69d75d0c083a4c5da12fe3b1b91d5">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="ae9017521a9672251ad6a11dcd1d6103d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9017521a9672251ad6a11dcd1d6103d">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -198,6 +201,12 @@ Public Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">queue.Queue&#160;</td>
           <td class="paramname"><em>raw_frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">queue.Queue&#160;</td>
+          <td class="paramname"><em>processed_frame</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -224,6 +233,7 @@ Public Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">stats</td><td>Instance of <a class="el" href="classcanopen__sniffer_1_1bus__stats.html">bus_stats</a> used to record statistics. </td></tr>
     <tr><td class="paramname">raw_frame</td><td><code>queue.Queue</code> providing raw frames (dict) from the sniffer. </td></tr>
+    <tr><td class="paramname">processed_frame</td><td><code>queue.Queue</code> instance to push processed frames for display. </td></tr>
     <tr><td class="paramname">eds_map</td><td><a class="el" href="classcanopen__sniffer_1_1eds__parser.html">eds_parser</a> providing name_map lookups. </td></tr>
     <tr><td class="paramname">export</td><td>If True, enable CSV export of processed frames. </td></tr>
   </table>
@@ -695,6 +705,22 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Logger instance scoped to this processor. </p>
+
+</div>
+</div>
+<a id="a5e5acd6f2030a04dbe189a2b21363c3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e5acd6f2030a04dbe189a2b21363c3a">&#9670;&nbsp;</a></span>processed_frame</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">processed_frame</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queue from which raw frame dictionaries are consumed. </p>
 
 </div>
 </div>

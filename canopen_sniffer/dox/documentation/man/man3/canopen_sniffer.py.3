@@ -1,17 +1,11 @@
-.TH "canopen_sniffer.py" 3 "Sat Oct 18 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "canopen_sniffer.py" 3 "Sat Nov 15 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-canopen_sniffer.py \- CANopen bus sniffer\&.  
-
+canopen_sniffer.py
 .SH SYNOPSIS
 .br
 .PP
-.SH "Detailed Description"
-.PP 
-CANopen bus sniffer\&. 
-
-This module defines default settings, constants, and enumerations used by the CANopen bus sniffer application\&. It also sets up logging for the module\&. 
 .SS "Classes"
 
 .in +1c
@@ -23,6 +17,12 @@ This module defines default settings, constants, and enumerations used by the CA
 .RI "class \fBcan_sniffer\fP"
 .br
 .RI "CAN bus sniffer thread\&. "
+.ti -1c
+.RI "class \fBDisplayCLI\fP"
+.br
+.ti -1c
+.RI "class \fBDisplayGUI\fP"
+.br
 .ti -1c
 .RI "class \fBeds_parser\fP"
 .br
@@ -47,6 +47,10 @@ This module defines default settings, constants, and enumerations used by the CA
 .RI "class \fBprocess_frame\fP"
 .br
 .RI "Processor thread that consumes CAN frames and updates statistics\&. "
+.ti -1c
+.RI "class \fBbus_stats\&.rates_stats\fP"
+.br
+.RI "Records frame rate statistics (PDO, SDO, total, etc\&.) "
 .ti -1c
 .RI "class \fBbus_stats\&.sdo_stats\fP"
 .br
@@ -77,7 +81,7 @@ This module defines default settings, constants, and enumerations used by the CA
 .ti -1c
 .RI "def \fBenable_logging\fP ()"
 .br
-.RI "Attaches a NullHandler to suppress warnings if no logging configuration is provided\&. "
+.RI "Enable file-only logging, enabled through argument\&. "
 .ti -1c
 .RI "def \fBmain\fP ()"
 .br
@@ -111,9 +115,9 @@ This module defines default settings, constants, and enumerations used by the CA
 .br
 .RI "Height of the protocol table in the CLI interface (number of rows)\&. "
 .ti -1c
-.RI "int \fBDEFAULT_BAUD_RATE\fP = 1000000"
+.RI "int \fBDEFAULT_CAN_BIT_RATE\fP = 1000000"
 .br
-.RI "Default CAN bus baud rate (in bits per second)\&. "
+.RI "Default CAN bus bit rate (in bits per second)\&. "
 .ti -1c
 .RI "string \fBDEFAULT_INTERFACE\fP = 'vcan0'"
 .br
@@ -129,11 +133,23 @@ This module defines default settings, constants, and enumerations used by the CA
 .ti -1c
 .RI "\fBlog\fP = logging\&.getLogger(f'{FILENAME}')"
 .br
-.RI "Logger instance for the CANopen bus sniffer\&. "
+.RI "Module-level convenience logger (will propagate to root_logger handler)\&. "
+.ti -1c
+.RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
+.br
+.RI "Default Logging level\&. "
 .ti -1c
 .RI "int \fBMAX_FRAMES\fP = 500"
 .br
 .RI "Maximum number of CANopen frames to be cached\&. "
+.ti -1c
+.RI "int \fBMAX_STATS_SHOW\fP = 5"
+.br
+.RI "Maximum number of values to be shown in Bus stats window\&. "
+.ti -1c
+.RI "\fBroot_logger\fP = logging\&.getLogger()"
+.br
+.RI "Logger instance\&. "
 .in -1c
 .SH "Author"
 .PP 

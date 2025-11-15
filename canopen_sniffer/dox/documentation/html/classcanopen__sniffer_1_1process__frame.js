@@ -1,6 +1,6 @@
 var classcanopen__sniffer_1_1process__frame =
 [
-    [ "__init__", "classcanopen__sniffer_1_1process__frame.html#abee69d75d0c083a4c5da12fe3b1b91d5", null ],
+    [ "__init__", "classcanopen__sniffer_1_1process__frame.html#ae9017521a9672251ad6a11dcd1d6103d", null ],
     [ "run", "classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0", null ],
     [ "save_frame", "classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3", null ],
     [ "save_frame_to_csv", "classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6", null ],
@@ -13,6 +13,7 @@ var classcanopen__sniffer_1_1process__frame =
     [ "export_serial_number", "classcanopen__sniffer_1_1process__frame.html#ab7a93db5093bfacf3425a3456acfa568", null ],
     [ "export_writer", "classcanopen__sniffer_1_1process__frame.html#a696cdde4828759bce70e9bf8f7a4ba74", null ],
     [ "log", "classcanopen__sniffer_1_1process__frame.html#ab09a63eb35b270b5cdbead1983ebdccb", null ],
+    [ "processed_frame", "classcanopen__sniffer_1_1process__frame.html#a5e5acd6f2030a04dbe189a2b21363c3a", null ],
     [ "raw_frame", "classcanopen__sniffer_1_1process__frame.html#a796de4da9ed5fad20bff2ba1ea3b7051", null ],
     [ "stats", "classcanopen__sniffer_1_1process__frame.html#aa57ebe01934de43865125819a3c4af74", null ]
 ];

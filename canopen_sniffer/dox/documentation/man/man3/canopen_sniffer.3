@@ -1,4 +1,4 @@
-.TH "canopen_sniffer" 3 "Sat Oct 18 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "canopen_sniffer" 3 "Sat Nov 15 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,6 +17,12 @@ canopen_sniffer
 .RI "class \fBcan_sniffer\fP"
 .br
 .RI "CAN bus sniffer thread\&. "
+.ti -1c
+.RI "class \fBDisplayCLI\fP"
+.br
+.ti -1c
+.RI "class \fBDisplayGUI\fP"
+.br
 .ti -1c
 .RI "class \fBeds_parser\fP"
 .br
@@ -44,7 +50,7 @@ canopen_sniffer
 .ti -1c
 .RI "def \fBenable_logging\fP ()"
 .br
-.RI "Attaches a NullHandler to suppress warnings if no logging configuration is provided\&. "
+.RI "Enable file-only logging, enabled through argument\&. "
 .ti -1c
 .RI "def \fBmain\fP ()"
 .br
@@ -78,9 +84,9 @@ canopen_sniffer
 .br
 .RI "Height of the protocol table in the CLI interface (number of rows)\&. "
 .ti -1c
-.RI "int \fBDEFAULT_BAUD_RATE\fP = 1000000"
+.RI "int \fBDEFAULT_CAN_BIT_RATE\fP = 1000000"
 .br
-.RI "Default CAN bus baud rate (in bits per second)\&. "
+.RI "Default CAN bus bit rate (in bits per second)\&. "
 .ti -1c
 .RI "string \fBDEFAULT_INTERFACE\fP = 'vcan0'"
 .br
@@ -96,11 +102,23 @@ canopen_sniffer
 .ti -1c
 .RI "\fBlog\fP = logging\&.getLogger(f'{FILENAME}')"
 .br
-.RI "Logger instance for the CANopen bus sniffer\&. "
+.RI "Module-level convenience logger (will propagate to root_logger handler)\&. "
+.ti -1c
+.RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
+.br
+.RI "Default Logging level\&. "
 .ti -1c
 .RI "int \fBMAX_FRAMES\fP = 500"
 .br
 .RI "Maximum number of CANopen frames to be cached\&. "
+.ti -1c
+.RI "int \fBMAX_STATS_SHOW\fP = 5"
+.br
+.RI "Maximum number of values to be shown in Bus stats window\&. "
+.ti -1c
+.RI "\fBroot_logger\fP = logging\&.getLogger()"
+.br
+.RI "Logger instance\&. "
 .in -1c
 .SH "Function Documentation"
 .PP 
@@ -139,9 +157,7 @@ Splitted value as integer\&.
 .SS "def canopen_sniffer\&.enable_logging ()"
 
 .PP
-Attaches a NullHandler to suppress warnings if no logging configuration is provided\&. This prevents 'No handler found' errors when the module is imported without the application setting up its own logging configuration\&.
-.PP
-Enable System logging 
+Enable file-only logging, enabled through argument\&. 
 .SS "def canopen_sniffer\&.main ()"
 
 .PP
@@ -193,10 +209,10 @@ Width of the graphs in the CLI interface (in characters)\&.
 
 .PP
 Height of the protocol table in the CLI interface (number of rows)\&. 
-.SS "int DEFAULT_BAUD_RATE = 1000000"
+.SS "int DEFAULT_CAN_BIT_RATE = 1000000"
 
 .PP
-Default CAN bus baud rate (in bits per second)\&. 
+Default CAN bus bit rate (in bits per second)\&. 
 .SS "string DEFAULT_INTERFACE = 'vcan0'"
 
 .PP
@@ -212,11 +228,23 @@ Frequency of filesystem synchronization (every N rows)\&. Setting this to 1 perf
 .SS "log = logging\&.getLogger(f'{FILENAME}')"
 
 .PP
-Logger instance for the CANopen bus sniffer\&. If no handlers are attached by the application using this module, a NullHandler ensures that no warnings are emitted\&. 
+Module-level convenience logger (will propagate to root_logger handler)\&. Create logger instance\&. 
+.SS "LOG_LEVEL = logging\&.DEBUG"
+
+.PP
+Default Logging level\&. Set default log level to INFO\&. 
 .SS "int MAX_FRAMES = 500"
 
 .PP
 Maximum number of CANopen frames to be cached\&. 
+.SS "int MAX_STATS_SHOW = 5"
+
+.PP
+Maximum number of values to be shown in Bus stats window\&. 
+.SS "root_logger = logging\&.getLogger()"
+
+.PP
+Logger instance\&. Default behavior: No console or file logs until explicitly enabled\&. 
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for CANopen-Sniffer from the source code\&.

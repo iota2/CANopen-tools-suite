@@ -1,4 +1,4 @@
-.TH "can_sniffer" 3 "Sat Oct 18 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "can_sniffer" 3 "Sat Nov 15 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -94,7 +94,7 @@ Initialize CAN sniffer thread and open resources\&. The constructor opens the so
 .RS 4
 \fIinterface\fP CAN interface name as string (e\&.g\&., 'can0' or 'vcan0')\&. 
 .br
-\fIraw_frame\fP Optional queue\&.Queue instance to push received frames to\&. 
+\fIraw_frame\fP \fCqueue\&.Queue\fP instance to push received frames for processing\&. 
 .br
 \fIexport\fP If True, enable CSV export of raw frames to a file\&. 
 .RE

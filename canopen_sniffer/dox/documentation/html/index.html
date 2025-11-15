@@ -87,16 +87,14 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">CANopen-Sniffer Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a></p><blockquote class="doxtable">
-<p><code>iota2</code> - Making Imaginations, Real</p>
-<p><a href="#" onclick="location.href='mai'+'lto:'+'i2.'+'io'+'tas'+'qu'+'are'+'@g'+'mai'+'l.'+'com'; return false;">i2.io<span style="display: none;">.nosp@m.</span>tasq<span style="display: none;">.nosp@m.</span>uare@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> </p>
-</blockquote>
-<div class="fragment"><div class="line">██╗ ██████╗ ████████╗ █████╗ ██████╗</div>
+<div class="textblock"><p><a class="anchor" id="md_README"></a></p><div class="fragment"><div class="line">██╗ ██████╗ ████████╗ █████╗ ██████╗</div>
 <div class="line">██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗</div>
 <div class="line">██║██║   ██║   ██║   ███████║ █████╔╝</div>
 <div class="line">██║██║   ██║   ██║   ██╔══██║██╔═══╝</div>
 <div class="line">██║╚██████╔╝   ██║   ██║  ██║███████╗</div>
 <div class="line">╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝</div>
+<div class="line">Copyright (c) 2025 iota2 (iota2 Engineering Tools)</div>
+<div class="line">Licensed under the MIT License. See LICENSE file in the project root for details.</div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md1"></a>
 CANopen Sniffer</h1>
@@ -178,7 +176,7 @@ Output Files</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>canopen_sniffer_processed.csv</code>   </td><td class="markdownTableBodyNone">Decoded frames with OD info    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code><a class="el" href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb" title="Logger instance for the CANopen bus sniffer.">canopen_sniffer.log</a></code>   </td><td class="markdownTableBodyNone">Debug and status logs (if enabled)   </td></tr>
+<td class="markdownTableBodyNone"><code><a class="el" href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb" title="Module-level convenience logger (will propagate to root_logger handler).">canopen_sniffer.log</a></code>   </td><td class="markdownTableBodyNone">Debug and status logs (if enabled)   </td></tr>
 </table>
 <hr  />
 <h2><a class="anchor" id="autotoc_md12"></a>
@@ -308,7 +306,25 @@ Dependencies</h2>
 Doxygen Integration</h2>
 <p>Doxygen documentation will be available under <code>./dox</code> directory. To regenerate the doxygen documentation, run following command in this scripts root directory:</p>
 <div class="fragment"><div class="line">doxygen dox/config</div>
-</div><!-- fragment --><hr  />
+</div><!-- fragment --><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Doxygen config   </th><th class="markdownTableHeadNone">File path    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Configurations   </td><td class="markdownTableBodyNone"><code>./dox/config</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Pages Layout formatting   </td><td class="markdownTableBodyNone"><code>./dox/layout.xml</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">HTML header style   </td><td class="markdownTableBodyNone"><code>./dox/doxygen_header.html</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">HTML footer style   </td><td class="markdownTableBodyNone"><code>./dox/doxygen_header.html</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Mermaid loader   </td><td class="markdownTableBodyNone"><code>./dox/mermaid.min.js/</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Mermaid diagrams   </td><td class="markdownTableBodyNone"><code>./dox/diagrams/</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Generated documentation   </td><td class="markdownTableBodyNone"><code>./dox/documentation/</code>   </td></tr>
+</table>
+<hr  />
  </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
