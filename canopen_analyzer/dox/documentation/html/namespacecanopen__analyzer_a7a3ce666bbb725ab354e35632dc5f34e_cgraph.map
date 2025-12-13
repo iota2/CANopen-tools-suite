@@ -1,0 +1,4 @@
+<map id="main" name="main">
+<area shape="rect" id="node1" title="Main entry point for the CANopen bus analyzer application." alt="" coords="5,13,60,39"/>
+<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging, enabled through argument." alt="" coords="108,5,269,47"/>
+</map>

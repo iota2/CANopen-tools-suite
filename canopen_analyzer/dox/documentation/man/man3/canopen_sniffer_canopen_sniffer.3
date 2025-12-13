@@ -1,0 +1,197 @@
+.TH "canopen_sniffer" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+canopen_sniffer \- CANopen bus sniffer thread\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Thread\&.
+.SH "Detailed Description"
+.PP 
+CANopen bus sniffer thread\&. 
+
+Threaded CAN sniffer which reads frames from a socketcan interface, optionally exports raw frames to CSV and pushes frames to a processing queue\&.
+.PP
+The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP frames, enqueues them on \fCraw_frame\fP for downstream processing, and optionally writes raw frames to a CSV file for offline analysis\&. The thread supports a graceful shutdown via \fC\fBstop()\fP\fP\&. Logging is performed on a per-instance logger\&. 
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB__init__\fP (self, str \fBinterface\fP, queue\&.Queue \fBraw_frame\fP=None, bool \fBexport\fP=False)"
+.br
+.RI "Initialize CAN sniffer thread and open resources\&. "
+.ti -1c
+.RI "def \fBhandle_message\fP (self, can\&.Message msg)"
+.br
+.RI "Handle a received CAN message\&. "
+.ti -1c
+.RI "def \fBrun\fP (self)"
+.br
+.RI "Main loop of the sniffer thread\&. "
+.ti -1c
+.RI "def \fBsave_frame_to_csv\fP (self, int cob, bool error, str raw)"
+.br
+.RI "Save a received CAN frame (raw view) to the CSV export file\&. "
+.ti -1c
+.RI "def \fBstop\fP (self, bool shutdown_bus=True)"
+.br
+.RI "Request the sniffer thread to stop and optionally shutdown the bus\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBbus\fP"
+.br
+.RI "CAN bus instance with configuration loading\&. "
+.ti -1c
+.RI "\fBexport\fP"
+.br
+.RI "Flag indicating whether CSV export is enabled\&. "
+.ti -1c
+.RI "\fBexport_file\fP"
+.br
+.RI "File object for CSV export (or None if not exporting)\&. "
+.ti -1c
+.RI "\fBexport_filename\fP"
+.br
+.RI "CSV file name used when export is enabled\&. "
+.ti -1c
+.RI "\fBexport_serial_number\fP"
+.br
+.RI "Export serial number (incremented for each exported row)\&. "
+.ti -1c
+.RI "\fBexport_writer\fP"
+.br
+.RI "csv\&.writer instance used to write CSV rows (or None)\&. "
+.ti -1c
+.RI "\fBinterface\fP"
+.br
+.RI "CAN interface name used by the sniffer\&. "
+.ti -1c
+.RI "\fBlog\fP"
+.br
+.RI "Logger instance for this sniffer\&. "
+.ti -1c
+.RI "\fBnetwork\fP"
+.br
+.RI "Optional CANopen\&.Network instance (connected if possible)\&. "
+.ti -1c
+.RI "\fBraw_frame\fP"
+.br
+.RI "Queue used to push raw frames for downstream processing\&. "
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "def __init__ ( self, str interface, queue\&.Queue  raw_frame = \fCNone\fP, bool  export = \fCFalse\fP)"
+
+.PP
+Initialize CAN sniffer thread and open resources\&. The constructor opens the socketcan Bus and attempts to connect a CANopen Network (non-fatal)\&. If CSV export is enabled, the CSV file and writer are created and a header row is persisted\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIinterface\fP CAN interface name as string (e\&.g\&., 'can0' or 'vcan0')\&. 
+.br
+\fIraw_frame\fP \fCqueue\&.Queue\fP instance to push received frames for processing\&. 
+.br
+\fIexport\fP If True, enable CSV export of raw frames to a file\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "def handle_message ( self, can\&.Message msg)"
+
+.PP
+Handle a received CAN message\&. Extracts arbitration id, raw payload and error flag, builds a small frame dictionary containing a timestamp and pushes it to \fCraw_frame\fP\&. Also logs the raw frame and triggers CSV export if enabled\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fImsg\fP The \fCcan\&.Message\fP instance received from the bus\&. 
+.RE
+.PP
+
+.SS "def run ( self)"
+
+.PP
+Main loop of the sniffer thread\&. Continuously receives frames from the CAN bus using a short timeout, handles interrupt-like exceptions gracefully, and delegates message processing to \fChandle_message\fP\&. On exit, CSV file and bus resources are closed/shutdown cleanly\&. 
+.SS "def save_frame_to_csv ( self, int cob, bool error, str raw)"
+
+.PP
+Save a received CAN frame (raw view) to the CSV export file\&. Writes a single CSV row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcob\fP COB-ID as integer of the CAN frame\&. 
+.br
+\fIerror\fP Boolean indicating whether the frame is an error frame\&. 
+.br
+\fIraw\fP Hex string representation of the payload\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+None\&. 
+.RE
+.PP
+
+.SS "def stop ( self, bool  shutdown_bus = \fCTrue\fP)"
+
+.PP
+Request the sniffer thread to stop and optionally shutdown the bus\&. Signals the run loop to exit via the internal \fC_stop_event\fP and attempts to shutdown the underlying CAN bus if requested\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIshutdown_bus\fP If True, call \fCbus\&.shutdown()\fP when stopping\&. 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "bus"
+
+.PP
+CAN bus instance with configuration loading\&. 
+.SS "export"
+
+.PP
+Flag indicating whether CSV export is enabled\&. 
+.SS "export_file"
+
+.PP
+File object for CSV export (or None if not exporting)\&. 
+.SS "export_filename"
+
+.PP
+CSV file name used when export is enabled\&. 
+.SS "export_serial_number"
+
+.PP
+Export serial number (incremented for each exported row)\&. 
+.SS "export_writer"
+
+.PP
+csv\&.writer instance used to write CSV rows (or None)\&. 
+.SS "interface"
+
+.PP
+CAN interface name used by the sniffer\&. 
+.SS "log"
+
+.PP
+Logger instance for this sniffer\&. 
+.SS "network"
+
+.PP
+Optional CANopen\&.Network instance (connected if possible)\&. 
+.SS "raw_frame"
+
+.PP
+Queue used to push raw frames for downstream processing\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

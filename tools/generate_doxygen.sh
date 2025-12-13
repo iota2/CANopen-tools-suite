@@ -9,12 +9,12 @@
 # Licensed under the MIT License. See LICENSE file in the project root for details.
 
 # tools/generate_doxygen_repo_stage.sh
-# Runs doxygen inside canopen_sniffer, hides logs, and stages documentation changes.
+# Runs doxygen inside canopen_analyzer, hides logs, and stages documentation changes.
 
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-TARGET_DIR="$ROOT_DIR/canopen_sniffer"
+TARGET_DIR="$ROOT_DIR/canopen_analyzer"
 DOXY_CFG="dox/config"
 DOCS_DIR="$TARGET_DIR/dox/documentation"
 

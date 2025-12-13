@@ -1,6 +1,0 @@
-canopen>=2.0.0
-python-can>=4.3.0
-textual>=0.44.0
-rich>=13.7.0
-pyqt5>=5.15.9
-pyyaml>=6.0.1

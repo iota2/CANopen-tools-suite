@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 - Added support to TUI interface.
 - Separated files for Display interfaces, bus stats calculation and common defs.
+- Restructuring of CANopen analyzer classes and updated documentation.
 
 ## [v0.14.0] - 2025-11-15
 

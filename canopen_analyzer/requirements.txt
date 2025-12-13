@@ -1,0 +1,26 @@
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
+# --------------------------------------------------
+# CANopen Analyzer – Python dependencies
+# --------------------------------------------------
+
+# Core CANopen protocol handling
+canopen>=2.0.0
+python-can>=4.3.0
+
+# Terminal user interfaces
+textual>=0.44.0     # Textual-based TUI
+rich>=13.7.0        # Rich tables & CLI rendering
+
+# Optional GUI backend (not required by default)
+pyqt5>=5.15.9       # GUI placeholder backend
+
+# Utilities
+pyyaml>=6.0.1       # Config & metadata helpers
