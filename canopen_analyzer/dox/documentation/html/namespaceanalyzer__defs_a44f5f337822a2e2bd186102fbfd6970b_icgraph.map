@@ -1,0 +1,4 @@
+<map id="enable_logging" name="enable_logging">
+<area shape="rect" id="node1" title="Enable file&#45;only logging, enabled through argument." alt="" coords="229,5,351,32"/>
+<area shape="rect" id="node2" href="$namespacecanopen__analyzer.html#a7a3ce666bbb725ab354e35632dc5f34e" title="Main entry point for the CANopen bus analyzer application." alt="" coords="5,5,181,32"/>
+</map>

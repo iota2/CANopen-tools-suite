@@ -1,0 +1,223 @@
+.TH "display_tui" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+display_tui \- Textual-based TUI implementation for CANopen protocol\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SH "Detailed Description"
+.PP 
+Textual-based TUI implementation for CANopen protocol\&. 
+
+This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP entrypoint that will start a textual App that renders the CANopen information\&. 
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBrun_textual\fP (cls, stats_instance, processed_frame_queue, \fBfixed\fP=False)"
+.br
+.RI "Start the Textual-based CANopen TUI\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBbus_stats_table\fP"
+.br
+.RI "TUI Element for bus stats table\&. "
+.ti -1c
+.RI "\fBfixed\fP"
+.br
+.ti -1c
+.RI "\fBfixed_pdo\fP"
+.br
+.RI "PDO data dict keys -> rows mapping for fixed mode\&. "
+.ti -1c
+.RI "\fBfixed_proto\fP"
+.br
+.RI "Protocol data dict keys -> rows mapping for fixed mode\&. "
+.ti -1c
+.RI "\fBfixed_sdo\fP"
+.br
+.RI "SDO data dict keys -> rows mapping for fixed mode\&. "
+.ti -1c
+.RI "\fBlogger\fP"
+.br
+.RI "Logger instance for TUI display\&. "
+.ti -1c
+.RI "\fBpdo_display\fP"
+.br
+.RI "PDO data display buffer\&. "
+.ti -1c
+.RI "\fBpdo_next_index\fP"
+.br
+.RI "PDO data indices to indicate next fill position (top-down)\&. "
+.ti -1c
+.RI "\fBpdo_table\fP"
+.br
+.RI "TUI Element for PDO data table\&. "
+.ti -1c
+.RI "\fBproto_display\fP"
+.br
+.RI "Protocol data display buffer\&. "
+.ti -1c
+.RI "\fBproto_next_index\fP"
+.br
+.RI "Protocol data indices to indicate next fill position (top-down)\&. "
+.ti -1c
+.RI "\fBproto_table\fP"
+.br
+.RI "TUI Element for protocol data table\&. "
+.ti -1c
+.RI "\fBsdo_display\fP"
+.br
+.RI "SDO data display buffer\&. "
+.ti -1c
+.RI "\fBsdo_next_index\fP"
+.br
+.RI "SDO data indices to indicate next fill position (top-down)\&. "
+.ti -1c
+.RI "\fBsdo_table\fP"
+.br
+.RI "TUI Element for SDO data table\&. "
+.ti -1c
+.RI "\fBsub_title\fP"
+.br
+.RI "Sub title to display on TUI console\&. "
+.ti -1c
+.RI "\fBtitle\fP"
+.br
+.RI "Title to display on TUI console\&. "
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "bool \fBfixed\fP = False"
+.br
+.RI "Private instance for pointing to incoming flag whether to keep display in fixed mode or not\&. "
+.ti -1c
+.RI "\fBprocessed_frame\fP = None"
+.br
+.RI "Private instance for pointing to incoming processed frames\&. "
+.ti -1c
+.RI "float \fBrefresh_interval\fP = 0\&.2"
+.br
+.RI "TUI display refresh rate (seconds) "
+.ti -1c
+.RI "\fBstats\fP = None"
+.br
+.RI "Private instance for pointing to incoming bus stats\&. "
+.in -1c
+.SH "Member Function Documentation"
+.PP 
+.SS "def run_textual ( cls,  stats_instance,  processed_frame_queue,  fixed = \fCFalse\fP)"
+
+.PP
+Start the Textual-based CANopen TUI\&. This method initializes and launches the Textual application that renders all live CANopen monitoring tables (Protocol, PDO, SDO, Bus Stats)\&. It sets up shared state used by the UI update loop, including statistics, frame queues, and the fixed/scrolling display mode\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstats_instance\fP The shared stats object providing real-time bus statistics and rate histories\&. 
+.br
+\fIprocessed_frame_queue\fP Queue delivering processed CANopen frames from the background sniffer thread\&. 
+.br
+\fIfixed\fP When True, tables operate in fixed-index mode; otherwise they show scrolling entries\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+None 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "bus_stats_table"
+
+.PP
+TUI Element for bus stats table\&. 
+.SS "bool fixed = False\fC [static]\fP"
+
+.PP
+Private instance for pointing to incoming flag whether to keep display in fixed mode or not\&. 
+.SS "fixed"
+
+.SS "fixed_pdo"
+
+.PP
+PDO data dict keys -> rows mapping for fixed mode\&. 
+.SS "fixed_proto"
+
+.PP
+Protocol data dict keys -> rows mapping for fixed mode\&. 
+.SS "fixed_sdo"
+
+.PP
+SDO data dict keys -> rows mapping for fixed mode\&. 
+.SS "logger"
+
+.PP
+Logger instance for TUI display\&. 
+.SS "pdo_display"
+
+.PP
+PDO data display buffer\&. 
+.SS "pdo_next_index"
+
+.PP
+PDO data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
+.SS "pdo_table"
+
+.PP
+TUI Element for PDO data table\&. 
+.SS "processed_frame = None\fC [static]\fP"
+
+.PP
+Private instance for pointing to incoming processed frames\&. 
+.SS "proto_display"
+
+.PP
+Protocol data display buffer\&. 
+.SS "proto_next_index"
+
+.PP
+Protocol data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
+.SS "proto_table"
+
+.PP
+TUI Element for protocol data table\&. 
+.SS "float refresh_interval = 0\&.2\fC [static]\fP"
+
+.PP
+TUI display refresh rate (seconds) 
+.SS "sdo_display"
+
+.PP
+SDO data display buffer\&. 
+.SS "sdo_next_index"
+
+.PP
+SDO data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
+.SS "sdo_table"
+
+.PP
+TUI Element for SDO data table\&. 
+.SS "stats = None\fC [static]\fP"
+
+.PP
+Private instance for pointing to incoming bus stats\&. 
+.SS "sub_title"
+
+.PP
+Sub title to display on TUI console\&. 
+.SS "title"
+
+.PP
+Title to display on TUI console\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

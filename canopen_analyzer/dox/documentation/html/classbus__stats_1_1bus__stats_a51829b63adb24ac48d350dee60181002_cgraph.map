@@ -1,0 +1,4 @@
+<map id="reset" name="reset">
+<area shape="rect" id="node1" title="Reset bus stats count." alt="" coords="5,5,60,32"/>
+<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="108,5,215,32"/>
+</map>

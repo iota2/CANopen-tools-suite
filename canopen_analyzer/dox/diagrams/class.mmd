@@ -1,0 +1,93 @@
+classDiagram-v2
+
+class BusStats {
+    +int total_frames
+    +int total_bytes
+    +map sdo_latency_histogram
+    +map top_talkers
+    +get_snapshot() BusStatsSnapshot
+    +increment_frame(frame_type)
+    +record_sdo_timing(node, latency_ms)
+}
+
+class EDSParser {
+    -string eds_path
+    -map name_map
+    -map pdo_map
+    +load(eds_path)
+    +build_name_map()
+    +parse_pdo_map()
+    +resolve(index, subindex) string
+}
+
+class CanSniffer {
+    -string iface
+    -RawFrameQueue *out_queue
+    -thread reader_thread
+    +start()
+    +stop()
+    +read_loop()
+}
+
+class RawFrameQueue {
+    -queue raw_frames
+    +push(frame)
+    +pop() frame
+    +drain()
+}
+
+class FrameProcessor {
+    -RawFrameQueue *in_queue
+    -EDSParser *eds
+    -BusStats *stats
+    -list workers
+    +start_pool(num_workers)
+    +stop_pool()
+    +worker_loop()
+    +decode_frame(frame) EnrichedFrame
+}
+
+class OutputSink {
+    <<abstract>>
+    +open()
+    +close()
+    +write(enriched_frame)
+}
+
+class DisplayTUI {
+    +render(snapshot)
+}
+class DisplayCLI {
+    +print_line(enriched_frame)
+}
+class DisplayGUI {
+    +update(enriched_frame)
+}
+class CSVExport {
+    -file handle
+    +write_row(enriched_frame)
+    +flush()
+}
+
+class Main {
+    +config
+    +main(args)
+}
+
+%% Associations
+Main "1" o-- "1" CanSniffer : creates >
+Main "1" o-- "1" FrameProcessor : creates >
+Main "1" o-- "1" EDSParser : creates >
+Main "1" o-- "*" OutputSink : configures >
+CanSniffer "1" --> "1" RawFrameQueue : pushes to >
+FrameProcessor "1" --> "1" RawFrameQueue : consumes from >
+FrameProcessor "1" --> "1" BusStats : updates >
+FrameProcessor "1" --> "1" EDSParser : resolves names >
+FrameProcessor "1" --> "*" OutputSink : forwards >
+OutputSink <|-- DisplayTUI
+OutputSink <|-- DisplayCLI
+OutputSink <|-- DisplayGUI
+OutputSink <|-- CSVExport
+
+note for FrameProcessor "Worker pool: multiple concurrent workers to decode frames"
+note for BusStats "Thread-safe aggregator; snapshot API for UIs"

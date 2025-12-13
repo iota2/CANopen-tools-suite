@@ -1,0 +1,30 @@
+stateDiagram-v2
+    [*] --> Initializing
+
+    state Initializing {
+        [*] --> LoadConfig
+        LoadConfig --> StartThreads : init resources
+        StartThreads --> Ready
+    }
+
+    Initializing --> Running : ready
+
+    state Running {
+        [*] --> Sniffer
+        Sniffer --> Processor : frame queued
+        Processor --> Sniffer : backpressure / continue
+        Processor --> Exporting : export enabled
+        Exporting --> Processor : export completed
+    }
+
+    Running --> Stopping : stop requested / SIGINT
+    Running --> Error : fatal exception
+
+    state Stopping {
+        [*] --> Drain
+        Drain --> CloseResources : stop threads, flush sinks
+        CloseResources --> Stopped
+    }
+
+    Error --> Stopping : cleanup on error
+    Stopping --> [*]

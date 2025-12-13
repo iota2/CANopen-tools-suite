@@ -1,0 +1,4 @@
+<map id="save_frame_to_csv" name="save_frame_to_csv">
+<area shape="rect" id="node1" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="5,5,153,32"/>
+<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="201,5,369,32"/>
+</map>

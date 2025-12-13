@@ -1,5 +1,0 @@
-<map id="save_frame" name="save_frame">
-<area shape="rect" id="node1" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="316,5,415,32"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="save_processed_frame" name="save_processed_frame">
-<area shape="rect" id="node1" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="5,105,177,131"/>
-<area shape="rect" id="node2" href="$namespacecanopen__sniffer.html#a4c58a43ad71454c2d1775bfd6b821aa4" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="225,5,389,47"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="258,71,357,98"/>
-<area shape="rect" id="node5" href="$classcanopen__sniffer_1_1can__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="232,122,383,178"/>
-<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6" title="Save a processed frame row to the processed CSV file." alt="" coords="233,202,381,229"/>
-<area shape="rect" id="node4" href="$namespacecanopen__sniffer.html#a8e3ff526c04831e4b712bf09284cff6d" title="Return current time string." alt="" coords="437,137,616,163"/>
-</map>

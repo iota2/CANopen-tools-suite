@@ -1,0 +1,139 @@
+.TH "eds_parser" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+eds_parser \- Parser for CANopen EDS (Electronic Data Sheet) files\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SH "Detailed Description"
+.PP 
+Parser for CANopen EDS (Electronic Data Sheet) files\&. 
+
+Provides utilities to extract ParameterName mappings and PDO mappings from an EDS file\&. The parser stores a name map for object dictionary entries, a PDO map keyed by COB-ID, and optional COB name overrides for more readable PDO field names\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIeds_path\fP Path to the EDS file to parse\&. If None, parsing is skipped until an EDS path is provided (or methods are called directly)\&. 
+.RE
+.PP
+
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB__init__\fP (self, str|None \fBeds_path\fP=None)"
+.br
+.RI "Initialize EDS parser and optionally parse the given EDS file\&. "
+.ti -1c
+.RI "def \fBbuild_name_map\fP (self)"
+.br
+.RI "Build a mapping from object dictionary entries to names\&. "
+.ti -1c
+.RI "def \fBlog_pdo_mapping_consistency\fP (self)"
+.br
+.RI "Emit warnings for PDO mappings that lack ParameterName information\&. "
+.ti -1c
+.RI "def \fBparse_pdo_map\fP (self)"
+.br
+.RI "Parse PDO mapping entries from the EDS file\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBcob_name_overrides\fP"
+.br
+.RI "Mapping of COB-ID -> list of human-readable field names for that PDO\&. "
+.ti -1c
+.RI "\fBeds_path\fP"
+.br
+.RI "Path to the EDS file supplied to this parser (or None)\&. "
+.ti -1c
+.RI "\fBlog\fP"
+.br
+.RI "Logger instance scoped to this parser\&. "
+.ti -1c
+.RI "\fBname_map\fP"
+.br
+.RI "Mapping of (index, subindex) -> human-readable ParameterName\&. "
+.ti -1c
+.RI "\fBpdo_map\fP"
+.br
+.RI "Mapping of COB-ID -> list of (index, subindex, size) tuples\&. "
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "def __init__ ( self, str | None  eds_path = \fCNone\fP)"
+
+.PP
+Initialize EDS parser and optionally parse the given EDS file\&. If eds_path is provided the constructor attempts to build a name map, parse PDO mappings and log basic load information\&. Any parsing errors are caught and logged as warnings so that a malformed EDS does not crash the application\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIeds_path\fP Path to the EDS file to load (hex/INI-style format)\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "def build_name_map ( self)"
+
+.PP
+Build a mapping from object dictionary entries to names\&. Parses the EDS/INI-style sections to find ParameterName entries for indexes and subindexes\&. Creates entries keyed by (index, subindex)\&. If a subindex has no explicit ParameterName, the parent parameter name (index) is used; otherwise the parent is represented as '0x{index:04X}'\&. Entries that include the word 'highest' (case-insensitive) are treated as not providing a meaningful sub-ParameterName and the parent name is used\&. 
+.PP
+\fBReturns\fP
+.RS 4
+dict A mapping {(index:int, sub:int): 'Parent\&.ParameterName' or 'Parent'}\&. 
+.RE
+.PP
+
+.SS "def log_pdo_mapping_consistency ( self)"
+
+.PP
+Emit warnings for PDO mappings that lack ParameterName information\&. Iterates over the currently stored pdo_map and verifies that every mapped (index, subindex) has an entry in the name_map\&. If neither (index, subindex) nor (index, 0) is present, a warning is logged with the offending COB-ID and object reference\&. This helps identify EDS files missing ParameterName entries for mapped PDO fields\&. 
+.PP
+\fBReturns\fP
+.RS 4
+None 
+.RE
+.PP
+
+.SS "def parse_pdo_map ( self)"
+
+.PP
+Parse PDO mapping entries from the EDS file\&. Scans for 1Axx (RPDO/TPDO mapping) sections and their subentries to extract the mapped Object Dictionary indices, subindexes and sizes\&. For each mapping found, the corresponding communication object (18xx) is checked for a COB-ID (sub1 DefaultValue) and the mapping is stored keyed by that COB-ID\&. Also builds a cob_name_overrides dictionary containing readable field names (using the name_map) for each COB-ID\&. 
+.PP
+\fBReturns\fP
+.RS 4
+dict Mapping of cob_id (int) -> list of (index:int, sub:int, size:int)\&. 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "cob_name_overrides"
+
+.PP
+Mapping of COB-ID -> list of human-readable field names for that PDO\&. 
+.SS "eds_path"
+
+.PP
+Path to the EDS file supplied to this parser (or None)\&. 
+.SS "log"
+
+.PP
+Logger instance scoped to this parser\&. 
+.SS "name_map"
+
+.PP
+Mapping of (index, subindex) -> human-readable ParameterName\&. 
+.SS "pdo_map"
+
+.PP
+Mapping of COB-ID -> list of (index, subindex, size) tuples\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

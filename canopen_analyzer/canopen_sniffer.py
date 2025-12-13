@@ -1,0 +1,299 @@
+#!/usr/bin/env python3
+# ██╗ ██████╗ ████████╗ █████╗ ██████╗
+# ██║██╔═══██╗╚══██╔══╝██╔══██╗╚════██╗
+# ██║██║   ██║   ██║   ███████║ █████╔╝
+# ██║██║   ██║   ██║   ██╔══██║██╔═══╝
+# ██║╚██████╔╝   ██║   ██║  ██║███████╗
+# ╚═╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝
+# Copyright (c) 2025 iota2 (iota2 Engineering Tools)
+# Licensed under the MIT License. See LICENSE file in the project root for details.
+
+"""!
+@file canopen_sniffer.py
+@brief Threaded CANopen raw frame sniffer and CSV exporter.
+@details
+This module implements the @ref canopen_sniffer thread, which connects to a
+SocketCAN interface, receives raw CAN frames, and forwards them for further
+processing.
+
+The sniffer optionally exports raw frames to CSV and attempts to attach to
+a CANopen network object for future extensions.
+
+### Responsibilities
+- Open and manage the CAN socket interface
+- Receive raw CAN frames in a non-blocking loop
+- Push received frames to a shared processing queue
+- Optionally export raw frames to CSV
+- Perform graceful shutdown of CAN resources
+
+### Design Notes
+- This module performs no CANopen decoding or classification.
+- Frames are passed downstream as lightweight dictionaries.
+- Network connection failures are non-fatal.
+
+### Threading Model
+Runs as a dedicated daemon thread. Communication with downstream consumers
+is performed via thread-safe queues.
+
+### Error Handling
+CAN I/O errors are handled defensively and do not crash the application
+during shutdown or transient failures.
+"""
+
+import os
+import csv
+import time
+import logging
+
+import threading
+import queue
+
+import can
+from can import exceptions as can_exceptions
+import canopen
+
+import analyzer_defs as analyzer_defs
+
+class canopen_sniffer(threading.Thread):
+    """! CANopen bus sniffer thread.
+    @brief Threaded CAN sniffer which reads frames from a socketcan interface,
+           optionally exports raw frames to CSV and pushes frames to a processing queue.
+    @details
+    The sniffer opens a `socketcan` interface, receives `can.Message` frames,
+    enqueues them on `raw_frame` for downstream processing, and optionally writes
+    raw frames to a CSV file for offline analysis. The thread supports a graceful
+    shutdown via `stop()`. Logging is performed on a per-instance logger.
+    """
+
+    def __init__(self, interface: str, raw_frame: queue.Queue = None, export: bool = False):
+        """! Initialize CAN sniffer thread and open resources.
+        @details
+        The constructor opens the socketcan Bus and attempts to connect a
+        CANopen Network (non-fatal). If CSV export is enabled, the CSV file
+        and writer are created and a header row is persisted.
+        @param interface CAN interface name as string (e.g., "can0" or "vcan0").
+        @param raw_frame `queue.Queue` instance to push received frames for processing.
+        @param export If True, enable CSV export of raw frames to a file.
+        """
+        super().__init__(daemon=True)
+
+        ## Queue used to push raw frames for downstream processing.
+        self.raw_frame = raw_frame or queue.Queue()
+
+        ## Thread stop event used to signal the run loop to exit.
+        self._stop_event = threading.Event()
+
+        ## Logger instance for this sniffer.
+        self.log = logging.getLogger(self.__class__.__name__)
+
+        ## CAN interface name used by the sniffer.
+        self.interface = interface
+
+        ## Flag indicating whether CSV export is enabled.
+        self.export = export
+
+        ## CSV file name used when export is enabled.
+        self.export_filename = f"{analyzer_defs.APP_NAME}_raw.csv"
+
+        ## File object for CSV export (or None if not exporting).
+        self.export_file = None
+
+        ## csv.writer instance used to write CSV rows (or None).
+        self.export_writer = None
+
+        ## Export serial number (incremented for each exported row).
+        self.export_serial_number = 1
+
+        if self.export:
+            try:
+                self.export_file = open(self.export_filename, "w", newline="")
+                self.export_writer = csv.writer(self.export_file)
+                self.export_writer.writerow(
+                    ["S.No.", "Time", "COB-ID", "Error", "Raw"]
+                )
+                # persist header
+                try:
+                    self.export_file.flush()
+                    os.fsync(self.export_file.fileno())
+                except Exception:
+                    pass
+                self.log.info(f"CSV export enabled → {self.export_filename}")
+            except Exception as e:
+                self.log.exception("Failed to open CSV export file: %s", e)
+                self.export = False
+
+        # Open CAN socket
+        try:
+            ## CAN bus instance with configuration loading.
+            self.bus = can.interface.Bus(channel=interface, interface="socketcan")
+            self.log.info(f"CAN socket opened on {interface}")
+        except Exception as e:
+            self.log.exception("Failed to open CAN interface %s: %s", interface, e)
+            raise
+
+        ## Optional CANopen.Network instance (connected if possible).
+        self.network = canopen.Network()
+        try:
+            self.network.connect(channel=interface, interface="socketcan")
+            self.log.info(f"Connected Network on {interface}")
+        except Exception:
+            self.log.warning("Network connection failed (not critical)")
+
+    # --- CSV export helper ---
+    def save_frame_to_csv(self, cob: int, error: bool, raw: str):
+        """! Save a received CAN frame (raw view) to the CSV export file.
+        @details
+        Writes a single CSV row with a serial number, timestamp, COB-ID,
+        error flag and raw payload. Periodically flushes and fsyncs the file
+        according to `defs.FSYNC_EVERY`.
+        @param cob COB-ID as integer of the CAN frame.
+        @param error Boolean indicating whether the frame is an error frame.
+        @param raw Hex string representation of the payload.
+        @return None.
+        """
+        if not self.export_writer:
+            return
+        try:
+            self.export_writer.writerow([
+                self.export_serial_number,
+                analyzer_defs.now_str(),
+                f"0x{cob:03X}",
+                error,
+                raw
+            ])
+            self.export_serial_number += 1
+            # flush and fsync periodically
+            try:
+                self.export_file.flush()
+                if (self.export_serial_number % analyzer_defs.FSYNC_EVERY) == 0:
+                    os.fsync(self.export_file.fileno())
+            except Exception:
+                pass
+        except Exception as e:
+            self.log.error("CSV export failed: %s", e)
+
+
+    # --- message handling ---
+    def handle_message(self, msg: can.Message):
+        """! Handle a received CAN message.
+        @details
+        Extracts arbitration id, raw payload and error flag, builds a small
+        frame dictionary containing a timestamp and pushes it to `raw_frame`.
+        Also logs the raw frame and triggers CSV export if enabled.
+        @param msg The `can.Message` instance received from the bus.
+        """
+        # Total received data
+        cob = msg.arbitration_id
+        raw = msg.data
+        error = msg.is_error_frame
+
+        frame = {"time": time.time(), "cob": cob, "error": error, "raw": raw}
+        # Push frame to queue
+        self.raw_frame.put(frame)
+
+        self.log.debug(f"Raw frame: [{analyzer_defs.now_str()}] [0x{cob:03X}] [{error}] [{analyzer_defs.bytes_to_hex(raw)}]")
+
+        # Export to CSV
+        self.save_frame_to_csv(cob, error, analyzer_defs.bytes_to_hex(raw))
+
+    def run(self):
+        """! Main loop of the sniffer thread.
+        @details
+        Continuously receives frames from the CAN bus using a short timeout,
+        handles interrupt-like exceptions gracefully, and delegates message
+        processing to `handle_message`. On exit, CSV file and bus resources
+        are closed/shutdown cleanly.
+        """
+        self.log.info("Sniffer thread started (interface=%s)", self.interface)
+        recv_timeout = 0.1
+
+        try:
+            while not self._stop_event.is_set():
+                try:
+                    msg = self.bus.recv(timeout=recv_timeout)
+                except (InterruptedError, KeyboardInterrupt):
+                    # signal interruption — re-check stop flag and continue/exit
+                    if self._stop_event.is_set():
+                        break
+                    continue
+                except can_exceptions.CanOperationError as e:
+                    # Happens when the underlying socket is closed during shutdown.
+                    # If we are stopping, treat silently; otherwise warn and break.
+                    if self._stop_event.is_set():
+                        self.log.debug("CanOperationError during shutdown: %s", e)
+                        break
+                    self.log.warning("CAN operation error (recv): %s", e)
+                    break
+                except OSError as e:
+                    # OSError like "Bad file descriptor" can also occur when socket is closed.
+                    if self._stop_event.is_set():
+                        self.log.debug("OSError during shutdown: %s", e)
+                        break
+                    self.log.warning("OSError from CAN recv: %s", e)
+                    # short sleep but wake on stop
+                    if self._stop_event.wait(0.2):
+                        break
+                    continue
+                except Exception as e:
+                    # Unexpected error — log at debug level and backoff to avoid tight loop.
+                    # Do not log full traceback when shutdown is in progress to avoid noisy output.
+                    if self._stop_event.is_set():
+                        self.log.debug("Unexpected exception during shutdown: %s", e)
+                        break
+                    self.log.exception("Unexpected error in CAN recv")
+                    if self._stop_event.wait(0.2):
+                        break
+                    continue
+
+                # Received message, handle it
+                if msg:
+                    try:
+                        self.handle_message(msg)
+                    except Exception:
+                        self.log.exception("Exception while handling message")
+        finally:
+            # Always attempt to flush/close CSV (if any) and shutdown bus safely.
+            if getattr(self, "export_file", None):
+                try:
+                    try:
+                        self.export_file.flush()
+                        os.fsync(self.export_file.fileno())
+                    except Exception:
+                        pass
+                    self.export_file.close()
+                    self.log.info("Raw CSV export file closed")
+                except Exception:
+                    self.log.exception("Failed to close raw CSV file")
+
+            # shutdown bus
+            try:
+                if getattr(self, "bus", None) is not None:
+                    # bus.shutdown() may raise if socket is already closed; ignore such errors
+                    try:
+                        self.bus.shutdown()
+                    except Exception:
+                        pass
+                    self.log.info("CAN bus shutdown completed")
+            except Exception:
+                self.log.exception("Exception while shutting down CAN bus")
+
+            self.log.info("Sniffer thread exiting")
+
+    def stop(self, shutdown_bus: bool = True):
+        """! Request the sniffer thread to stop and optionally shutdown the bus.
+        @details
+        Signals the run loop to exit via the internal `_stop_event` and attempts
+        to shutdown the underlying CAN bus if requested.
+        @param shutdown_bus If True, call `bus.shutdown()` when stopping.
+        """
+        self._stop_event.set()
+        self.log.debug("Stop requested for sniffer thread")
+        if shutdown_bus:
+            try:
+                if getattr(self, "bus", None) is not None:
+                    # bus.shutdown() may raise "Bad file descriptor" if socket already closed;
+                    # that's fine — we swallow exceptions here.
+                    self.bus.shutdown()
+                    self.log.debug("bus.shutdown() called from stop()")
+            except Exception as e:
+                self.log.debug("bus.shutdown() raised during stop(): %s", e)
