@@ -1,4 +1,0 @@
-<map id="process_frame" name="process_frame">
-<area shape="rect" id="node1" title="Processor thread that consumes CAN frames and updates statistics." alt="" coords="5,80,124,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="31,5,98,32"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="handle_message" name="handle_message">
-<area shape="rect" id="node1" title="Handle a received CAN message." alt="" coords="5,71,137,98"/>
-<area shape="rect" id="node2" href="$namespacesniffer__defs.html#af63c0eef8b4a1980386db12406fbeef0" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="215,5,354,47"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1can__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="211,71,359,98"/>
-<area shape="rect" id="node5" href="$classcanopen__sniffer_1_1process__frame.html#add9829a9eabac7353568fca9fcefec28" title="Save a processed frame row to the processed CSV file." alt="" coords="185,123,384,164"/>
-<area shape="rect" id="node4" href="$namespacesniffer__defs.html#a5670aaf1dc94ebff3428a0e15d43a13f" title="Return current time string." alt="" coords="432,101,585,127"/>
-</map>

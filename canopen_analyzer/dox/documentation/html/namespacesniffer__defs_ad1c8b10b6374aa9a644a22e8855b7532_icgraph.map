@@ -1,4 +1,0 @@
-<map id="enable_logging" name="enable_logging">
-<area shape="rect" id="node1" title="Enable file&#45;only logging, enabled through argument." alt="" coords="215,5,336,32"/>
-<area shape="rect" id="node2" href="$namespacecanopen__sniffer.html#a355f06d5ba7ea264dc3e2e128349c130" title="Main entry point for the CANopen bus sniffer application." alt="" coords="5,5,167,32"/>
-</map>
