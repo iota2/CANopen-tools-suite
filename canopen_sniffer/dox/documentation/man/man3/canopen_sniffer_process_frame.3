@@ -1,4 +1,4 @@
-.TH "process_frame" 3 "Sat Nov 15 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "process_frame" 3 "Sun Dec 14 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -40,15 +40,15 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .br
 .RI "Main processing loop\&. "
 .ti -1c
-.RI "def \fBsave_frame\fP (self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.RI "def \fBsave_frame\fP (self, int cob, \fBsniffer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
 .br
 .RI "Save a processed CANopen frame for downstream use or logging\&. "
 .ti -1c
-.RI "def \fBsave_frame_to_csv\fP (self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.RI "def \fBsave_frame_to_csv\fP (self, int cob, \fBsniffer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
 .br
 .RI "Save a processed frame row to the processed CSV file\&. "
 .ti -1c
-.RI "def \fBsave_processed_frame\fP (self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.RI "def \fBsave_processed_frame\fP (self, int cob, \fBsniffer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
 .br
 .RI "Save a fully processed CANopen frame in memory and export it to CSV\&. "
 .ti -1c
@@ -127,7 +127,7 @@ Initialize the processor thread\&. The constructor stores references to required
 
 .PP
 Main processing loop\&. Non-blocking, interruptable loop that pulls frame dicts from \fCraw_frame\fP, classifies frames, updates \fCself\&.stats\fP, resolves names via \fCself\&.eds_map\fP, decodes simple SDO payloads (expedited/data), exports CSV rows (if enabled), and logs the processed frame details\&. Ensures resources are closed on exit\&. 
-.SS "def save_frame ( self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.SS "def save_frame ( self, int cob, \fBsniffer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
 
 .PP
 Save a processed CANopen frame for downstream use or logging\&. Constructs a dictionary representing a fully decoded CANopen frame and appends it to the internal list of processed frames\&. Each stored frame includes timestamp, COB-ID, frame type, Object Dictionary indices, and decoded payload\&. A debug log entry is also generated with formatted frame details\&. 
@@ -136,7 +136,7 @@ Save a processed CANopen frame for downstream use or logging\&. Constructs a dic
 .RS 4
 \fIcob\fP The CANopen COB-ID of the frame\&. 
 .br
-\fIftype\fP The frame type as an instance of \fBframe_type\fP\&. 
+\fIftype\fP The frame type as an instance of \fBdefs\&.frame_type\fP\&. 
 .br
 \fIindex\fP The CANopen Object Dictionary index associated with the frame\&. 
 .br
@@ -150,16 +150,16 @@ Save a processed CANopen frame for downstream use or logging\&. Constructs a dic
 .RE
 .PP
 
-.SS "def save_frame_to_csv ( self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.SS "def save_frame_to_csv ( self, int cob, \fBsniffer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
 
 .PP
-Save a processed frame row to the processed CSV file\&. Writes a CSV row with serial number, timestamp, frame classification, OD address, name, raw hex payload and decoded value\&. Periodically flushes and \fCfsyncs\fP the file according to \fCFSYNC_EVERY\fP\&. 
+Save a processed frame row to the processed CSV file\&. Writes a CSV row with serial number, timestamp, frame classification, OD address, name, raw hex payload and decoded value\&. Periodically flushes and \fCfsyncs\fP the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
 .PP
 \fBParameters\fP
 .RS 4
 \fIcob\fP COB-ID of the frame\&. 
 .br
-\fIftype\fP \fBframe_type\fP enumeration value describing frame class\&. 
+\fIftype\fP defs\&.frame_type enumeration value describing frame class\&. 
 .br
 \fIindex\fP Object dictionary index (for SDO/decoded frames)\&. 
 .br
@@ -173,7 +173,7 @@ Save a processed frame row to the processed CSV file\&. Writes a CSV row with se
 .RE
 .PP
 
-.SS "def save_processed_frame ( self, int cob, \fBframe_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.SS "def save_processed_frame ( self, int cob, \fBsniffer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
 
 .PP
 Save a fully processed CANopen frame in memory and export it to CSV\&. Converts the raw and decoded payloads into hexadecimal string representations if necessary, then delegates the storage of the processed frame to \fBsave_frame\fP and its CSV export to \fBsave_frame_to_csv\fP\&. This function ensures consistent formatting for both in-memory data and CSV output\&. 
@@ -182,7 +182,7 @@ Save a fully processed CANopen frame in memory and export it to CSV\&. Converts 
 .RS 4
 \fIcob\fP The CANopen COB-ID of the processed frame\&. 
 .br
-\fIftype\fP The frame type as an instance of \fBframe_type\fP\&. 
+\fIftype\fP The frame type as an instance of \fBdefs\&.frame_type\fP\&. 
 .br
 \fIindex\fP The Object Dictionary index associated with the frame\&. 
 .br

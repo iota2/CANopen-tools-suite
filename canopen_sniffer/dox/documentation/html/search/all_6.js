@@ -1,12 +1,11 @@
 var searchData=
 [
-  ['filename_40',['FILENAME',['../namespacecanopen__sniffer.html#ae4e6f99e1b73b1f62bb9ed8ced355214',1,'canopen_sniffer']]],
-  ['fixed_41',['fixed',['../classcanopen__sniffer_1_1DisplayCLI.html#a0ceb8ae554e8a185caf22e15c9487f4b',1,'canopen_sniffer::DisplayCLI']]],
-  ['fixed_5fpdo_42',['fixed_pdo',['../classcanopen__sniffer_1_1DisplayCLI.html#a3078ce0e2c75accf21cd8df0224f542f',1,'canopen_sniffer::DisplayCLI']]],
-  ['fixed_5fproto_43',['fixed_proto',['../classcanopen__sniffer_1_1DisplayCLI.html#ae26348b8154ac3a851d99532a3430602',1,'canopen_sniffer::DisplayCLI']]],
-  ['fixed_5fsdo_44',['fixed_sdo',['../classcanopen__sniffer_1_1DisplayCLI.html#a245f95c57526a94ba9ce7b8ef285dac6',1,'canopen_sniffer::DisplayCLI']]],
-  ['float_45',['float',['../classcanopen__sniffer_1_1bus__stats_1_1rates__stats.html#a6a1bb6ed41f44b60e7bd83b0e9945aa7',1,'canopen_sniffer.bus_stats.rates_stats.float()'],['../classcanopen__sniffer_1_1bus__stats_1_1stats__data.html#a6a1bb6ed41f44b60e7bd83b0e9945aa7',1,'canopen_sniffer.bus_stats.stats_data.float()']]],
-  ['frame_5fcount_46',['frame_count',['../classcanopen__sniffer_1_1bus__stats_1_1frame__count.html',1,'canopen_sniffer::bus_stats']]],
-  ['frame_5ftype_47',['frame_type',['../classcanopen__sniffer_1_1frame__type.html',1,'canopen_sniffer']]],
-  ['fsync_5fevery_48',['FSYNC_EVERY',['../namespacecanopen__sniffer.html#abd5e97aaf326e2debb2e68277808c957',1,'canopen_sniffer']]]
+  ['fixed_44',['fixed',['../classdisplay__cli_1_1display__cli.html#a0ceb8ae554e8a185caf22e15c9487f4b',1,'display_cli.display_cli.fixed()'],['../classdisplay__tui_1_1display__tui.html#aad4faf9da5c9975b632cadbb28335c70',1,'display_tui.display_tui.fixed()'],['../classdisplay__tui_1_1display__tui.html#a0ceb8ae554e8a185caf22e15c9487f4b',1,'display_tui.display_tui.fixed()']]],
+  ['fixed_5fpdo_45',['fixed_pdo',['../classdisplay__cli_1_1display__cli.html#a3078ce0e2c75accf21cd8df0224f542f',1,'display_cli.display_cli.fixed_pdo()'],['../classdisplay__tui_1_1display__tui.html#a3078ce0e2c75accf21cd8df0224f542f',1,'display_tui.display_tui.fixed_pdo()']]],
+  ['fixed_5fproto_46',['fixed_proto',['../classdisplay__cli_1_1display__cli.html#ae26348b8154ac3a851d99532a3430602',1,'display_cli.display_cli.fixed_proto()'],['../classdisplay__tui_1_1display__tui.html#ae26348b8154ac3a851d99532a3430602',1,'display_tui.display_tui.fixed_proto()']]],
+  ['fixed_5fsdo_47',['fixed_sdo',['../classdisplay__cli_1_1display__cli.html#a245f95c57526a94ba9ce7b8ef285dac6',1,'display_cli.display_cli.fixed_sdo()'],['../classdisplay__tui_1_1display__tui.html#a245f95c57526a94ba9ce7b8ef285dac6',1,'display_tui.display_tui.fixed_sdo()']]],
+  ['float_48',['float',['../classbus__stats_1_1bus__stats_1_1rates__stats.html#a6a1bb6ed41f44b60e7bd83b0e9945aa7',1,'bus_stats.bus_stats.rates_stats.float()'],['../classbus__stats_1_1bus__stats_1_1stats__data.html#a6a1bb6ed41f44b60e7bd83b0e9945aa7',1,'bus_stats.bus_stats.stats_data.float()']]],
+  ['frame_5fcount_49',['frame_count',['../classbus__stats_1_1bus__stats_1_1frame__count.html',1,'bus_stats::bus_stats']]],
+  ['frame_5ftype_50',['frame_type',['../classsniffer__defs_1_1frame__type.html',1,'sniffer_defs']]],
+  ['fsync_5fevery_51',['FSYNC_EVERY',['../namespacesniffer__defs.html#abd5e97aaf326e2debb2e68277808c957',1,'sniffer_defs']]]
 ];

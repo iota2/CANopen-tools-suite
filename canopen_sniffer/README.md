@@ -18,6 +18,21 @@ Designed for engineers working on **CANopen nodes** or **embedded systems**.
 
 ---
 
+## Overview
+The CANopen Sniffer Suite is a collection of Python tools to monitor, parse,
+and visualize CANopen traffic. It supports multiple frontends:
+- Headless CLI (Rich-based)
+- Textual TUI (interactive terminal UI)
+- Optional GUI frontend (extension point)
+
+It includes:
+- EDS parsing to resolve Object Dictionary names
+- RPDO/TPDO and SDO decoding
+- Bus statistics collection and CSV export
+- Graceful shutdown and thread-safe queues for integration into other tools
+
+---
+
 ## Features
 
 - Live capture of CANopen frames using `python-can` (SocketCAN backend)
@@ -27,7 +42,12 @@ Designed for engineers working on **CANopen nodes** or **embedded systems**.
 - Dual-threaded architecture:
   - `can_sniffer` — raw frame capture
   - `process_frame` — frame classification, decoding & export
-- CSV export for both raw and processed CAN data
+- Textual TUI: interactive terminal-based UI showing Protocol Data, Bus
+  Stats and live graphs.
+- CSV export: capture decoded frames and statistics for offline analysis.
+- Improved EDS parsing: resilient name mapping and PDO resolution.
+- Doxygen-ready docstrings: all modules and public functions/classes now
+  contain expanded Doxygen-style comments for better generated docs.
 - Graceful thread shutdown and signal handling
 - Optional logging to file and console
 
@@ -36,36 +56,62 @@ Designed for engineers working on **CANopen nodes** or **embedded systems**.
 ## Architecture Overview
 
 ```
-┌────────────────────────────────────────────┐
-│                  main()                    │
-│  Parses args → starts threads → waits exit │
-└────────────────────────────────────────────┘
-          │
-          ▼
-┌────────────────────────────────────────────┐
-│             can_sniffer(Thread)            │
-│  - Captures CAN frames from interface      │
-│  - Pushes to shared queue (raw_frame)      │
-│  - Optional CSV export                     │
-└────────────────────────────────────────────┘
-          │
-          ▼
-┌────────────────────────────────────────────┐
-│           process_frame(Thread)            │
-│  - Consumes frames from queue              │
-│  - Classifies & decodes via EDS map        │
-│  - Updates bus_stats                       │
-│  - Optional processed CSV export           │
-└────────────────────────────────────────────┘
+┌─────────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+| CAN Interface (HW)  | ---> | can_sniffer      | ---> | frame_processor  |
+|  (SocketCAN/PCAN)   |      | (reader thread)  |      | (worker threads) |
+└─────────────────────┘      └──────────────────┘      └──────────────────┘
+                                         |                    |
+                                         v                    v
+                           ┌──────────────────┐     ┌─────────────────────┐
+                           | bus_stats        |     | Output sinks        |
+                           | (aggregator)     |     | - display_tui       |
+                           └──────────────────┘     | - display_cli       |
+                                                    | - display_gui       |
+                                                    | - CSV export        |
+                                                    └─────────────────────┘
 ```
 
 ---
 
-## Command-Line Usage
+### Components
+- **can_sniffer**: reads raw CAN frames, performs initial classification,
+  and pushes frames to the processing queue.
+- **frame_processor**: decodes CANopen payloads (SDO/PDO), enriches frames
+  with EDS metadata, updates bus_stats, and forwards frames to sinks.
+- **bus_stats**: thread-safe aggregator of counters, rates, and timing
+  histograms. Exposes `get_snapshot()` for rendering.
+- **display_tui / display_cli / display_gui**: backends that render snapshots
+  or frame streams for human consumption.
+
+---
+
+## Technical specifications
+
+- Python: 3.10+ recommended
+- Dependencies: see `requirements.txt` or install:
 
 ```bash
-python canopen_sniffer.py [options]
+pip install textual rich canopen python-can
 ```
+- [python-can](https://pypi.org/project/python-can/)
+- [canopen](https://pypi.org/project/canopen/)
+- [rich](https://pypi.org/project/rich/)
+- [textual](https://pypi.org/project/textual/)
+- SocketCAN: Linux (for `socketcan` interface) or PCAN adapter supported
+  via python-can drivers.
+- Expected CPU/memory: lightweight for typical loads (single-digit MBs,
+  single-digit percent CPU). High-volume buses may require batching and
+  increased worker threads.
+
+---
+
+## Usage Examples
+
+```bash
+python canopen_sniffer.py --interface vcan0 --eds ./device.eds --export --log
+```
+
+---
 
 ### Options
 
@@ -73,15 +119,20 @@ python canopen_sniffer.py [options]
 |-----------|--------------|----------|
 | `--interface` | CAN interface (e.g. `can0`, `vcan0`) | `vcan0` |
 | `--bitrate` | CAN bus bitrate (bps) | `1000000` |
-| `--mode` | Run mode: `cli` or `gui` | `cli` |
+| `--mode` | Run mode: `cli`, `tui` or `gui` | `cli` |
 | `--eds` | Path to EDS file for decoding | *optional* |
 | `--export` | Enable CSV export | *off* |
 | `--log` | Enable logging | *off* |
 | `--fixed` | Keep CLI table fixed height | *off* |
 
-Example:
-```bash
-python canopen_sniffer.py --interface vcan0 --eds ./device.eds --export --log
+---
+
+## Example Output
+
+```
+[12:10:43.456] [PDO] [0x201] [0x6041:00] [StatusWord] [23 10]
+[12:10:44.102] [SDO_REQ] [0x601] [0x6060:00] [ModeOfOperation] [Set:6]
+[12:10:44.103] [SDO_RES] [0x581] [0x6060:00] [ModeOfOperation] [OK]
 ```
 
 ---
@@ -124,31 +175,6 @@ Available under `dox/diagrams` as @mermaid{class}
 
 ---
 
-## Example Output
-
-```
-[12:10:43.456] [PDO] [0x201] [0x6041:00] [StatusWord] [23 10]
-[12:10:44.102] [SDO_REQ] [0x601] [0x6060:00] [ModeOfOperation] [Set:6]
-[12:10:44.103] [SDO_RES] [0x581] [0x6060:00] [ModeOfOperation] [OK]
-```
-
----
-
-## Dependencies
-
-- Python ≥ 3.9
-- [python-can](https://pypi.org/project/python-can/)
-- [canopen](https://pypi.org/project/canopen/)
-- [rich](https://pypi.org/project/rich/) *(for CLI interface)*
-
-Install dependencies with:
-
-```bash
-pip install python-can canopen rich
-```
-
----
-
 ## Doxygen Integration
 
 Doxygen documentation will be available under `./dox` directory.
@@ -167,5 +193,46 @@ doxygen dox/config
 | Mermaid loader | `./dox/mermaid.min.js/` |
 | Mermaid diagrams | `./dox/diagrams/` |
 | Generated documentation | `./dox/documentation/` |
+
+---
+
+## Pre-Commit Hooks
+
+This repository uses **pre-commit** to enforce formatting, documentation
+generation, and project-quality standards before changes are committed.
+
+### Installation
+
+```sh
+pip install pre-commit
+pre-commit install
+```
+
+### Running Hooks Manually
+
+```sh
+pre-commit run --all-files
+```
+
+Run a specific hook:
+
+```sh
+pre-commit run check-license-headers
+```
+
+### Hooks Included in This Project
+
+| Hook Name               | Description |
+|------------------------|-------------|
+| **check-license-headers** | Verifies license headers in `.py`, `.sh`, `.yml`, `.yaml`, `.md` files. |
+| **fix-license-headers**   | Automatically inserts or fixes license headers. *(Manual run)* |
+| **check-changelog**       | Validates `CHANGELOG.md` Unreleased section. |
+| **fix-changelog**         | Automatically populates CHANGELOG from git history. *(Manual run)* |
+| **generate-doxygen**      | Generates and stages Doxygen documentation. |
+
+### Notes
+
+- Some hooks (e.g., *fix-…*) are designed for **manual execution** and do not run on every commit.
+- If a hook fails, resolve the issue and commit again.
 
 ---

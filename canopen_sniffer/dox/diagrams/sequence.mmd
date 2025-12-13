@@ -1,23 +1,42 @@
 sequenceDiagram
     participant User
     participant Main as main()
-    participant Sniffer as can_sniffer
-    participant Queue as raw_frame (Queue)
-    participant Processor as process_frame
+    participant Sniffer as can_sniffer (reader thread)
+    participant RawQ as raw_frame Queue
+    participant Processor as frame_processor (worker pool)
     participant EDS as eds_parser
-    participant Stats as BusStats
-    participant CSV as CSV File
+    participant Stats as bus_stats (aggregator)
+    participant Sinks as Output Sinks
+    participant TUI as display_tui
+    participant CLI as display_cli
+    participant GUI as display_gui
+    participant CSV as CSV Export
 
+    Note over Main,Sniffer: Startup
     User->>Main: start tool (args)
-    Main->>Sniffer: start()
-    Main->>Processor: start()
-    Sniffer->>Sniffer: open socketcan interface
-    Sniffer->>Queue: push(frame)
-    Queue-->>Processor: pop(frame)
-    Processor->>Stats: increment_frame / count_talker / add_node
-    Processor->>EDS: lookup name_map(index, sub)
-    Processor->>CSV: write processed row (if export)
-    Sniffer->>CSV: write raw row (if export)
+    Main->>Sniffer: start reader thread
+    Main->>Processor: start worker pool
+    Sniffer->>Sniffer: open CAN interface (SocketCAN/PCAN)
+    Sniffer->>RawQ: push(raw_frame)
+    RawQ-->>Processor: pop(frame) (round-robin to worker)
+    Processor->>Stats: update counters / timing / top-talkers
+    Processor->>EDS: resolve names (index, subindex)
+    Processor->>Processor: decode PDO/SDO/NMT/SYNC
+    Processor->>Sinks: forward enriched frame
+    Sinks->>TUI: send snapshots / events (if TUI enabled)
+    Sinks->>CLI: send line output (if CLI enabled)
+    Sinks->>GUI: send GUI events (if GUI enabled)
+    Sinks->>CSV: append processed row (if export enabled)
+    Sniffer->>CSV: append raw row (optional raw export)
+
+    Note over Processor,Stats: Periodic tasks
+    Processor->>Stats: sample rates / compute histograms
+    Stats->>Sinks: provide snapshot for rendering (on request)
+
+    Note over User,Main: Shutdown
     User->>Main: Ctrl+C (SIGINT)
-    Main->>Sniffer: stop()
-    Main->>Processor: stop()
+    Main->>Sniffer: stop reader thread (join)
+    Main->>Processor: stop workers (drain queue, join)
+    Main->>Sinks: flush & close outputs
+    Main->>Stats: finalize and write final CSV (if requested)
+    Main-->>User: exit (0)

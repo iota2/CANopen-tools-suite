@@ -1,0 +1,53 @@
+.TH "bus_stats.sdo_stats" 3 "Sun Dec 14 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+bus_stats.sdo_stats \- Records SDO (Service Data Object) communication statistics\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SH "Detailed Description"
+.PP 
+Records SDO (Service Data Object) communication statistics\&. 
+
+Includes counts of successful and aborted transfers, and timing data for SDO request/response cycles\&. 
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBdefault_factory\fP"
+.br
+.ti -1c
+.RI "\fBdeque\fP"
+.br
+.RI "Deque storing recent SDO response times for visualization\&. "
+.ti -1c
+.RI "\fBdict\fP"
+.br
+.RI "Timestamp dictionary for active SDO requests\&. "
+.ti -1c
+.RI "\fBint\fP"
+.br
+.RI "Number of successful SDO transactions\&. "
+.in -1c
+.SH "Member Data Documentation"
+.PP 
+.SS "default_factory\fC [static]\fP"
+
+.SS "deque\fC [static]\fP"
+
+.PP
+Deque storing recent SDO response times for visualization\&. The maximum length is scaled by CLI graph width for CLI graph display\&. 
+.SS "dict\fC [static]\fP"
+
+.PP
+Timestamp dictionary for active SDO requests\&. Used to compute response latency when corresponding replies arrive\&. 
+.SS "int\fC [static]\fP"
+
+.PP
+Number of successful SDO transactions\&. Number of aborted or failed SDO transactions\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Sniffer from the source code\&.

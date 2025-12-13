@@ -1,4 +1,4 @@
-.TH "can_sniffer" 3 "Sat Nov 15 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "can_sniffer" 3 "Sun Dec 14 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -46,6 +46,7 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "\fBbus\fP"
 .br
+.RI "CAN bus instance with configuration loading\&. "
 .ti -1c
 .RI "\fBexport\fP"
 .br
@@ -120,7 +121,7 @@ Main loop of the sniffer thread\&. Continuously receives frames from the CAN bus
 .SS "def save_frame_to_csv ( self, int cob, bool error, str raw)"
 
 .PP
-Save a received CAN frame (raw view) to the CSV export file\&. Writes a single CSV row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCFSYNC_EVERY\fP\&. 
+Save a received CAN frame (raw view) to the CSV export file\&. Writes a single CSV row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
 .PP
 \fBParameters\fP
 .RS 4
@@ -152,6 +153,8 @@ Request the sniffer thread to stop and optionally shutdown the bus\&. Signals th
 .PP 
 .SS "bus"
 
+.PP
+CAN bus instance with configuration loading\&. 
 .SS "export"
 
 .PP

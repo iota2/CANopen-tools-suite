@@ -1,0 +1,45 @@
+.TH "bus_stats.frame_count" 3 "Sun Dec 14 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+bus_stats.frame_count \- Tracks the number of frames by CANopen message type\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SH "Detailed Description"
+.PP 
+Tracks the number of frames by CANopen message type\&. 
+
+Maintains counters for total frames and per-message-type counts\&. 
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBdefault_factory\fP"
+.br
+.ti -1c
+.RI "\fBdict\fP"
+.br
+.RI "Dictionary storing count per \fBdefs\&.frame_type\fP\&. "
+.ti -1c
+.RI "\fBtotal\fP = int(0)"
+.br
+.RI "Total number of CANopen frames received\&. "
+.in -1c
+.SH "Member Data Documentation"
+.PP 
+.SS "default_factory\fC [static]\fP"
+
+.SS "dict\fC [static]\fP"
+
+.PP
+Dictionary storing count per \fBdefs\&.frame_type\fP\&. Keys correspond to message types (e\&.g\&., NMT, PDO, SDO, etc\&.)\&. Values represent how many frames of each type have been received\&. 
+.SS "total = int(0)\fC [static]\fP"
+
+.PP
+Total number of CANopen frames received\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Sniffer from the source code\&.

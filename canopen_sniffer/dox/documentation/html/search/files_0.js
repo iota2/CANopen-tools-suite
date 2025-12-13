@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['canopen_5fsniffer_2epy_122',['canopen_sniffer.py',['../canopen__sniffer_8py.html',1,'']]]
+  ['bus_5fstats_2epy_146',['bus_stats.py',['../bus__stats_8py.html',1,'']]]
 ];

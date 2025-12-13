@@ -101,6 +101,20 @@ CANopen Sniffer</h1>
 <p>A lightweight, Python-based CANopen bus sniffer and frame analyzer supporting <b>real-time monitoring</b>, <b>SDO/PDO decoding</b>, and <b>CSV export</b>. Designed for engineers working on <b>CANopen nodes</b> or <b>embedded systems</b>.</p>
 <hr  />
 <h2><a class="anchor" id="autotoc_md3"></a>
+Overview</h2>
+<p>The CANopen Sniffer Suite is a collection of Python tools to monitor, parse, and visualize CANopen traffic. It supports multiple frontends:</p><ul>
+<li>Headless CLI (Rich-based)</li>
+<li>Textual TUI (interactive terminal UI)</li>
+<li>Optional GUI frontend (extension point)</li>
+</ul>
+<p>It includes:</p><ul>
+<li>EDS parsing to resolve Object Dictionary names</li>
+<li>RPDO/TPDO and SDO decoding</li>
+<li>Bus statistics collection and CSV export</li>
+<li>Graceful shutdown and thread-safe queues for integration into other tools</li>
+</ul>
+<hr  />
+<h2><a class="anchor" id="autotoc_md5"></a>
 Features</h2>
 <ul>
 <li>Live capture of CANopen frames using <code>python-can</code> (SocketCAN backend)</li>
@@ -112,39 +126,60 @@ Features</h2>
 <li><code>process_frame</code> — frame classification, decoding &amp; export</li>
 </ul>
 </li>
-<li>CSV export for both raw and processed CAN data</li>
+<li>Textual TUI: interactive terminal-based UI showing Protocol Data, Bus Stats and live graphs.</li>
+<li>CSV export: capture decoded frames and statistics for offline analysis.</li>
+<li>Improved EDS parsing: resilient name mapping and PDO resolution.</li>
+<li>Doxygen-ready docstrings: all modules and public functions/classes now contain expanded Doxygen-style comments for better generated docs.</li>
 <li>Graceful thread shutdown and signal handling</li>
 <li>Optional logging to file and console</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md5"></a>
-Architecture Overview</h2>
-<div class="fragment"><div class="line">┌────────────────────────────────────────────┐</div>
-<div class="line">│                  main()                    │</div>
-<div class="line">│  Parses args → starts threads → waits exit │</div>
-<div class="line">└────────────────────────────────────────────┘</div>
-<div class="line">          │</div>
-<div class="line">          ▼</div>
-<div class="line">┌────────────────────────────────────────────┐</div>
-<div class="line">│             can_sniffer(Thread)            │</div>
-<div class="line">│  - Captures CAN frames from interface      │</div>
-<div class="line">│  - Pushes to shared queue (raw_frame)      │</div>
-<div class="line">│  - Optional CSV export                     │</div>
-<div class="line">└────────────────────────────────────────────┘</div>
-<div class="line">          │</div>
-<div class="line">          ▼</div>
-<div class="line">┌────────────────────────────────────────────┐</div>
-<div class="line">│           process_frame(Thread)            │</div>
-<div class="line">│  - Consumes frames from queue              │</div>
-<div class="line">│  - Classifies &amp; decodes via EDS map        │</div>
-<div class="line">│  - Updates bus_stats                       │</div>
-<div class="line">│  - Optional processed CSV export           │</div>
-<div class="line">└────────────────────────────────────────────┘</div>
-</div><!-- fragment --><hr  />
 <h2><a class="anchor" id="autotoc_md7"></a>
-Command-Line Usage</h2>
-<div class="fragment"><div class="line">python canopen_sniffer.py [options]</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md8"></a>
+Architecture Overview</h2>
+<div class="fragment"><div class="line">┌─────────────────────┐      ┌──────────────────┐      ┌──────────────────┐</div>
+<div class="line">| CAN Interface (HW)  | ---&gt; | can_sniffer      | ---&gt; | frame_processor  |</div>
+<div class="line">|  (SocketCAN/PCAN)   |      | (reader thread)  |      | (worker threads) |</div>
+<div class="line">└─────────────────────┘      └──────────────────┘      └──────────────────┘</div>
+<div class="line">                                         |                    |</div>
+<div class="line">                                         v                    v</div>
+<div class="line">                           ┌──────────────────┐     ┌─────────────────────┐</div>
+<div class="line">                           | bus_stats        |     | Output sinks        |</div>
+<div class="line">                           | (aggregator)     |     | - display_tui       |</div>
+<div class="line">                           └──────────────────┘     | - display_cli       |</div>
+<div class="line">                                                    | - display_gui       |</div>
+<div class="line">                                                    | - CSV export        |</div>
+<div class="line">                                                    └─────────────────────┘</div>
+</div><!-- fragment --><hr  />
+<h3><a class="anchor" id="autotoc_md9"></a>
+Components</h3>
+<ul>
+<li><b>can_sniffer</b>: reads raw CAN frames, performs initial classification, and pushes frames to the processing queue.</li>
+<li><b>frame_processor</b>: decodes CANopen payloads (SDO/PDO), enriches frames with EDS metadata, updates <a class="el" href="namespacebus__stats.html">bus_stats</a>, and forwards frames to sinks.</li>
+<li><b><a class="el" href="namespacebus__stats.html">bus_stats</a></b>: thread-safe aggregator of counters, rates, and timing histograms. Exposes <code>get_snapshot()</code> for rendering.</li>
+<li><b><a class="el" href="namespacedisplay__tui.html">display_tui</a> / <a class="el" href="namespacedisplay__cli.html">display_cli</a> / <a class="el" href="namespacedisplay__gui.html">display_gui</a></b>: backends that render snapshots or frame streams for human consumption.</li>
+</ul>
+<hr  />
+<h2><a class="anchor" id="autotoc_md11"></a>
+Technical specifications</h2>
+<ul>
+<li>Python: 3.10+ recommended</li>
+<li>Dependencies: see <code>requirements.txt</code> or install:</li>
+</ul>
+<div class="fragment"><div class="line">pip install textual rich canopen python-can</div>
+</div><!-- fragment --><ul>
+<li><a href="https://pypi.org/project/python-can/">python-can</a></li>
+<li><a href="https://pypi.org/project/canopen/">canopen</a></li>
+<li><a href="https://pypi.org/project/rich/">rich</a></li>
+<li><a href="https://pypi.org/project/textual/">textual</a></li>
+<li>SocketCAN: Linux (for <code>socketcan</code> interface) or PCAN adapter supported via python-can drivers.</li>
+<li>Expected CPU/memory: lightweight for typical loads (single-digit MBs, single-digit percent CPU). High-volume buses may require batching and increased worker threads.</li>
+</ul>
+<hr  />
+<h2><a class="anchor" id="autotoc_md13"></a>
+Usage Examples</h2>
+<div class="fragment"><div class="line">python canopen_sniffer.py --interface vcan0 --eds ./device.eds --export --log</div>
+</div><!-- fragment --><hr  />
+<h3><a class="anchor" id="autotoc_md15"></a>
 Options</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -154,7 +189,7 @@ Options</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>--bitrate</code>   </td><td class="markdownTableBodyNone">CAN bus bitrate (bps)   </td><td class="markdownTableBodyNone"><code>1000000</code>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>--mode</code>   </td><td class="markdownTableBodyNone">Run mode: <code>cli</code> or <code>gui</code>   </td><td class="markdownTableBodyNone"><code>cli</code>    </td></tr>
+<td class="markdownTableBodyNone"><code>--mode</code>   </td><td class="markdownTableBodyNone">Run mode: <code>cli</code>, <code>tui</code> or <code>gui</code>   </td><td class="markdownTableBodyNone"><code>cli</code>    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>--eds</code>   </td><td class="markdownTableBodyNone">Path to EDS file for decoding   </td><td class="markdownTableBodyNone"><em>optional</em>    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -164,9 +199,14 @@ Options</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>--fixed</code>   </td><td class="markdownTableBodyNone">Keep CLI table fixed height   </td><td class="markdownTableBodyNone"><em>off</em>   </td></tr>
 </table>
-<p>Example: </p><div class="fragment"><div class="line">python canopen_sniffer.py --interface vcan0 --eds ./device.eds --export --log</div>
+<hr  />
+<h2><a class="anchor" id="autotoc_md17"></a>
+Example Output</h2>
+<div class="fragment"><div class="line">[12:10:43.456] [PDO] [0x201] [0x6041:00] [StatusWord] [23 10]</div>
+<div class="line">[12:10:44.102] [SDO_REQ] [0x601] [0x6060:00] [ModeOfOperation] [Set:6]</div>
+<div class="line">[12:10:44.103] [SDO_RES] [0x581] [0x6060:00] [ModeOfOperation] [OK]</div>
 </div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md19"></a>
 Output Files</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -176,133 +216,199 @@ Output Files</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>canopen_sniffer_processed.csv</code>   </td><td class="markdownTableBodyNone">Decoded frames with OD info    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code><a class="el" href="namespacecanopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb" title="Module-level convenience logger (will propagate to root_logger handler).">canopen_sniffer.log</a></code>   </td><td class="markdownTableBodyNone">Debug and status logs (if enabled)   </td></tr>
+<td class="markdownTableBodyNone"><code>canopen_sniffer.log</code>   </td><td class="markdownTableBodyNone">Debug and status logs (if enabled)   </td></tr>
 </table>
 <hr  />
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Key Classes</h2>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md22"></a>
 bus_stats</h3>
 <p>Collects CANopen bus statistics such as frame counts, top talkers, and SDO timing.</p>
-<h3><a class="anchor" id="autotoc_md14"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 eds_parser</h3>
 <p>Parses EDS files to build name and PDO mappings. Used by the processor thread for decoding object dictionary references.</p>
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 can_sniffer</h3>
 <p>Threaded CAN bus sniffer that reads from the SocketCAN interface, exports raw frames, and pushes them into a queue.</p>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md25"></a>
 process_frame</h3>
 <p>Processor thread that consumes queued frames, updates statistics, decodes SDO/PDO data, and writes processed CSVs.</p>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md26"></a>
 Sequence Diagram — frame flow</h3>
 <p>Available under <code>dox/diagrams</code> as <div class="mermaid"> sequenceDiagram
     participant User
     participant Main as main()
-    participant Sniffer as can_sniffer
-    participant Queue as raw_frame (Queue)
-    participant Processor as process_frame
+    participant Sniffer as can_sniffer (reader thread)
+    participant RawQ as raw_frame Queue
+    participant Processor as frame_processor (worker pool)
     participant EDS as eds_parser
-    participant Stats as BusStats
-    participant CSV as CSV File
+    participant Stats as bus_stats (aggregator)
+    participant Sinks as Output Sinks
+    participant TUI as display_tui
+    participant CLI as display_cli
+    participant GUI as display_gui
+    participant CSV as CSV Export
 
+    Note over Main,Sniffer: Startup
     User->>Main: start tool (args)
-    Main->>Sniffer: start()
-    Main->>Processor: start()
-    Sniffer->>Sniffer: open socketcan interface
-    Sniffer->>Queue: push(frame)
-    Queue-->>Processor: pop(frame)
-    Processor->>Stats: increment_frame / count_talker / add_node
-    Processor->>EDS: lookup name_map(index, sub)
-    Processor->>CSV: write processed row (if export)
-    Sniffer->>CSV: write raw row (if export)
+    Main->>Sniffer: start reader thread
+    Main->>Processor: start worker pool
+    Sniffer->>Sniffer: open CAN interface (SocketCAN/PCAN)
+    Sniffer->>RawQ: push(raw_frame)
+    RawQ-->>Processor: pop(frame) (round-robin to worker)
+    Processor->>Stats: update counters / timing / top-talkers
+    Processor->>EDS: resolve names (index, subindex)
+    Processor->>Processor: decode PDO/SDO/NMT/SYNC
+    Processor->>Sinks: forward enriched frame
+    Sinks->>TUI: send snapshots / events (if TUI enabled)
+    Sinks->>CLI: send line output (if CLI enabled)
+    Sinks->>GUI: send GUI events (if GUI enabled)
+    Sinks->>CSV: append processed row (if export enabled)
+    Sniffer->>CSV: append raw row (optional raw export)
+
+    Note over Processor,Stats: Periodic tasks
+    Processor->>Stats: sample rates / compute histograms
+    Stats->>Sinks: provide snapshot for rendering (on request)
+
+    Note over User,Main: Shutdown
     User->>Main: Ctrl+C (SIGINT)
-    Main->>Sniffer: stop()
-    Main->>Processor: stop()
+    Main->>Sniffer: stop reader thread (join)
+    Main->>Processor: stop workers (drain queue, join)
+    Main->>Sinks: flush & close outputs
+    Main->>Stats: finalize and write final CSV (if requested)
+    Main-->>User: exit (0)
  </div></p>
-<h3><a class="anchor" id="autotoc_md18"></a>
+<h3><a class="anchor" id="autotoc_md27"></a>
 State Diagram — sniffer life-cycle</h3>
 <p>Available under <code>dox/diagrams</code> as <div class="mermaid"> stateDiagram-v2
     [*] --> Initializing
-    Initializing --> Running : resources opened
-    Running --> Exporting : export enabled
-    Running --> Stopping : stop requested
-    Exporting --> Stopping : stop requested
-    Running --> Error : unrecoverable exception
-    Error --> Stopping
-    Stopping --> Stopped : resources closed
-    Stopped --> [*]
+
+    state Initializing {
+        [*] --> LoadConfig
+        LoadConfig --> StartThreads : init resources
+        StartThreads --> Ready
+    }
+
+    Initializing --> Running : ready
+
+    state Running {
+        [*] --> Sniffer
+        Sniffer --> Processor : frame queued
+        Processor --> Sniffer : backpressure / continue
+        Processor --> Exporting : export enabled
+        Exporting --> Processor : export completed
+    }
+
+    Running --> Stopping : stop requested / SIGINT
+    Running --> Error : fatal exception
+
+    state Stopping {
+        [*] --> Drain
+        Drain --> CloseResources : stop threads, flush sinks
+        CloseResources --> Stopped
+    }
+
+    Error --> Stopping : cleanup on error
+    Stopping --> [*]
  </div></p>
-<h3><a class="anchor" id="autotoc_md19"></a>
+<h3><a class="anchor" id="autotoc_md28"></a>
 Class Diagram — core classes &amp; relationships</h3>
-<p>Available under <code>dox/diagrams</code> as <div class="mermaid"> classDiagram
+<p>Available under <code>dox/diagrams</code> as <div class="mermaid"> classDiagram-v2
+
 class BusStats {
-    +frame_count
-    +payload_size
-    +sdo_stats
-    +error_stats
-    +set_start_time()
-    +increment_frame(ftype)
+    +int total_frames
+    +int total_bytes
+    +map sdo_latency_histogram
+    +map top_talkers
+    +get_snapshot() BusStatsSnapshot
+    +increment_frame(frame_type)
+    +record_sdo_timing(node, latency_ms)
 }
 
-class eds_parser {
-    -eds_path
-    -name_map
-    -pdo_map
+class EDSParser {
+    -string eds_path
+    -map name_map
+    -map pdo_map
+    +load(eds_path)
     +build_name_map()
     +parse_pdo_map()
+    +resolve(index, subindex) string
 }
 
-class can_sniffer {
-    -interface
-    -raw_frame
-    -bus
-    -network
-    -export
+class CanSniffer {
+    -string iface
+    -RawFrameQueue *out_queue
+    -thread reader_thread
     +start()
     +stop()
-    +handle_message(msg)
+    +read_loop()
 }
 
-class process_frame {
-    -raw_frame
-    -eds_map
-    -stats
-    -export
-    +run()
-    +stop()
-    +save_frame_to_csv(...)
+class RawFrameQueue {
+    -queue raw_frames
+    +push(frame)
+    +pop() frame
+    +drain()
 }
 
-class main {
-    +main()
+class FrameProcessor {
+    -RawFrameQueue *in_queue
+    -EDSParser *eds
+    -BusStats *stats
+    -list workers
+    +start_pool(num_workers)
+    +stop_pool()
+    +worker_loop()
+    +decode_frame(frame) EnrichedFrame
 }
 
-BusStats "1" <-- "1" process_frame : updates >
-eds_parser "1" <-- "1" process_frame : uses >
-can_sniffer "1" -- "1" process_frame : shares raw_frame with >
-main "1" o-- "1" can_sniffer : creates >
-main "1" o-- "1" process_frame : creates >
-main "1" o-- "1" eds_parser : creates >
+class OutputSink {
+    <<abstract>>
+    +open()
+    +close()
+    +write(enriched_frame)
+}
+
+class DisplayTUI {
+    +render(snapshot)
+}
+class DisplayCLI {
+    +print_line(enriched_frame)
+}
+class DisplayGUI {
+    +update(enriched_frame)
+}
+class CSVExport {
+    -file handle
+    +write_row(enriched_frame)
+    +flush()
+}
+
+class Main {
+    +config
+    +main(args)
+}
+
+%% Associations
+Main "1" o-- "1" CanSniffer : creates >
+Main "1" o-- "1" FrameProcessor : creates >
+Main "1" o-- "1" EDSParser : creates >
+Main "1" o-- "*" OutputSink : configures >
+CanSniffer "1" --> "1" RawFrameQueue : pushes to >
+FrameProcessor "1" --> "1" RawFrameQueue : consumes from >
+FrameProcessor "1" --> "1" BusStats : updates >
+FrameProcessor "1" --> "1" EDSParser : resolves names >
+FrameProcessor "1" --> "*" OutputSink : forwards >
+OutputSink <|-- DisplayTUI
+OutputSink <|-- DisplayCLI
+OutputSink <|-- DisplayGUI
+OutputSink <|-- CSVExport
+
+note for FrameProcessor "Worker pool: multiple concurrent workers to decode frames"
+note for BusStats "Thread-safe aggregator; snapshot API for UIs"
  </div></p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md21"></a>
-Example Output</h2>
-<div class="fragment"><div class="line">[12:10:43.456] [PDO] [0x201] [0x6041:00] [StatusWord] [23 10]</div>
-<div class="line">[12:10:44.102] [SDO_REQ] [0x601] [0x6060:00] [ModeOfOperation] [Set:6]</div>
-<div class="line">[12:10:44.103] [SDO_RES] [0x581] [0x6060:00] [ModeOfOperation] [OK]</div>
-</div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md23"></a>
-Dependencies</h2>
-<ul>
-<li>Python ≥ 3.9</li>
-<li><a href="https://pypi.org/project/python-can/">python-can</a></li>
-<li><a href="https://pypi.org/project/canopen/">canopen</a></li>
-<li><a href="https://pypi.org/project/rich/">rich</a> *(for CLI interface)*</li>
-</ul>
-<p>Install dependencies with:</p>
-<div class="fragment"><div class="line">pip install python-can canopen rich</div>
-</div><!-- fragment --><hr  />
-<h2><a class="anchor" id="autotoc_md25"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 Doxygen Integration</h2>
 <p>Doxygen documentation will be available under <code>./dox</code> directory. To regenerate the doxygen documentation, run following command in this scripts root directory:</p>
 <div class="fragment"><div class="line">doxygen dox/config</div>
@@ -324,6 +430,41 @@ Doxygen Integration</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Generated documentation   </td><td class="markdownTableBodyNone"><code>./dox/documentation/</code>   </td></tr>
 </table>
+<hr  />
+<h2><a class="anchor" id="autotoc_md32"></a>
+Pre-Commit Hooks</h2>
+<p>This repository uses <b>pre-commit</b> to enforce formatting, documentation generation, and project-quality standards before changes are committed.</p>
+<h3><a class="anchor" id="autotoc_md33"></a>
+Installation</h3>
+<div class="fragment"><div class="line">pip install pre-commit</div>
+<div class="line">pre-commit install</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md34"></a>
+Running Hooks Manually</h3>
+<div class="fragment"><div class="line">pre-commit run --all-files</div>
+</div><!-- fragment --><p>Run a specific hook:</p>
+<div class="fragment"><div class="line">pre-commit run check-license-headers</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md35"></a>
+Hooks Included in This Project</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Hook Name   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>check-license-headers</b>   </td><td class="markdownTableBodyNone">Verifies license headers in <code>.py</code>, <code>.sh</code>, <code>.yml</code>, <code>.yaml</code>, <code>.md</code> files.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>fix-license-headers</b>   </td><td class="markdownTableBodyNone">Automatically inserts or fixes license headers. *(Manual run)*    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>check-changelog</b>   </td><td class="markdownTableBodyNone">Validates <code>CHANGELOG.md</code> Unreleased section.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>fix-changelog</b>   </td><td class="markdownTableBodyNone">Automatically populates CHANGELOG from git history. *(Manual run)*    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>generate-doxygen</b>   </td><td class="markdownTableBodyNone">Generates and stages Doxygen documentation.   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md36"></a>
+Notes</h3>
+<ul>
+<li>Some hooks (e.g., <em>fix-…</em>) are designed for <b>manual execution</b> and do not run on every commit.</li>
+<li>If a hook fails, resolve the issue and commit again.</li>
+</ul>
 <hr  />
  </div></div><!-- PageDoc -->
 </div><!-- contents -->

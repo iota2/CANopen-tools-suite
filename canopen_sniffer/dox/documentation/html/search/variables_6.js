@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['graph_5fwidth_187',['GRAPH_WIDTH',['../classcanopen__sniffer_1_1DisplayCLI.html#a3f49a3f3cb41debc86ca3d71a7ad500c',1,'canopen_sniffer::DisplayCLI']]]
+  ['hb_215',['HB',['../classsniffer__defs_1_1frame__type.html#a2e01ef077b0fedaea9e286ccdf2fe259',1,'sniffer_defs::frame_type']]]
 ];

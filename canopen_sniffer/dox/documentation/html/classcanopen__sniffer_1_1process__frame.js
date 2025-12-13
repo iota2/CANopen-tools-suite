@@ -2,9 +2,9 @@ var classcanopen__sniffer_1_1process__frame =
 [
     [ "__init__", "classcanopen__sniffer_1_1process__frame.html#ae9017521a9672251ad6a11dcd1d6103d", null ],
     [ "run", "classcanopen__sniffer_1_1process__frame.html#ad22709b2e67308af35f55680d5a026e0", null ],
-    [ "save_frame", "classcanopen__sniffer_1_1process__frame.html#a330d0aa4e889583805485fc069b8d7e3", null ],
-    [ "save_frame_to_csv", "classcanopen__sniffer_1_1process__frame.html#a43c1277547b2e3a9db6631c8134c28f6", null ],
-    [ "save_processed_frame", "classcanopen__sniffer_1_1process__frame.html#a8a398b1c620b611b45d8da94d9d35e6c", null ],
+    [ "save_frame", "classcanopen__sniffer_1_1process__frame.html#a37684c6eae6f49a7c2fad127dc3e6816", null ],
+    [ "save_frame_to_csv", "classcanopen__sniffer_1_1process__frame.html#add9829a9eabac7353568fca9fcefec28", null ],
+    [ "save_processed_frame", "classcanopen__sniffer_1_1process__frame.html#aa4baa38f8068f53168b5016321344cc4", null ],
     [ "stop", "classcanopen__sniffer_1_1process__frame.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
     [ "eds_map", "classcanopen__sniffer_1_1process__frame.html#a087b69c6d3cd89b6872e63605be5e05c", null ],
     [ "export", "classcanopen__sniffer_1_1process__frame.html#af44e2d3afd4e0e4d03f637dbb2bce3cd", null ],

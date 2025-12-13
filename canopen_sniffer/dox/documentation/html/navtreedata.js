@@ -26,24 +26,33 @@ var NAVTREE =
 [
   [ "CANopen-Sniffer", "index.html", [
     [ "CANopen Sniffer", "index.html#autotoc_md1", [
-      [ "Features", "index.html#autotoc_md3", null ],
-      [ "Architecture Overview", "index.html#autotoc_md5", null ],
-      [ "Command-Line Usage", "index.html#autotoc_md7", [
-        [ "Options", "index.html#autotoc_md8", null ]
+      [ "Overview", "index.html#autotoc_md3", null ],
+      [ "Features", "index.html#autotoc_md5", null ],
+      [ "Architecture Overview", "index.html#autotoc_md7", [
+        [ "Components", "index.html#autotoc_md9", null ]
       ] ],
-      [ "Output Files", "index.html#autotoc_md10", null ],
-      [ "Key Classes", "index.html#autotoc_md12", [
-        [ "bus_stats", "index.html#autotoc_md13", null ],
-        [ "eds_parser", "index.html#autotoc_md14", null ],
-        [ "can_sniffer", "index.html#autotoc_md15", null ],
-        [ "process_frame", "index.html#autotoc_md16", null ],
-        [ "Sequence Diagram — frame flow", "index.html#autotoc_md17", null ],
-        [ "State Diagram — sniffer life-cycle", "index.html#autotoc_md18", null ],
-        [ "Class Diagram — core classes & relationships", "index.html#autotoc_md19", null ]
+      [ "Technical specifications", "index.html#autotoc_md11", null ],
+      [ "Usage Examples", "index.html#autotoc_md13", [
+        [ "Options", "index.html#autotoc_md15", null ]
       ] ],
-      [ "Example Output", "index.html#autotoc_md21", null ],
-      [ "Dependencies", "index.html#autotoc_md23", null ],
-      [ "Doxygen Integration", "index.html#autotoc_md25", null ]
+      [ "Example Output", "index.html#autotoc_md17", null ],
+      [ "Output Files", "index.html#autotoc_md19", null ],
+      [ "Key Classes", "index.html#autotoc_md21", [
+        [ "bus_stats", "index.html#autotoc_md22", null ],
+        [ "eds_parser", "index.html#autotoc_md23", null ],
+        [ "can_sniffer", "index.html#autotoc_md24", null ],
+        [ "process_frame", "index.html#autotoc_md25", null ],
+        [ "Sequence Diagram — frame flow", "index.html#autotoc_md26", null ],
+        [ "State Diagram — sniffer life-cycle", "index.html#autotoc_md27", null ],
+        [ "Class Diagram — core classes & relationships", "index.html#autotoc_md28", null ]
+      ] ],
+      [ "Doxygen Integration", "index.html#autotoc_md30", null ],
+      [ "Pre-Commit Hooks", "index.html#autotoc_md32", [
+        [ "Installation", "index.html#autotoc_md33", null ],
+        [ "Running Hooks Manually", "index.html#autotoc_md34", null ],
+        [ "Hooks Included in This Project", "index.html#autotoc_md35", null ],
+        [ "Notes", "index.html#autotoc_md36", null ]
+      ] ]
     ] ],
     [ "Packages", "namespaces.html", [
       [ "Packages", "namespaces.html", "namespaces_dup" ],

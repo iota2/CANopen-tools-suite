@@ -1,4 +1,4 @@
-.TH "canopen_sniffer" 3 "Sat Nov 15 2025" "CANopen-Sniffer" \" -*- nroff -*-
+.TH "canopen_sniffer" 3 "Sun Dec 14 2025" "CANopen-Sniffer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,27 +10,13 @@ canopen_sniffer
 
 .in +1c
 .ti -1c
-.RI "class \fBbus_stats\fP"
-.br
-.RI "Container class for all CANopen bus statistics\&. "
-.ti -1c
 .RI "class \fBcan_sniffer\fP"
 .br
 .RI "CAN bus sniffer thread\&. "
 .ti -1c
-.RI "class \fBDisplayCLI\fP"
-.br
-.ti -1c
-.RI "class \fBDisplayGUI\fP"
-.br
-.ti -1c
 .RI "class \fBeds_parser\fP"
 .br
 .RI "Parser for CANopen EDS (Electronic Data Sheet) files\&. "
-.ti -1c
-.RI "class \fBframe_type\fP"
-.br
-.RI "Types of CANopen messages\&. "
 .ti -1c
 .RI "class \fBprocess_frame\fP"
 .br
@@ -40,124 +26,12 @@ canopen_sniffer
 
 .in +1c
 .ti -1c
-.RI "str \fBbytes_to_hex\fP (data)"
-.br
-.RI "Convert bytes or bytearray to a space-separated hex string safely\&. "
-.ti -1c
-.RI "int \fBclean_int_with_comment\fP (str val)"
-.br
-.RI "Get value after splitting the string\&. "
-.ti -1c
-.RI "def \fBenable_logging\fP ()"
-.br
-.RI "Enable file-only logging, enabled through argument\&. "
-.ti -1c
 .RI "def \fBmain\fP ()"
 .br
 .RI "Main entry point for the CANopen bus sniffer application\&. "
-.ti -1c
-.RI "str \fBnow_str\fP ()"
-.br
-.RI "Return current time string\&. "
-.in -1c
-.SS "Variables"
-
-.in +1c
-.ti -1c
-.RI "string \fBAPP_NAME\fP = 'CANopen\-Sniffer'"
-.br
-.RI "Application name\&. "
-.ti -1c
-.RI "string \fBAPP_ORG\fP = 'iota2'"
-.br
-.RI "Application organization name\&. "
-.ti -1c
-.RI "int \fBCLI_DATA_TABLE_HEIGHT\fP = 30"
-.br
-.RI "Height of the data table in the CLI interface (number of rows)\&. "
-.ti -1c
-.RI "int \fBCLI_GRAPH_WIDTH\fP = 20"
-.br
-.RI "Width of the graphs in the CLI interface (in characters)\&. "
-.ti -1c
-.RI "int \fBCLI_PROTOCOL_TABLE_HEIGHT\fP = 15"
-.br
-.RI "Height of the protocol table in the CLI interface (number of rows)\&. "
-.ti -1c
-.RI "int \fBDEFAULT_CAN_BIT_RATE\fP = 1000000"
-.br
-.RI "Default CAN bus bit rate (in bits per second)\&. "
-.ti -1c
-.RI "string \fBDEFAULT_INTERFACE\fP = 'vcan0'"
-.br
-.RI "Default CAN interface to be loaded\&. "
-.ti -1c
-.RI "\fBFILENAME\fP = os\&.path\&.splitext(os\&.path\&.basename(__file__))[0]"
-.br
-.RI "Script file name used as a reference for other system-generated files\&. "
-.ti -1c
-.RI "int \fBFSYNC_EVERY\fP = 50"
-.br
-.RI "Frequency of filesystem synchronization (every N rows)\&. "
-.ti -1c
-.RI "\fBlog\fP = logging\&.getLogger(f'{FILENAME}')"
-.br
-.RI "Module-level convenience logger (will propagate to root_logger handler)\&. "
-.ti -1c
-.RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
-.br
-.RI "Default Logging level\&. "
-.ti -1c
-.RI "int \fBMAX_FRAMES\fP = 500"
-.br
-.RI "Maximum number of CANopen frames to be cached\&. "
-.ti -1c
-.RI "int \fBMAX_STATS_SHOW\fP = 5"
-.br
-.RI "Maximum number of values to be shown in Bus stats window\&. "
-.ti -1c
-.RI "\fBroot_logger\fP = logging\&.getLogger()"
-.br
-.RI "Logger instance\&. "
 .in -1c
 .SH "Function Documentation"
 .PP 
-.SS " str canopen_sniffer\&.bytes_to_hex ( data)"
-
-.PP
-Convert bytes or bytearray to a space-separated hex string safely\&. 
-.PP
-\fBParameters\fP
-.RS 4
-\fIdata\fP Byte stream\&. 
-.RE
-.PP
-\fBReturns\fP
-.RS 4
-Converted string\&. 
-.RE
-.PP
-
-.SS " int canopen_sniffer\&.clean_int_with_comment (str val)"
-
-.PP
-Get value after splitting the string\&. 
-.PP
-\fBParameters\fP
-.RS 4
-\fIval\fP Input string\&. 
-.RE
-.PP
-\fBReturns\fP
-.RS 4
-Splitted value as integer\&. 
-.RE
-.PP
-
-.SS "def canopen_sniffer\&.enable_logging ()"
-
-.PP
-Enable file-only logging, enabled through argument\&. 
 .SS "def canopen_sniffer\&.main ()"
 
 .PP
@@ -176,75 +50,6 @@ Handling SIGINT/SIGTSTP for controlled shutdown\&.
 Joining and cleaning up threads and CAN resources before exit\&. 
 .PP
 
-.SS " str canopen_sniffer\&.now_str ()"
-
-.PP
-Return current time string\&. 
-.PP
-\fBReturns\fP
-.RS 4
-Time string\&. 
-.RE
-.PP
-
-.SH "Variable Documentation"
-.PP 
-.SS "string APP_NAME = 'CANopen\-Sniffer'"
-
-.PP
-Application name\&. 
-.SS "string APP_ORG = 'iota2'"
-
-.PP
-Application organization name\&. 
-.SS "int CLI_DATA_TABLE_HEIGHT = 30"
-
-.PP
-Height of the data table in the CLI interface (number of rows)\&. 
-.SS "int CLI_GRAPH_WIDTH = 20"
-
-.PP
-Width of the graphs in the CLI interface (in characters)\&. 
-.SS "int CLI_PROTOCOL_TABLE_HEIGHT = 15"
-
-.PP
-Height of the protocol table in the CLI interface (number of rows)\&. 
-.SS "int DEFAULT_CAN_BIT_RATE = 1000000"
-
-.PP
-Default CAN bus bit rate (in bits per second)\&. 
-.SS "string DEFAULT_INTERFACE = 'vcan0'"
-
-.PP
-Default CAN interface to be loaded\&. 
-.SS "FILENAME = os\&.path\&.splitext(os\&.path\&.basename(__file__))[0]"
-
-.PP
-Script file name used as a reference for other system-generated files\&. 
-.SS "int FSYNC_EVERY = 50"
-
-.PP
-Frequency of filesystem synchronization (every N rows)\&. Setting this to 1 performs fsync after every row, which is safer but slower\&. 
-.SS "log = logging\&.getLogger(f'{FILENAME}')"
-
-.PP
-Module-level convenience logger (will propagate to root_logger handler)\&. Create logger instance\&. 
-.SS "LOG_LEVEL = logging\&.DEBUG"
-
-.PP
-Default Logging level\&. Set default log level to INFO\&. 
-.SS "int MAX_FRAMES = 500"
-
-.PP
-Maximum number of CANopen frames to be cached\&. 
-.SS "int MAX_STATS_SHOW = 5"
-
-.PP
-Maximum number of values to be shown in Bus stats window\&. 
-.SS "root_logger = logging\&.getLogger()"
-
-.PP
-Logger instance\&. Default behavior: No console or file logs until explicitly enabled\&. 
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for CANopen-Sniffer from the source code\&.

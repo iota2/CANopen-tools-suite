@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['get_5fframe_5fcount_132',['get_frame_count',['../classcanopen__sniffer_1_1bus__stats.html#a04a08b7d5a675eaddf9ac350966183c4',1,'canopen_sniffer::bus_stats']]],
-  ['get_5fsnapshot_133',['get_snapshot',['../classcanopen__sniffer_1_1bus__stats.html#aec57c1b7a69ec3efeb622f269d4484f0',1,'canopen_sniffer::bus_stats']]],
-  ['get_5ftotal_5fframes_134',['get_total_frames',['../classcanopen__sniffer_1_1bus__stats.html#a4204bbed3351741f6e167302b564c36c',1,'canopen_sniffer::bus_stats']]]
+  ['get_5fframe_5fcount_161',['get_frame_count',['../classbus__stats_1_1bus__stats.html#a6125fad5758fd72d6bb09c98eed835f3',1,'bus_stats::bus_stats']]],
+  ['get_5fsnapshot_162',['get_snapshot',['../classbus__stats_1_1bus__stats.html#aec57c1b7a69ec3efeb622f269d4484f0',1,'bus_stats::bus_stats']]],
+  ['get_5ftotal_5fframes_163',['get_total_frames',['../classbus__stats_1_1bus__stats.html#a4204bbed3351741f6e167302b564c36c',1,'bus_stats::bus_stats']]]
 ];

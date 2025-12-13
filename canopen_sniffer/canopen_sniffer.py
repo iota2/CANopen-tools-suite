@@ -10,10 +10,23 @@
 
 """!
 @file canopen_sniffer.py
-@brief CANopen bus sniffer.
+@brief CANopen sniffer main module and EDS helper utilities.
 @details
-This module defines default settings, constants, and enumerations used by
-the CANopen bus sniffer application. It also sets up logging for the module.
+Provides the core sniffer thread that listens on a CAN interface (SocketCAN
+or PCAN), frame processing pipelines that classify and enrich frames, and
+helpers for EDS (Electronic Data Sheet) parsing.
+
+Key components documented:
+ - eds_parser: builds name maps and PDO mappings used by UIs to resolve
+   object dictionary indices into human-readable parameter names.
+ - can_sniffer: threading class which reads raw CAN frames and pushes them to
+   processing queues.
+ - frame_processor: consumes frames, decodes CANopen content and updates
+   statistics and output sinks (TUI/GUI/CSV).
+
+Resource management: sockets and files are opened lazily and closed during
+graceful shutdown. Parsing is resilient to incomplete/invalid EDS files and
+will log warnings rather than raising for non-critical inconsistencies.
 """
 
 import copy
@@ -28,7 +41,6 @@ import argparse
 import configparser
 import signal
 
-from enum import Enum, auto
 from datetime import datetime, timedelta, UTC
 from dataclasses import dataclass, field
 from collections import Counter, deque
@@ -36,625 +48,16 @@ from collections import Counter, deque
 import threading
 import queue
 
-from rich.console import Console
-from rich.table import Table
-from rich.live import Live
-from rich.text import Text
-from rich import box
 
 import can
 from can import exceptions as can_exceptions
 import canopen
 
-
-# --------------------------------------------------------------------------
-# ----- Definitions -----
-# --------------------------------------------------------------------------
-
-## Application organization name.
-APP_ORG = "iota2"
-
-## Application name.
-APP_NAME = "CANopen-Sniffer"
-
-# --------------------------------------------------------------------------
-# ----- Defaults -----
-# --------------------------------------------------------------------------
-
-## Default CAN interface to be loaded.
-DEFAULT_INTERFACE = "vcan0"
-
-## Default CAN bus bit rate (in bits per second).
-DEFAULT_CAN_BIT_RATE = 1000000
-
-## Script file name used as a reference for other system-generated files.
-FILENAME = os.path.splitext(os.path.basename(__file__))[0]
-
-## Frequency of filesystem synchronization (every N rows).
-## @details
-## Setting this to 1 performs fsync after every row, which is safer but slower.
-FSYNC_EVERY = 50
-
-## Default Logging level.
-## @details
-## Set default log level to INFO.
-LOG_LEVEL = logging.DEBUG
-
-# --------------------------------------------------------------------------
-# ----- Constants -----
-# --------------------------------------------------------------------------
-
-## Height of the data table in the CLI interface (number of rows).
-CLI_DATA_TABLE_HEIGHT = 30
-
-## Height of the protocol table in the CLI interface (number of rows).
-CLI_PROTOCOL_TABLE_HEIGHT = 15
-
-## Width of the graphs in the CLI interface (in characters).
-CLI_GRAPH_WIDTH = 20
-
-## Maximum number of values to be shown in Bus stats window.
-MAX_STATS_SHOW = 5
-
-## Maximum number of CANopen frames to be cached.
-MAX_FRAMES = 500
-
-
-# --------------------------------------------------------------------------
-# ----- Enumerations -----
-# --------------------------------------------------------------------------
-class frame_type(Enum):
-    """! Types of CANopen messages.
-    @details
-        This enumeration defines the various message types that can appear
-        on a CANopen network.
-    """
-    ## Emergency message.
-    EMCY = 1
-
-    ## Heartbeat message.
-    HB = 2
-
-    ## Network Management message.
-    NMT = 3
-
-    ## Process Data Object message.
-    PDO = 4
-
-    ## Service Data Object request message.
-    SDO_REQ = 5
-
-    ## Service Data Object response message.
-    SDO_RES = 6
-
-    ## CANopen synchronization message.
-    SYNC = 7
-
-    ## Timestamp message.
-    TIME = 8
-
-    ## Other or unknown message type.
-    UNKNOWN = 9
-
-
-# --------------------------------------------------------------------------
-# ----- Logging -----
-# --------------------------------------------------------------------------
-## @brief Logger instance
-## @details
-## Default behavior: No console or file logs until explicitly enabled.
-root_logger = logging.getLogger()
-# Remove any inherited handlers to keep console quiet
-for h in root_logger.handlers[:]:
-    root_logger.removeHandler(h)
-root_logger.setLevel(LOG_LEVEL)
-
-## @brief Module-level convenience logger (will propagate to root_logger handler).
-## @details
-## Create logger instance.
-log = logging.getLogger(f"{FILENAME}")
-log.addHandler(logging.NullHandler())
-
-def enable_logging():
-    """! Enable file-only logging, enabled through argument."""
-    filename = f"{FILENAME}.log"
-
-    # Remove existing handlers (console) and configure file handler only.
-    logging.basicConfig(
-        filename=filename,
-        format="%(asctime)s [%(levelname)-8s] [%(name)-15s] %(message)s",
-        filemode="w",           # overwrite instead of append
-        level=LOG_LEVEL,
-        force=True,             # overwrite any existing handlers
-    )
-
-    # Do NOT add a StreamHandler here — we want file-only logging when enabled through argument.
-    global log
-    log = logging.getLogger(f"{FILENAME}")
-    log.setLevel(LOG_LEVEL)
-    log.info(f"Logging enabled → {filename}")
-
-
-# ----- helpers -----
-def now_str() -> str:
-    """! Return current time string.
-    @return Time string.
-    """
-    return datetime.now().strftime("%H:%M:%S.%f")[:-3]
-
-def bytes_to_hex(data) -> str:
-    """! Convert bytes or bytearray to a space-separated hex string safely.
-    @param data Byte stream.
-    @return Converted string.
-    """
-    if data is None:
-        return ""
-    # if already a string, return it as-is
-    if isinstance(data, str):
-        return data
-    # if it’s not iterable of ints (like None or empty), return empty
-    try:
-        return " ".join(f"{b:02X}" for b in data)
-    except Exception:
-        return str(data)
-
-
-def clean_int_with_comment(val: str) -> int:
-    """! Get value after splitting the string.
-    @param val Input string.
-    @return Splitted value as integer.
-    """
-    return int(val.split(";", 1)[0].strip(), 0)
-
-
-class bus_stats:
-    """! Container class for all CANopen bus statistics.
-    @details
-    This class organizes statistical data related to CANopen bus activity.
-    It includes nested dataclasses for different categories of metrics such as
-    frame counts, payload sizes, SDO transaction results, and error tracking.
-    """
-
-    @dataclass
-    class frame_count:
-        """! Tracks the number of frames by CANopen message type.
-        @details
-        Maintains counters for total frames and per-message-type counts.
-        """
-
-        ## Total number of CANopen frames received.
-        total = int(0)
-
-        ## Dictionary storing count per @ref frame_type.
-        ## @details
-        ## Keys correspond to message types (e.g., NMT, PDO, SDO, etc.).
-        ## Values represent how many frames of each type have been received.
-        counts : dict = field(default_factory=lambda: dict.fromkeys(frame_type, 0))
-
-
-    @dataclass
-    class payload_size:
-        """! Tracks cumulative payload sizes for key CANopen message types.
-        @details
-        Used to compute data throughput for PDO and SDO messages.
-        """
-
-        ## Dictionary holding total payload size per frame type.
-        ## @details
-        ## Initialized for PDO and SDO response messages.
-        sizes: dict = field(default_factory=lambda: {frame_type.PDO: 0, frame_type.SDO_RES: 0})
-
-
-    @dataclass
-    class sdo_stats:
-        """! Records SDO (Service Data Object) communication statistics.
-        @details
-        Includes counts of successful and aborted transfers, and timing data
-        for SDO request/response cycles.
-        """
-
-        ## Number of successful SDO transactions.
-        success: int = 0
-
-        ## Number of aborted or failed SDO transactions.
-        abort: int = 0
-
-        ## Timestamp dictionary for active SDO requests.
-        ## @details
-        ## Used to compute response latency when corresponding replies arrive.
-        request_time: dict = field(default_factory=dict)
-
-        ## Deque storing recent SDO response times for visualization.
-        ## @details
-        ## The maximum length is scaled by CLI graph width for CLI graph display.
-        response_time: deque = field(default_factory=lambda: deque(maxlen=CLI_GRAPH_WIDTH * 5))
-
-
-    @dataclass
-    class rates_stats:
-        """! Records frame rate statistics (PDO, SDO, total, etc.)
-        @details
-        Tracks last update time and last frame counts for rate computations.
-        """
-        # List of rate keys we track. Keep this small & canonical.
-        keys: list = field(default_factory=lambda: ['total', 'hb', 'emcy', 'pdo', 'sdo_res', 'sdo_req'])
-
-        # Bus utilization (percent)
-        bus_util_percent: float = 0.0
-
-        # Peak frames per seconds
-        peak_fps: float = 0.0
-
-        # Last update timestamp
-        last_update_time: float = field(default_factory=time.time)
-
-        # Last observed cumulative frame counts for each key (will be populated in bus_stats.__init__)
-        last_frame_counts: dict = field(default_factory=dict)
-
-        # Rolling histories (dict of deques) — init empty here; bus_stats.__init__ will populate using CLI_GRAPH_WIDTH
-        history: dict = field(default_factory=dict)
-
-        # Latest numeric rates (dict) — init empty here; bus_stats.__init__ will populate
-        latest: dict = field(default_factory=dict)
-
-
-    @dataclass
-    class error_stats:
-        """! Tracks error-related information observed on the CANopen bus.
-        @details
-        Maintains time and frame references for the most recent errors seen per node.
-        """
-
-        ## Dictionary mapping node IDs to timestamps of last error.
-        last_time: dict = field(default_factory=dict)
-
-        ## Dictionary mapping node IDs to the last error frame received.
-        last_frame: dict = field(default_factory=dict)
-
-
-    @dataclass
-    class stats_data:
-        """! Consolidated data record for overall bus statistics.
-        @details
-        This dataclass aggregates multiple categories of bus-level statistics,
-        including nodes, top talkers, and various measurement substructures.
-        """
-
-        ## Timestamp marking when statistics collection started.
-        start_time: float = 0.0
-
-        ## Set of node IDs currently active on the CANopen network.
-        nodes: set = field(default_factory=set)
-
-        ## Counter tracking nodes sending the most messages.
-        top_talkers: Counter = field(default_factory=Counter)
-
-        ## Reference to @ref bus_stats::frame_count data structure.
-        frame_count: "bus_stats.frame_count" = field(default_factory=lambda: bus_stats.frame_count())
-
-        ## Reference to @ref bus_stats::payload_size data structure.
-        payload_size: "bus_stats.payload_size" = field(default_factory=lambda: bus_stats.payload_size())
-
-        ## Reference to @ref bus_stats::sdo_stats data structure.
-        sdo: "bus_stats.sdo_stats" = field(default_factory=lambda: bus_stats.sdo_stats())
-
-        ## Reference to @ref bus_stats::sdo_stats data structure.
-        rates: "bus_stats.rates_stats" = field(default_factory=lambda: bus_stats.rates_stats())
-
-        ## Reference to @ref bus_stats::error_stats data structure.
-        error: "bus_stats.error_stats" = field(default_factory=lambda: bus_stats.error_stats())
-
-
-    def __init__(self, bitrate: int = DEFAULT_CAN_BIT_RATE):
-        """! Initialize the bus_stats object and its internal data structures.
-        @details
-        This constructor initializes synchronization primitives and prepares the
-        root statistics container used to store CANopen bus statistics. A thread
-        lock is used to protect concurrent access to the shared `_stats` data.
-        A logger instance is also created for internal diagnostics and reporting.
-        """
-        ## Thread lock used to protect access to statistics data.
-        self._lock = threading.Lock()
-
-        ## Instance of the @ref bus_stats::stats_data structure holding all metrics.
-        self._stats = self.stats_data()
-
-        ## CAN communication bit rate
-        self.bitrate = bitrate
-
-        # Reset rates status
-        self._stats.rates.bus_util_percent = 0.0
-        self._stats.rates.peak_fps = 0.0
-
-        # Use canonical keys from the rates_stats dataclass
-        keys = self._stats.rates.keys
-
-        # Initialize rate dictionaries using dict.fromkeys()
-        self._stats.rates.last_frame_counts = dict.fromkeys(keys, 0)
-        self._stats.rates.latest = dict.fromkeys(keys, 0.0)
-
-        # Initialize rolling histories (must use comprehension — new deque per key)
-        self._stats.rates.history = {k: deque(maxlen=CLI_GRAPH_WIDTH) for k in keys}
-
-        ## Logger instance used for reporting and debugging.
-        self.log = logging.getLogger(self.__class__.__name__)
-
-        # Timer for computing bus stats
-        self._rate_interval = 1.0                # seconds, sampling period
-        self._rate_sampler_stop = threading.Event()
-        self._rate_sampler_thread = threading.Thread(target=self._rate_sampler, name="bus_stats-rate-sampler", daemon=True)
-        self._rate_sampler_thread.start()
-
-    # --------- Update helpers ---------
-    def increment_frame(self, ftype: frame_type):
-        """! Increment frame counters by FrameType.
-        @param ftype Frame type @ref frame_type for incrementing its count.
-        @return None.
-        """
-        with self._lock:
-            self._stats.frame_count.total += 1
-            self._stats.frame_count.counts[ftype] += 1
-        # Update derived rates/history (time-gated inside update_rates)
-        try:
-            self.update_rates()
-        except Exception:
-            pass
-
-    def increment_payload(self, ftype: frame_type, size: int):
-        """! Increment payload size counters for PDO/SDO frames
-        @param ftype Frame type @ref frame_type to increment it's size.
-        @param size payload size as integer.
-        @exception KeyError : Payload size not tracked.
-        """
-        with self._lock:
-            if ftype in self._stats.payload_size.sizes:
-                self._stats.payload_size.sizes[ftype] += size
-            else:
-                raise KeyError(f"Payload size not tracked for {ftype}")
-
-    def set_start_time(self):
-        """! Sets the start time parameter of bus stats."""
-        with self._lock:
-            self._stats.start_time = time.time()
-
-    def increment_sdo_success(self):
-        """! Increment the SDO success counter."""
-        with self._lock:
-            self._stats.sdo.success += 1
-
-    def increment_sdo_abort(self):
-        """! Increment the SDO abort counter."""
-        with self._lock:
-            self._stats.sdo.abort += 1
-
-    def update_sdo_request_time(self, index: int, sub: int):
-        """! Update the SDO request message time to the deque.
-        @param index Index of received message as integer.
-        @param sub Sub index of received message as integer.
-        """
-        with self._lock:
-            self._stats.sdo.request_time[(index, sub)] = time.time()
-        log.debug(f"SDO request idx=0x{index:04X} sub={sub} recorded for latency measurement")
-
-    def update_sdo_response_time(self, index: int, sub: int):
-        """! Update the SDO response message time from the deque.
-        @param index Index of received message as integer.
-        @param sub Sub index of received message as integer.
-        """
-        with self._lock:
-            resp_time = None
-            key = (index, sub)
-            req_ts = self._stats.sdo.request_time.pop(key, None)
-            if req_ts:
-                resp_time = time.time() - req_ts
-                self._stats.sdo.response_time.append(resp_time)
-                self.log.debug(f"SDO response latency for 0x{index:04X}:{sub} = {resp_time:.4f}s")
-
-    def add_node(self, node_id: int):
-        """! Add node to communicating nodes list.
-        @param node_id Received Node id as integer.
-        """
-        with self._lock:
-            self._stats.nodes.add(node_id)
-
-    def count_talker(self, cob_id: int):
-        """! Increment TopTalkers counter for a COB-ID.
-        @param cob_id COB-ID as integer of top talker to be incremented.
-        """
-        with self._lock:
-            self._stats.top_talkers[cob_id] += 1
-
-    # --------- Getters ---------
-    def get_frame_count(self, ftype: frame_type) -> int:
-        """! Get counted frames.
-        @param ftype Frame type @ref frame_type.
-        @return Count of frames received as integer.
-        """
-        with self._lock:
-            return self._stats.frame_count.counts[ftype]
-
-    def get_total_frames(self) -> int:
-        """! Get total frame count.
-        @return Total counted frames as integer.
-        """
-        with self._lock:
-            return self._stats.frame_count.total
-
-    def update_rates(self, now: float = None, interval: float = 1.0):
-        """! Compute frames/s rates by differencing cumulative counters.
-        This method is time-gated (default ~1s) and appends values into the
-        rolling rate_history stored inside the snapshot. It also updates
-        snapshot.rates (latest numbers) and snapshot.bus_util_percent.
-        Call this regularly or invoke after incrementing counters; it's safe
-        to call frequently because it checks elapsed time internally.
-        """
-        if now is None:
-            now = time.time()
-
-        with self._lock:
-            elapsed = now - getattr(self._stats.rates, "last_update_time", now)
-            if elapsed <= 0 or elapsed < (interval * 0.9):
-                return
-
-            # collect current cumulative counts into a dict keyed same as rates.keys
-            counts = {}
-            counts['total'] = self._stats.frame_count.total
-            counts['hb'] = self._stats.frame_count.counts.get(frame_type.HB, 0)
-            counts['emcy'] = self._stats.frame_count.counts.get(frame_type.EMCY, 0)
-            counts['pdo'] = self._stats.frame_count.counts.get(frame_type.PDO, 0)
-            counts['sdo_res'] = self._stats.frame_count.counts.get(frame_type.SDO_RES, 0)
-            counts['sdo_req'] = self._stats.frame_count.counts.get(frame_type.SDO_REQ, 0)
-
-            # compute deltas and rates in a loop
-            keys = self._stats.rates.keys
-            # ensure history dict exists
-            if not getattr(self._stats.rates, "history", None):
-                width = getattr(self, "_rate_history_width", CLI_GRAPH_WIDTH)
-                self._stats.rates.history = {k: deque(maxlen=width) for k in keys}
-
-            rh = self._stats.rates.history  # should be dict of deques
-            for k in keys:
-                last = self._stats.rates.last_frame_counts.get(k, 0)
-                cur = counts.get(k, 0)
-                delta = cur - last
-                rate = (delta / elapsed) if elapsed > 0 else 0.0
-
-                # store latest and append to history (in-place)
-                self._stats.rates.latest[k] = rate
-                # append to history deque
-                if k not in rh:
-                    rh[k] = deque(maxlen=CLI_GRAPH_WIDTH)
-                rh[k].append(rate)
-
-                # update last count
-                self._stats.rates.last_frame_counts[k] = cur
-
-            # maintain peak explicitly
-            # if "peak" not in rh:
-            #     rh["peak"] = deque(maxlen=CLI_GRAPH_WIDTH)
-            # rh["peak"].append(max(rh["peak"][-1] if rh["peak"] else 0.0, self._stats.rates.latest.get("total", 0.0)))
-            # update peak_fps (single float) as max(prev_peak, max(history['total']) or latest total)
-            try:
-                prev_peak = float(getattr(self._stats.rates, "peak_fps", 0.0))
-                # prefer max of history if available (reflects observed peaks over the kept window)
-                if 'total' in rh and len(rh['total']) > 0:
-                    hist_max = max(rh['total'])
-                    new_peak = max(prev_peak, hist_max)
-                else:
-                    # fallback to latest total rate
-                    cur_total_rate = float(self._stats.rates.latest.get('total', 0.0))
-                    new_peak = max(prev_peak, cur_total_rate)
-                self._stats.rates.peak_fps = new_peak
-            except Exception:
-                # be defensive: don't break rates update if peak logic fails
-                try:
-                    self._stats.rates.peak_fps = max(float(getattr(self._stats.rates, "peak_fps", 0.0)),
-                                                    float(self._stats.rates.latest.get('total', 0.0)))
-                except Exception:
-                    pass
-
-            # update timestamp
-            self._stats.rates.last_update_time = now
-
-            # compute bus util using stored external bitrate or default
-            try:
-                bitrate = self.bitrate
-
-                # total frames observed in this snapshot (avoid zero)
-                total_cnt = max(1, counts.get("total", 0))
-
-                # derive avg payload bytes using stored payload_size totals (best-effort)
-                pdo_payload = self._stats.payload_size.sizes.get(frame_type.PDO, 0)
-                sdo_payload = self._stats.payload_size.sizes.get(frame_type.SDO_RES, 0) + self._stats.payload_size.sizes.get(frame_type.SDO_REQ, 0)
-
-                # If payload_size stores cumulative bytes per type, compute average payload bytes per frame
-                avg_payload_bytes = (pdo_payload + sdo_payload) / total_cnt if total_cnt else 0.0
-
-                # rough estimate of bits on bus per frame: overhead + payload
-                avg_frame_bits = max(64, int(avg_payload_bytes * 8 + 64))
-
-                # use the most recent total frames/s rate
-                rate_total = float(self._stats.rates.latest.get("total", 0.0))
-
-                # compute utilization percentage
-                util = (rate_total * avg_frame_bits) / max(1, bitrate) * 100.0
-
-                # store in snapshot rates
-                self._stats.rates.bus_util_percent = util
-            except Exception:
-                self._stats.rates.bus_util_percent = 0.0
-
-    def get_snapshot(self) -> stats_data:
-        """! Get snapshot of bus stats.
-        @return Current bus stats @ref stats_data.
-        """
-        with self._lock:
-            snap = copy.copy(self._stats)
-            snap.rates = copy.copy(self._stats.rates)
-            # convert each deque in history to a list
-            snap.rates.history = {k: list(d) for k, d in self._stats.rates.history.items()}
-            snap.rates.latest = dict(self._stats.rates.latest)
-        return snap
-
-    def reset(self):
-        """! Reset bus stats count."""
-        with self._lock:
-            # Reset all core stats objects
-            self._stats.frame_count = self.frame_count()
-            self._stats.payload_size = self.payload_size()
-            self._stats.sdo = self.sdo_stats()
-            self._stats.error = self.error_stats()
-            self._stats.top_talkers.clear()
-            self._stats.nodes.clear()
-
-            # Reinitialize the rates tracking structure
-            self._stats.rates = self.rates_stats()
-
-            # Use the canonical keys from rates_stats
-            keys = self._stats.rates.keys
-
-            # Reset all counters and rate data structures
-            self._stats.rates.last_frame_counts = dict.fromkeys(keys, 0)
-            self._stats.rates.latest = dict.fromkeys(keys, 0.0)
-            self._stats.rates.history = {k: deque(maxlen=CLI_GRAPH_WIDTH) for k in keys}
-            self._stats.rates.peak_fps = 0.0
-
-            # Reset utilization and timestamps
-            self._stats.rates.bus_util_percent = 0.0
-            self._stats.rates.last_update_time = time.time()
-
-            # Log reset completion
-            self.log.info("Bus statistics and rate histories have been reset.")
-
-    def _rate_sampler(self):
-        """Background thread: periodically call update_rates() so rates get sampled even when no frames arrive."""
-        self.log.debug("Rate sampler thread started (interval=%.3fs)", getattr(self, "_rate_interval", 1.0))
-        # Use a monotonic clock for sleeping
-        interval = getattr(self, "_rate_interval", 1.0)
-        while not self._rate_sampler_stop.is_set():
-            start = time.time()
-            try:
-                # pass explicit now and interval so update_rates uses correct elapsed
-                self.update_rates(now=start, interval=interval)
-            except Exception:
-                # keep the sampler alive even if update_rates throws
-                self.log.exception("Exception while sampling rates")
-            # sleep accurately but wake early if stop requested
-            elapsed = time.time() - start
-            to_sleep = max(0.0, interval - elapsed)
-            # wait with timeout so stop can be responsive
-            self._rate_sampler_stop.wait(timeout=to_sleep)
-        self.log.debug("Rate sampler thread exiting")
-
-    def stop(self):
-        """Stop background threads cleanly (call on application exit)."""
-        try:
-            self._rate_sampler_stop.set()
-            if self._rate_sampler_thread and self._rate_sampler_thread.is_alive():
-                self._rate_sampler_thread.join(timeout=1.0)
-        except Exception:
-            pass
-
+import sniffer_defs as sniffer_defs
+from bus_stats import bus_stats
+from display_cli import display_cli
+from display_tui import display_tui
+from display_gui import display_gui
 
 class eds_parser:
     """! Parser for CANopen EDS (Electronic Data Sheet) files.
@@ -761,7 +164,7 @@ class eds_parser:
                     entries = []
                     subidx = 1
                     while f"{sec}sub{subidx}" in cfg:
-                        raw = clean_int_with_comment(cfg[f"{sec}sub{subidx}"]["DefaultValue"])
+                        raw = sniffer_defs.clean_int_with_comment(cfg[f"{sec}sub{subidx}"]["DefaultValue"])
                         index = (raw >> 16) & 0xFFFF
                         sub = (raw >> 8) & 0xFF
                         size = raw & 0xFF
@@ -770,7 +173,7 @@ class eds_parser:
                     comm_sec = sec.replace("1A", "18", 1)
                     comm_sub1 = f"{comm_sec}sub1"
                     if comm_sub1 in cfg:
-                        cob_id = clean_int_with_comment(cfg[comm_sub1]["DefaultValue"])
+                        cob_id = sniffer_defs.clean_int_with_comment(cfg[comm_sub1]["DefaultValue"])
                         pdo_map[cob_id] = entries
                         names = []
                         for (idx, sub, _) in entries:
@@ -840,7 +243,7 @@ class can_sniffer(threading.Thread):
         self.export = export
 
         ## CSV file name used when export is enabled.
-        self.export_filename = f"{FILENAME}_raw.csv"
+        self.export_filename = f"{sniffer_defs.APP_NAME}_raw.csv"
 
         ## File object for CSV export (or None if not exporting).
         self.export_file = None
@@ -871,6 +274,7 @@ class can_sniffer(threading.Thread):
 
         # Open CAN socket
         try:
+            ## CAN bus instance with configuration loading.
             self.bus = can.interface.Bus(channel=interface, interface="socketcan")
             self.log.info(f"CAN socket opened on {interface}")
         except Exception as e:
@@ -891,7 +295,7 @@ class can_sniffer(threading.Thread):
         @details
         Writes a single CSV row with a serial number, timestamp, COB-ID,
         error flag and raw payload. Periodically flushes and fsyncs the file
-        according to `FSYNC_EVERY`.
+        according to `defs.FSYNC_EVERY`.
         @param cob COB-ID as integer of the CAN frame.
         @param error Boolean indicating whether the frame is an error frame.
         @param raw Hex string representation of the payload.
@@ -902,7 +306,7 @@ class can_sniffer(threading.Thread):
         try:
             self.export_writer.writerow([
                 self.export_serial_number,
-                now_str(),
+                sniffer_defs.now_str(),
                 f"0x{cob:03X}",
                 error,
                 raw
@@ -911,7 +315,7 @@ class can_sniffer(threading.Thread):
             # flush and fsync periodically
             try:
                 self.export_file.flush()
-                if (self.export_serial_number % FSYNC_EVERY) == 0:
+                if (self.export_serial_number % sniffer_defs.FSYNC_EVERY) == 0:
                     os.fsync(self.export_file.fileno())
             except Exception:
                 pass
@@ -937,10 +341,10 @@ class can_sniffer(threading.Thread):
         # Push frame to queue
         self.raw_frame.put(frame)
 
-        self.log.debug(f"Raw frame: [{now_str()}] [0x{cob:03X}] [{error}] [{bytes_to_hex(raw)}]")
+        self.log.debug(f"Raw frame: [{sniffer_defs.now_str()}] [0x{cob:03X}] [{error}] [{sniffer_defs.bytes_to_hex(raw)}]")
 
         # Export to CSV
-        self.save_frame_to_csv(cob, error, bytes_to_hex(raw))
+        self.save_frame_to_csv(cob, error, sniffer_defs.bytes_to_hex(raw))
 
     def run(self):
         """! Main loop of the sniffer thread.
@@ -1098,7 +502,7 @@ class process_frame(threading.Thread):
         self.export = export
 
         ## Output filename for processed CSV export.
-        self.export_filename = f"{FILENAME}_processed.csv"
+        self.export_filename = f"{sniffer_defs.APP_NAME}_processed.csv"
 
         ## File object for processed CSV export (or None).
         self.export_file = None
@@ -1126,7 +530,7 @@ class process_frame(threading.Thread):
                 self.log.exception("Failed to open CSV export file: %s", e)
                 self.export = False
 
-    def save_frame(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
+    def save_frame(self, cob: int, ftype: sniffer_defs.frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
         """! Save a processed CANopen frame for downstream use or logging.
         @details
         Constructs a dictionary representing a fully decoded CANopen frame and appends it
@@ -1134,7 +538,7 @@ class process_frame(threading.Thread):
         COB-ID, frame type, Object Dictionary indices, and decoded payload.
         A debug log entry is also generated with formatted frame details.
         @param cob      The CANopen COB-ID of the frame.
-        @param ftype    The frame type as an instance of @ref frame_type.
+        @param ftype    The frame type as an instance of @ref defs.frame_type.
         @param index    The CANopen Object Dictionary index associated with the frame.
         @param sub      The Object Dictionary subindex.
         @param name     Human-readable parameter name resolved via the EDS file.
@@ -1143,7 +547,7 @@ class process_frame(threading.Thread):
         """
 
         frame = {
-            "time": now_str(),
+            "time": sniffer_defs.now_str(),
             "cob": cob,
             "type": ftype,
             "index": index,
@@ -1155,20 +559,20 @@ class process_frame(threading.Thread):
 
         self.log.debug(
             "Processed frame: [%s] [%s] [0x%03X] [0x%04X] [0x%02X] [%s] [%s] [%s]",
-            now_str(), ftype.name, cob, index, sub, name, raw, decoded
+            sniffer_defs.now_str(), ftype.name, cob, index, sub, name, raw, decoded
         )
 
         # push frame to queue
         self.processed_frame.put(frame)
 
-    def save_frame_to_csv(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
+    def save_frame_to_csv(self, cob: int, ftype: sniffer_defs.frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
         """! Save a processed frame row to the processed CSV file.
         @details
         Writes a CSV row with serial number, timestamp, frame classification,
         OD address, name, raw hex payload and decoded value. Periodically flushes
-        and `fsyncs` the file according to `FSYNC_EVERY`.
+        and `fsyncs` the file according to `defs.FSYNC_EVERY`.
         @param cob COB-ID of the frame.
-        @param ftype frame_type enumeration value describing frame class.
+        @param ftype defs.frame_type enumeration value describing frame class.
         @param index Object dictionary index (for SDO/decoded frames).
         @param sub Object dictionary subindex.
         @param name Human-readable name for the mapped OD entry (from EDS).
@@ -1180,8 +584,8 @@ class process_frame(threading.Thread):
         try:
             self.export_writer.writerow([
                 self.export_serial_number,
-                now_str(),
-                ftype.name if isinstance(ftype, frame_type) else str(ftype),
+                sniffer_defs.now_str(),
+                ftype.name if isinstance(ftype, sniffer_defs.frame_type) else str(ftype),
                 f"0x{cob:03X}",
                 f"0x{index:04X}",
                 f"0x{sub:02X}",
@@ -1192,14 +596,14 @@ class process_frame(threading.Thread):
             self.export_serial_number += 1
             try:
                 self.export_file.flush()
-                if (self.export_serial_number % FSYNC_EVERY) == 0:
+                if (self.export_serial_number % sniffer_defs.FSYNC_EVERY) == 0:
                     os.fsync(self.export_file.fileno())
             except Exception:
                 pass
         except Exception as e:
             self.log.error("CSV export failed: %s", e)
 
-    def save_processed_frame(self, cob: int, ftype: frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
+    def save_processed_frame(self, cob: int, ftype: sniffer_defs.frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
         """! Save a fully processed CANopen frame in memory and export it to CSV.
         @details
         Converts the raw and decoded payloads into hexadecimal string representations if necessary,
@@ -1207,7 +611,7 @@ class process_frame(threading.Thread):
         to @ref save_frame_to_csv.
         This function ensures consistent formatting for both in-memory data and CSV output.
         @param cob      The CANopen COB-ID of the processed frame.
-        @param ftype    The frame type as an instance of @ref frame_type.
+        @param ftype    The frame type as an instance of @ref defs.frame_type.
         @param index    The Object Dictionary index associated with the frame.
         @param sub      The Object Dictionary subindex.
         @param name     Human-readable parameter name resolved from the EDS map.
@@ -1216,8 +620,8 @@ class process_frame(threading.Thread):
         """
 
         # Render decoded possibly already a string — only hex raw bytes
-        raw_hex = bytes_to_hex(raw)
-        decoded_hex = decoded if isinstance(decoded, str) else bytes_to_hex(decoded)
+        raw_hex = sniffer_defs.bytes_to_hex(raw)
+        decoded_hex = decoded if isinstance(decoded, str) else sniffer_defs.bytes_to_hex(decoded)
 
         # Save frame for downstream use
         self.save_frame(cob, ftype, index, sub, name, raw_hex, decoded_hex)
@@ -1263,49 +667,49 @@ class process_frame(threading.Thread):
                     pass
 
                 # frame distribution (use enums, not names)
-                ftype = frame_type.UNKNOWN
+                ftype = sniffer_defs.frame_type.UNKNOWN
                 try:
                     if cob == 0x000:
-                        ftype = frame_type.NMT
-                        self.stats.increment_frame(frame_type.NMT)
+                        ftype = sniffer_defs.frame_type.NMT
+                        self.stats.increment_frame(sniffer_defs.frame_type.NMT)
                     elif cob == 0x080:
-                        ftype = frame_type.SYNC
-                        self.stats.increment_frame(frame_type.SYNC)
+                        ftype = sniffer_defs.frame_type.SYNC
+                        self.stats.increment_frame(sniffer_defs.frame_type.SYNC)
                     elif 0x080 <= cob <= 0x0FF:
-                        ftype = frame_type.EMCY
-                        self.stats.increment_frame(frame_type.EMCY)
+                        ftype = sniffer_defs.frame_type.EMCY
+                        self.stats.increment_frame(sniffer_defs.frame_type.EMCY)
                     elif 0x100 <= cob <= 0x17F:
-                        ftype = frame_type.TIME
-                        self.stats.increment_frame(frame_type.TIME)
+                        ftype = sniffer_defs.frame_type.TIME
+                        self.stats.increment_frame(sniffer_defs.frame_type.TIME)
                     elif 0x180 <= cob <= 0x4FF:
-                        ftype = frame_type.PDO
-                        self.stats.increment_frame(frame_type.PDO)
+                        ftype = sniffer_defs.frame_type.PDO
+                        self.stats.increment_frame(sniffer_defs.frame_type.PDO)
                     elif 0x580 <= cob <= 0x5FF:
-                        ftype = frame_type.SDO_RES
-                        self.stats.increment_frame(frame_type.SDO_RES)
+                        ftype = sniffer_defs.frame_type.SDO_RES
+                        self.stats.increment_frame(sniffer_defs.frame_type.SDO_RES)
                     elif 0x600 <= cob <= 0x67F:
-                        ftype = frame_type.SDO_REQ
-                        self.stats.increment_frame(frame_type.SDO_REQ)
+                        ftype = sniffer_defs.frame_type.SDO_REQ
+                        self.stats.increment_frame(sniffer_defs.frame_type.SDO_REQ)
                     elif 0x700 <= cob <= 0x7FF:
-                        ftype = frame_type.HB
-                        self.stats.increment_frame(frame_type.HB)
+                        ftype = sniffer_defs.frame_type.HB
+                        self.stats.increment_frame(sniffer_defs.frame_type.HB)
                     else:
-                        ftype = frame_type.UNKNOWN
-                        self.stats.increment_frame(frame_type.UNKNOWN)
+                        ftype = sniffer_defs.frame_type.UNKNOWN
+                        self.stats.increment_frame(sniffer_defs.frame_type.UNKNOWN)
                 except Exception:
                     self.log.warning("Error while classifying frame cob=%s", cob)
 
                 # detect error frames (python-can: is_error_frame)
                 if error:
                     try:
-                        self.stats._stats.error.last_time = now_str()
+                        self.stats._stats.error.last_time = sniffer_defs.now_str()
                         self.stats._stats.error.last_frame = raw
                     except Exception:
                         pass
                     self.log.warning("Error frame detected: %s", raw)
 
                 # SDO request (client->server)
-                if ftype == frame_type.SDO_REQ and raw and len(raw) >= 4:
+                if ftype == sniffer_defs.frame_type.SDO_REQ and raw and len(raw) >= 4:
                     try:
                         index = raw[2] << 8 | raw[1]
                         sub = raw[3]
@@ -1318,7 +722,7 @@ class process_frame(threading.Thread):
                         self.log.warning("Malformed SDO request frame while recording req time")
 
                 # SDO response (server->client)
-                elif ftype == frame_type.SDO_RES:
+                elif ftype == sniffer_defs.frame_type.SDO_RES:
                     if raw and len(raw) >= 4:
                         index = raw[2] << 8 | raw[1]
                         sub = raw[3]
@@ -1342,7 +746,7 @@ class process_frame(threading.Thread):
                             decoded = ""
 
                     try:
-                        self.stats.increment_payload(frame_type.SDO_RES, payload_len)
+                        self.stats.increment_payload(sniffer_defs.frame_type.SDO_RES, payload_len)
                     except Exception:
                         pass
 
@@ -1356,9 +760,9 @@ class process_frame(threading.Thread):
                     self.save_processed_frame(cob, ftype, index, sub, name, raw, decoded)
 
                 # PDO frame
-                elif ftype == frame_type.PDO:
+                elif ftype == sniffer_defs.frame_type.PDO:
                     payload_len = len(raw)
-                    self.stats.increment_payload(frame_type.PDO, payload_len)
+                    self.stats.increment_payload(sniffer_defs.frame_type.PDO, payload_len)
                     if cob in self.eds_map.pdo_map:
                         entries = self.eds_map.pdo_map[cob]
                         offset = 0
@@ -1384,7 +788,7 @@ class process_frame(threading.Thread):
                         self.save_processed_frame(cob, ftype, index=0, sub=0, name="", raw=raw, decoded=decoded)
 
                 # TIME frame
-                elif ftype == frame_type.TIME:
+                elif ftype == sniffer_defs.frame_type.TIME:
                     # CiA-301 TIME: 4 bytes = ms after midnight (LE), 2 bytes = days since 1984-01-01 (LE)
                     try:
                         if raw and len(raw) >= 6:
@@ -1419,7 +823,7 @@ class process_frame(threading.Thread):
                     self.save_processed_frame(cob, ftype, index=0, sub=0, name="TIME", raw=raw, decoded=decoded)
 
                 # Emergency (EMCY) frame — generic decoding (no vendor-specific interpretation)
-                elif ftype == frame_type.EMCY:
+                elif ftype == sniffer_defs.frame_type.EMCY:
                     # EMCY format (generic): bytes 0..1 = 16-bit error code (LE),
                     # byte 2 = error register (bitfield), bytes 3..7 = manufacturer-specific bytes (raw hex)
                     try:
@@ -1456,7 +860,7 @@ class process_frame(threading.Thread):
                     self.save_processed_frame(cob, ftype, index=0, sub=0, name="EMCY", raw=raw, decoded=decoded)
 
                 # Heartbeat (HB) frame
-                elif ftype == frame_type.HB:
+                elif ftype == sniffer_defs.frame_type.HB:
                     # Heartbeat: single status byte. COB-ID = 0x700 + nodeID
                     try:
                         if raw and len(raw) >= 1:
@@ -1511,385 +915,6 @@ class process_frame(threading.Thread):
         self.log.debug("Stop requested for processor thread")
 
 
-# -----------------------------
-# Display thread implementations
-# -----------------------------
-class DisplayCLI(threading.Thread):
-    """
-    Rich-based CLI display thread that consumes processed_frame queue and renders
-    Protocol, PDO, SDO tables plus Bus Stats in a live layout.
-
-    NOTE: This DisplayCLI reads all rate/utility information from bus_stats snapshot
-    (snapshot.rates.latest and snapshot.rates.history). It does not perform any local
-    rate calculation or use bitrate directly.
-    """
-
-    def __init__(self, stats: bus_stats, processed_frame: queue.Queue, fixed: bool = False):
-        super().__init__(daemon=True)
-        self.processed_frame = processed_frame
-        self.stats = stats
-        self.fixed = fixed
-
-        # rich console / live
-        self.console = Console()
-        self._stop_event = threading.Event()
-        self.log = logging.getLogger(self.__class__.__name__)
-
-        # internal storage for rendering
-        self.PROTOCOL_TABLE_HEIGHT = CLI_PROTOCOL_TABLE_HEIGHT
-        self.DATA_TABLE_HEIGHT = CLI_DATA_TABLE_HEIGHT
-        self.GRAPH_WIDTH = CLI_GRAPH_WIDTH
-
-        # Small per-display buffers used only for rendering rows (not for rate calc).
-        self.proto_frames = deque(maxlen=MAX_FRAMES)
-        self.pdo_frames = deque(maxlen=MAX_FRAMES)
-        self.sdo_frames = deque(maxlen=MAX_FRAMES)
-
-        self.fixed_proto = {}
-        self.fixed_pdo = {}
-        self.fixed_sdo = {}
-
-    def sparkline(self, history, style="white"):
-        """Create a compact sparkline Text from a numeric history sequence."""
-        if not history:
-            return ""
-        # ensure we operate on a plain list of floats
-        try:
-            seq = list(history)[-self.GRAPH_WIDTH:]
-            if not seq:
-                return ""
-            blocks = "▁▂▃▄▅▆▇█"
-            mn, mx = min(seq), max(seq)
-            span = mx - mn or 1.0
-            chars = []
-            for v in seq:
-                try:
-                    idx = int((float(v) - mn) / span * (len(blocks) - 1))
-                except Exception:
-                    idx = 0
-                idx = max(0, min(idx, len(blocks) - 1))
-                chars.append(blocks[idx])
-            return Text("".join(chars), style=style)
-        except Exception:
-            return ""
-
-    def build_bus_stats_table(self):
-        """Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)."""
-        snapshot = self.stats.get_snapshot()
-
-        metric_labels = [
-            "State", "Active Nodes", "PDO Frames/s", "SDO Frames/s",
-            "HB Frames/s", "EMCY Frames/s", "Total Frames/s", "Peak Frames/s",
-            "Bus Util %", "Bus Idle %", "SDO OK/Abort",
-            "SDO resp time", "Last Error Frame", "Top Talkers", "Frame Dist."
-        ]
-        # Max label length + padding
-        metric_col_width = max(len(label) for label in metric_labels) + 2
-        graph_col_width = self.GRAPH_WIDTH
-
-        # Build table: Metric & Graph fixed width, Value expands
-        t = Table(title="Bus Stats", expand=True, box=box.SQUARE, style="yellow")
-        t.add_column("Metric", no_wrap=True, width=metric_col_width)
-        t.add_column("Value", justify="right", ratio=1)  # fill remaining width
-        t.add_column("Graph", justify="left", width=graph_col_width)
-
-        # Basic fields
-        total_frames = getattr(snapshot.frame_count, "total", 0)
-        nodes = getattr(snapshot, "nodes", {}) or {}
-        t.add_row("State", "Active" if total_frames else "Idle", "")
-        t.add_row("Active Nodes", str(len(nodes)), f"[dim]{sorted(nodes)}[/]" if nodes else "")
-
-        # Read rates and histories from snapshot.rates (structure provided by bus_stats)
-        rates_latest = getattr(snapshot.rates, "latest", {}) if hasattr(snapshot, "rates") else {}
-        rates_hist = getattr(snapshot.rates, "history", {}) if hasattr(snapshot, "rates") else {}
-
-        # PDO
-        pdo_val = float(rates_latest.get("pdo", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("pdo", []) if isinstance(rates_hist, dict) else []
-        t.add_row("PDO Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "green") if pdo_hist else "")
-
-        # SDO (request + response)
-        sdo_res = float(rates_latest.get("sdo_res", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        sdo_req = float(rates_latest.get("sdo_req", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        sdo_val = sdo_res + sdo_req
-        # build combined history (elementwise sum when lengths match)
-        sdo_hist_res = rates_hist.get("sdo_res", []) if isinstance(rates_hist, dict) else []
-        sdo_hist_req = rates_hist.get("sdo_req", []) if isinstance(rates_hist, dict) else []
-        sdo_hist = []
-        try:
-            if sdo_hist_res and sdo_hist_req and len(sdo_hist_res) == len(sdo_hist_req):
-                sdo_hist = [a + b for a, b in zip(sdo_hist_res, sdo_hist_req)]
-            elif sdo_hist_res:
-                sdo_hist = list(sdo_hist_res)
-            elif sdo_hist_req:
-                sdo_hist = list(sdo_hist_req)
-        except Exception:
-            sdo_hist = list(sdo_hist_res) if sdo_hist_res else list(sdo_hist_req) if sdo_hist_req else []
-        t.add_row("SDO Frames/s", f"{sdo_val:.1f}", self.sparkline(sdo_hist, "magenta") if sdo_hist else "")
-
-        # Heart beat
-        pdo_val = float(rates_latest.get("hb", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("hb", []) if isinstance(rates_hist, dict) else []
-        t.add_row("HB Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
-
-        # Emergency Messages
-        pdo_val = float(rates_latest.get("emcy", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("emcy", []) if isinstance(rates_hist, dict) else []
-        t.add_row("EMCY Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
-
-        # Total frames/s
-        total_val = float(rates_latest.get("total", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        total_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Total Frames/s", f"{total_val:.1f}", self.sparkline(total_hist, "yellow") if total_hist else "")
-
-        # Peak frames/s
-        peak_val = float(getattr(snapshot.rates, "peak_fps", 0.0))
-        t.add_row("Peak Frames/s", f"{peak_val:.1f}", "")
-
-        # Bus utilization (computed by bus_stats)
-        util = None
-        if hasattr(snapshot, "rates") and hasattr(snapshot.rates, "bus_util_percent"):
-            util = snapshot.rates.bus_util_percent
-        elif hasattr(snapshot, "compute_bus_util"):
-            try:
-                util = snapshot.compute_bus_util()
-            except Exception:
-                util = None
-
-        idle = max(0.0, 100.0 - util) if util is not None else 0.0
-        util_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Bus Util %", f"{util:.2f}%" if util is not None else "-", self.sparkline(util_hist, "grey") if util_hist else "")
-        t.add_row("Bus Idle %", f"{idle:.2f}%" if util is not None else "-", "")
-
-        # SDO stats & response time
-        try:
-            t.add_row("SDO OK/Abort", f"{snapshot.sdo.success}/{snapshot.sdo.abort}", "")
-            avg_sdo_rt = (sum(snapshot.sdo.response_time) / len(snapshot.sdo.response_time)) if snapshot.sdo.response_time else 0.0
-            t.add_row("SDO resp time", f"{avg_sdo_rt * 1000:.1f} ms", "")
-        except Exception:
-            t.add_row("SDO OK/Abort", "-", "")
-            t.add_row("SDO resp time", "-", "")
-
-        # Last error frame
-        last_err = "-"
-        try:
-            if snapshot.error.last_time or snapshot.error.last_frame:
-                last_err = f"[{snapshot.error.last_time}] <{snapshot.error.last_frame}>"
-        except Exception:
-            last_err = "-"
-        t.add_row("Last Error Frame", last_err, "")
-
-        # Top talkers
-        try:
-            top = snapshot.top_talkers.most_common(MAX_STATS_SHOW)
-            top_str = ", ".join(f"0x{c:03X}:{cnt}" for c, cnt in top) if top else "-"
-            t.add_row("Top Talkers", top_str, "")
-        except Exception:
-            t.add_row("Top Talkers", "-", "")
-
-        # Frame distribution — show top-N kinds sorted by count (descending)
-        try:
-            counts = snapshot.frame_count.counts  # mapping: frame_type -> int
-            # build list of (name, count) and sort by count desc
-            items = sorted(((k.name, v) for k, v in counts.items()), key=lambda kv: kv[1], reverse=True)
-            # choose how many to show inline
-            shown = items[:MAX_STATS_SHOW]
-            dist_pairs = ", ".join(f"{name}:{cnt}" for name, cnt in shown)
-            if not dist_pairs:
-                dist_pairs = "-"
-        except Exception:
-            dist_pairs = "-"
-        t.add_row("Frame Dist.", dist_pairs, "")
-
-        return t
-
-    def render_tables(self):
-        # Protocol Data
-        t_proto = Table(title="Protocol Data", expand=True, box=box.SQUARE, style="cyan")
-        t_proto.add_column("Time", no_wrap=True)
-        t_proto.add_column("COB-ID", width=8)
-        t_proto.add_column("Type", width=12)
-        t_proto.add_column("Raw Data", no_wrap=True)
-        t_proto.add_column("Decoded")
-        t_proto.add_column("Count", width=6, justify="right")
-
-        protos = list(self.fixed_proto.values())[-self.PROTOCOL_TABLE_HEIGHT:] if self.fixed else list(self.proto_frames)[-self.PROTOCOL_TABLE_HEIGHT:]
-        while len(protos) < self.PROTOCOL_TABLE_HEIGHT:
-            protos.append({"time": "", "cob": "", "type": "", "raw": "", "decoded": "", "count": ""})
-        for p in protos:
-            t_proto.add_row(p["time"], p["cob"], p["type"], p["raw"], p["decoded"], str(p.get("count", "")))
-
-        # Bus Stats
-        t_bus = self.build_bus_stats_table()
-
-        # PDO table
-        t_pdo = Table(title="PDO Data", expand=True, box=box.SQUARE, style="green")
-        t_pdo.add_column("Time", no_wrap=True)
-        t_pdo.add_column("COB-ID", width=8)
-        t_pdo.add_column("Name")
-        t_pdo.add_column("Index")
-        t_pdo.add_column("Sub")
-        t_pdo.add_column("Raw Data", no_wrap=True)
-        t_pdo.add_column("Decoded")
-        t_pdo.add_column("Count", width=6, justify="right")
-
-        frames = list(self.fixed_pdo.values())[-self.DATA_TABLE_HEIGHT:] if self.fixed else list(self.pdo_frames)[-self.DATA_TABLE_HEIGHT:]
-        while len(frames) < self.DATA_TABLE_HEIGHT:
-            frames.append({"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
-        for f in frames:
-            decoded = Text(str(f.get("decoded", "")), style="bold green") if f.get("decoded") else ""
-            t_pdo.add_row(f["time"], f["cob"], f.get("name", ""), f.get("index", ""), f.get("sub", ""), f.get("raw", ""), decoded, str(f.get("count", "")))
-
-        # SDO table
-        t_sdo = Table(title="SDO Data", expand=True, box=box.SQUARE, style="magenta")
-        t_sdo.add_column("Time", no_wrap=True)
-        t_sdo.add_column("COB-ID", width=8)
-        t_sdo.add_column("Name")
-        t_sdo.add_column("Index")
-        t_sdo.add_column("Sub")
-        t_sdo.add_column("Raw Data", no_wrap=True)
-        t_sdo.add_column("Decoded")
-        t_sdo.add_column("Count", width=6, justify="right")
-
-        sdos = list(self.fixed_sdo.values())[-self.DATA_TABLE_HEIGHT:] if self.fixed else list(self.sdo_frames)[-self.DATA_TABLE_HEIGHT:]
-        while len(sdos) < self.DATA_TABLE_HEIGHT:
-            sdos.append({"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
-        for s in sdos:
-            decoded = Text(str(s.get("decoded", "")), style="bold magenta") if s.get("decoded") else ""
-            t_sdo.add_row(s["time"], s["cob"], s.get("name", ""), s.get("index", ""), s.get("sub", ""), s.get("raw", ""), decoded, str(s.get("count", "")))
-
-        # Grid layout (two columns)
-        layout = Table.grid(expand=True)
-        layout.add_row(t_proto, None, t_bus)
-        layout.add_row(t_pdo, None, t_sdo)
-        return layout
-
-    def run(self):
-        self.log.info("DisplayCLI (rich) started")
-        # Use Live to update the complete dashboard
-        with Live(console=self.console, refresh_per_second=5, screen=True) as live:
-            try:
-                # loop until stop requested
-                while not self._stop_event.is_set():
-                    # consume all available processed frames (non-blocking)
-                    try:
-                        while True:
-                            pframe = self.processed_frame.get_nowait()
-                            # pframe fields: time, cob (int), type (frame_type), index, sub, name, raw, decoded
-                            t = pframe.get("time", now_str())
-                            cob = pframe.get("cob", 0)
-                            ftype = pframe.get("type")
-                            idx = pframe.get("index", 0)
-                            sub = pframe.get("sub", 0)
-                            name = pframe.get("name", "")
-                            raw = pframe.get("raw", "")
-                            decoded = pframe.get("decoded", "")
-
-                            # Format cob/index/sub as hex strings for display
-                            cob_s = f"0x{cob:03X}" if isinstance(cob, int) else str(cob)
-                            idx_s = f"0x{idx:04X}" if isinstance(idx, int) else str(idx)
-                            sub_s = f"0x{sub:02X}" if isinstance(sub, int) else str(sub)
-
-                            # classify into proto/pdo/sdo by type
-                            type_name = ftype.name if isinstance(ftype, frame_type) else str(ftype)
-                            if ftype == frame_type.PDO:
-                                key = (cob, idx, sub)
-                                row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": decoded, "count": 1}
-                                if self.fixed:
-                                    prev = self.fixed_pdo.get(key)
-                                    if prev:
-                                        row["count"] = prev.get("count", 1) + 1
-                                    self.fixed_pdo[key] = row
-                                else:
-                                    self.pdo_frames.append(row)
-                            elif ftype in (frame_type.SDO_REQ, frame_type.SDO_RES):
-                                key = (cob, idx, sub)
-                                row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": decoded, "count": 1}
-                                if self.fixed:
-                                    prev = self.fixed_sdo.get(key)
-                                    if prev:
-                                        row["count"] = prev.get("count", 1) + 1
-                                    self.fixed_sdo[key] = row
-                                else:
-                                    self.sdo_frames.append(row)
-                            else:
-                                # protocol/other
-                                ptype = type_name
-                                row = {"time": t, "cob": cob_s, "type": ptype, "raw": raw, "decoded": decoded, "count": 1}
-                                if self.fixed:
-                                    key = (cob, ptype)
-                                    prev = self.fixed_proto.get(key)
-                                    if prev:
-                                        row["count"] = prev.get("count", 1) + 1
-                                    self.fixed_proto[key] = row
-                                else:
-                                    self.proto_frames.append(row)
-
-                            try:
-                                self.processed_frame.task_done()
-                            except Exception:
-                                pass
-                    except queue.Empty:
-                        # nothing to consume
-                        pass
-
-                    # render and push to live
-                    live.update(self.render_tables())
-
-                    # small sleep to reduce busy-loop
-                    time.sleep(0.05)
-
-            finally:
-                self.log.info("DisplayCLI exiting")
-
-    def stop(self):
-        self._stop_event.set()
-        self.log.debug("DisplayCLI stop requested")
-
-
-class DisplayGUI(threading.Thread):
-    """Placeholder GUI display thread — for now consume queue and log the frames.
-       Replace this run() with actual Qt event integration later if needed.
-    """
-
-    def __init__(self, processed_frame: queue.Queue):
-        super().__init__(daemon=True)
-        self.processed_frame = processed_frame
-        self._stop_event = threading.Event()
-        self.log = logging.getLogger(self.__class__.__name__)
-
-    def run(self):
-        self.log.info("DisplayGUI started (placeholder)")
-        get_timeout = 0.1
-        try:
-            while not self._stop_event.is_set():
-                try:
-                    pframe = self.processed_frame.get(timeout=get_timeout)
-                except queue.Empty:
-                    continue
-
-                # Inside DisplayGUI.run(), where you currently do:
-                self.log.info("GUI frame: type=%s cob=0x%03X name=%s raw=%s decoded=%s", ...)
-
-                # Replace with:
-                msg = (f"GUI frame: type={(pframe.get('type').name if isinstance(pframe.get('type'), frame_type) else str(pframe.get('type')))} "
-                    f"cob=0x{pframe.get('cob'):03X} name={pframe.get('name')} raw={pframe.get('raw')} decoded={pframe.get('decoded')}")
-                # print(msg)              # immediate console feedback
-                self.log.info(msg)     # still log to logger (file/handlers)
-
-                try:
-                    self.processed_frame.task_done()
-                except Exception:
-                    pass
-
-        finally:
-            self.log.info("DisplayGUI exiting")
-
-    def stop(self):
-        self._stop_event.set()
-        self.log.debug("DisplayGUI stop requested")
-
-
 def main():
     """! Main entry point for the CANopen bus sniffer application.
     @details
@@ -1908,9 +933,9 @@ def main():
 
     ## Command-line argument parser setup.
     p = argparse.ArgumentParser()
-    p.add_argument("--interface", default=DEFAULT_INTERFACE, help="CAN interface (default: {DEFAULT_INTERFACE})")
-    p.add_argument("--mode", default="cli", choices=["cli", "gui"], help="enable cli or gui mode (default: cli)")
-    p.add_argument("--bitrate", type=int, default=DEFAULT_CAN_BIT_RATE, help="CAN bitrate (default: {DEFAULT_CAN_BIT_RATE})")
+    p.add_argument("--interface", default=sniffer_defs.DEFAULT_INTERFACE, help="CAN interface (default: {defs.DEFAULT_INTERFACE})")
+    p.add_argument("--mode", default="cli", choices=["cli", "tui", "gui"], help="enable cli or gui mode (default: cli)")
+    p.add_argument("--bitrate", type=int, default=sniffer_defs.DEFAULT_CAN_BIT_RATE, help="CAN bitrate (default: {defs.DEFAULT_CAN_BIT_RATE})")
     p.add_argument("--eds", help="EDS file path (optional)")
     p.add_argument("--fixed", action="store_true", help="update rows instead of scrolling")
     p.add_argument("--export", action="store_true", help="export received frames to CSV")
@@ -1919,21 +944,21 @@ def main():
 
     ## Enable logging if requested.
     if args.log:
-        enable_logging()
+        sniffer_defs.enable_logging()
 
     ## Parse and load EDS mapping for object dictionary and PDOs.
     eds_map = eds_parser(args.eds)
 
-    log.debug(f"Decoded PDO map: {eds_map.pdo_map}")
-    log.debug(f"Decoded NAME map: {eds_map.name_map}")
+    sniffer_defs.log.debug(f"Decoded PDO map: {eds_map.pdo_map}")
+    sniffer_defs.log.debug(f"Decoded NAME map: {eds_map.name_map}")
 
     ## Check if user passed the desired bitrate else use default.
     if args.bitrate:
         bitrate = args.bitrate
     else:
-        bitrate = DEFAULT_CAN_BIT_RATE
+        bitrate = sniffer_defs.DEFAULT_CAN_BIT_RATE
 
-    log.info(f"Configured CAN bitrate : {bitrate}")
+    sniffer_defs.log.info(f"Configured CAN bitrate : {bitrate}")
 
     ## Initialize bus statistics and reset counters.
     stats = bus_stats(bitrate=bitrate)
@@ -1957,25 +982,37 @@ def main():
                               eds_map=eds_map,
                               export=args.export)
 
-    # create chosen display thread
-    if args.mode == "cli":
-        display = DisplayCLI(stats=stats,
-                             processed_frame=processed_frame,
-                             fixed=args.fixed)
-    else:
-        display = DisplayGUI(processed_frame=processed_frame)
-
     ## Start background threads.
     sniffer.start()
     processor.start()
-    display.start()
+
+    # create chosen display thread
+    display = None
+    if args.mode == "cli":
+        display = display_cli(stats=stats,
+                             processed_frame=processed_frame,
+                             fixed=args.fixed)
+    elif args.mode == "tui":
+        try:
+            sniffer_defs.log.info("Loading TUI interface")
+            display_tui.run_textual(stats, processed_frame, fixed=args.fixed)
+        except Exception as e:
+            sniffer_defs.log.exception("Failed to start Textual TUI: %s", e)
+            # fallback to legacy CLI thread if textual unavailable
+            display = display_cli(stats=stats, processed_frame=processed_frame, fixed=args.fixed)
+    elif args.mode == "gui":
+        display = display_gui(processed_frame=processed_frame)
+
+    if display:
+        display.start()
 
     ## Signal handler for graceful termination (Ctrl+C).
     def _stop_all(signum, frame):
-        log.warning("Signal %s received — stopping threads...", signum)
+        sniffer_defs.log.warning("Signal %s received — stopping threads...", signum)
         sniffer.stop(shutdown_bus=True)
         processor.stop()
-        display.stop()
+        if display:
+            display.stop()
 
     ## Register signal handlers.
     signal.signal(signal.SIGINT, _stop_all)   # Ctrl+C → graceful stop
@@ -1993,14 +1030,15 @@ def main():
                 break
     except KeyboardInterrupt:
         ## Fallback KeyboardInterrupt handler to stop all threads.
-        log.info("KeyboardInterrupt received — shutting down")
+        sniffer_defs.log.info("KeyboardInterrupt received — shutting down")
         sniffer.stop(shutdown_bus=True)
         processor.stop()
     finally:
         ## Ensure both threads terminate and join gracefully.
         sniffer.join(timeout=2.0)
         processor.join(timeout=2.0)
-        display.join(timeout=2.0)
+        if display:
+            display.join(timeout=2.0)
 
         ## Attempt final CAN bus shutdown if still open.
         try:
@@ -2008,7 +1046,7 @@ def main():
                 sniffer.bus.shutdown()
         except Exception:
             pass
-        log.info(f"Terminating {APP_NAME}...")
+        sniffer_defs.log.info(f"Terminating {sniffer_defs.APP_NAME}...")
 
         # Shutdown logging now that threads have been joined\n"
         try:
@@ -2019,4 +1057,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
