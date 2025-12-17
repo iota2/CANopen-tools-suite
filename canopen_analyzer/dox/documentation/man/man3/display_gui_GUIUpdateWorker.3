@@ -1,0 +1,85 @@
+.TH "GUIUpdateWorker" 3 "Wed Dec 17 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+GUIUpdateWorker \- Background worker for delivering decoded CAN frames to the GUI\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits QObject\&.
+.SH "Detailed Description"
+.PP 
+Background worker for delivering decoded CAN frames to the GUI\&. 
+
+Mirrors the producer/consumer pattern used by CLI, The worker runs in a dedicated QThread and emits decoded frames via a Qt signal to avoid cross-thread UI access\&. 
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB__init__\fP (self, queue\&.Queue \fBprocessed_frame\fP)"
+.br
+.RI "Initialize the worker\&. "
+.ti -1c
+.RI "def \fBrun\fP (self)"
+.br
+.RI "Run the worker\&. "
+.ti -1c
+.RI "def \fBstop\fP (self)"
+.br
+.RI "Stop the worker\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBprocessed_frame\fP"
+.br
+.RI "Processed frame received from CAN thread\&. "
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBframe_received\fP = Signal(dict)"
+.br
+.RI "Emitted when a decoded frame is available\&. "
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "def __init__ ( self, queue\&.Queue processed_frame)"
+
+.PP
+Initialize the worker\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIprocessed_frame\fP Thread-safe queue of decoded CAN frames\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "def run ( self)"
+
+.PP
+Run the worker\&. 
+.SS "def stop ( self)"
+
+.PP
+Stop the worker\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "frame_received = Signal(dict)\fC [static]\fP"
+
+.PP
+Emitted when a decoded frame is available\&. 
+.SS "processed_frame"
+
+.PP
+Processed frame received from CAN thread\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

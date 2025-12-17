@@ -1,0 +1,249 @@
+.TH "MultiRateLineWidget" 3 "Wed Dec 17 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MultiRateLineWidget
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits QWidget\&.
+.SH "Detailed Description"
+.PP 
+
+.PP
+.nf
+Multi-series FPS graph widget (full-width graph).
+
+UX:
+  - Graph spans full width
+  - Series name + FPS overlaid on top of graph
+
+Functionality:
+  - Identical behavior to grid-based version
+  - Same update(), clear(), tooltip semantics
+
+.fi
+.PP
+ 
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB__init__\fP (self, series_defs)"
+.br
+.RI "Frame rate widget initialization\&. "
+.ti -1c
+.RI "def \fBclear\fP (self)"
+.br
+.RI "Clear all rate graph data and reset display state\&. "
+.ti -1c
+.RI "def \fBeventFilter\fP (self, obj, event)"
+.br
+.RI "Handle mouse hover events for the rate graph\&. "
+.ti -1c
+.RI "def \fBresizeEvent\fP (self, event)"
+.br
+.RI "Handle widget resize events\&. "
+.ti -1c
+.RI "def \fBupdate\fP (self, dict values, dict histories)"
+.br
+.RI "Update rate graph with new FPS values and histories\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBaxis_x\fP"
+.br
+.RI "X-axis represents sample index / time progression\&. "
+.ti -1c
+.RI "\fBaxis_y\fP"
+.br
+.RI "Y-axis represents frames per second\&. "
+.ti -1c
+.RI "\fBchart\fP"
+.br
+.RI "Chart object to display frame rate graphs\&. "
+.ti -1c
+.RI "\fBheader_labels\fP"
+.br
+.RI "Mapping: series name -> header QLabel\&. "
+.ti -1c
+.RI "\fBheader_layout\fP"
+.br
+.RI "Layout used later to align header text with chart plot area\&. "
+.ti -1c
+.RI "\fBmax_points\fP"
+.br
+.RI "Maximum number of samples retained per rate series\&. "
+.ti -1c
+.RI "\fBpeak_lines\fP"
+.br
+.RI "Mapping: series name -> QLineSeries (peak indicator line)\&. "
+.ti -1c
+.RI "\fBseries\fP"
+.br
+.RI "Mapping: series name -> QLineSeries (main FPS line) "
+.ti -1c
+.RI "\fBseries_colors\fP"
+.br
+.RI "Mapping: series name -> human-readable color name (for tooltips) "
+.ti -1c
+.RI "\fBvalue_labels\fP"
+.br
+.RI "Mapping: series name -> QLabel displaying current FPS\&. "
+.ti -1c
+.RI "\fBview\fP"
+.br
+.RI "Chart view widget for frame rate graphs\&. "
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "def __init__ ( self,  series_defs)"
+
+.PP
+Frame rate widget initialization\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "def clear ( self)"
+
+.PP
+Clear all rate graph data and reset display state\&. Resets the widget to its initial state by:
+.IP "\(bu" 2
+Clearing all plotted FPS series
+.IP "\(bu" 2
+Discarding stored history buffers
+.IP "\(bu" 2
+Resetting displayed FPS values to zero
+.IP "\(bu" 2
+Restoring chart axes to safe default ranges 
+.PP
+\fBNote\fP
+.RS 4
+This method is typically invoked when the user presses the \fIClear\fP action or when switching display modes (Fixed / Sequential)\&. 
+.RE
+.PP
+
+.PP
+
+.SS "def eventFilter ( self,  obj,  event)"
+
+.PP
+Handle mouse hover events for the rate graph\&. Intercepts mouse-move events on the chart viewport to display a tooltip containing statistical information for each rate series\&. The tooltip shows:
+.IP "\(bu" 2
+Minimum FPS
+.IP "\(bu" 2
+Average FPS
+.IP "\(bu" 2
+Maximum FPS over the currently retained history window\&. 
+.PP
+\fBNote\fP
+.RS 4
+Tooltip handling is intentionally limited to the chart's viewport so that labels and surrounding widgets do not trigger spurious updates\&. 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIobj\fP QObject that generated the event\&. 
+.br
+\fIevent\fP QEvent instance describing the event\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+True if the event is handled by this filter, otherwise delegates to the base implementation\&. 
+.RE
+.PP
+
+.PP
+
+.SS "def resizeEvent ( self,  event)"
+
+.PP
+Handle widget resize events\&. Recomputes header alignment after layout or size changes to ensure that header text remains vertically aligned with the chart plot area 
+.PP
+\fBParameters\fP
+.RS 4
+\fIevent\fP Qt resize event containing the new widget geometry\&. 
+.RE
+.PP
+
+.SS "def update ( self, dict values, dict histories)"
+
+.PP
+Update rate graph with new FPS values and histories\&. Updates both the textual FPS indicators and the plotted history for each configured rate series\&. This method:
+.IP "\(bu" 2
+Truncates history to the configured window size
+.IP "\(bu" 2
+Redraws all series with the latest history
+.IP "\(bu" 2
+Updates peak indicators per series
+.IP "\(bu" 2
+Rescales the Y-axis based on the maximum observed FPS 
+.PP
+\fBNote\fP
+.RS 4
+The widget performs no rate calculations itself; it only visualizes values supplied by the caller, mirroring the CLI rate display behavior\&. 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIvalues\fP Mapping of series name to current FPS value\&. 
+.br
+\fIhistories\fP Mapping of series name to rolling FPS history list\&. 
+.RE
+.PP
+
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "axis_x"
+
+.PP
+X-axis represents sample index / time progression\&. 
+.SS "axis_y"
+
+.PP
+Y-axis represents frames per second\&. 
+.SS "chart"
+
+.PP
+Chart object to display frame rate graphs\&. 
+.SS "header_labels"
+
+.PP
+Mapping: series name -> header QLabel\&. 
+.SS "header_layout"
+
+.PP
+Layout used later to align header text with chart plot area\&. 
+.SS "max_points"
+
+.PP
+Maximum number of samples retained per rate series\&. 
+.SS "peak_lines"
+
+.PP
+Mapping: series name -> QLineSeries (peak indicator line)\&. 
+.SS "series"
+
+.PP
+Mapping: series name -> QLineSeries (main FPS line) Mapping: series name -> QLineSeries (main line)\&. 
+.SS "series_colors"
+
+.PP
+Mapping: series name -> human-readable color name (for tooltips) Mapping: series name -> color name string\&. 
+.SS "value_labels"
+
+.PP
+Mapping: series name -> QLabel displaying current FPS\&. 
+.SS "view"
+
+.PP
+Chart view widget for frame rate graphs\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

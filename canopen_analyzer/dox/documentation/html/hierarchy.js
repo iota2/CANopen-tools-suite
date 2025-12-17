@@ -12,10 +12,18 @@ var hierarchy =
     [ "Thread", null, [
       [ "canopen_sniffer", "classcanopen__sniffer_1_1canopen__sniffer.html", null ],
       [ "display_cli", "classdisplay__cli_1_1display__cli.html", null ],
-      [ "display_gui", "classdisplay__gui_1_1display__gui.html", null ],
       [ "process_frames", "classprocess__frames_1_1process__frames.html", null ]
     ] ],
     [ "Enum", null, [
       [ "frame_type", "classanalyzer__defs_1_1frame__type.html", null ]
+    ] ],
+    [ "QMainWindow", null, [
+      [ "CANopenMainWindow", "classdisplay__gui_1_1CANopenMainWindow.html", null ]
+    ] ],
+    [ "QObject", null, [
+      [ "GUIUpdateWorker", "classdisplay__gui_1_1GUIUpdateWorker.html", null ]
+    ] ],
+    [ "QWidget", null, [
+      [ "MultiRateLineWidget", "classdisplay__gui_1_1MultiRateLineWidget.html", null ]
     ] ]
 ];

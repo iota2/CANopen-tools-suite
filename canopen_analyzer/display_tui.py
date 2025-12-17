@@ -85,6 +85,7 @@ class display_tui:
         @param fixed When True, tables operate in fixed-index mode; otherwise they show scrolling entries.
         @return None
         """
+
         # Lazy import check
         if App is None:
             raise RuntimeError("textual is not installed. Install with: pip install textual")
@@ -113,6 +114,8 @@ class display_tui:
             ]
 
             def __init__(self, *a, **kw):
+                """! TUI interface initialization."""
+
                 super().__init__(*a, **kw)
 
                 ## Logger instance for TUI display.
@@ -155,6 +158,7 @@ class display_tui:
 
             def compose(self) -> ComposeResult:
                 """! Textual compose callback."""
+
                 yield Header()
                 # two-column layout (left: proto + pdo, right: bus stats + sdo)
                 with Horizontal():
@@ -188,6 +192,7 @@ class display_tui:
 
             def _copy_to_clipboard_or_file(self, text: str, filename: str = f"/tmp/{analyzer_defs.APP_NAME}.log"):
                 """! Try to copy to clipboard using pyperclip; if unavailable, write to filename."""
+
                 try:
                     pyperclip.copy(text)
                     return True, "Copied to clipboard"
@@ -207,6 +212,7 @@ class display_tui:
                 @details
                 Tries several APIs depending on Textual version and avoids dumping internal RowKey objects.
                 """
+
                 lines = []
                 try:
                     # Preferred: use row_count + get_row_at
@@ -345,6 +351,7 @@ class display_tui:
 
             def sparkline_text(self, history, width=None):
                 """! Create a compact sparkline string from a numeric history sequence."""
+
                 if not history:
                     return ""
                 try:
@@ -368,6 +375,7 @@ class display_tui:
 
             def _update_from_queue(self) -> None:
                 """! Poll processed_frame queue and update tables"""
+
                 q = cls.processed_frame
                 if q is None:
                     return
@@ -495,6 +503,7 @@ class display_tui:
 
             def _clear_table_rows(self, table):
                 """! Robustly clear all rows from a DataTable instance."""
+
                 # Preferred: use clear(rows=True) if available
                 try:
                     table.clear(rows=True)
@@ -556,6 +565,7 @@ class display_tui:
                 """! Refresh the three DataTables with either fixed-mode rows (replace) or scrolling rows (append last N).
                 Ensures previous displayed rows are removed before adding new rows to avoid the table growing indefinitely.
                 """
+
                 # Clear existing rows robustly before adding new ones
                 try:
                     self._clear_table_rows(self.proto_table)
@@ -670,8 +680,8 @@ class display_tui:
                         pass
 
             def _refresh_bus_stats(self):
-                """! Populate the bus_stats_table DataTable using the stats snapshot.
-                """
+                """! Populate the bus_stats_table DataTable using the stats snapshot."""
+
                 snapshot = cls.stats.get_snapshot() if cls.stats else None
                 # If no snapshot, clear and show placeholder
                 if not snapshot:
@@ -698,6 +708,7 @@ class display_tui:
 
                 def get_hist(key):
                     """! Helper to get stats history"""
+
                     try:
                         return rates_hist.get(key, []) if isinstance(rates_hist, dict) else []
                     except Exception:
@@ -705,6 +716,7 @@ class display_tui:
 
                 def add_metric(label, value, hist_key=None, style=None):
                     """! Helper to add metrics data"""
+
                     graph = ""
                     if hist_key:
                         hist = get_hist(hist_key)
@@ -831,6 +843,7 @@ class display_tui:
 
             async def on_key(self, event: events.Key) -> None:
                 """! Textual callback of detecting key press"""
+
                 k = event.key
                 try:
                     if k in ("q", "Q"):

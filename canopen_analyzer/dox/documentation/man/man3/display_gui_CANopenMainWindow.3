@@ -1,0 +1,305 @@
+.TH "CANopenMainWindow" 3 "Wed Dec 17 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CANopenMainWindow \- Main application window for the CANopen Analyzer GUI\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits QMainWindow\&.
+.SH "Detailed Description"
+.PP 
+Main application window for the CANopen Analyzer GUI\&. 
+
+Owns all top-level GUI components including menus, toolbars, dock widgets, central data tables, and rate graphs\&. This class is responsible for translating decoded CAN frames and bus statistics into visual updates\&. 
+.PP
+\fBNote\fP
+.RS 4
+Terminology, display modes (Fixed / Sequential), and update behavior intentionally mirror CLI to maintain consistency between the CLI and GUI interfaces\&. 
+.RE
+.PP
+
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP)"
+.br
+.RI "Construct the main CANopen Analyzer GUI window\&. "
+.ti -1c
+.RI "def \fBclear_tables\fP (self)"
+.br
+.RI "Clear all displayed data and reset statistics\&. "
+.ti -1c
+.RI "def \fBcloseEvent\fP (self, event)"
+.br
+.RI "Handle application shutdown and cleanup\&. "
+.ti -1c
+.RI "def \fBon_frame\fP (self, p)"
+.br
+.RI "Handle a newly decoded CAN frame\&. "
+.ti -1c
+.RI "def \fBupdate_bus_stats\fP (self)"
+.br
+.RI "Update the Bus Statistics table and rate graphs\&. "
+.ti -1c
+.RI "def \fBupdate_table\fP (self, table, fixed_map, key, values)"
+.br
+.RI "Insert or update a row in a data table\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBbus_table\fP"
+.br
+.RI "Displays key/value style bus metrics (e\&.g\&. "
+.ti -1c
+.RI "\fBfixed\fP"
+.br
+.RI "Display mode flag: "
+.ti -1c
+.RI "\fBfixed_pdo\fP"
+.br
+.RI "Fixed-row PDO data caches used when operating in Fixed mode\&. "
+.ti -1c
+.RI "\fBfixed_proto\fP"
+.br
+.RI "Fixed-row protocol data caches used when operating in Fixed mode\&. "
+.ti -1c
+.RI "\fBfixed_sdo\fP"
+.br
+.RI "Fixed-row SDO data caches used when operating in Fixed mode\&. "
+.ti -1c
+.RI "\fBmode_combo\fP"
+.br
+.RI "Mode selection combo box\&. "
+.ti -1c
+.RI "\fBpdo_filter\fP"
+.br
+.RI "PDO data filter\&. "
+.ti -1c
+.RI "\fBproto_filter\fP"
+.br
+.RI "Protocol data filter\&. "
+.ti -1c
+.RI "\fBrate_misc\fP"
+.br
+.RI "Heartbeat and EMCY frame-rate history\&. "
+.ti -1c
+.RI "\fBrate_pdo\fP"
+.br
+.RI "PDO frame-rate history\&. "
+.ti -1c
+.RI "\fBrate_sdo\fP"
+.br
+.RI "SDO request/response frame-rate history (shared time axis) "
+.ti -1c
+.RI "\fBsdo_filter\fP"
+.br
+.RI "SDO data filter\&. "
+.ti -1c
+.RI "\fBsettings\fP"
+.br
+.RI "Persistent settings store used for window geometry, dock layout, and column width restoration\&. "
+.ti -1c
+.RI "\fBsplitter\fP"
+.br
+.RI "Create a vertical splitter to allow user-resizable sections\&. "
+.ti -1c
+.RI "\fBstats\fP"
+.br
+.RI "Reference to shared bus statistics backend\&. "
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBHEAT_CLEAR_MS\fP = 600"
+.br
+.RI "Duration (in milliseconds) for which the activity highlight remains visible before being cleared automatically\&. "
+.ti -1c
+.RI "\fBHEAT_COLOR\fP = QColor(255, 230, 170)"
+.br
+.RI "Background color used to temporarily highlight rows when new or updated data is received (activity heat effect)\&. "
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "def __init__ ( self, \fBbus_stats\fP stats, bool fixed)"
+
+.PP
+Construct the main CANopen Analyzer GUI window\&. Initializes the main window state, stores shared backend references, constructs all UI components, and restores any previously saved layout\&. The initial display mode (Fixed / Sequential) is derived from the caller and mirrors the behavior of the CLI implementation\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstats\fP Shared bus statistics object used as the single source of truth for counters and rates\&. 
+.br
+\fIfixed\fP If True, start in Fixed (aggregated-row) mode; otherwise start in Sequential mode\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "def clear_tables ( self)"
+
+.PP
+Clear all displayed data and reset statistics\&. Clears protocol, PDO, and SDO tables, resets fixed-mode aggregation maps, clears bus statistics and rate graphs, and resets the backend statistics counters\&. 
+.SS "def closeEvent ( self,  event)"
+
+.PP
+Handle application shutdown and cleanup\&. Ensures that background worker threads are stopped cleanly and that window layout state is persisted before exiting the application\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIevent\fP Qt close event\&. 
+.RE
+.PP
+
+.SS "def on_frame ( self,  p)"
+
+.PP
+Handle a newly decoded CAN frame\&. Called from the GUI worker thread via signal emission\&. Dispatches the decoded frame to the appropriate table (Protocol, PDO, or SDO), updates row counts, applies highlighting, and refreshes bus statistics\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIp\fP Dictionary containing decoded CAN frame fields\&. 
+.RE
+.PP
+
+.SS "def update_bus_stats ( self)"
+
+.PP
+Update the Bus Statistics table and rate graphs\&. Retrieves a snapshot from the shared bus statistics backend and refreshes all bus-level metrics displayed in the GUI\&. This includes:
+.IP "\(bu" 2
+General bus state and node activity
+.IP "\(bu" 2
+Utilization and idle percentages
+.IP "\(bu" 2
+Aggregate and peak frame rates
+.IP "\(bu" 2
+SDO success/abort statistics and response timing
+.IP "\(bu" 2
+Error and diagnostic information
+.IP "\(bu" 2
+Top talkers and frame distribution
+.IP "\(bu" 2
+Frame-rate history graphs (PDO, SDO, Heartbeat, EMCY) 
+.PP
+\fBNote\fP
+.RS 4
+The data and grouping mirror the CLI statistics panel\&. 
+.RE
+.PP
+
+.PP
+
+.SS "def update_table ( self,  table,  fixed_map,  key,  values)"
+
+.PP
+Insert or update a row in a data table\&. Updates the specified table based on the current display mode:
+.IP "\(bu" 2
+Fixed mode: rows are aggregated by key and counts incremented
+.IP "\(bu" 2
+Sequential mode: each frame is appended as a new row 
+.PP
+\fBNote\fP
+.RS 4
+Row highlighting is applied to indicate recent activity\&. 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP Target QTableWidget\&. 
+.br
+\fIfixed_map\fP Mapping of aggregation keys to table rows\&. 
+.br
+\fIkey\fP Unique key identifying a row in Fixed mode\&. 
+.br
+\fIvalues\fP List of column values to insert/update\&. 
+.RE
+.PP
+
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "bus_table"
+
+.PP
+Displays key/value style bus metrics (e\&.g\&. utilization, error counters, SDO status), similar to the CLI stats view\&. 
+.SS "fixed"
+
+.PP
+Display mode flag: 
+.IP "\(bu" 2
+True -> Fixed (aggregated) display
+.IP "\(bu" 2
+False -> Sequential (rolling) display 
+.PP
+
+.SS "fixed_pdo"
+
+.PP
+Fixed-row PDO data caches used when operating in Fixed mode\&. 
+.SS "fixed_proto"
+
+.PP
+Fixed-row protocol data caches used when operating in Fixed mode\&. 
+.SS "fixed_sdo"
+
+.PP
+Fixed-row SDO data caches used when operating in Fixed mode\&. 
+.SS "int HEAT_CLEAR_MS = 600\fC [static]\fP"
+
+.PP
+Duration (in milliseconds) for which the activity highlight remains visible before being cleared automatically\&. 
+.SS "HEAT_COLOR = QColor(255, 230, 170)\fC [static]\fP"
+
+.PP
+Background color used to temporarily highlight rows when new or updated data is received (activity heat effect)\&. 
+.SS "mode_combo"
+
+.PP
+Mode selection combo box\&. 
+.SS "pdo_filter"
+
+.PP
+PDO data filter\&. 
+.SS "proto_filter"
+
+.PP
+Protocol data filter\&. 
+.SS "rate_misc"
+
+.PP
+Heartbeat and EMCY frame-rate history\&. 
+.SS "rate_pdo"
+
+.PP
+PDO frame-rate history\&. 
+.SS "rate_sdo"
+
+.PP
+SDO request/response frame-rate history (shared time axis) 
+.SS "sdo_filter"
+
+.PP
+SDO data filter\&. 
+.SS "settings"
+
+.PP
+Persistent settings store used for window geometry, dock layout, and column width restoration\&. 
+.SS "splitter"
+
+.PP
+Create a vertical splitter to allow user-resizable sections\&. 
+.SS "stats"
+
+.PP
+Reference to shared bus statistics backend\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

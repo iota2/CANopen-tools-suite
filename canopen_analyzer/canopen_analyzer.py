@@ -151,7 +151,7 @@ def main():
             # fallback to legacy CLI thread if textual unavailable
             display = display_cli(stats=stats, processed_frame=processed_frame, fixed=args.fixed)
     elif args.mode == "gui":
-        display = display_gui(processed_frame=processed_frame)
+        display_gui(stats, processed_frame, fixed=args.fixed)
 
     if display:
         display.start()

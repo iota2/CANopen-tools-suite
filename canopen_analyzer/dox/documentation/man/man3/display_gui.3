@@ -1,4 +1,4 @@
-.TH "display_gui" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_gui" 3 "Wed Dec 17 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,10 +10,47 @@ display_gui
 
 .in +1c
 .ti -1c
-.RI "class \fBdisplay_gui\fP"
+.RI "class \fBCANopenMainWindow\fP"
 .br
-.RI "Placeholder GUI display thread — for now consume queue and log the frames\&. "
+.RI "Main application window for the CANopen Analyzer GUI\&. "
+.ti -1c
+.RI "class \fBGUIUpdateWorker\fP"
+.br
+.RI "Background worker for delivering decoded CAN frames to the GUI\&. "
+.ti -1c
+.RI "class \fBMultiRateLineWidget\fP"
+.br
 .in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBdisplay_gui\fP (stats, processed_frame, fixed=False)"
+.br
+.RI "Launch the CANopen Analyzer GUI application\&. "
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "def display_gui\&.display_gui ( stats,  processed_frame,  fixed = \fCFalse\fP)"
+
+.PP
+Launch the CANopen Analyzer GUI application\&. Creates the Qt application instance, initializes the main window, and starts a background worker thread to deliver decoded CAN frames to the GUI\&. This function also installs proper Ctrl+C (SIGINT) handling so that the application shuts down cleanly when run from a terminal\&. 
+.PP
+\fBNote\fP
+.RS 4
+The worker thread communicates with the GUI exclusively via Qt signals to ensure thread safety\&. 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIstats\fP Shared bus statistics object used by the GUI\&. 
+.br
+\fIprocessed_frame\fP Thread-safe queue containing decoded CAN frames from the backend\&. 
+.br
+\fIfixed\fP If True, start in Fixed (aggregated) display mode; otherwise start in Sequential mode\&. 
+.RE
+.PP
+
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for CANopen-Analyzer from the source code\&.

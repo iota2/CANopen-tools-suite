@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rates_5fstats_141',['rates_stats',['../classbus__stats_1_1bus__stats_1_1rates__stats.html',1,'bus_stats::bus_stats']]]
+  ['multiratelinewidget_176',['MultiRateLineWidget',['../classdisplay__gui_1_1MultiRateLineWidget.html',1,'display_gui']]]
 ];

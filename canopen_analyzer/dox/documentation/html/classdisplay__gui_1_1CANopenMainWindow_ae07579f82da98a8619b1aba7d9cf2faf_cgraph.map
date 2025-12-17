@@ -1,0 +1,7 @@
+<map id="on_frame" name="on_frame">
+<area shape="rect" id="node1" title="Handle a newly decoded CAN frame." alt="" coords="5,31,89,57"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a4485a4e310b2221fa0e8c7d476533f65" title="Update the Bus Statistics table and rate graphs." alt="" coords="137,5,273,32"/>
+<area shape="rect" id="node4" href="$classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf" title="Insert or update a row in a data table." alt="" coords="152,56,259,83"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a94ffcdf4bdc98224f44388443eb1e657" title=" " alt="" coords="321,5,508,32"/>
+<area shape="rect" id="node5" href="$classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa" title=" " alt="" coords="369,56,460,83"/>
+</map>

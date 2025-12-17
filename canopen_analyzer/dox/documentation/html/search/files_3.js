@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['display_5fcli_2epy_157',['display_cli.py',['../display__cli_8py.html',1,'']]],
-  ['display_5fgui_2epy_158',['display_gui.py',['../display__gui_8py.html',1,'']]],
-  ['display_5ftui_2epy_159',['display_tui.py',['../display__tui_8py.html',1,'']]]
+  ['display_5fcli_2epy_195',['display_cli.py',['../display__cli_8py.html',1,'']]],
+  ['display_5fgui_2epy_196',['display_gui.py',['../display__gui_8py.html',1,'']]],
+  ['display_5ftui_2epy_197',['display_tui.py',['../display__tui_8py.html',1,'']]]
 ];
