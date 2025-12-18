@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['chart_256',['chart',['../classdisplay__gui_1_1MultiRateLineWidget.html#a7d6a8315d94c77f3ba1f1a2d8640efdb',1,'display_gui::MultiRateLineWidget']]],
-  ['cob_5fname_5foverrides_257',['cob_name_overrides',['../classeds__parser_1_1eds__parser.html#a428159b615b67863252e4b5463fa3771',1,'eds_parser::eds_parser']]],
-  ['console_258',['console',['../classdisplay__cli_1_1display__cli.html#a59b27486da7ae78f25305f338b4b2fce',1,'display_cli::display_cli']]],
-  ['counter_259',['Counter',['../classbus__stats_1_1bus__stats_1_1stats__data.html#a21825f37e76fb1b4cf8d02dd17f0cba8',1,'bus_stats::bus_stats::stats_data']]]
+  ['bitrate_314',['bitrate',['../classbus__stats_1_1bus__stats.html#a9ba628ef53aa2760ee08afab49765d42',1,'bus_stats::bus_stats']]],
+  ['bus_315',['bus',['../classcanopen__sniffer_1_1canopen__sniffer.html#a411bd59fecc82fdfda0e5c9d7da7447f',1,'canopen_sniffer::canopen_sniffer']]],
+  ['bus_5flabels_316',['bus_labels',['../classdisplay__gui_1_1CANopenMainWindow.html#adf0ff66d2d75c14e64b9f0738132fb27',1,'display_gui::CANopenMainWindow']]],
+  ['bus_5fstats_5ftable_317',['bus_stats_table',['../classdisplay__tui_1_1display__tui.html#a13322e7aa50616f0af270c661d2ffb1c',1,'display_tui::display_tui']]]
 ];

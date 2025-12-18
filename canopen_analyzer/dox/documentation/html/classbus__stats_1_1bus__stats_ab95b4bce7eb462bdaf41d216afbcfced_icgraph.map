@@ -1,5 +1,5 @@
 <map id="update_rates" name="update_rates">
 <area shape="rect" id="node1" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="188,31,295,57"/>
-<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#a825b83d3b22a7bee94353a6fc7433de3" title="Increment frame counters by FrameType." alt="" coords="5,5,140,32"/>
-<area shape="rect" id="node3" href="$classbus__stats_1_1bus__stats.html#a51829b63adb24ac48d350dee60181002" title="Reset bus stats count." alt="" coords="45,56,100,83"/>
+<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d" title=" " alt="" coords="15,5,130,32"/>
+<area shape="rect" id="node3" href="$classbus__stats_1_1bus__stats.html#a825b83d3b22a7bee94353a6fc7433de3" title="Increment frame counters by FrameType." alt="" coords="5,56,140,83"/>
 </map>

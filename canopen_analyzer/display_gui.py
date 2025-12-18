@@ -129,16 +129,16 @@ class MultiRateLineWidget(QWidget):
         # Root layout for the widget
         # ------------------------------------------------------------------
         root = QVBoxLayout(self)
-        root.setContentsMargins(2, 2, 2, 2)
-        root.setSpacing(4)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
 
         # ------------------------------------------------------------------
         # Header area (textual FPS values above the chart)
         # ------------------------------------------------------------------
         header = QWidget()
         header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(2, 2, 2, 2)
-        header_layout.setSpacing(2)
+        header_layout.setContentsMargins(0, 0, 0, 0)
+        header_layout.setSpacing(0)
 
         ## Layout used later to align header text with chart plot area
         self.header_layout = header_layout
@@ -172,7 +172,7 @@ class MultiRateLineWidget(QWidget):
         self.chart = QChart()
         self.chart.setBackgroundVisible(False)
         self.chart.legend().hide()
-        self.chart.setMargins(QMargins(2, 2, 2, 2))
+        self.chart.setMargins(QMargins(0, 0, 0, 0))
 
         ## X-axis represents sample index / time progression.
         self.axis_x = QValueAxis()
@@ -374,7 +374,7 @@ class MultiRateLineWidget(QWidget):
 
             # Update textual FPS indicator in the header
             self.header_labels[name].setText(
-                f"{name}: {values.get(name, 0.0):4.1f} fps"
+                f"{name}: {values.get(name, 0.0):4.1f} fps        "
             )
 
             # Update peak indicator line for this series
@@ -763,34 +763,46 @@ class CANopenMainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, dock)
 
     def _build_right_dock(self):
-        """!
-        @brief Build the Bus Statistics dock using a dashboard-style layout.
-
+        """! Construct and attach the right-side Bus Statistics dock widget.
         @details
-        Replaces the flat key-value table with a professional layout:
-        - Top status cards for quick health overview
-        - Grouped metric sections using form layouts
-        - Existing frame-rate graphs retained as-is
+        This method builds a comprehensive dashboard-style dock that visualizes
+        CAN bus health and performance metrics. The layout is composed of:
+        - Top-level status cards for high-level operational insight
+        - Grouped metric sections rendered using structured form layouts
+        - Progress-bar based performance indicators
+        - Historical frame-rate graphs for protocol-specific traffic
+        @note
+        The dock is finally registered with the main window on the right dock area.
         """
 
+        # Dock widget hosting all Bus Statistics UI elements.
         dock = QDockWidget("Bus Stats", self)
         dock.setObjectName("BusStatsDock")
         dock.setMinimumWidth(360)
         dock.setMaximumWidth(600)
 
+        # Root container widget for the dock.
         root = QWidget()
         root_layout = QVBoxLayout(root)
         root_layout.setContentsMargins(6, 6, 6, 6)
         root_layout.setSpacing(8)
 
-        # ==============================================================
+        # ------------------------------------------------------------------
         # Status Cards (Top Row)
-        # ==============================================================
+        # Provides a quick, at-a-glance overview of bus state, utilization,
+        # and active node count.
+        # ------------------------------------------------------------------
 
+        # Horizontal layout containing all status cards.
         cards_row = QHBoxLayout()
         cards_row.setSpacing(8)
 
         def make_card(title: str):
+            """! Create a single status card widget.
+            @param title Display title of the card.
+            @return Tuple consisting of the card frame and its value QLabel.
+            """
+
             frame = QFrame()
             frame.setFrameShape(QFrame.StyledPanel)
             frame.setStyleSheet("""
@@ -799,12 +811,15 @@ class CANopenMainWindow(QMainWindow):
                     border-radius: 6px;
                 }
             """)
+
             v = QVBoxLayout(frame)
             v.setContentsMargins(8, 6, 8, 6)
 
+            # Card title label.
             lbl_title = QLabel(title)
             lbl_title.setStyleSheet("font-size: 11px; color: gray;")
 
+            # Card value label (updated dynamically).
             lbl_value = QLabel("--")
             lbl_value.setStyleSheet("font-size: 18px; font-weight: 600;")
             lbl_value.setAlignment(Qt.AlignCenter)
@@ -814,8 +829,13 @@ class CANopenMainWindow(QMainWindow):
 
             return frame, lbl_value
 
+        ## Status card widgets and value labels for "STATE".
         self.card_state, self.lbl_state = make_card("STATE")
+
+        ## Status card widgets and value labels for "BUS UTIL %".
         self.card_util, self.lbl_util = make_card("BUS UTIL %")
+
+        ## Status card widgets and value labels for "ACTIVE NODES".
         self.card_nodes, self.lbl_nodes = make_card("ACTIVE NODES")
 
         cards_row.addWidget(self.card_state)
@@ -824,13 +844,21 @@ class CANopenMainWindow(QMainWindow):
 
         root_layout.addLayout(cards_row)
 
-        # ==============================================================
+        # ------------------------------------------------------------------
         # Grouped Metrics (Form Layouts)
-        # ==============================================================
+        # Displays logically grouped numerical metrics using label-value pairs.
+        # ------------------------------------------------------------------
 
+        ## Dictionary mapping metric names to their corresponding QLabel widgets.
         self.bus_labels = {}
 
         def make_group(title: str, fields):
+            """! Create a framed group of label-value metric fields.
+            @param title Group title displayed at the top of the frame.
+            @param fields Iterable of metric names to be displayed.
+            @return Configured QFrame containing the metric group.
+            """
+
             box = QFrame()
             box.setFrameShape(QFrame.StyledPanel)
             box.setStyleSheet("""
@@ -844,6 +872,7 @@ class CANopenMainWindow(QMainWindow):
             v.setContentsMargins(8, 6, 8, 6)
             v.setSpacing(4)
 
+            # Group title label.
             lbl = QLabel(title)
             lbl.setStyleSheet("font-weight: 600;")
             v.addWidget(lbl)
@@ -853,7 +882,10 @@ class CANopenMainWindow(QMainWindow):
 
             row = 0
             for name in fields:
+                # Metric name label.
                 l_name = QLabel(name)
+
+                # Metric value label.
                 l_val = QLabel("--")
                 l_val.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
                 l_val.setStyleSheet("font-family: Monospace;")
@@ -861,15 +893,17 @@ class CANopenMainWindow(QMainWindow):
                 form.addWidget(l_name, row, 0)
                 form.addWidget(l_val, row, 1)
 
+                # Store reference for runtime updates.
                 self.bus_labels[name] = l_val
                 row += 1
 
             v.addLayout(form)
             return box
 
-        # ==============================================================
+        # ------------------------------------------------------------------
         # Bus Performance (with progress bars)
-        # ==============================================================
+        # Combines percentage-based metrics with visual progress indicators.
+        # ------------------------------------------------------------------
 
         perf_box = QFrame()
         perf_box.setFrameShape(QFrame.StyledPanel)
@@ -892,6 +926,12 @@ class CANopenMainWindow(QMainWindow):
         grid.setColumnStretch(1, 1)
 
         def add_progress_row(label_text, bar_attr, value_attr):
+            """! Add a progress-bar based metric row.
+            @param label_text Display name of the metric.
+            @param bar_attr Attribute name for storing the QProgressBar.
+            @param value_attr Attribute name for storing the value QLabel.
+            """
+
             lbl = QLabel(label_text)
 
             bar = QProgressBar()
@@ -914,6 +954,7 @@ class CANopenMainWindow(QMainWindow):
             val.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
             val.setStyleSheet("font-family: Monospace;")
 
+            # Expose widgets for dynamic updates.
             setattr(self, bar_attr, bar)
             setattr(self, value_attr, val)
 
@@ -923,6 +964,11 @@ class CANopenMainWindow(QMainWindow):
             grid.addWidget(val, r, 2)
 
         def add_value_row(label_text, value_key):
+            """! Add a numeric-only metric row without a progress bar.
+            @param label_text Display name of the metric.
+            @param value_key Key used for lookup in bus_labels.
+            """
+
             lbl = QLabel(label_text)
             val = QLabel("--")
             val.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
@@ -934,20 +980,20 @@ class CANopenMainWindow(QMainWindow):
             grid.addWidget(lbl, r, 0)
             grid.addWidget(val, r, 2)
 
-        # Progress-bar metrics
+        # Progress-bar metrics.
         add_progress_row("Bus Util %", "util_bar", "util_value")
         add_progress_row("Bus Idle %", "idle_bar", "idle_value")
 
-        # Numeric-only metrics
+        # Numeric-only performance metrics.
         add_value_row("Total FPS", "Total FPS")
         add_value_row("Peak FPS", "Peak FPS")
 
         perf_layout.addLayout(grid)
         root_layout.addWidget(perf_box)
 
-        # ==============================================================
-        # Bus Performance (without progress bars)
-        # ==============================================================
+        # ------------------------------------------------------------------
+        # Additional Bus Metrics (without progress bars)
+        # ------------------------------------------------------------------
 
         root_layout.addWidget(
             make_group(
@@ -970,18 +1016,21 @@ class CANopenMainWindow(QMainWindow):
             )
         )
 
-        # ==============================================================
-        # Frame Rate Graphs (unchanged)
-        # ==============================================================
+        # ------------------------------------------------------------------
+        # Frame Rate Graphs
+        # Historical time-series plots for different CANopen traffic classes.
+        # ------------------------------------------------------------------
 
         rates_lbl = QLabel("Frame Rates")
         rates_lbl.setStyleSheet("font-weight: 600;")
         root_layout.addWidget(rates_lbl)
 
+        ## PDO frame rate graph.
         self.rate_pdo = MultiRateLineWidget(
             [("PDO", Qt.darkGreen)]
         )
 
+        ## SDO request/response frame rate graph.
         self.rate_sdo = MultiRateLineWidget(
             [
                 ("SDO-Req", Qt.darkBlue),
@@ -989,6 +1038,7 @@ class CANopenMainWindow(QMainWindow):
             ]
         )
 
+        ## Miscellaneous CAN frame rate graph.
         self.rate_misc = MultiRateLineWidget(
             [
                 ("Heartbeat", Qt.darkYellow),
@@ -1000,8 +1050,10 @@ class CANopenMainWindow(QMainWindow):
         root_layout.addWidget(self.rate_sdo)
         root_layout.addWidget(self.rate_misc)
 
+        # Spacer to push content to the top.
         root_layout.addStretch(1)
 
+        # Finalize and attach dock to the main window.
         dock.setWidget(root)
         self.addDockWidget(Qt.RightDockWidgetArea, dock)
 
@@ -1226,10 +1278,7 @@ class CANopenMainWindow(QMainWindow):
 
         # Restore dock / toolbar layout ONLY
         if self.settings.value("windowState"):
-            self.restoreState(
-                self.settings.value("windowState"),
-                QMainWindow.AllowNestedDocks
-            )
+            self.restoreState(self.settings.value("windowState"))
 
         # Restore splitter state
         if self.settings.value("splitter"):
@@ -1295,82 +1344,119 @@ class CANopenMainWindow(QMainWindow):
         )
 
     def update_bus_stats(self):
-        """!
-        @brief Update Bus Statistics dashboard widgets and rate graphs.
-
+        """! Update Bus Statistics dashboard widgets and rate graphs.
         @details
-        Refreshes all bus-level metrics using the latest snapshot from
-        the statistics backend. Values are written into dashboard-style
-        labels and status cards, replacing the legacy key-value table.
-
-        The underlying statistics and grouping remain identical to
-        display_cli.py.
+        Refreshes all bus-level metrics using the latest immutable snapshot
+        obtained from the statistics backend. This method updates:
+        - Top-level status cards (state, utilization, active nodes)
+        - Grouped numeric and progress-bar based performance metrics
+        - SDO health and diagnostic indicators
+        - Historical frame-rate graphs for different CANopen traffic classes
+        @note
+        The data semantics and grouping are kept consistent with the
+        CLI implementation.
         """
 
         # ------------------------------------------------------------------
         # Retrieve immutable snapshot from statistics backend
+        # The snapshot represents a consistent, read-only view of all
+        # counters, rates, and historical data at the time of invocation.
         # ------------------------------------------------------------------
         snap = self.stats.get_snapshot()
 
         # ------------------------------------------------------------------
         # Top status cards
+        # Provides a high-level overview of bus activity and node presence.
         # ------------------------------------------------------------------
+
+        # Determine bus activity based on total observed frames.
         active = bool(snap.frame_count.total)
         self.lbl_state.setText("Active" if active else "Idle")
 
+        # Current bus utilization percentage.
         util = getattr(snap.rates, "bus_util_percent", 0.0)
         self.lbl_util.setText(f"{util:.2f}")
+
+        # Number of currently active nodes on the bus.
         self.lbl_nodes.setText(str(len(snap.nodes or {})))
 
         # ------------------------------------------------------------------
         # Bus performance metrics
+        # Updates both instantaneous and peak frame-rate statistics as
+        # well as utilization-based progress indicators.
         # ------------------------------------------------------------------
+
+        # Latest computed frame-rate values.
         rates = snap.rates.latest
 
         # ---- Bus Util / Idle with progress bars ----
+
+        # Clamp utilization percentage to a valid [0, 100] range.
         util_pct = max(0.0, min(100.0, util))
         idle_pct = max(0.0, 100.0 - util_pct)
 
+        # Update utilization progress bar and numeric label.
         self.util_bar.setValue(int(util_pct))
         self.util_value.setText(f"{util_pct:5.2f} %")
 
+        # Update idle percentage progress bar and numeric label.
         self.idle_bar.setValue(int(idle_pct))
         self.idle_value.setText(f"{idle_pct:5.2f} %")
 
-        # Color coding based on utilization
+        # Apply color coding to utilization bar based on load thresholds.
         if util_pct < 40:
-            self.util_bar.setStyleSheet("QProgressBar::chunk { background-color: #4CAF50; }")
+            self.util_bar.setStyleSheet(
+                "QProgressBar::chunk { background-color: #4CAF50; }"
+            )
         elif util_pct < 70:
-            self.util_bar.setStyleSheet("QProgressBar::chunk { background-color: #FFC107; }")
+            self.util_bar.setStyleSheet(
+                "QProgressBar::chunk { background-color: #FFC107; }"
+            )
         else:
-            self.util_bar.setStyleSheet("QProgressBar::chunk { background-color: #F44336; }")
+            self.util_bar.setStyleSheet(
+                "QProgressBar::chunk { background-color: #F44336; }"
+            )
 
         # ---- FPS summary ----
+
+        # Display total instantaneous frame rate.
         self.bus_labels["Total FPS"].setText(
             f"{rates.get('total', 0.0):.1f}"
         )
+
+        # Display peak observed frame rate.
         self.bus_labels["Peak FPS"].setText(
             f"{snap.rates.peak_fps:.1f}"
         )
 
         # ------------------------------------------------------------------
         # SDO health
+        # Indicates success vs abort counts and average response latency
+        # for SDO transactions.
         # ------------------------------------------------------------------
+
+        # Display cumulative SDO success and abort counters.
         self.bus_labels["SDO OK / Abort"].setText(
             f"{snap.sdo.success}/{snap.sdo.abort}"
         )
 
+        # Compute and display average SDO response time if available.
         if snap.sdo.response_time:
             avg_rt = sum(snap.sdo.response_time) / len(snap.sdo.response_time)
             self.bus_labels["Avg SDO Resp (ms)"].setText(
                 f"{avg_rt * 1000:.1f}"
             )
         else:
+            # No SDO response samples collected.
             self.bus_labels["Avg SDO Resp (ms)"].setText("-")
 
         # ------------------------------------------------------------------
         # Diagnostics
+        # Presents error-related and traffic distribution diagnostics
+        # useful for debugging and bus analysis.
         # ------------------------------------------------------------------
+
+        # Display timestamp and content of the last observed error frame.
         if snap.error.last_time or snap.error.last_frame:
             self.bus_labels["Last Error Frame"].setText(
                 f"[{snap.error.last_time}] {snap.error.last_frame}"
@@ -1378,11 +1464,13 @@ class CANopenMainWindow(QMainWindow):
         else:
             self.bus_labels["Last Error Frame"].setText("-")
 
+        # Display top CAN identifiers by frame count.
         top = snap.top_talkers.most_common(analyzer_defs.MAX_STATS_SHOW)
         self.bus_labels["Top Talkers"].setText(
             ", ".join(f"0x{c:03X}:{n}" for c, n in top) if top else "-"
         )
 
+        # Display frame distribution grouped by frame type.
         dist = sorted(
             ((k.name, v) for k, v in snap.frame_count.counts.items()),
             key=lambda kv: kv[1],
@@ -1396,15 +1484,21 @@ class CANopenMainWindow(QMainWindow):
         )
 
         # ------------------------------------------------------------------
-        # Update frame-rate history graphs (unchanged behavior)
+        # Update frame-rate history graphs
+        # Preserves existing behavior by pushing both the latest rate
+        # value and the full historical series into each graph widget.
         # ------------------------------------------------------------------
+
+        # Historical frame-rate samples.
         hist = snap.rates.history
 
+        # Update PDO traffic rate graph.
         self.rate_pdo.update(
             {"PDO": rates.get("pdo", 0.0)},
             {"PDO": hist.get("pdo", [])}
         )
 
+        # Update SDO request/response traffic rate graph.
         self.rate_sdo.update(
             {
                 "SDO-Req": rates.get("sdo_req", 0.0),
@@ -1416,6 +1510,7 @@ class CANopenMainWindow(QMainWindow):
             }
         )
 
+        # Update miscellaneous traffic rate graph.
         self.rate_misc.update(
             {
                 "Heartbeat": rates.get("hb", 0.0),

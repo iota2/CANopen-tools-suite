@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['bitrate_252',['bitrate',['../classbus__stats_1_1bus__stats.html#a9ba628ef53aa2760ee08afab49765d42',1,'bus_stats::bus_stats']]],
-  ['bus_253',['bus',['../classcanopen__sniffer_1_1canopen__sniffer.html#a411bd59fecc82fdfda0e5c9d7da7447f',1,'canopen_sniffer::canopen_sniffer']]],
-  ['bus_5flabels_254',['bus_labels',['../classdisplay__gui_1_1CANopenMainWindow.html#adf0ff66d2d75c14e64b9f0738132fb27',1,'display_gui::CANopenMainWindow']]],
-  ['bus_5fstats_5ftable_255',['bus_stats_table',['../classdisplay__tui_1_1display__tui.html#a13322e7aa50616f0af270c661d2ffb1c',1,'display_tui::display_tui']]]
+  ['app_309',['App',['../namespacedisplay__tui.html#a0ac8512426efbd5aed951550c0939686',1,'display_tui']]],
+  ['app_5fname_310',['APP_NAME',['../namespaceanalyzer__defs.html#a54f4259535eb0ca336b0b80a46aaf3bf',1,'analyzer_defs']]],
+  ['app_5forg_311',['APP_ORG',['../namespaceanalyzer__defs.html#acd590119f951363e7f34cfc58f80e6bb',1,'analyzer_defs']]],
+  ['axis_5fx_312',['axis_x',['../classdisplay__gui_1_1MultiRateLineWidget.html#ac58cbf59937d456275d30201980d6b10',1,'display_gui::MultiRateLineWidget']]],
+  ['axis_5fy_313',['axis_y',['../classdisplay__gui_1_1MultiRateLineWidget.html#a3bbe369a3f3690dff3c09d8aa742295a',1,'display_gui::MultiRateLineWidget']]]
 ];

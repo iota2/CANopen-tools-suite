@@ -1,6 +1,19 @@
 var searchData=
 [
-  ['time_339',['TIME',['../classanalyzer__defs_1_1frame__type.html#a256d466ef5a544c9fad1adb69ce28ca8',1,'analyzer_defs::frame_type']]],
-  ['title_340',['title',['../classdisplay__tui_1_1display__tui.html#a051e403214cb6872ad3fe4e50302a6ee',1,'display_tui::display_tui']]],
-  ['total_341',['total',['../classbus__stats_1_1bus__stats_1_1frame__count.html#a2c1a52cd37ed38e861bba51c47c1802a',1,'bus_stats::bus_stats::frame_count']]]
+  ['sdo_5fdisplay_385',['sdo_display',['../classdisplay__tui_1_1display__tui.html#a6f9d4712460d24472c0660946bd7d1ad',1,'display_tui::display_tui']]],
+  ['sdo_5ffilter_386',['sdo_filter',['../classdisplay__gui_1_1CANopenMainWindow.html#ace47c83f900a5ce72ddcfce478222e70',1,'display_gui::CANopenMainWindow']]],
+  ['sdo_5fframes_387',['sdo_frames',['../classdisplay__cli_1_1display__cli.html#a5b5c93be2f940dcfa114fa61f98c1d23',1,'display_cli::display_cli']]],
+  ['sdo_5fnext_5findex_388',['sdo_next_index',['../classdisplay__tui_1_1display__tui.html#a9a151c3008c56f11f0b15020ab4ab609',1,'display_tui::display_tui']]],
+  ['sdo_5freq_389',['SDO_REQ',['../classanalyzer__defs_1_1frame__type.html#aa227b2666e9ee4b630add48d6dec0c39',1,'analyzer_defs::frame_type']]],
+  ['sdo_5fres_390',['SDO_RES',['../classanalyzer__defs_1_1frame__type.html#a95373d5028d5cb3c1ce7b6120de91447',1,'analyzer_defs::frame_type']]],
+  ['sdo_5ftable_391',['sdo_table',['../classdisplay__tui_1_1display__tui.html#a6f82f6e9d1c2c1beaa4902841472c690',1,'display_tui::display_tui']]],
+  ['series_392',['series',['../classdisplay__gui_1_1MultiRateLineWidget.html#a2f978b1094edb50fb4601136b7005315',1,'display_gui::MultiRateLineWidget']]],
+  ['series_5fcolors_393',['series_colors',['../classdisplay__gui_1_1MultiRateLineWidget.html#aa6a9d54673e85221c00cc9c0a39d7c3c',1,'display_gui::MultiRateLineWidget']]],
+  ['set_394',['set',['../classbus__stats_1_1bus__stats_1_1stats__data.html#a112a711f766db446c2f517b794a1c04a',1,'bus_stats::bus_stats::stats_data']]],
+  ['settings_395',['settings',['../classdisplay__gui_1_1CANopenMainWindow.html#a6cddb5e40c21eadd2ded85bc51f79822',1,'display_gui::CANopenMainWindow']]],
+  ['splitter_396',['splitter',['../classdisplay__gui_1_1CANopenMainWindow.html#aab017c47a757df17688f3fb8f437b330',1,'display_gui::CANopenMainWindow']]],
+  ['stats_397',['stats',['../classdisplay__cli_1_1display__cli.html#aa57ebe01934de43865125819a3c4af74',1,'display_cli.display_cli.stats()'],['../classdisplay__gui_1_1CANopenMainWindow.html#aa57ebe01934de43865125819a3c4af74',1,'display_gui.CANopenMainWindow.stats()'],['../classdisplay__tui_1_1display__tui.html#aa57ebe01934de43865125819a3c4af74',1,'display_tui.display_tui.stats()'],['../classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74',1,'process_frames.process_frames.stats()']]],
+  ['stats_5fgraph_5fwidth_398',['STATS_GRAPH_WIDTH',['../namespaceanalyzer__defs.html#a8df7572f27a774cf8035bd3d4e9cc752',1,'analyzer_defs']]],
+  ['sub_5ftitle_399',['sub_title',['../classdisplay__tui_1_1display__tui.html#a668c3dabd5893be34deacee376ddbcd3',1,'display_tui::display_tui']]],
+  ['sync_400',['SYNC',['../classanalyzer__defs_1_1frame__type.html#a03082caece11e4751c1e251f4a2525cd',1,'analyzer_defs::frame_type']]]
 ];

@@ -119,6 +119,34 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 .br
 .RI "Logger instance used for reporting and debugging\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB_rate_sampler\fP (self)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_lock\fP"
+.br
+.RI "Thread lock used to protect access to statistics data\&. "
+.ti -1c
+.RI "\fB_rate_interval\fP"
+.br
+.ti -1c
+.RI "\fB_rate_sampler_stop\fP"
+.br
+.ti -1c
+.RI "\fB_rate_sampler_thread\fP"
+.br
+.ti -1c
+.RI "\fB_stats\fP"
+.br
+.RI "Instance of the \fBbus_stats\&.stats_data\fP structure holding all metrics\&. "
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self, int  bitrate = \fC\fBanalyzer_defs\&.DEFAULT_CAN_BIT_RATE\fP\fP)"
@@ -127,6 +155,14 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 Initialize the \fBbus_stats\fP object and its internal data structures\&. This constructor initializes synchronization primitives and prepares the root statistics container used to store CANopen bus statistics\&. A thread lock is used to protect concurrent access to the shared \fC_stats\fP data\&. A logger instance is also created for internal diagnostics and reporting\&. 
 .SH "Member Function Documentation"
 .PP 
+.SS "def _rate_sampler ( self)\fC [private]\fP"
+
+.PP
+.nf
+Background thread: periodically call update_rates() so rates get sampled even when no frames arrive.
+.fi
+.PP
+ 
 .SS "def add_node ( self, int node_id)"
 
 .PP
@@ -277,6 +313,20 @@ Update the SDO response message time from the deque\&.
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_lock\fC [private]\fP"
+
+.PP
+Thread lock used to protect access to statistics data\&. 
+.SS "_rate_interval\fC [private]\fP"
+
+.SS "_rate_sampler_stop\fC [private]\fP"
+
+.SS "_rate_sampler_thread\fC [private]\fP"
+
+.SS "_stats\fC [private]\fP"
+
+.PP
+Instance of the \fBbus_stats\&.stats_data\fP structure holding all metrics\&. 
 .SS "bitrate"
 
 .PP

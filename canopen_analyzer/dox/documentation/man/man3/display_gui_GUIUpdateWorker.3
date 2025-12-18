@@ -46,6 +46,13 @@ Mirrors the producer/consumer pattern used by CLI, The worker runs in a dedicate
 .br
 .RI "Emitted when a decoded frame is available\&. "
 .in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_running\fP"
+.br
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self, queue\&.Queue processed_frame)"
@@ -71,6 +78,8 @@ Run the worker\&.
 Stop the worker\&. 
 .SH "Member Data Documentation"
 .PP 
+.SS "_running\fC [private]\fP"
+
 .SS "frame_received = Signal(dict)\fC [static]\fP"
 
 .PP

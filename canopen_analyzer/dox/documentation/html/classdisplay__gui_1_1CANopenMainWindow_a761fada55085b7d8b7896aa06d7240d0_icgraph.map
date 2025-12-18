@@ -1,0 +1,5 @@
+<map id="clear_tables" name="clear_tables">
+<area shape="rect" id="node1" title="Clear all displayed data and reset statistics." alt="" coords="204,31,305,57"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a2a702ac56f9abf36523c17065376dc45" title="Build the top control toolbar." alt="" coords="23,5,138,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a244742ae4559e6115110f21439ff4f19" title="Handle display mode changes from the toolbar." alt="" coords="5,56,156,83"/>
+</map>

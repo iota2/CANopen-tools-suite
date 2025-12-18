@@ -1,6 +1,7 @@
 var classdisplay__tui_1_1display__tui =
 [
     [ "run_textual", "classdisplay__tui_1_1display__tui.html#a06d308c260a5e945f80724fcd934a8c7", null ],
+    [ "_last_bus_stats", "classdisplay__tui_1_1display__tui.html#a910bf18994fa84a67853bf6b3948360c", null ],
     [ "bus_stats_table", "classdisplay__tui_1_1display__tui.html#a13322e7aa50616f0af270c661d2ffb1c", null ],
     [ "fixed", "classdisplay__tui_1_1display__tui.html#a0ceb8ae554e8a185caf22e15c9487f4b", null ],
     [ "fixed_pdo", "classdisplay__tui_1_1display__tui.html#a3078ce0e2c75accf21cd8df0224f542f", null ],

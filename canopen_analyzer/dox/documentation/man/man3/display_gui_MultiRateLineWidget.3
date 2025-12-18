@@ -98,6 +98,26 @@ Functionality:
 .br
 .RI "Chart view widget for frame rate graphs\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB_align_header_with_plot\fP (self)"
+.br
+.RI "Align the starting of header text with the chart plot area\&. "
+.ti -1c
+.RI "str \fB_color_name\fP (self, QColor color)"
+.br
+.RI "Convert a QColor to a human-readable color name\&. "
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_history\fP"
+.br
+.RI "Mapping: series name -> rolling FPS history list\&. "
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self,  series_defs)"
@@ -106,6 +126,26 @@ Functionality:
 Frame rate widget initialization\&. 
 .SH "Member Function Documentation"
 .PP 
+.SS "def _align_header_with_plot ( self)\fC [private]\fP"
+
+.PP
+Align the starting of header text with the chart plot area\&. 
+.SS " str _color_name ( self, QColor color)\fC [private]\fP"
+
+.PP
+Convert a QColor to a human-readable color name\&. Used primarily for tooltips and diagnostics to present meaningful color names (e\&.g\&. "Dark Blue") instead of raw hex color codes\&. If a color is not part of the predefined mapping, the QColor hex name is returned\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcolor\fP QColor instance representing the series color\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Human-readable color name string if known, otherwise the QColor hex name (e\&.g\&. "#3a7bd5")\&. 
+.RE
+.PP
+
 .SS "def clear ( self)"
 
 .PP
@@ -199,6 +239,10 @@ The widget performs no rate calculations itself; it only visualizes values suppl
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_history\fC [private]\fP"
+
+.PP
+Mapping: series name -> rolling FPS history list\&. 
 .SS "axis_x"
 
 .PP

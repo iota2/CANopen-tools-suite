@@ -84,6 +84,14 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .br
 .RI "Queue used to push raw frames for downstream processing\&. "
 .in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_stop_event\fP"
+.br
+.RI "Thread stop event used to signal the run loop to exit\&. "
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self, str interface, queue\&.Queue  raw_frame = \fCNone\fP, bool  export = \fCFalse\fP)"
@@ -151,6 +159,10 @@ Request the sniffer thread to stop and optionally shutdown the bus\&. Signals th
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_stop_event\fC [private]\fP"
+
+.PP
+Thread stop event used to signal the run loop to exit\&. 
 .SS "bus"
 
 .PP

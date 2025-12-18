@@ -55,6 +55,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "\fBbus_labels\fP"
 .br
+.RI "Dictionary mapping metric names to their corresponding QLabel widgets\&. "
 .ti -1c
 .RI "\fBfixed\fP"
 .br
@@ -74,12 +75,15 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "\fBlbl_nodes\fP"
 .br
+.RI "Status card widgets and value labels for 'ACTIVE NODES'\&. "
 .ti -1c
 .RI "\fBlbl_state\fP"
 .br
+.RI "Status card widgets and value labels for 'STATE'\&. "
 .ti -1c
 .RI "\fBlbl_util\fP"
 .br
+.RI "Status card widgets and value labels for 'BUS UTIL %'\&. "
 .ti -1c
 .RI "\fBmode_combo\fP"
 .br
@@ -95,12 +99,15 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "\fBrate_misc\fP"
 .br
+.RI "Miscellaneous CAN frame rate graph\&. "
 .ti -1c
 .RI "\fBrate_pdo\fP"
 .br
+.RI "PDO frame rate graph\&. "
 .ti -1c
 .RI "\fBrate_sdo\fP"
 .br
+.RI "SDO request/response frame rate graph\&. "
 .ti -1c
 .RI "\fBsdo_filter\fP"
 .br
@@ -130,6 +137,86 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Background color used to temporarily highlight rows when new or updated data is received (activity heat effect)\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB_adjust_bus_table_height\fP (self)"
+.br
+.RI "Adjust the Bus Stats table height to fit all rows\&. "
+.ti -1c
+.RI "def \fB_apply_filter\fP (self, table, text)"
+.br
+.RI "Apply a substring filter to a table\&. "
+.ti -1c
+.RI "def \fB_autosize_columns\fP (self, table)"
+.br
+.RI "Auto-size table columns and rows to fit contents\&. "
+.ti -1c
+.RI "def \fB_build_central\fP (self)"
+.br
+.RI "Build the central widget containing protocol, PDO, and SDO tables\&. "
+.ti -1c
+.RI "def \fB_build_left_dock\fP (self)"
+.br
+.RI "Build the Remote Node Control dock\&. "
+.ti -1c
+.RI "def \fB_build_menu\fP (self)"
+.br
+.RI "Build the main application menu bar\&. "
+.ti -1c
+.RI "def \fB_build_right_dock\fP (self)"
+.br
+.RI "Construct and attach the right-side Bus Statistics dock widget\&. "
+.ti -1c
+.RI "def \fB_build_toolbar\fP (self)"
+.br
+.RI "Build the top control toolbar\&. "
+.ti -1c
+.RI "def \fB_configure_table_columns\fP (self, table, str stretch_column_name)"
+.br
+.RI "Configure column resize behavior using column names instead of indices\&. "
+.ti -1c
+.RI "def \fB_flash_row\fP (self, table, row)"
+.br
+.RI "Temporarily highlight a table row to indicate activity\&. "
+.ti -1c
+.RI "def \fB_make_pdo_table\fP (self)"
+.br
+.RI "Create and configure the PDO Data table\&. "
+.ti -1c
+.RI "def \fB_make_protocol_table\fP (self)"
+.br
+.RI "Create and configure the Protocol Data table\&. "
+.ti -1c
+.RI "def \fB_make_sdo_table\fP (self)"
+.br
+.RI "Create and configure the SDO Data table\&. "
+.ti -1c
+.RI "def \fB_make_titled_table\fP (self, title, table)"
+.br
+.RI "Create a titled table container with an integrated filter bar\&. "
+.ti -1c
+.RI "def \fB_on_mode_changed\fP (self, text)"
+.br
+.RI "Handle display mode changes from the toolbar\&. "
+.ti -1c
+.RI "def \fB_restore_column_widths\fP (self, QTableWidget table, str table_name)"
+.br
+.RI "Restore column widths for a table from persistent settings\&. "
+.ti -1c
+.RI "def \fB_restore_layout\fP (self)"
+.br
+.RI "Restore persisted window and layout state\&. "
+.ti -1c
+.RI "def \fB_save_column_widths\fP (self, QTableWidget table, str table_name)"
+.br
+.RI "Persist current column widths for a table\&. "
+.ti -1c
+.RI "str \fB_settings_key_for_table\fP (self, str table_name)"
+.br
+.RI "Generate a QSettings key for storing table column widths\&. "
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self, \fBbus_stats\fP stats, bool fixed)"
@@ -147,6 +234,226 @@ Construct the main CANopen Analyzer GUI window\&. Initializes the main window st
 
 .SH "Member Function Documentation"
 .PP 
+.SS "def _adjust_bus_table_height ( self)\fC [private]\fP"
+
+.PP
+Adjust the Bus Stats table height to fit all rows\&. Computes the required table height based on header height and the number of rows, then fixes the table height so that all metrics are visible without vertical scrolling\&. 
+.SS "def _apply_filter ( self,  table,  text)\fC [private]\fP"
+
+.PP
+Apply a substring filter to a table\&. Performs a case-insensitive substring match across all columns of each row\&. Rows that do not contain the filter text in any column are hidden\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget to which the filter should be applied\&. 
+.br
+\fItext\fP Filter text entered by the user\&. 
+.RE
+.PP
+
+.SS "def _autosize_columns ( self,  table)\fC [private]\fP"
+
+.PP
+Auto-size table columns and rows to fit contents\&. Triggers a one-time resize based on current cell contents\&. This is typically used after bulk updates to ensure optimal readability without forcing ResizeToContents permanently\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget to be auto-sized\&. 
+.RE
+.PP
+
+.SS "def _build_central ( self)\fC [private]\fP"
+
+.PP
+Build the central widget containing protocol, PDO, and SDO tables\&. Constructs the vertically stacked central view used to display decoded CANopen traffic\&. The central widget consists of:
+.IP "\(bu" 2
+Protocol Data table
+.IP "\(bu" 2
+PDO Data table
+.IP "\(bu" 2
+SDO Data table 
+.PP
+\fBNote\fP
+.RS 4
+Each table is wrapped with a titled header and filter input\&. Column sizing and layout behavior are aligned with the CLI table presentation while leveraging Qt interaction features\&. 
+.RE
+.PP
+
+.PP
+
+.SS "def _build_left_dock ( self)\fC [private]\fP"
+
+.PP
+Build the Remote Node Control dock\&. Constructs the left-side dock widget that hosts controls related to remote CANopen node interaction\&. This includes actions such as network scanning and manual PDO/SDO transmission\&. 
+.PP
+\fBNote\fP
+.RS 4
+The dock layout mirrors the logical grouping used in the CLI command interface but presents controls in a GUI form\&. 
+.RE
+.PP
+
+.SS "def _build_menu ( self)\fC [private]\fP"
+
+.PP
+Build the main application menu bar\&. Initializes top-level menus for the GUI\&. The menu structure mirrors the CLI command groupings and is intentionally minimal, with additional actions expected to be added incrementally\&. 
+.SS "def _build_right_dock ( self)\fC [private]\fP"
+
+.PP
+Construct and attach the right-side Bus Statistics dock widget\&. This method builds a comprehensive dashboard-style dock that visualizes CAN bus health and performance metrics\&. The layout is composed of:
+.IP "\(bu" 2
+Top-level status cards for high-level operational insight
+.IP "\(bu" 2
+Grouped metric sections rendered using structured form layouts
+.IP "\(bu" 2
+Progress-bar based performance indicators
+.IP "\(bu" 2
+Historical frame-rate graphs for protocol-specific traffic 
+.PP
+\fBNote\fP
+.RS 4
+The dock is finally registered with the main window on the right dock area\&. 
+.RE
+.PP
+
+.PP
+
+.SS "def _build_toolbar ( self)\fC [private]\fP"
+
+.PP
+Build the top control toolbar\&. Creates the primary control toolbar that provides quick-access actions affecting data flow and presentation, including:
+.IP "\(bu" 2
+Pause (future extension)
+.IP "\(bu" 2
+Clear (reset all tables, graphs, and statistics)
+.IP "\(bu" 2
+Mode selection (Fixed / Sequential) 
+.PP
+\fBNote\fP
+.RS 4
+This toolbar corresponds conceptually to interactive controls available in the CLI\&. 
+.RE
+.PP
+
+.PP
+
+.SS "def _configure_table_columns ( self,  table, str stretch_column_name)\fC [private]\fP"
+
+.PP
+Configure column resize behavior using column names instead of indices\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget instance 
+.br
+\fIstretch_column_name\fP Header text of column to stretch (e\&.g\&. 'Decoded') 
+.RE
+.PP
+
+.SS "def _flash_row ( self,  table,  row)\fC [private]\fP"
+
+.PP
+Temporarily highlight a table row to indicate activity\&. Applies a background color to all cells in the specified row to visually indicate new or updated data\&. The highlight is automatically cleared after a fixed timeout\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget containing the row to highlight\&. 
+.br
+\fIrow\fP Row index to be highlighted\&. 
+.RE
+.PP
+
+.SS "def _make_pdo_table ( self)\fC [private]\fP"
+
+.PP
+Create and configure the PDO Data table\&. Displays PDO-related frames with object dictionary context (index, subindex, name) alongside raw and decoded values\&. 
+.SS "def _make_protocol_table ( self)\fC [private]\fP"
+
+.PP
+Create and configure the Protocol Data table\&. Displays decoded CANopen protocol-level frames, including raw data and decoded textual representation\&. Column layout mirrors the CLI protocol table\&. 
+.SS "def _make_sdo_table ( self)\fC [private]\fP"
+
+.PP
+Create and configure the SDO Data table\&. Displays SDO request/response traffic with object dictionary information\&. Column layout intentionally matches the PDO table for visual consistency\&. 
+.SS "def _make_titled_table ( self,  title,  table)\fC [private]\fP"
+
+.PP
+Create a titled table container with an integrated filter bar\&. Wraps a QTableWidget with a title label and a text filter input\&. The filter allows interactive row filtering based on substring matching across all table columns\&. This pattern is reused for Protocol, PDO, and SDO tables to ensure consistent UX\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItitle\fP Title string displayed above the table\&. 
+.br
+\fItable\fP QTableWidget instance to be wrapped\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Tuple of (container widget, table, filter line edit)\&. 
+.RE
+.PP
+
+.SS "def _on_mode_changed ( self,  text)\fC [private]\fP"
+
+.PP
+Handle display mode changes from the toolbar\&. Switches between Fixed (aggregated-row) and Sequential display modes\&. When the mode changes, all tables and graphs are cleared to avoid mixing incompatible data representations\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItext\fP Selected mode string from the combo box\&. 
+.RE
+.PP
+
+.SS "def _restore_column_widths ( self, QTableWidget table, str table_name)\fC [private]\fP"
+
+.PP
+Restore column widths for a table from persistent settings\&. Reads previously saved column widths from QSettings and applies them to the given table\&. If no saved state exists, the function exits silently and leaves the default sizing unchanged\&. 
+.PP
+\fBNote\fP
+.RS 4
+: Any inconsistencies (e\&.g\&. column count mismatch) are ignored defensively to avoid breaking the GUI on corrupted settings\&. 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget whose column widths should be restored\&. 
+.br
+\fItable_name\fP Logical name used to look up saved settings\&. 
+.RE
+.PP
+
+.SS "def _restore_layout ( self)\fC [private]\fP"
+
+.PP
+Restore persisted window and layout state\&. Restores window geometry, dock layout, and central splitter state from QSettings if previously saved\&. Each component is restored independently to allow partial recovery\&. 
+.SS "def _save_column_widths ( self, QTableWidget table, str table_name)\fC [private]\fP"
+
+.PP
+Persist current column widths for a table\&. Captures the current column widths of the given table and stores them in QSettings\&. These values are later restored during application startup to preserve user layout preferences\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget whose column widths should be saved\&. 
+.br
+\fItable_name\fP Logical name used to store settings\&. 
+.RE
+.PP
+
+.SS " str _settings_key_for_table ( self, str table_name)\fC [private]\fP"
+
+.PP
+Generate a QSettings key for storing table column widths\&. Constructs a stable settings key namespace for persisting column width information for a given table\&. This allows each table (Protocol, PDO, SDO) to restore its column layout independently across application runs\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable_name\fP Logical name of the table (e\&.g\&. "protocol", "pdo", "sdo")\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Fully-qualified QSettings key for column width storage\&. 
+.RE
+.PP
+
 .SS "def clear_tables ( self)"
 
 .PP
@@ -176,9 +483,24 @@ Handle a newly decoded CAN frame\&. Called from the GUI worker thread via signal
 .SS "def update_bus_stats ( self)"
 
 .PP
-Update Bus Statistics dashboard widgets and rate graphs\&. Refreshes all bus-level metrics using the latest snapshot from the statistics backend\&. Values are written into dashboard-style labels and status cards, replacing the legacy key-value table\&.
+Update Bus Statistics dashboard widgets and rate graphs\&. Refreshes all bus-level metrics using the latest immutable snapshot obtained from the statistics backend\&. This method updates:
+.IP "\(bu" 2
+Top-level status cards (state, utilization, active nodes)
+.IP "\(bu" 2
+Grouped numeric and progress-bar based performance metrics
+.IP "\(bu" 2
+SDO health and diagnostic indicators
+.IP "\(bu" 2
+Historical frame-rate graphs for different CANopen traffic classes 
 .PP
-The underlying statistics and grouping remain identical to \fBdisplay_cli\&.py\fP\&. 
+\fBNote\fP
+.RS 4
+The data semantics and grouping are kept consistent with the CLI implementation\&. 
+.RE
+.PP
+
+.PP
+
 .SS "def update_table ( self,  table,  fixed_map,  key,  values)"
 
 .PP
@@ -211,6 +533,8 @@ Row highlighting is applied to indicate recent activity\&.
 .PP 
 .SS "bus_labels"
 
+.PP
+Dictionary mapping metric names to their corresponding QLabel widgets\&. 
 .SS "fixed"
 
 .PP
@@ -243,10 +567,16 @@ Duration (in milliseconds) for which the activity highlight remains visible befo
 Background color used to temporarily highlight rows when new or updated data is received (activity heat effect)\&. 
 .SS "lbl_nodes"
 
+.PP
+Status card widgets and value labels for 'ACTIVE NODES'\&. 
 .SS "lbl_state"
 
+.PP
+Status card widgets and value labels for 'STATE'\&. 
 .SS "lbl_util"
 
+.PP
+Status card widgets and value labels for 'BUS UTIL %'\&. 
 .SS "mode_combo"
 
 .PP
@@ -261,10 +591,16 @@ PDO data filter\&.
 Protocol data filter\&. 
 .SS "rate_misc"
 
+.PP
+Miscellaneous CAN frame rate graph\&. 
 .SS "rate_pdo"
 
+.PP
+PDO frame rate graph\&. 
 .SS "rate_sdo"
 
+.PP
+SDO request/response frame rate graph\&. 
 .SS "sdo_filter"
 
 .PP

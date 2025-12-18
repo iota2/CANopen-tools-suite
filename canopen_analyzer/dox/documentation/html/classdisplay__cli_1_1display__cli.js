@@ -6,6 +6,7 @@ var classdisplay__cli_1_1display__cli =
     [ "run", "classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0", null ],
     [ "sparkline", "classdisplay__cli_1_1display__cli.html#a1716b97b8fa04faf79e5df60d9fb3489", null ],
     [ "stop", "classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
+    [ "_stop_event", "classdisplay__cli_1_1display__cli.html#a2c9373a2aa1f4cdf3e6c936e81b17267", null ],
     [ "console", "classdisplay__cli_1_1display__cli.html#a59b27486da7ae78f25305f338b4b2fce", null ],
     [ "fixed", "classdisplay__cli_1_1display__cli.html#a0ceb8ae554e8a185caf22e15c9487f4b", null ],
     [ "fixed_pdo", "classdisplay__cli_1_1display__cli.html#a3078ce0e2c75accf21cd8df0224f542f", null ],

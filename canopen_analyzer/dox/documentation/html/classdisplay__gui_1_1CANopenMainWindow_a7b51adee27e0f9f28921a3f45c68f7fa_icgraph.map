@@ -1,0 +1,5 @@
+<map id="_flash_row" name="_flash_row">
+<area shape="rect" id="node1" title="Temporarily highlight a table row to indicate activity." alt="" coords="292,5,383,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf" title="Insert or update a row in a data table." alt="" coords="137,5,244,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf" title="Handle a newly decoded CAN frame." alt="" coords="5,5,89,32"/>
+</map>

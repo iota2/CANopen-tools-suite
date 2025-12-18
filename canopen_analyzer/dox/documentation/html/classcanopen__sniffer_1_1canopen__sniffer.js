@@ -5,6 +5,7 @@ var classcanopen__sniffer_1_1canopen__sniffer =
     [ "run", "classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0", null ],
     [ "save_frame_to_csv", "classcanopen__sniffer_1_1canopen__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172", null ],
     [ "stop", "classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480", null ],
+    [ "_stop_event", "classcanopen__sniffer_1_1canopen__sniffer.html#a2c9373a2aa1f4cdf3e6c936e81b17267", null ],
     [ "bus", "classcanopen__sniffer_1_1canopen__sniffer.html#a411bd59fecc82fdfda0e5c9d7da7447f", null ],
     [ "export", "classcanopen__sniffer_1_1canopen__sniffer.html#af44e2d3afd4e0e4d03f637dbb2bce3cd", null ],
     [ "export_file", "classcanopen__sniffer_1_1canopen__sniffer.html#afdcb13a7e8e9ec20376d877dbae55960", null ],
