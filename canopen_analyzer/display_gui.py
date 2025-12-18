@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTableWidget, QTableWidgetItem, QDockWidget, QSplitter,
     QPushButton, QLineEdit, QComboBox, QToolBar, QToolTip,
-    QLabel, QHeaderView
+    QLabel, QHeaderView, QFrame, QGridLayout, QProgressBar
 )
 from PySide6.QtCharts import (
     QChart, QChartView, QLineSeries, QValueAxis
@@ -237,7 +237,7 @@ class MultiRateLineWidget(QWidget):
 
         # Height bounds keep graph readable but compact in the right dock
         self.view.setMinimumHeight(100)
-        self.view.setMaximumHeight(200)
+        self.view.setMaximumHeight(180)
 
         # Enable mouse tracking for hover tooltips
         self.view.setMouseTracking(True)
@@ -245,7 +245,7 @@ class MultiRateLineWidget(QWidget):
         self.view.viewport().installEventFilter(self)
 
         # Ensure the widget reserves enough vertical space
-        self.setMinimumHeight(200)
+        self.setMinimumHeight(180)
 
         # Visual framing for the rate widget
         self.setStyleSheet("""
@@ -530,7 +530,6 @@ class CANopenMainWindow(QMainWindow):
 
         # Set application window title and launch in maximized state
         self.setWindowTitle(analyzer_defs.APP_NAME)
-        self.showMaximized()
 
         # ------------------------------------------------------------------
         # UI construction sequence
@@ -542,6 +541,11 @@ class CANopenMainWindow(QMainWindow):
         self._build_left_dock()
         self._build_right_dock()
         self._build_central()
+
+        self.setDockOptions(
+            QMainWindow.AllowNestedDocks |
+            QMainWindow.AllowTabbedDocks
+        )
 
         # Restore window geometry, dock positions, and splitter state
         self._restore_layout()
@@ -759,62 +763,225 @@ class CANopenMainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, dock)
 
     def _build_right_dock(self):
-        """! Build the Bus Statistics dock.
+        """!
+        @brief Build the Bus Statistics dock using a dashboard-style layout.
+
         @details
-        Constructs the right-side dock widget that presents live bus-level
-        statistics and frame-rate visualizations. This dock includes:
-        - A metrics table summarizing bus state
-        - A frame-rate section with multi-line history graphs
-        (PDO, SDO Req/Resp, Heartbeat/EMCY)
-        @note
-        The content and grouping mirror the information shown in the
-        CLI statistics panel, adapted for graphical presentation.
+        Replaces the flat key-value table with a professional layout:
+        - Top status cards for quick health overview
+        - Grouped metric sections using form layouts
+        - Existing frame-rate graphs retained as-is
         """
 
-        # Create the dock widget with a stable object name
-        # (required for layout persistence via QSettings)
         dock = QDockWidget("Bus Stats", self)
         dock.setObjectName("BusStatsDock")
-
-        # Constrain dock width to prevent excessive horizontal usage
-        dock.setMinimumWidth(300)
+        dock.setMinimumWidth(360)
         dock.setMaximumWidth(600)
 
-        # Root widget for the dock contents
-        w = QWidget()
-        layout = QVBoxLayout(w)
-        layout.setSpacing(2)
-        layout.setContentsMargins(4, 4, 4, 4)
+        root = QWidget()
+        root_layout = QVBoxLayout(root)
+        root_layout.setContentsMargins(6, 6, 6, 6)
+        root_layout.setSpacing(8)
 
-        # ------------------------------------------------------------------
-        # Bus statistics table
-        # ------------------------------------------------------------------
-        ## Displays key/value style bus metrics (e.g. utilization,
-        ## error counters, SDO status), similar to the CLI stats view.
-        self.bus_table = QTableWidget(0, 2)
-        self.bus_table.setHorizontalHeaderLabels(["Metric", "Value"])
+        # ==============================================================
+        # Status Cards (Top Row)
+        # ==============================================================
 
-        # Allow the value column to stretch and consume remaining space
-        self.bus_table.horizontalHeader().setStretchLastSection(True)
+        cards_row = QHBoxLayout()
+        cards_row.setSpacing(8)
 
-        layout.addWidget(self.bus_table)
+        def make_card(title: str):
+            frame = QFrame()
+            frame.setFrameShape(QFrame.StyledPanel)
+            frame.setStyleSheet("""
+                QFrame {
+                    border: 1px solid palette(mid);
+                    border-radius: 6px;
+                }
+            """)
+            v = QVBoxLayout(frame)
+            v.setContentsMargins(8, 6, 8, 6)
 
-        # ------------------------------------------------------------------
-        # Frame-rate visualization section
-        # ------------------------------------------------------------------
-        rates_label = QLabel("Frame Rates")
-        rates_label.setStyleSheet("font-weight: 600;")
-        layout.addWidget(rates_label)
+            lbl_title = QLabel(title)
+            lbl_title.setStyleSheet("font-size: 11px; color: gray;")
 
-        # ------------------------------------------------------------------
-        # Multi-line rate graph widgets
-        # ------------------------------------------------------------------
-        ## PDO frame-rate history
+            lbl_value = QLabel("--")
+            lbl_value.setStyleSheet("font-size: 18px; font-weight: 600;")
+            lbl_value.setAlignment(Qt.AlignCenter)
+
+            v.addWidget(lbl_title)
+            v.addWidget(lbl_value)
+
+            return frame, lbl_value
+
+        self.card_state, self.lbl_state = make_card("STATE")
+        self.card_util, self.lbl_util = make_card("BUS UTIL %")
+        self.card_nodes, self.lbl_nodes = make_card("ACTIVE NODES")
+
+        cards_row.addWidget(self.card_state)
+        cards_row.addWidget(self.card_util)
+        cards_row.addWidget(self.card_nodes)
+
+        root_layout.addLayout(cards_row)
+
+        # ==============================================================
+        # Grouped Metrics (Form Layouts)
+        # ==============================================================
+
+        self.bus_labels = {}
+
+        def make_group(title: str, fields):
+            box = QFrame()
+            box.setFrameShape(QFrame.StyledPanel)
+            box.setStyleSheet("""
+                QFrame {
+                    border: 1px solid palette(mid);
+                    border-radius: 6px;
+                }
+            """)
+
+            v = QVBoxLayout(box)
+            v.setContentsMargins(8, 6, 8, 6)
+            v.setSpacing(4)
+
+            lbl = QLabel(title)
+            lbl.setStyleSheet("font-weight: 600;")
+            v.addWidget(lbl)
+
+            form = QGridLayout()
+            form.setColumnStretch(1, 1)
+
+            row = 0
+            for name in fields:
+                l_name = QLabel(name)
+                l_val = QLabel("--")
+                l_val.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                l_val.setStyleSheet("font-family: Monospace;")
+
+                form.addWidget(l_name, row, 0)
+                form.addWidget(l_val, row, 1)
+
+                self.bus_labels[name] = l_val
+                row += 1
+
+            v.addLayout(form)
+            return box
+
+        # ==============================================================
+        # Bus Performance (with progress bars)
+        # ==============================================================
+
+        perf_box = QFrame()
+        perf_box.setFrameShape(QFrame.StyledPanel)
+        perf_box.setStyleSheet("""
+            QFrame {
+                border: 1px solid palette(mid);
+                border-radius: 6px;
+            }
+        """)
+
+        perf_layout = QVBoxLayout(perf_box)
+        perf_layout.setContentsMargins(8, 6, 8, 6)
+        perf_layout.setSpacing(6)
+
+        lbl_perf = QLabel("Bus Performance")
+        lbl_perf.setStyleSheet("font-weight: 600;")
+        perf_layout.addWidget(lbl_perf)
+
+        grid = QGridLayout()
+        grid.setColumnStretch(1, 1)
+
+        def add_progress_row(label_text, bar_attr, value_attr):
+            lbl = QLabel(label_text)
+
+            bar = QProgressBar()
+            bar.setRange(0, 100)
+            bar.setTextVisible(False)
+            bar.setFixedHeight(10)
+            bar.setStyleSheet("""
+                QProgressBar {
+                    border: 1px solid palette(mid);
+                    border-radius: 4px;
+                    background: palette(base);
+                }
+                QProgressBar::chunk {
+                    border-radius: 3px;
+                    background-color: #4CAF50;
+                }
+            """)
+
+            val = QLabel("--")
+            val.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            val.setStyleSheet("font-family: Monospace;")
+
+            setattr(self, bar_attr, bar)
+            setattr(self, value_attr, val)
+
+            r = grid.rowCount()
+            grid.addWidget(lbl, r, 0)
+            grid.addWidget(bar, r, 1)
+            grid.addWidget(val, r, 2)
+
+        def add_value_row(label_text, value_key):
+            lbl = QLabel(label_text)
+            val = QLabel("--")
+            val.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            val.setStyleSheet("font-family: Monospace;")
+
+            self.bus_labels[label_text] = val
+
+            r = grid.rowCount()
+            grid.addWidget(lbl, r, 0)
+            grid.addWidget(val, r, 2)
+
+        # Progress-bar metrics
+        add_progress_row("Bus Util %", "util_bar", "util_value")
+        add_progress_row("Bus Idle %", "idle_bar", "idle_value")
+
+        # Numeric-only metrics
+        add_value_row("Total FPS", "Total FPS")
+        add_value_row("Peak FPS", "Peak FPS")
+
+        perf_layout.addLayout(grid)
+        root_layout.addWidget(perf_box)
+
+        # ==============================================================
+        # Bus Performance (without progress bars)
+        # ==============================================================
+
+        root_layout.addWidget(
+            make_group(
+                "SDO Health",
+                [
+                    "SDO OK / Abort",
+                    "Avg SDO Resp (ms)",
+                ]
+            )
+        )
+
+        root_layout.addWidget(
+            make_group(
+                "Diagnostics",
+                [
+                    "Last Error Frame",
+                    "Top Talkers",
+                    "Frame Dist.",
+                ]
+            )
+        )
+
+        # ==============================================================
+        # Frame Rate Graphs (unchanged)
+        # ==============================================================
+
+        rates_lbl = QLabel("Frame Rates")
+        rates_lbl.setStyleSheet("font-weight: 600;")
+        root_layout.addWidget(rates_lbl)
+
         self.rate_pdo = MultiRateLineWidget(
             [("PDO", Qt.darkGreen)]
         )
 
-        ## SDO request/response frame-rate history (shared time axis)
         self.rate_sdo = MultiRateLineWidget(
             [
                 ("SDO-Req", Qt.darkBlue),
@@ -822,7 +989,6 @@ class CANopenMainWindow(QMainWindow):
             ]
         )
 
-        ## Heartbeat and EMCY frame-rate history
         self.rate_misc = MultiRateLineWidget(
             [
                 ("Heartbeat", Qt.darkYellow),
@@ -830,18 +996,14 @@ class CANopenMainWindow(QMainWindow):
             ]
         )
 
-        # Add rate graph widgets to the dock layout
-        layout.addWidget(self.rate_pdo)
-        layout.addWidget(self.rate_sdo)
-        layout.addWidget(self.rate_misc)
+        root_layout.addWidget(self.rate_pdo)
+        root_layout.addWidget(self.rate_sdo)
+        root_layout.addWidget(self.rate_misc)
 
-        # Push all content to the top, leaving flexible space below
-        layout.addStretch(1)
+        root_layout.addStretch(1)
 
-        # Attach content widget to the dock and dock it on the right
-        dock.setWidget(w)
+        dock.setWidget(root)
         self.addDockWidget(Qt.RightDockWidgetArea, dock)
-
 
     def _build_central(self):
         """! Build the central widget containing protocol, PDO, and SDO tables.
@@ -1058,14 +1220,23 @@ class CANopenMainWindow(QMainWindow):
         is restored independently to allow partial recovery.
         """
 
+        # Restore window size & position (does NOT affect buttons)
         if self.settings.value("geometry"):
             self.restoreGeometry(self.settings.value("geometry"))
 
+        # Restore dock / toolbar layout ONLY
         if self.settings.value("windowState"):
-            self.restoreState(self.settings.value("windowState"))
+            self.restoreState(
+                self.settings.value("windowState"),
+                QMainWindow.AllowNestedDocks
+            )
 
+        # Restore splitter state
         if self.settings.value("splitter"):
             self.splitter.restoreState(self.settings.value("splitter"))
+
+        # FORCE maximized state after layout restoration
+        self.showMaximized()
 
     def _autosize_columns(self, table):
         """! Auto-size table columns and rows to fit contents.
@@ -1124,110 +1295,116 @@ class CANopenMainWindow(QMainWindow):
         )
 
     def update_bus_stats(self):
-        """! Update the Bus Statistics table and rate graphs.
+        """!
+        @brief Update Bus Statistics dashboard widgets and rate graphs.
+
         @details
-        Retrieves a snapshot from the shared bus statistics backend
-        and refreshes all bus-level metrics displayed in the GUI.
-        This includes:
-        - General bus state and node activity
-        - Utilization and idle percentages
-        - Aggregate and peak frame rates
-        - SDO success/abort statistics and response timing
-        - Error and diagnostic information
-        - Top talkers and frame distribution
-        - Frame-rate history graphs (PDO, SDO, Heartbeat, EMCY)
-        @note
-        The data and grouping mirror the CLI statistics panel.
+        Refreshes all bus-level metrics using the latest snapshot from
+        the statistics backend. Values are written into dashboard-style
+        labels and status cards, replacing the legacy key-value table.
+
+        The underlying statistics and grouping remain identical to
+        display_cli.py.
         """
 
-        # Retrieve an immutable snapshot of current bus statistics
+        # ------------------------------------------------------------------
+        # Retrieve immutable snapshot from statistics backend
+        # ------------------------------------------------------------------
         snap = self.stats.get_snapshot()
 
-        # Clear existing rows before repopulating metrics
-        self.bus_table.setRowCount(0)
-
-        # Helper to append a metric/value row to the bus table
-        def add(metric, value):
-            r = self.bus_table.rowCount()
-            self.bus_table.insertRow(r)
-            self.bus_table.setItem(r, 0, QTableWidgetItem(metric))
-            self.bus_table.setItem(r, 1, QTableWidgetItem(str(value)))
-
         # ------------------------------------------------------------------
-        # General bus state
+        # Top status cards
         # ------------------------------------------------------------------
-        add("State", "Active" if snap.frame_count.total else "Idle")
-        add("Active Nodes", len(snap.nodes or {}))
+        active = bool(snap.frame_count.total)
+        self.lbl_state.setText("Active" if active else "Idle")
 
-        # Bus utilization percentages
         util = getattr(snap.rates, "bus_util_percent", 0.0)
-        add("Bus Util %", f"{util:.2f}")
-        add("Bus Idle %", f"{max(0.0, 100.0 - util):.2f}")
+        self.lbl_util.setText(f"{util:.2f}")
+        self.lbl_nodes.setText(str(len(snap.nodes or {})))
 
         # ------------------------------------------------------------------
-        # Frame-rate summary
+        # Bus performance metrics
         # ------------------------------------------------------------------
         rates = snap.rates.latest
-        add("Total FPS", f"{rates.get('total', 0.0):.1f}")
-        add("Peak FPS", f"{snap.rates.peak_fps:.1f}")
 
-        # ------------------------------------------------------------------
-        # SDO statistics
-        # ------------------------------------------------------------------
-        add("SDO OK / Abort", f"{snap.sdo.success}/{snap.sdo.abort}")
+        # ---- Bus Util / Idle with progress bars ----
+        util_pct = max(0.0, min(100.0, util))
+        idle_pct = max(0.0, 100.0 - util_pct)
 
-        if snap.sdo.response_time:
-            avg_rt = sum(snap.sdo.response_time) / len(snap.sdo.response_time)
-            add("Avg SDO Resp (ms)", f"{avg_rt * 1000:.1f}")
+        self.util_bar.setValue(int(util_pct))
+        self.util_value.setText(f"{util_pct:5.2f} %")
+
+        self.idle_bar.setValue(int(idle_pct))
+        self.idle_value.setText(f"{idle_pct:5.2f} %")
+
+        # Color coding based on utilization
+        if util_pct < 40:
+            self.util_bar.setStyleSheet("QProgressBar::chunk { background-color: #4CAF50; }")
+        elif util_pct < 70:
+            self.util_bar.setStyleSheet("QProgressBar::chunk { background-color: #FFC107; }")
         else:
-            add("Avg SDO Resp (ms)", "-")
+            self.util_bar.setStyleSheet("QProgressBar::chunk { background-color: #F44336; }")
 
-        # ------------------------------------------------------------------
-        # Error diagnostics
-        # ------------------------------------------------------------------
-        if snap.error.last_time or snap.error.last_frame:
-            add(
-                "Last Error Frame",
-                f"[{snap.error.last_time}] {snap.error.last_frame}"
-            )
-        else:
-            add("Last Error Frame", "-")
-
-        # ------------------------------------------------------------------
-        # Top talkers (most active COB-IDs)
-        # ------------------------------------------------------------------
-        top = snap.top_talkers.most_common(analyzer_defs.MAX_STATS_SHOW)
-        add(
-            "Top Talkers",
-            ", ".join(f"0x{c:03X}:{n}" for c, n in top) if top else "-"
+        # ---- FPS summary ----
+        self.bus_labels["Total FPS"].setText(
+            f"{rates.get('total', 0.0):.1f}"
+        )
+        self.bus_labels["Peak FPS"].setText(
+            f"{snap.rates.peak_fps:.1f}"
         )
 
         # ------------------------------------------------------------------
-        # Frame distribution by type
+        # SDO health
         # ------------------------------------------------------------------
+        self.bus_labels["SDO OK / Abort"].setText(
+            f"{snap.sdo.success}/{snap.sdo.abort}"
+        )
+
+        if snap.sdo.response_time:
+            avg_rt = sum(snap.sdo.response_time) / len(snap.sdo.response_time)
+            self.bus_labels["Avg SDO Resp (ms)"].setText(
+                f"{avg_rt * 1000:.1f}"
+            )
+        else:
+            self.bus_labels["Avg SDO Resp (ms)"].setText("-")
+
+        # ------------------------------------------------------------------
+        # Diagnostics
+        # ------------------------------------------------------------------
+        if snap.error.last_time or snap.error.last_frame:
+            self.bus_labels["Last Error Frame"].setText(
+                f"[{snap.error.last_time}] {snap.error.last_frame}"
+            )
+        else:
+            self.bus_labels["Last Error Frame"].setText("-")
+
+        top = snap.top_talkers.most_common(analyzer_defs.MAX_STATS_SHOW)
+        self.bus_labels["Top Talkers"].setText(
+            ", ".join(f"0x{c:03X}:{n}" for c, n in top) if top else "-"
+        )
+
         dist = sorted(
             ((k.name, v) for k, v in snap.frame_count.counts.items()),
             key=lambda kv: kv[1],
             reverse=True
         )
-        add(
-            "Frame Dist.",
-            ", ".join(f"{k}:{v}" for k, v in dist[:analyzer_defs.MAX_STATS_SHOW])
-            if dist else "-"
+        self.bus_labels["Frame Dist."].setText(
+            ", ".join(
+                f"{k}:{v}"
+                for k, v in dist[:analyzer_defs.MAX_STATS_SHOW]
+            ) if dist else "-"
         )
 
         # ------------------------------------------------------------------
-        # Update frame-rate history graphs
+        # Update frame-rate history graphs (unchanged behavior)
         # ------------------------------------------------------------------
         hist = snap.rates.history
 
-        # PDO rate graph
         self.rate_pdo.update(
             {"PDO": rates.get("pdo", 0.0)},
             {"PDO": hist.get("pdo", [])}
         )
 
-        # SDO request/response rate graph
         self.rate_sdo.update(
             {
                 "SDO-Req": rates.get("sdo_req", 0.0),
@@ -1239,7 +1416,6 @@ class CANopenMainWindow(QMainWindow):
             }
         )
 
-        # Heartbeat and EMCY rate graph
         self.rate_misc.update(
             {
                 "Heartbeat": rates.get("hb", 0.0),
@@ -1250,25 +1426,6 @@ class CANopenMainWindow(QMainWindow):
                 "EMCY": hist.get("emcy", []),
             }
         )
-
-        # ------------------------------------------------------------------
-        # Adjust bus table column sizing
-        # ------------------------------------------------------------------
-        header = self.bus_table.horizontalHeader()
-
-        # Metric column: size to longest metric name
-        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-
-        # Value column: occupy remaining horizontal space
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
-
-        # Lock metric column width after sizing
-        w = self.bus_table.columnWidth(0)
-        header.setSectionResizeMode(0, QHeaderView.Fixed)
-        self.bus_table.setColumnWidth(0, w)
-
-        # Adjust table height so all rows are visible without scrolling
-        self._adjust_bus_table_height()
 
     def update_table(self, table, fixed_map, key, values):
         """! Insert or update a row in a data table.

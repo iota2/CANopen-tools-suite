@@ -1,4 +1,4 @@
-.TH "CANopenMainWindow" 3 "Wed Dec 17 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "CANopenMainWindow" 3 "Thu Dec 18 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -43,7 +43,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "def \fBupdate_bus_stats\fP (self)"
 .br
-.RI "Update the Bus Statistics table and rate graphs\&. "
+.RI "Update Bus Statistics dashboard widgets and rate graphs\&. "
 .ti -1c
 .RI "def \fBupdate_table\fP (self, table, fixed_map, key, values)"
 .br
@@ -53,9 +53,8 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
-.RI "\fBbus_table\fP"
+.RI "\fBbus_labels\fP"
 .br
-.RI "Displays key/value style bus metrics (e\&.g\&. "
 .ti -1c
 .RI "\fBfixed\fP"
 .br
@@ -73,6 +72,15 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Fixed-row SDO data caches used when operating in Fixed mode\&. "
 .ti -1c
+.RI "\fBlbl_nodes\fP"
+.br
+.ti -1c
+.RI "\fBlbl_state\fP"
+.br
+.ti -1c
+.RI "\fBlbl_util\fP"
+.br
+.ti -1c
 .RI "\fBmode_combo\fP"
 .br
 .RI "Mode selection combo box\&. "
@@ -87,15 +95,12 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "\fBrate_misc\fP"
 .br
-.RI "Heartbeat and EMCY frame-rate history\&. "
 .ti -1c
 .RI "\fBrate_pdo\fP"
 .br
-.RI "PDO frame-rate history\&. "
 .ti -1c
 .RI "\fBrate_sdo\fP"
 .br
-.RI "SDO request/response frame-rate history (shared time axis) "
 .ti -1c
 .RI "\fBsdo_filter\fP"
 .br
@@ -171,30 +176,9 @@ Handle a newly decoded CAN frame\&. Called from the GUI worker thread via signal
 .SS "def update_bus_stats ( self)"
 
 .PP
-Update the Bus Statistics table and rate graphs\&. Retrieves a snapshot from the shared bus statistics backend and refreshes all bus-level metrics displayed in the GUI\&. This includes:
-.IP "\(bu" 2
-General bus state and node activity
-.IP "\(bu" 2
-Utilization and idle percentages
-.IP "\(bu" 2
-Aggregate and peak frame rates
-.IP "\(bu" 2
-SDO success/abort statistics and response timing
-.IP "\(bu" 2
-Error and diagnostic information
-.IP "\(bu" 2
-Top talkers and frame distribution
-.IP "\(bu" 2
-Frame-rate history graphs (PDO, SDO, Heartbeat, EMCY) 
+Update Bus Statistics dashboard widgets and rate graphs\&. Refreshes all bus-level metrics using the latest snapshot from the statistics backend\&. Values are written into dashboard-style labels and status cards, replacing the legacy key-value table\&.
 .PP
-\fBNote\fP
-.RS 4
-The data and grouping mirror the CLI statistics panel\&. 
-.RE
-.PP
-
-.PP
-
+The underlying statistics and grouping remain identical to \fBdisplay_cli\&.py\fP\&. 
 .SS "def update_table ( self,  table,  fixed_map,  key,  values)"
 
 .PP
@@ -225,10 +209,8 @@ Row highlighting is applied to indicate recent activity\&.
 
 .SH "Member Data Documentation"
 .PP 
-.SS "bus_table"
+.SS "bus_labels"
 
-.PP
-Displays key/value style bus metrics (e\&.g\&. utilization, error counters, SDO status), similar to the CLI stats view\&. 
 .SS "fixed"
 
 .PP
@@ -259,6 +241,12 @@ Duration (in milliseconds) for which the activity highlight remains visible befo
 
 .PP
 Background color used to temporarily highlight rows when new or updated data is received (activity heat effect)\&. 
+.SS "lbl_nodes"
+
+.SS "lbl_state"
+
+.SS "lbl_util"
+
 .SS "mode_combo"
 
 .PP
@@ -273,16 +261,10 @@ PDO data filter\&.
 Protocol data filter\&. 
 .SS "rate_misc"
 
-.PP
-Heartbeat and EMCY frame-rate history\&. 
 .SS "rate_pdo"
 
-.PP
-PDO frame-rate history\&. 
 .SS "rate_sdo"
 
-.PP
-SDO request/response frame-rate history (shared time axis) 
 .SS "sdo_filter"
 
 .PP

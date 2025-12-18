@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bus_5fstats_166',['bus_stats',['../classbus__stats_1_1bus__stats.html',1,'bus_stats']]]
+  ['bus_5fstats_169',['bus_stats',['../classbus__stats_1_1bus__stats.html',1,'bus_stats']]]
 ];

@@ -1,7 +1,7 @@
 ; Minimal EDS for testing with RPDO mappings + Heartbeat + Timestamp
 
 [DeviceComissioning]
-NodeID=0x01
+NodeID=0x02
 
 [DeviceInfo]
 VendorName=iota2
