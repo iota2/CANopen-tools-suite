@@ -47,7 +47,7 @@ from PySide6.QtCharts import (
 )
 from PySide6.QtGui import (
     QAction, QPainter, QColor,
-    QCursor, QFont, QPen
+    QCursor, QFont, QPen, QIcon
 )
 
 import analyzer_defs as analyzer_defs
@@ -531,6 +531,9 @@ class CANopenMainWindow(QMainWindow):
         # Set application window title and launch in maximized state
         self.setWindowTitle(analyzer_defs.APP_NAME)
 
+        # Set application icon.
+        self.setWindowIcon(QIcon("./dox/iota2_thumb.png"))
+
         # ------------------------------------------------------------------
         # UI construction sequence
         # ------------------------------------------------------------------
@@ -798,11 +801,6 @@ class CANopenMainWindow(QMainWindow):
         cards_row.setSpacing(8)
 
         def make_card(title: str):
-            """! Create a single status card widget.
-            @param title Display title of the card.
-            @return Tuple consisting of the card frame and its value QLabel.
-            """
-
             frame = QFrame()
             frame.setFrameShape(QFrame.StyledPanel)
             frame.setStyleSheet("""
@@ -812,20 +810,25 @@ class CANopenMainWindow(QMainWindow):
                 }
             """)
 
-            v = QVBoxLayout(frame)
-            v.setContentsMargins(8, 6, 8, 6)
+            root = QVBoxLayout(frame)
+            root.setContentsMargins(8, 6, 8, 6)
+            root.setSpacing(4)
 
-            # Card title label.
+            # ------------------------------------------------------
+            # Title
+            # ------------------------------------------------------
             lbl_title = QLabel(title)
             lbl_title.setStyleSheet("font-size: 11px; color: gray;")
+            lbl_title.setAlignment(Qt.AlignCenter)
+            root.addWidget(lbl_title)
 
-            # Card value label (updated dynamically).
+            # ------------------------------------------------------
+            # Value row
+            # ------------------------------------------------------
             lbl_value = QLabel("--")
             lbl_value.setStyleSheet("font-size: 18px; font-weight: 600;")
             lbl_value.setAlignment(Qt.AlignCenter)
-
-            v.addWidget(lbl_title)
-            v.addWidget(lbl_value)
+            root.addWidget(lbl_value)
 
             return frame, lbl_value
 
@@ -836,11 +839,15 @@ class CANopenMainWindow(QMainWindow):
         self.card_util, self.lbl_util = make_card("BUS UTIL %")
 
         ## Status card widgets and value labels for "ACTIVE NODES".
-        self.card_nodes, self.lbl_nodes = make_card("ACTIVE NODES")
+        self.card_nodes, self.lbl_nodes = (make_card("ACTIVE NODES"))
+
+        cards_row.addStretch(1)
 
         cards_row.addWidget(self.card_state)
         cards_row.addWidget(self.card_util)
         cards_row.addWidget(self.card_nodes)
+
+        cards_row.addStretch(1)
 
         root_layout.addLayout(cards_row)
 
@@ -1378,7 +1385,15 @@ class CANopenMainWindow(QMainWindow):
         self.lbl_util.setText(f"{util:.2f}")
 
         # Number of currently active nodes on the bus.
-        self.lbl_nodes.setText(str(len(snap.nodes or {})))
+        nodes = sorted(snap.nodes) if snap.nodes else []
+        self.lbl_nodes.setText(str(len(nodes)))
+
+        # Display node IDs
+        if nodes:
+            ids = ", ".join(f"0x{n:02X}" for n in nodes)
+            self.lbl_nodes.setToolTip("Active nodes: " + ids)
+        else:
+            self.lbl_nodes.setToolTip("No Active Node")
 
         # ------------------------------------------------------------------
         # Bus performance metrics
