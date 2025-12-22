@@ -1,6 +1,5 @@
 <map id="on_frame" name="on_frame">
-<area shape="rect" id="node1" title="Handle a newly decoded CAN frame." alt="" coords="5,31,89,57"/>
-<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a4485a4e310b2221fa0e8c7d476533f65" title="Update Bus Statistics dashboard widgets and rate graphs." alt="" coords="137,5,273,32"/>
-<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf" title="Insert or update a row in a data table." alt="" coords="152,56,259,83"/>
-<area shape="rect" id="node4" href="$classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa" title="Temporarily highlight a table row to indicate activity." alt="" coords="321,56,412,83"/>
+<area shape="rect" id="node1" title="Handle a newly decoded CAN frame." alt="" coords="5,5,89,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf" title="Insert or update a row in a data table." alt="" coords="137,5,244,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa" title="Temporarily highlight a table row to indicate activity." alt="" coords="292,5,383,32"/>
 </map>

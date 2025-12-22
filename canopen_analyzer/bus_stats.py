@@ -121,6 +121,7 @@ class bus_stats:
         @details
         Tracks last update time and last frame counts for rate computations.
         """
+
         # List of rate keys we track. Keep this small & canonical.
         keys: list = field(default_factory=lambda: ['total', 'hb', 'emcy', 'pdo', 'sdo_res', 'sdo_req'])
 
@@ -142,6 +143,8 @@ class bus_stats:
         # Latest numeric rates (dict) — init empty here; bus_stats.__init__ will populate
         latest: dict = field(default_factory=dict)
 
+        ## Human-readable bus state ("Active" or "Idle")
+        bus_state: str = "Idle"
 
     @dataclass
     class error_stats:
@@ -171,6 +174,9 @@ class bus_stats:
         ## Set of node IDs currently active on the CANopen network.
         nodes: set = field(default_factory=set)
 
+        ## Last-seen timestamp per node (used for inactivity detection).
+        node_last_seen: dict = field(default_factory=dict)
+
         ## Counter tracking nodes sending the most messages.
         top_talkers: Counter = field(default_factory=Counter)
 
@@ -198,6 +204,7 @@ class bus_stats:
         lock is used to protect concurrent access to the shared `_stats` data.
         A logger instance is also created for internal diagnostics and reporting.
         """
+
         ## Thread lock used to protect access to statistics data.
         self._lock = threading.Lock()
 
@@ -236,14 +243,10 @@ class bus_stats:
         @param ftype Frame type @ref defs.frame_type for incrementing its count.
         @return None.
         """
+
         with self._lock:
             self._stats.frame_count.total += 1
             self._stats.frame_count.counts[ftype] += 1
-        # Update derived rates/history (time-gated inside update_rates)
-        try:
-            self.update_rates()
-        except Exception:
-            pass
 
     def increment_payload(self, ftype: analyzer_defs.frame_type, size: int):
         """! Increment payload size counters for PDO/SDO frames
@@ -251,6 +254,7 @@ class bus_stats:
         @param size payload size as integer.
         @exception KeyError : Payload size not tracked.
         """
+
         with self._lock:
             if ftype in self._stats.payload_size.sizes:
                 self._stats.payload_size.sizes[ftype] += size
@@ -259,16 +263,19 @@ class bus_stats:
 
     def set_start_time(self):
         """! Sets the start time parameter of bus stats."""
+
         with self._lock:
             self._stats.start_time = time.time()
 
     def increment_sdo_success(self):
         """! Increment the SDO success counter."""
+
         with self._lock:
             self._stats.sdo.success += 1
 
     def increment_sdo_abort(self):
         """! Increment the SDO abort counter."""
+
         with self._lock:
             self._stats.sdo.abort += 1
 
@@ -277,6 +284,7 @@ class bus_stats:
         @param index Index of received message as integer.
         @param sub Sub index of received message as integer.
         """
+
         with self._lock:
             self._stats.sdo.request_time[(index, sub)] = time.time()
         analyzer_defs.log.debug(f"SDO request idx=0x{index:04X} sub={sub} recorded for latency measurement")
@@ -286,6 +294,7 @@ class bus_stats:
         @param index Index of received message as integer.
         @param sub Sub index of received message as integer.
         """
+
         with self._lock:
             resp_time = None
             key = (index, sub)
@@ -296,16 +305,20 @@ class bus_stats:
                 self.log.debug(f"SDO response latency for 0x{index:04X}:{sub} = {resp_time:.4f}s")
 
     def add_node(self, node_id: int):
-        """! Add node to communicating nodes list.
+        """! Add or refresh a communicating node.
         @param node_id Received Node id as integer.
         """
+
+        now = time.time()
         with self._lock:
             self._stats.nodes.add(node_id)
+            self._stats.node_last_seen[node_id] = now
 
     def count_talker(self, cob_id: int):
         """! Increment TopTalkers counter for a COB-ID.
         @param cob_id COB-ID as integer of top talker to be incremented.
         """
+
         with self._lock:
             self._stats.top_talkers[cob_id] += 1
 
@@ -315,6 +328,7 @@ class bus_stats:
         @param ftype Frame type @ref defs.frame_type.
         @return Count of frames received as integer.
         """
+
         with self._lock:
             return self._stats.frame_count.counts[ftype]
 
@@ -322,6 +336,7 @@ class bus_stats:
         """! Get total frame count.
         @return Total counted frames as integer.
         """
+
         with self._lock:
             return self._stats.frame_count.total
 
@@ -333,6 +348,7 @@ class bus_stats:
         Call this regularly or invoke after incrementing counters; it's safe
         to call frequently because it checks elapsed time internally.
         """
+
         if now is None:
             now = time.time()
 
@@ -340,6 +356,24 @@ class bus_stats:
             elapsed = now - getattr(self._stats.rates, "last_update_time", now)
             if elapsed <= 0 or elapsed < (interval * 0.9):
                 return
+
+            # Prune inactive nodes
+            now_ts = now
+            inactive = []
+
+            for node_id, last_seen in self._stats.node_last_seen.items():
+                if (now_ts - last_seen) > analyzer_defs.NODE_INACTIVE_TIMEOUT:
+                    inactive.append(node_id)
+
+            for node_id in inactive:
+                self._stats.node_last_seen.pop(node_id, None)
+                self._stats.nodes.discard(node_id)
+
+            # Update bus state based on active nodes
+            if self._stats.nodes:
+                self._stats.rates.bus_state = "Active"
+            else:
+                self._stats.rates.bus_state = "Idle"
 
             # collect current cumulative counts into a dict keyed same as rates.keys
             counts = {}
@@ -417,11 +451,14 @@ class bus_stats:
                 # use the most recent total frames/s rate
                 rate_total = float(self._stats.rates.latest.get("total", 0.0))
 
-                # compute utilization percentage
-                util = (rate_total * avg_frame_bits) / max(1, bitrate) * 100.0
+                # Reset bus utilization for idle bus
+                if not self._stats.nodes:
+                    # No active nodes → bus is idle
+                    self._stats.rates.bus_util_percent = 0.0
+                else:
+                    util = (rate_total * avg_frame_bits) / max(1, bitrate) * 100.0
+                    self._stats.rates.bus_util_percent = util
 
-                # store in snapshot rates
-                self._stats.rates.bus_util_percent = util
             except Exception:
                 self._stats.rates.bus_util_percent = 0.0
 
@@ -429,6 +466,7 @@ class bus_stats:
         """! Get snapshot of bus stats.
         @return Current bus stats @ref stats_data.
         """
+
         with self._lock:
             snap = copy.copy(self._stats)
             snap.rates = copy.copy(self._stats.rates)
@@ -439,6 +477,7 @@ class bus_stats:
 
     def reset(self):
         """! Reset bus stats count."""
+
         with self._lock:
             # Reset all core stats objects
             self._stats.frame_count = self.frame_count()
@@ -468,7 +507,8 @@ class bus_stats:
             self.log.info("Bus statistics and rate histories have been reset.")
 
     def _rate_sampler(self):
-        """Background thread: periodically call update_rates() so rates get sampled even when no frames arrive."""
+        """! Background thread: periodically call update_rates() so rates get sampled even when no frames arrive."""
+
         self.log.debug("Rate sampler thread started (interval=%.3fs)", getattr(self, "_rate_interval", 1.0))
         # Use a monotonic clock for sleeping
         interval = getattr(self, "_rate_interval", 1.0)
@@ -488,7 +528,8 @@ class bus_stats:
         self.log.debug("Rate sampler thread exiting")
 
     def stop(self):
-        """Stop background threads cleanly (call on application exit)."""
+        """! Stop background threads cleanly (call on application exit)."""
+
         try:
             self._rate_sampler_stop.set()
             if self._rate_sampler_thread and self._rate_sampler_thread.is_alive():

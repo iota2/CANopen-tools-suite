@@ -117,6 +117,7 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .ti -1c
 .RI "\fB_last_bus_stats\fP"
 .br
+.RI "Content for the Graph column to render\&. "
 .in -1c
 .SH "Member Function Documentation"
 .PP 
@@ -144,6 +145,20 @@ None
 .PP 
 .SS "_last_bus_stats\fC [private]\fP"
 
+.PP
+Content for the Graph column to render\&. Generate sparkline graph when a history key is provided\&.
+.PP
+Retrieve history samples for the given key\&.
+.PP
+Convert history samples into a sparkline render\&.
+.PP
+Use explicitly provided render/data for graph column\&.
+.PP
+Primary path: add row using native renders\&.
+.PP
+Fallback path: coerce all fields to strings to avoid DataTable rendering failures\&.
+.PP
+Suppress any remaining rendering errors to keep the TUI responsive\&. 
 .SS "bus_stats_table"
 
 .PP

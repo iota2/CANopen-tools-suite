@@ -24,6 +24,10 @@ This dataclass aggregates multiple categories of bus-level statistics, including
 .br
 .RI "Reference to \fBbus_stats\&.frame_count\fP data structure\&. "
 .ti -1c
+.RI "\fBdict\fP"
+.br
+.RI "Last-seen timestamp per node (used for inactivity detection)\&. "
+.ti -1c
 .RI "\fBfloat\fP"
 .br
 .RI "Timestamp marking when statistics collection started\&. "
@@ -46,6 +50,10 @@ Reference to \fBbus_stats\&.frame_count\fP data structure\&. Reference to \fBbus
 Reference to \fBbus_stats\&.sdo_stats\fP data structure\&.
 .PP
 Reference to \fBbus_stats\&.payload_size\fP data structure\&. 
+.SS "dict\fC [static]\fP"
+
+.PP
+Last-seen timestamp per node (used for inactivity detection)\&. 
 .SS "float\fC [static]\fP"
 
 .PP

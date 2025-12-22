@@ -159,7 +159,9 @@ class display_cli(threading.Thread):
         # Basic fields
         total_frames = getattr(snapshot.frame_count, "total", 0)
         nodes = getattr(snapshot, "nodes", {}) or {}
-        t.add_row("State", "Active" if total_frames else "Idle", "")
+        # Bus state (authoritative, from bus_stats)
+        bus_state = getattr(snapshot.rates, "bus_state", "Idle")
+        t.add_row("State", bus_state, "")
         t.add_row("Active Nodes", str(len(nodes)), f"[dim]{sorted(nodes)}[/]" if nodes else "")
 
         # Read rates and histories from snapshot.rates (structure provided by bus_stats)

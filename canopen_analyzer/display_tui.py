@@ -45,6 +45,8 @@ try:
 except Exception:
     App = None  # textual may be missing
 
+from rich.text import Text
+
 import copy
 import pyperclip
 import logging
@@ -714,24 +716,74 @@ class display_tui:
                     except Exception:
                         return []
 
-                def add_metric(label, value, hist_key=None, style=None):
-                    """! Helper to add metrics data"""
+                def add_metric(label, value, hist_key=None, data=None):
+                    """!
+                    @brief Add a single Bus Statistics metric row to the TUI table.
+                    @details
+                    This helper inserts one row into the Bus Stats DataTable.
+                    The row consists of:
+                    - A metric label (left column)
+                    - A value (middle column)
+                    - Either a sparkline graph or custom renderable (right column)
 
+                    The graph column behavior depends on the inputs:
+                    - If @p hist_key is provided, a sparkline is generated using
+                      historical data associated with that key.
+                    - Otherwise, @p data is used directly as the graph/renderable.
+
+                    A fallback path is included to handle rendering issues by
+                    coercing all fields to strings if necessary.
+                    """
+
+                    ## Content for the Graph column to render.
                     graph = ""
+
+                    ## Generate sparkline graph when a history key is provided.
                     if hist_key:
+                        ## Retrieve history samples for the given key.
                         hist = get_hist(hist_key)
+
+                        ## Convert history samples into a sparkline render.
                         graph = self.sparkline_text(hist)
+                    else:
+                        ## Use explicitly provided render/data for graph column.
+                        graph = data
+
                     try:
+                        ## Primary path: add row using native renders.
                         self.bus_stats_table.add_row(label, value, graph)
                     except Exception:
                         try:
-                            # fallback to string-only row
-                            self.bus_stats_table.add_row(label, str(value), str(graph))
+                            ## Fallback path: coerce all fields to strings
+                            ## to avoid DataTable rendering failures.
+                            self.bus_stats_table.add_row(
+                                label,
+                                str(value),
+                                str(graph)
+                            )
                         except Exception:
+                            ## Suppress any remaining rendering errors to
+                            ## keep the TUI responsive.
                             pass
 
-                add_metric("State", "Active" if total_frames else "Idle")
-                add_metric("Active Nodes", str(len(nodes)))
+                # Bus state (authoritative, from bus_stats)
+                bus_state = getattr(snapshot.rates, "bus_state", "Idle")
+                add_metric("State", bus_state)
+
+                # Active Nodes (count + node IDs)
+                nodes = sorted(snapshot.nodes) if snapshot.nodes else []
+
+                node_count = str(len(nodes))
+
+                if nodes:
+                    node_ids = Text(
+                        "[" + ", ".join(f"0x{n:02X}" for n in nodes) + "]",
+                        style="bold white"
+                    )
+                else:
+                    node_ids = Text("")
+
+                add_metric("Active Nodes", node_count, hist_key=None, data=node_ids)
 
                 # PDO
                 pdo_val = float(rates_latest.get("pdo", 0.0)) if isinstance(rates_latest, dict) else 0.0
