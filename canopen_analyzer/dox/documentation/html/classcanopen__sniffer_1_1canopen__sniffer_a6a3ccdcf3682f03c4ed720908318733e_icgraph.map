@@ -1,0 +1,6 @@
+<map id="_ensure_bus" name="_ensure_bus">
+<area shape="rect" id="node1" title="Ensure CAN bus is available before transmitting." alt="" coords="244,56,347,83"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send raw PDO frame." alt="" coords="43,5,158,32"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="24,56,177,83"/>
+<area shape="rect" id="node4" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="Send SDO upload request (read)." alt="" coords="5,107,196,133"/>
+</map>

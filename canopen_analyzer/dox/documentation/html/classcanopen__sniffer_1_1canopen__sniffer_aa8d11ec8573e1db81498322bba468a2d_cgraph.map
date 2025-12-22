@@ -1,0 +1,4 @@
+<map id="send_sdo_download" name="send_sdo_download">
+<area shape="rect" id="node1" title="Send expedited SDO download (write)." alt="" coords="5,5,159,32"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="207,5,309,32"/>
+</map>

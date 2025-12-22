@@ -24,7 +24,7 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .br
 .RI "Initialize CAN sniffer thread and open resources\&. "
 .ti -1c
-.RI "def \fBhandle_message\fP (self, can\&.Message msg)"
+.RI "def \fBhandle_received_message\fP (self, can\&.Message msg)"
 .br
 .RI "Handle a received CAN message\&. "
 .ti -1c
@@ -35,6 +35,18 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .RI "def \fBsave_frame_to_csv\fP (self, int cob, bool error, str raw)"
 .br
 .RI "Save a received CAN frame (raw view) to the CSV export file\&. "
+.ti -1c
+.RI "def \fBsend_raw_pdo\fP (self, int cob_id, bytes data)"
+.br
+.RI "Send raw PDO frame\&. "
+.ti -1c
+.RI "def \fBsend_sdo_download\fP (self, int node_id, int index, int subindex, int value, int size)"
+.br
+.RI "Send expedited SDO download (write)\&. "
+.ti -1c
+.RI "def \fBsend_sdo_upload_request\fP (self, int node_id, int index, int subindex)"
+.br
+.RI "Send SDO upload request (read)\&. "
 .ti -1c
 .RI "def \fBstop\fP (self, bool shutdown_bus=True)"
 .br
@@ -84,6 +96,14 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .br
 .RI "Queue used to push raw frames for downstream processing\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB_ensure_bus\fP (self)"
+.br
+.RI "Ensure CAN bus is available before transmitting\&. "
+.in -1c
 .SS "Private Attributes"
 
 .in +1c
@@ -111,7 +131,11 @@ Initialize CAN sniffer thread and open resources\&. The constructor opens the so
 
 .SH "Member Function Documentation"
 .PP 
-.SS "def handle_message ( self, can\&.Message msg)"
+.SS "def _ensure_bus ( self)\fC [private]\fP"
+
+.PP
+Ensure CAN bus is available before transmitting\&. 
+.SS "def handle_received_message ( self, can\&.Message msg)"
 
 .PP
 Handle a received CAN message\&. Extracts arbitration id, raw payload and error flag, builds a small frame dictionary containing a timestamp and pushes it to \fCraw_frame\fP\&. Also logs the raw frame and triggers CSV export if enabled\&. 
@@ -125,7 +149,7 @@ Handle a received CAN message\&. Extracts arbitration id, raw payload and error 
 .SS "def run ( self)"
 
 .PP
-Main loop of the sniffer thread\&. Continuously receives frames from the CAN bus using a short timeout, handles interrupt-like exceptions gracefully, and delegates message processing to \fChandle_message\fP\&. On exit, CSV file and bus resources are closed/shutdown cleanly\&. 
+Main loop of the sniffer thread\&. Continuously receives frames from the CAN bus using a short timeout, handles interrupt-like exceptions gracefully, and delegates message processing to \fChandle_received_message\fP\&. On exit, CSV file and bus resources are closed/shutdown cleanly\&. 
 .SS "def save_frame_to_csv ( self, int cob, bool error, str raw)"
 
 .PP
@@ -143,6 +167,53 @@ Save a received CAN frame (raw view) to the CSV export file\&. Writes a single C
 \fBReturns\fP
 .RS 4
 None\&. 
+.RE
+.PP
+
+.SS "def send_raw_pdo ( self, int cob_id, bytes data)"
+
+.PP
+Send raw PDO frame\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcob_id\fP PDO COB-ID 
+.br
+\fIdata\fP Up to 8 bytes 
+.RE
+.PP
+
+.SS "def send_sdo_download ( self, int node_id, int index, int subindex, int value, int size)"
+
+.PP
+Send expedited SDO download (write)\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fInode_id\fP Node ID (1–127) 
+.br
+\fIindex\fP Object Dictionary index 
+.br
+\fIsubindex\fP Subindex 
+.br
+\fIvalue\fP Integer value to write 
+.br
+\fIsize\fP Data size in bytes (1,2,4) 
+.RE
+.PP
+
+.SS "def send_sdo_upload_request ( self, int node_id, int index, int subindex)"
+
+.PP
+Send SDO upload request (read)\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fInode_id\fP Node ID (1–127) 
+.br
+\fIindex\fP Object Dictionary index 
+.br
+\fIsubindex\fP Subindex 
 .RE
 .PP
 

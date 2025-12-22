@@ -89,6 +89,12 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Mode selection combo box\&. "
 .ti -1c
+.RI "\fBpdo_cob_edit\fP"
+.br
+.ti -1c
+.RI "\fBpdo_data_edit\fP"
+.br
+.ti -1c
 .RI "\fBpdo_filter\fP"
 .br
 .RI "PDO data filter\&. "
@@ -112,6 +118,30 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBsdo_filter\fP"
 .br
 .RI "SDO data filter\&. "
+.ti -1c
+.RI "\fBsdo_index_edit\fP"
+.br
+.ti -1c
+.RI "\fBsdo_node_edit\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_index_edit\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_node_edit\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_sub_edit\fP"
+.br
+.ti -1c
+.RI "\fBsdo_size_combo\fP"
+.br
+.ti -1c
+.RI "\fBsdo_sub_edit\fP"
+.br
+.ti -1c
+.RI "\fBsdo_value_edit\fP"
+.br
 .ti -1c
 .RI "\fBsettings\fP"
 .br
@@ -159,7 +189,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "def \fB_build_left_dock\fP (self)"
 .br
-.RI "Build the Remote Node Control dock\&. "
+.RI "Build Remote Node Control dock (SDO / PDO send & receive)\&. "
 .ti -1c
 .RI "def \fB_build_menu\fP (self)"
 .br
@@ -200,6 +230,15 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "def \fB_on_mode_changed\fP (self, text)"
 .br
 .RI "Handle display mode changes from the toolbar\&. "
+.ti -1c
+.RI "def \fB_on_recv_sdo\fP (self)"
+.br
+.ti -1c
+.RI "def \fB_on_send_pdo\fP (self)"
+.br
+.ti -1c
+.RI "def \fB_on_send_sdo\fP (self)"
+.br
 .ti -1c
 .RI "def \fB_restore_column_widths\fP (self, QTableWidget table, str table_name)"
 .br
@@ -292,14 +331,7 @@ Each table is wrapped with a titled header and filter input\&. Column sizing and
 .SS "def _build_left_dock ( self)\fC [private]\fP"
 
 .PP
-Build the Remote Node Control dock\&. Constructs the left-side dock widget that hosts controls related to remote CANopen node interaction\&. This includes actions such as network scanning and manual PDO/SDO transmission\&. 
-.PP
-\fBNote\fP
-.RS 4
-The dock layout mirrors the logical grouping used in the CLI command interface but presents controls in a GUI form\&. 
-.RE
-.PP
-
+Build Remote Node Control dock (SDO / PDO send & receive)\&. Provides GUI controls for manual SDO download/upload and raw PDO transmission\&. This dock is a thin UI layer that delegates all CAN transmission to \fBcanopen_sniffer\fP APIs\&. 
 .SS "def _build_menu ( self)\fC [private]\fP"
 
 .PP
@@ -410,6 +442,12 @@ Handle display mode changes from the toolbar\&. Switches between Fixed (aggregat
 \fItext\fP Selected mode string from the combo box\&. 
 .RE
 .PP
+
+.SS "def _on_recv_sdo ( self)\fC [private]\fP"
+
+.SS "def _on_send_pdo ( self)\fC [private]\fP"
+
+.SS "def _on_send_sdo ( self)\fC [private]\fP"
 
 .SS "def _restore_column_widths ( self, QTableWidget table, str table_name)\fC [private]\fP"
 
@@ -593,6 +631,10 @@ Status card widgets and value labels for 'BUS UTIL %'\&.
 
 .PP
 Mode selection combo box\&. 
+.SS "pdo_cob_edit"
+
+.SS "pdo_data_edit"
+
 .SS "pdo_filter"
 
 .PP
@@ -617,6 +659,22 @@ SDO request/response frame rate graph\&.
 
 .PP
 SDO data filter\&. 
+.SS "sdo_index_edit"
+
+.SS "sdo_node_edit"
+
+.SS "sdo_recv_index_edit"
+
+.SS "sdo_recv_node_edit"
+
+.SS "sdo_recv_sub_edit"
+
+.SS "sdo_size_combo"
+
+.SS "sdo_sub_edit"
+
+.SS "sdo_value_edit"
+
 .SS "settings"
 
 .PP

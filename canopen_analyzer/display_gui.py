@@ -52,7 +52,7 @@ from PySide6.QtGui import (
 
 import analyzer_defs as analyzer_defs
 from bus_stats import bus_stats
-
+from canopen_sniffer import canopen_sniffer
 
 class GUIUpdateWorker(QObject):
     """! Background worker for delivering decoded CAN frames to the GUI.
@@ -668,6 +668,348 @@ class CANopenMainWindow(QMainWindow):
         # Clear all tables and graphs to restart display in new mode
         self.clear_tables()
 
+    def _build_left_dock(self):
+        """!
+        @brief Build Remote Node Control dock (SDO / PDO send & receive).
+        @details
+        Provides GUI controls for manual SDO download/upload and
+        raw PDO transmission. This dock is a thin UI layer that
+        delegates all CAN transmission to canopen_sniffer APIs.
+        """
+
+        dock = QDockWidget("Remote Node Control", self)
+        dock.setObjectName("RemoteNodeControlDock")
+        dock.setMinimumWidth(280)
+        dock.setMaximumWidth(320)
+
+        root = QWidget()
+        layout = QVBoxLayout(root)
+        layout.setSpacing(10)
+
+        # ==========================================================
+        # SDO SEND (Download – expedited)
+        # ==========================================================
+        layout.addWidget(QLabel("<b>Send SDO (Write)</b>"))
+
+        self.sdo_node_edit = QLineEdit("0x02")
+        self.sdo_index_edit = QLineEdit("0x6000")
+        self.sdo_sub_edit = QLineEdit("0x00")
+        self.sdo_value_edit = QLineEdit("1")
+
+        self.sdo_size_combo = QComboBox()
+        self.sdo_size_combo.addItems(["1", "2", "4"])
+
+        sdo_send_btn = QPushButton("Send SDO")
+
+        grid = QGridLayout()
+        grid.addWidget(QLabel("Node ID"), 0, 0)
+        grid.addWidget(self.sdo_node_edit, 0, 1)
+        grid.addWidget(QLabel("Index"), 1, 0)
+        grid.addWidget(self.sdo_index_edit, 1, 1)
+        grid.addWidget(QLabel("Sub"), 2, 0)
+        grid.addWidget(self.sdo_sub_edit, 2, 1)
+        grid.addWidget(QLabel("Value"), 3, 0)
+        grid.addWidget(self.sdo_value_edit, 3, 1)
+        grid.addWidget(QLabel("Size (bytes)"), 4, 0)
+        grid.addWidget(self.sdo_size_combo, 4, 1)
+
+        layout.addLayout(grid)
+        layout.addWidget(sdo_send_btn)
+
+        # ==========================================================
+        # SDO RECEIVE (Upload request)
+        # ==========================================================
+        layout.addSpacing(8)
+        layout.addWidget(QLabel("<b>Receive SDO (Read)</b>"))
+
+        self.sdo_recv_node_edit = QLineEdit("0x02")
+        self.sdo_recv_index_edit = QLineEdit("0x6000")
+        self.sdo_recv_sub_edit = QLineEdit("0x00")
+
+        sdo_recv_btn = QPushButton("Receive SDO")
+
+        grid = QGridLayout()
+        grid.addWidget(QLabel("Node ID"), 0, 0)
+        grid.addWidget(self.sdo_recv_node_edit, 0, 1)
+        grid.addWidget(QLabel("Index"), 1, 0)
+        grid.addWidget(self.sdo_recv_index_edit, 1, 1)
+        grid.addWidget(QLabel("Sub"), 2, 0)
+        grid.addWidget(self.sdo_recv_sub_edit, 2, 1)
+
+        layout.addLayout(grid)
+        layout.addWidget(sdo_recv_btn)
+
+        # ==========================================================
+        # PDO SEND (Raw)
+        # ==========================================================
+        layout.addSpacing(8)
+        layout.addWidget(QLabel("<b>Send PDO</b>"))
+
+        self.pdo_cob_edit = QLineEdit("0x181")
+        self.pdo_data_edit = QLineEdit("00 00 00 00 00 00 00 00")
+
+        pdo_send_btn = QPushButton("Send PDO")
+
+        grid = QGridLayout()
+        grid.addWidget(QLabel("COB-ID"), 0, 0)
+        grid.addWidget(self.pdo_cob_edit, 0, 1)
+        grid.addWidget(QLabel("Data (hex)"), 1, 0)
+        grid.addWidget(self.pdo_data_edit, 1, 1)
+
+        layout.addLayout(grid)
+        layout.addWidget(pdo_send_btn)
+
+        layout.addStretch(1)
+        dock.setWidget(root)
+        self.addDockWidget(Qt.LeftDockWidgetArea, dock)
+
+        # ==========================================================
+        # Signal wiring (GUI → sniffer APIs)
+        # ==========================================================
+
+        sdo_send_btn.clicked.connect(self._on_send_sdo)
+        sdo_recv_btn.clicked.connect(self._on_recv_sdo)
+        pdo_send_btn.clicked.connect(self._on_send_pdo)
+
+    def _on_send_sdo(self):
+        try:
+            self.sniffer.send_sdo_download(
+                node_id=int(self.sdo_node_edit.text(), 0),
+                index=int(self.sdo_index_edit.text(), 0),
+                subindex=int(self.sdo_sub_edit.text(), 0),
+                value=int(self.sdo_value_edit.text(), 0),
+                size=int(self.sdo_size_combo.currentText()),
+            )
+        except Exception as e:
+            QToolTip.showText(QCursor.pos(), f"SDO send failed: {e}")
+
+    def _on_recv_sdo(self):
+        try:
+            self.sniffer.send_sdo_upload_request(
+                node_id=int(self.sdo_recv_node_edit.text(), 0),
+                index=int(self.sdo_recv_index_edit.text(), 0),
+                subindex=int(self.sdo_recv_sub_edit.text(), 0),
+            )
+        except Exception as e:
+            QToolTip.showText(QCursor.pos(), f"SDO receive failed: {e}")
+
+    def _on_send_pdo(self):
+        try:
+            data = bytes(int(b, 16) for b in self.pdo_data_edit.text().split())
+            self.sniffer.send_raw_pdo(
+                cob_id=int(self.pdo_cob_edit.text(), 0),
+                data=data,
+            )
+        except Exception as e:
+            QToolTip.showText(QCursor.pos(), f"PDO send failed: {e}")
+
+    def _build_central(self):
+        """! Build the central widget containing protocol, PDO, and SDO tables.
+        @details
+        Constructs the vertically stacked central view used to display
+        decoded CANopen traffic. The central widget consists of:
+        - Protocol Data table
+        - PDO Data table
+        - SDO Data table
+        @note
+        Each table is wrapped with a titled header and filter input.
+        Column sizing and layout behavior are aligned with the CLI
+        table presentation while leveraging Qt interaction features.
+        """
+
+        ## Create a vertical splitter to allow user-resizable sections
+        self.splitter = QSplitter(Qt.Vertical)
+
+        # ------------------------------------------------------------------
+        # Create titled table blocks with per-table filters
+        # ------------------------------------------------------------------
+        ## Protocol data filter
+        self.proto_block, self.proto_table, self.proto_filter = (
+            self._make_titled_table(
+                "Protocol Data",
+                self._make_protocol_table()
+            )
+        )
+
+        ## PDO data filter
+        self.pdo_block, self.pdo_table, self.pdo_filter = (
+            self._make_titled_table(
+                "PDO Data",
+                self._make_pdo_table()
+            )
+        )
+
+        ## SDO data filter
+        self.sdo_block, self.sdo_table, self.sdo_filter = (
+            self._make_titled_table(
+                "SDO Data",
+                self._make_sdo_table()
+            )
+        )
+
+        # ------------------------------------------------------------------
+        # Configure column sizing behavior for each table
+        # ------------------------------------------------------------------
+        # One column per table is allowed to stretch to fill remaining space
+        self._configure_table_columns(
+            self.proto_table,
+            stretch_column_name="Decoded"
+        )
+        self._configure_table_columns(
+            self.pdo_table,
+            stretch_column_name="Name"
+        )
+        self._configure_table_columns(
+            self.sdo_table,
+            stretch_column_name="Name"
+        )
+
+        # ------------------------------------------------------------------
+        # Restore persisted column widths (if available)
+        # ------------------------------------------------------------------
+        self._restore_column_widths(self.proto_table, "protocol")
+        self._restore_column_widths(self.pdo_table, "pdo")
+        self._restore_column_widths(self.sdo_table, "sdo")
+
+        # ------------------------------------------------------------------
+        # Configure splitter space distribution
+        # ------------------------------------------------------------------
+        # Give more space to higher-volume tables (Protocol, PDO)
+        self.splitter.setStretchFactor(0, 3)  # Protocol
+        self.splitter.setStretchFactor(1, 4)  # PDO
+        self.splitter.setStretchFactor(2, 2)  # SDO
+
+        # Add table blocks to the splitter in display order
+        self.splitter.addWidget(self.proto_block)
+        self.splitter.addWidget(self.pdo_block)
+        self.splitter.addWidget(self.sdo_block)
+
+        # Install splitter as the central widget of the main window
+        self.setCentralWidget(self.splitter)
+
+    def _make_titled_table(self, title, table):
+        """! Create a titled table container with an integrated filter bar.
+        @details
+        Wraps a QTableWidget with a title label and a text filter input.
+        The filter allows interactive row filtering based on substring
+        matching across all table columns. This pattern is reused for
+        Protocol, PDO, and SDO tables to ensure consistent UX.
+        @param title Title string displayed above the table.
+        @param table QTableWidget instance to be wrapped.
+        @return Tuple of (container widget, table, filter line edit).
+        """
+
+        # Container widget holding header and table
+        container = QWidget()
+        v = QVBoxLayout(container)
+
+        # ------------------------------------------------------------------
+        # Header row: title + filter controls
+        # ------------------------------------------------------------------
+        header = QHBoxLayout()
+
+        # Title label
+        lbl = QLabel(title)
+        lbl.setStyleSheet("font-weight:600;")
+
+        # Filter input for interactive row filtering
+        flt = QLineEdit()
+        flt.setPlaceholderText("Filter...")
+        flt.textChanged.connect(
+            lambda text, t=table: self._apply_filter(t, text)
+        )
+
+        # Clear button to reset filter text
+        clear_btn = QPushButton("×")
+        clear_btn.setFixedWidth(24)
+        clear_btn.clicked.connect(flt.clear)
+
+        # Assemble header layout
+        header.addWidget(lbl)
+        header.addStretch(1)
+        header.addWidget(QLabel("Filter:"))
+        header.addWidget(flt)
+        header.addWidget(clear_btn)
+
+        # Add header and table to container
+        v.addLayout(header)
+        v.addWidget(table)
+
+        return container, table, flt
+
+    def _make_protocol_table(self):
+        """! Create and configure the Protocol Data table.
+        @details
+        Displays decoded CANopen protocol-level frames, including
+        raw data and decoded textual representation. Column layout
+        mirrors the CLI protocol table.
+        """
+
+        t = QTableWidget(0, 6)
+        t.setHorizontalHeaderLabels(
+            ["Time", "COB-ID", "Type", "Raw", "Decoded", "Count"]
+        )
+        t.setAlternatingRowColors(True)
+
+        return t
+
+    def _make_pdo_table(self):
+        """! Create and configure the PDO Data table.
+        @details
+        Displays PDO-related frames with object dictionary context
+        (index, subindex, name) alongside raw and decoded values.
+        """
+
+        t = QTableWidget(0, 8)
+        t.setHorizontalHeaderLabels(
+            ["Time", "COB-ID", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
+        )
+        t.setAlternatingRowColors(True)
+
+        return t
+
+
+    def _make_sdo_table(self):
+        """! Create and configure the SDO Data table.
+        @details
+        Displays SDO request/response traffic with object dictionary
+        information. Column layout intentionally matches the PDO table
+        for visual consistency.
+        """
+
+        t = QTableWidget(0, 8)
+        t.setHorizontalHeaderLabels(
+            ["Time", "COB-ID", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
+        )
+        t.setAlternatingRowColors(True)
+
+        return t
+
+    def _apply_filter(self, table, text):
+        """! Apply a substring filter to a table.
+        @details
+        Performs a case-insensitive substring match across all columns
+        of each row. Rows that do not contain the filter text in any
+        column are hidden.
+        @param table QTableWidget to which the filter should be applied.
+        @param text Filter text entered by the user.
+        """
+
+        # Normalize filter text for case-insensitive comparison
+        text = text.lower()
+
+        # Iterate through all rows and evaluate match condition
+        for row in range(table.rowCount()):
+            match = False
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                if item and text in item.text().lower():
+                    match = True
+                    break
+
+            # Hide rows that do not match filter criteria
+            table.setRowHidden(row, not match)
+
     def _configure_table_columns(self, table, stretch_column_name: str):
         """! Configure column resize behavior using column names instead of indices.
         @param table: QTableWidget instance
@@ -758,45 +1100,6 @@ class CANopenMainWindow(QMainWindow):
             self._settings_key_for_table(table_name),
             widths
         )
-
-    def _build_left_dock(self):
-        """! Build the Remote Node Control dock.
-        @details
-        Constructs the left-side dock widget that hosts controls
-        related to remote CANopen node interaction. This includes
-        actions such as network scanning and manual PDO/SDO
-        transmission.
-        @note
-        The dock layout mirrors the logical grouping used in the
-        CLI command interface but presents controls in a GUI form.
-        """
-
-        # Create the dock widget and assign a stable object name
-        # (required for layout persistence)
-        dock = QDockWidget("Remote Node Control", self)
-        dock.setObjectName("RemoteNodeControlDock")
-
-        # Constrain dock width to avoid excessive horizontal usage
-        dock.setMinimumWidth(250)
-        dock.setMaximumWidth(300)
-
-        # Root widget for dock contents
-        w = QWidget()
-        l = QVBoxLayout(w)
-
-        # Add placeholder controls for remote node operations
-        for name in ("Scan Network", "Send SDO", "Receive SDO", "Send PDO"):
-            # Section label
-            l.addWidget(QLabel(name))
-            # Corresponding action button
-            l.addWidget(QPushButton(name))
-
-        # Push controls to the top, leaving flexible space below
-        l.addStretch(1)
-
-        # Attach content widget to the dock and dock it on the left
-        dock.setWidget(w)
-        self.addDockWidget(Qt.LeftDockWidgetArea, dock)
 
     def _build_right_dock(self):
         """! Construct and attach the right-side Bus Statistics dock widget.
@@ -1096,213 +1399,6 @@ class CANopenMainWindow(QMainWindow):
         # Finalize and attach dock to the main window.
         dock.setWidget(root)
         self.addDockWidget(Qt.RightDockWidgetArea, dock)
-
-    def _build_central(self):
-        """! Build the central widget containing protocol, PDO, and SDO tables.
-        @details
-        Constructs the vertically stacked central view used to display
-        decoded CANopen traffic. The central widget consists of:
-        - Protocol Data table
-        - PDO Data table
-        - SDO Data table
-        @note
-        Each table is wrapped with a titled header and filter input.
-        Column sizing and layout behavior are aligned with the CLI
-        table presentation while leveraging Qt interaction features.
-        """
-
-        ## Create a vertical splitter to allow user-resizable sections
-        self.splitter = QSplitter(Qt.Vertical)
-
-        # ------------------------------------------------------------------
-        # Create titled table blocks with per-table filters
-        # ------------------------------------------------------------------
-        ## Protocol data filter
-        self.proto_block, self.proto_table, self.proto_filter = (
-            self._make_titled_table(
-                "Protocol Data",
-                self._make_protocol_table()
-            )
-        )
-
-        ## PDO data filter
-        self.pdo_block, self.pdo_table, self.pdo_filter = (
-            self._make_titled_table(
-                "PDO Data",
-                self._make_pdo_table()
-            )
-        )
-
-        ## SDO data filter
-        self.sdo_block, self.sdo_table, self.sdo_filter = (
-            self._make_titled_table(
-                "SDO Data",
-                self._make_sdo_table()
-            )
-        )
-
-        # ------------------------------------------------------------------
-        # Configure column sizing behavior for each table
-        # ------------------------------------------------------------------
-        # One column per table is allowed to stretch to fill remaining space
-        self._configure_table_columns(
-            self.proto_table,
-            stretch_column_name="Decoded"
-        )
-        self._configure_table_columns(
-            self.pdo_table,
-            stretch_column_name="Name"
-        )
-        self._configure_table_columns(
-            self.sdo_table,
-            stretch_column_name="Name"
-        )
-
-        # ------------------------------------------------------------------
-        # Restore persisted column widths (if available)
-        # ------------------------------------------------------------------
-        self._restore_column_widths(self.proto_table, "protocol")
-        self._restore_column_widths(self.pdo_table, "pdo")
-        self._restore_column_widths(self.sdo_table, "sdo")
-
-        # ------------------------------------------------------------------
-        # Configure splitter space distribution
-        # ------------------------------------------------------------------
-        # Give more space to higher-volume tables (Protocol, PDO)
-        self.splitter.setStretchFactor(0, 3)  # Protocol
-        self.splitter.setStretchFactor(1, 4)  # PDO
-        self.splitter.setStretchFactor(2, 2)  # SDO
-
-        # Add table blocks to the splitter in display order
-        self.splitter.addWidget(self.proto_block)
-        self.splitter.addWidget(self.pdo_block)
-        self.splitter.addWidget(self.sdo_block)
-
-        # Install splitter as the central widget of the main window
-        self.setCentralWidget(self.splitter)
-
-    def _make_titled_table(self, title, table):
-        """! Create a titled table container with an integrated filter bar.
-        @details
-        Wraps a QTableWidget with a title label and a text filter input.
-        The filter allows interactive row filtering based on substring
-        matching across all table columns. This pattern is reused for
-        Protocol, PDO, and SDO tables to ensure consistent UX.
-        @param title Title string displayed above the table.
-        @param table QTableWidget instance to be wrapped.
-        @return Tuple of (container widget, table, filter line edit).
-        """
-
-        # Container widget holding header and table
-        container = QWidget()
-        v = QVBoxLayout(container)
-
-        # ------------------------------------------------------------------
-        # Header row: title + filter controls
-        # ------------------------------------------------------------------
-        header = QHBoxLayout()
-
-        # Title label
-        lbl = QLabel(title)
-        lbl.setStyleSheet("font-weight:600;")
-
-        # Filter input for interactive row filtering
-        flt = QLineEdit()
-        flt.setPlaceholderText("Filter...")
-        flt.textChanged.connect(
-            lambda text, t=table: self._apply_filter(t, text)
-        )
-
-        # Clear button to reset filter text
-        clear_btn = QPushButton("×")
-        clear_btn.setFixedWidth(24)
-        clear_btn.clicked.connect(flt.clear)
-
-        # Assemble header layout
-        header.addWidget(lbl)
-        header.addStretch(1)
-        header.addWidget(QLabel("Filter:"))
-        header.addWidget(flt)
-        header.addWidget(clear_btn)
-
-        # Add header and table to container
-        v.addLayout(header)
-        v.addWidget(table)
-
-        return container, table, flt
-
-    def _make_protocol_table(self):
-        """! Create and configure the Protocol Data table.
-        @details
-        Displays decoded CANopen protocol-level frames, including
-        raw data and decoded textual representation. Column layout
-        mirrors the CLI protocol table.
-        """
-
-        t = QTableWidget(0, 6)
-        t.setHorizontalHeaderLabels(
-            ["Time", "COB-ID", "Type", "Raw", "Decoded", "Count"]
-        )
-        t.setAlternatingRowColors(True)
-
-        return t
-
-    def _make_pdo_table(self):
-        """! Create and configure the PDO Data table.
-        @details
-        Displays PDO-related frames with object dictionary context
-        (index, subindex, name) alongside raw and decoded values.
-        """
-
-        t = QTableWidget(0, 8)
-        t.setHorizontalHeaderLabels(
-            ["Time", "COB-ID", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
-        )
-        t.setAlternatingRowColors(True)
-
-        return t
-
-
-    def _make_sdo_table(self):
-        """! Create and configure the SDO Data table.
-        @details
-        Displays SDO request/response traffic with object dictionary
-        information. Column layout intentionally matches the PDO table
-        for visual consistency.
-        """
-
-        t = QTableWidget(0, 8)
-        t.setHorizontalHeaderLabels(
-            ["Time", "COB-ID", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
-        )
-        t.setAlternatingRowColors(True)
-
-        return t
-
-    def _apply_filter(self, table, text):
-        """! Apply a substring filter to a table.
-        @details
-        Performs a case-insensitive substring match across all columns
-        of each row. Rows that do not contain the filter text in any
-        column are hidden.
-        @param table QTableWidget to which the filter should be applied.
-        @param text Filter text entered by the user.
-        """
-
-        # Normalize filter text for case-insensitive comparison
-        text = text.lower()
-
-        # Iterate through all rows and evaluate match condition
-        for row in range(table.rowCount()):
-            match = False
-            for col in range(table.columnCount()):
-                item = table.item(row, col)
-                if item and text in item.text().lower():
-                    match = True
-                    break
-
-            # Hide rows that do not match filter criteria
-            table.setRowHidden(row, not match)
 
     def _restore_layout(self):
         """! Restore persisted window and layout state.

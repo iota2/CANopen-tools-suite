@@ -139,6 +139,11 @@ class canopen_sniffer(threading.Thread):
         except Exception:
             self.log.warning("Network connection failed (not critical)")
 
+    def _ensure_bus(self):
+        """! Ensure CAN bus is available before transmitting."""
+        if not getattr(self, "bus", None):
+            raise RuntimeError("CAN bus not initialized")
+
     # --- CSV export helper ---
     def save_frame_to_csv(self, cob: int, error: bool, raw: str):
         """! Save a received CAN frame (raw view) to the CSV export file.
@@ -173,8 +178,8 @@ class canopen_sniffer(threading.Thread):
             self.log.error("CSV export failed: %s", e)
 
 
-    # --- message handling ---
-    def handle_message(self, msg: can.Message):
+    # --- Message handling ---
+    def handle_received_message(self, msg: can.Message):
         """! Handle a received CAN message.
         @details
         Extracts arbitration id, raw payload and error flag, builds a small
@@ -196,12 +201,94 @@ class canopen_sniffer(threading.Thread):
         # Export to CSV
         self.save_frame_to_csv(cob, error, analyzer_defs.bytes_to_hex(raw))
 
+    # --- SDO Download (Expedited Write) ---
+    def send_sdo_download(self, node_id: int, index: int, subindex: int, value: int, size: int):
+        """! Send expedited SDO download (write).
+        @param node_id Node ID (1–127)
+        @param index Object Dictionary index
+        @param subindex Subindex
+        @param value Integer value to write
+        @param size Data size in bytes (1,2,4)
+        """
+
+        self._ensure_bus()
+
+        if size not in (1, 2, 4):
+            raise ValueError("SDO expedited size must be 1, 2 or 4 bytes")
+
+        # Command specifier
+        cs_map = {1: 0x2F, 2: 0x2B, 4: 0x23}
+        cs = cs_map[size]
+
+        payload = bytearray(8)
+        payload[0] = cs
+        payload[1] = index & 0xFF
+        payload[2] = (index >> 8) & 0xFF
+        payload[3] = subindex & 0xFF
+        payload[4:4+size] = value.to_bytes(size, "little", signed=False)
+
+        cob_id = 0x600 + node_id
+
+        msg = can.Message(
+            arbitration_id=cob_id,
+            data=bytes(payload),
+            is_extended_id=False
+        )
+
+        self.bus.send(msg)
+
+    # --- SDO Upload Request (Read) ---
+    def send_sdo_upload_request(self, node_id: int, index: int, subindex: int):
+        """! Send SDO upload request (read).
+        @param node_id Node ID (1–127)
+        @param index Object Dictionary index
+        @param subindex Subindex
+        """
+
+        self._ensure_bus()
+
+        payload = bytearray(8)
+        payload[0] = 0x40  # Initiate upload
+        payload[1] = index & 0xFF
+        payload[2] = (index >> 8) & 0xFF
+        payload[3] = subindex & 0xFF
+
+        cob_id = 0x600 + node_id
+
+        msg = can.Message(
+            arbitration_id=cob_id,
+            data=bytes(payload),
+            is_extended_id=False
+        )
+
+        self.bus.send(msg)
+
+    # --- Raw PDO Send ---
+    def send_raw_pdo(self, cob_id: int, data: bytes):
+        """! Send raw PDO frame.
+        @param cob_id PDO COB-ID
+        @param data Up to 8 bytes
+        """
+
+        self._ensure_bus()
+
+        if len(data) > 8:
+            raise ValueError("PDO data length must be <= 8 bytes")
+
+        msg = can.Message(
+            arbitration_id=cob_id,
+            data=data,
+            is_extended_id=False
+        )
+
+        self.bus.send(msg)
+
     def run(self):
         """! Main loop of the sniffer thread.
         @details
         Continuously receives frames from the CAN bus using a short timeout,
         handles interrupt-like exceptions gracefully, and delegates message
-        processing to `handle_message`. On exit, CSV file and bus resources
+        processing to `handle_received_message`. On exit, CSV file and bus resources
         are closed/shutdown cleanly.
         """
         self.log.info("Sniffer thread started (interface=%s)", self.interface)
@@ -248,7 +335,7 @@ class canopen_sniffer(threading.Thread):
                 # Received message, handle it
                 if msg:
                     try:
-                        self.handle_message(msg)
+                        self.handle_received_message(msg)
                     except Exception:
                         self.log.exception("Exception while handling message")
         finally:

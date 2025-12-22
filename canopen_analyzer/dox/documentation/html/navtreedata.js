@@ -76,7 +76,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "analyzer__defs_8py.html",
-"index.html#autotoc_md12"
+"functions_i.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
