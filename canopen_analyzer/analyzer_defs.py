@@ -87,6 +87,9 @@ PROTOCOL_TABLE_HEIGHT = 15
 ## Width of the graphs in the CLI interface (in characters).
 STATS_GRAPH_WIDTH = 20
 
+## Minimum number of values to be shown in Bus stats window.
+MIN_STATS_SHOW = 3
+
 ## Maximum number of values to be shown in Bus stats window.
 MAX_STATS_SHOW = 5
 

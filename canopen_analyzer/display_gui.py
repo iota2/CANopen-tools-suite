@@ -153,15 +153,40 @@ class MultiRateLineWidget(QWidget):
         font.setBold(True)
 
         # Create one header label per rate series
-        for name, color in series_defs:
-            lbl = QLabel(f"{name}: 0.0 fps")
+        self.header_left = QWidget()
+        self.header_right = QWidget()
+
+        left_layout = QHBoxLayout(self.header_left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(0)
+
+        right_layout = QHBoxLayout(self.header_right)
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(0)
+
+        # Create labels deterministically
+        names = [name for name, _ in series_defs]
+
+        if len(names) >= 1:
+            lbl = QLabel()
             lbl.setFont(font)
-            lbl.setStyleSheet(f"color: {QColor(color).name()};")
-            header_layout.addWidget(lbl)
-            self.header_labels[name] = lbl
+            lbl.setStyleSheet(f"color: {QColor(series_defs[0][1]).name()};")
+            left_layout.addWidget(lbl)
+            self.header_labels[names[0]] = lbl
+            lbl.setText(f"{names[0]}: 0.0 fps")
+
+        if len(names) >= 2:
+            lbl = QLabel()
+            lbl.setFont(font)
+            lbl.setStyleSheet(f"color: {QColor(series_defs[1][1]).name()};")
+            right_layout.addWidget(lbl)
+            self.header_labels[names[1]] = lbl
+            lbl.setText(f"{names[0]}: 0.0 fps")
 
         # Stretch pushes header labels to the left
+        header_layout.addWidget(self.header_left)
         header_layout.addStretch(1)
+        header_layout.addWidget(self.header_right)
 
         root.addWidget(header)
 
@@ -372,12 +397,15 @@ class MultiRateLineWidget(QWidget):
             if hist:
                 ymax = max(ymax, max(hist))
 
+            # --------------------------------------------------
             # Update textual FPS indicator in the header
-            self.header_labels[name].setText(
-                f"{name}: {values.get(name, 0.0):4.1f} fps        "
-            )
+            # --------------------------------------------------
+            lbl = self.header_labels[name]
+            lbl.setText(f"{name}: {values.get(name, 0.0):4.1f} fps")
 
+            # --------------------------------------------------
             # Update peak indicator line for this series
+            # --------------------------------------------------
             peak_series = self.peak_lines[name]
             peak_series.clear()
 
@@ -395,7 +423,6 @@ class MultiRateLineWidget(QWidget):
         # Scale Y-axis slightly above the maximum observed FPS
         # to provide visual headroom above plotted lines
         self.axis_y.setRange(0, max(1.0, ymax * 1.2))
-
 
     def resizeEvent(self, event):
         """! Handle widget resize events.
@@ -1479,24 +1506,46 @@ class CANopenMainWindow(QMainWindow):
         else:
             self.bus_labels["Last Error Frame"].setText("-")
 
-        # Display top CAN identifiers by frame count.
-        top = snap.top_talkers.most_common(analyzer_defs.MAX_STATS_SHOW)
-        self.bus_labels["Top Talkers"].setText(
-            ", ".join(f"0x{c:03X}:{n}" for c, n in top) if top else "-"
-        )
+        # Top Talkers: show MIN_STATS_SHOW, tooltip shows MAX_STATS_SHOW
+        top_all = snap.top_talkers.most_common(analyzer_defs.MAX_STATS_SHOW)
+        top_disp = top_all[:analyzer_defs.MIN_STATS_SHOW]
 
-        # Display frame distribution grouped by frame type.
-        dist = sorted(
+        if top_disp:
+            text = ", ".join(f"0x{c:03X}:{n}" for c, n in top_disp)
+            tooltip = ", ".join(f"0x{c:03X}:{n}" for c, n in top_all)
+        else:
+            text = "-"
+            tooltip = "No talkers"
+
+        lbl = self.bus_labels["Top Talkers"]
+        lbl.setText(text)
+        lbl.setToolTip(f"Top Talkers:\n{tooltip}")
+
+        if len(top_all) > analyzer_defs.MIN_STATS_SHOW:
+            lbl.setText(text + " …")
+
+        # Frame Distribution: show MIN_STATS_SHOW, tooltip shows MAX_STATS_SHOW
+        dist_all = sorted(
             ((k.name, v) for k, v in snap.frame_count.counts.items()),
             key=lambda kv: kv[1],
             reverse=True
-        )
-        self.bus_labels["Frame Dist."].setText(
-            ", ".join(
-                f"{k}:{v}"
-                for k, v in dist[:analyzer_defs.MAX_STATS_SHOW]
-            ) if dist else "-"
-        )
+        )[:analyzer_defs.MAX_STATS_SHOW]
+
+        dist_disp = dist_all[:analyzer_defs.MIN_STATS_SHOW]
+
+        if dist_disp:
+            text = ", ".join(f"{k}:{v}" for k, v in dist_disp)
+            tooltip = ", ".join(f"{k}:{v}" for k, v in dist_all)
+        else:
+            text = "-"
+            tooltip = "No frames"
+
+        lbl = self.bus_labels["Frame Dist."]
+        lbl.setText(text)
+        lbl.setToolTip(f"Frame Distribution:\n{tooltip}")
+
+        if len(dist_all) > analyzer_defs.MIN_STATS_SHOW:
+            lbl.setText(text + " …")
 
         # ------------------------------------------------------------------
         # Update frame-rate history graphs

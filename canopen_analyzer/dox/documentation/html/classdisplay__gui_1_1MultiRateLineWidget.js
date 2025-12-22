@@ -13,6 +13,8 @@ var classdisplay__gui_1_1MultiRateLineWidget =
     [ "chart", "classdisplay__gui_1_1MultiRateLineWidget.html#a7d6a8315d94c77f3ba1f1a2d8640efdb", null ],
     [ "header_labels", "classdisplay__gui_1_1MultiRateLineWidget.html#a1eab9b9f77b4935c5fd92ec2534c659e", null ],
     [ "header_layout", "classdisplay__gui_1_1MultiRateLineWidget.html#ac6eb9d700f7422eb37cac22ac5c5cb57", null ],
+    [ "header_left", "classdisplay__gui_1_1MultiRateLineWidget.html#af093cccbb3fba205c54e2174e26c2c0d", null ],
+    [ "header_right", "classdisplay__gui_1_1MultiRateLineWidget.html#a5e41011457240acdd33322f2d7d45a6e", null ],
     [ "max_points", "classdisplay__gui_1_1MultiRateLineWidget.html#a043afb44cd3575db763c65fd445a5858", null ],
     [ "peak_lines", "classdisplay__gui_1_1MultiRateLineWidget.html#ad084debca98ee574b4e8abb36576d7e1", null ],
     [ "series", "classdisplay__gui_1_1MultiRateLineWidget.html#a2f978b1094edb50fb4601136b7005315", null ],

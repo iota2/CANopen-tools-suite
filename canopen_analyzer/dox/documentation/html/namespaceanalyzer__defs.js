@@ -15,6 +15,7 @@ var namespaceanalyzer__defs =
     [ "LOG_LEVEL", "namespaceanalyzer__defs.html#aa5a9053636a30269210c54e734e0d583", null ],
     [ "MAX_FRAMES", "namespaceanalyzer__defs.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
     [ "MAX_STATS_SHOW", "namespaceanalyzer__defs.html#aa6fda8207dcce3b56fd8ed0ff3ec827e", null ],
+    [ "MIN_STATS_SHOW", "namespaceanalyzer__defs.html#a80c4d7f9c3a827951418fea4187ad0df", null ],
     [ "PROTOCOL_TABLE_HEIGHT", "namespaceanalyzer__defs.html#ad34b850f413d130ec4a6f42787217af6", null ],
     [ "root_logger", "namespaceanalyzer__defs.html#af2fe9aec0484a8d331ffcbc182d64af3", null ],
     [ "STATS_GRAPH_WIDTH", "namespaceanalyzer__defs.html#a8df7572f27a774cf8035bd3d4e9cc752", null ]
