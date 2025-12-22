@@ -1,8 +1,0 @@
-var classdisplay__gui_1_1display__gui =
-[
-    [ "__init__", "classdisplay__gui_1_1display__gui.html#a71f404a4f380d5b50080e705aac9909b", null ],
-    [ "run", "classdisplay__gui_1_1display__gui.html#ad22709b2e67308af35f55680d5a026e0", null ],
-    [ "stop", "classdisplay__gui_1_1display__gui.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
-    [ "log", "classdisplay__gui_1_1display__gui.html#ab09a63eb35b270b5cdbead1983ebdccb", null ],
-    [ "processed_frame", "classdisplay__gui_1_1display__gui.html#a5e5acd6f2030a04dbe189a2b21363c3a", null ]
-];

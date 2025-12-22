@@ -84,7 +84,8 @@ $(document).ready(function(){initNavTree('namespacedisplay__gui.html',''); initR
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">display_gui Namespace Reference</div>  </div>
 </div><!--header-->
@@ -92,10 +93,67 @@ $(document).ready(function(){initNavTree('namespacedisplay__gui.html',''); initR
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1display__gui.html">display_gui</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder GUI display thread — for now consume queue and log the frames.  <a href="classdisplay__gui_1_1display__gui.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html">CANopenMainWindow</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main application window for the CANopen Analyzer GUI.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1GUIUpdateWorker.html">GUIUpdateWorker</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background worker for delivering decoded CAN frames to the GUI.  <a href="classdisplay__gui_1_1GUIUpdateWorker.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1MultiRateLineWidget.html">MultiRateLineWidget</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a8247158519186ad09cce5855219efdb0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedisplay__gui.html#a8247158519186ad09cce5855219efdb0">display_gui</a> (stats, processed_frame, fixed=False)</td></tr>
+<tr class="memdesc:a8247158519186ad09cce5855219efdb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Launch the CANopen Analyzer GUI application.  <a href="namespacedisplay__gui.html#a8247158519186ad09cce5855219efdb0">More...</a><br /></td></tr>
+<tr class="separator:a8247158519186ad09cce5855219efdb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a8247158519186ad09cce5855219efdb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8247158519186ad09cce5855219efdb0">&#9670;&nbsp;</a></span>display_gui()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def display_gui.display_gui </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>stats</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>processed_frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>fixed</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Launch the CANopen Analyzer GUI application. </p>
+<p>Creates the Qt application instance, initializes the main window, and starts a background worker thread to deliver decoded CAN frames to the GUI. This function also installs proper Ctrl+C (SIGINT) handling so that the application shuts down cleanly when run from a terminal. </p><dl class="section note"><dt>Note</dt><dd>The worker thread communicates with the GUI exclusively via Qt signals to ensure thread safety. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stats</td><td>Shared bus statistics object used by the GUI. </td></tr>
+    <tr><td class="paramname">processed_frame</td><td>Thread-safe queue containing decoded CAN frames from the backend. </td></tr>
+    <tr><td class="paramname">fixed</td><td>If True, start in Fixed (aggregated) display mode; otherwise start in Sequential mode. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- docs/doxygen_footer.html -->

@@ -20,7 +20,7 @@ textual>=0.44.0     # Textual-based TUI
 rich>=13.7.0        # Rich tables & CLI rendering
 
 # Optional GUI backend (not required by default)
-pyqt5>=5.15.9       # GUI placeholder backend
+PySide6>=6.6        # GUI placeholder backend
 
 # Utilities
 pyyaml>=6.0.1       # Config & metadata helpers

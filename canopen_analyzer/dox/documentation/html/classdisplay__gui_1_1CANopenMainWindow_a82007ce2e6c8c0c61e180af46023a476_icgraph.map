@@ -1,0 +1,5 @@
+<map id="_settings_key_for_table" name="_settings_key_for_table">
+<area shape="rect" id="node1" title="Generate a QSettings key for storing table column widths." alt="" coords="233,31,409,57"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211" title="Restore column widths for a table from persistent settings." alt="" coords="5,5,185,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a89031e360e49efb6136631a6aa7c2557" title="Persist current column widths for a table." alt="" coords="13,56,178,83"/>
+</map>

@@ -62,7 +62,7 @@ var NAVTREE =
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ]
       ] ]
@@ -75,7 +75,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"analyzer__defs_8py.html"
+"analyzer__defs_8py.html",
+"index.html#autotoc_md16"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

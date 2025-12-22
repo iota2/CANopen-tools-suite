@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sdo_5fstats_142',['sdo_stats',['../classbus__stats_1_1bus__stats_1_1sdo__stats.html',1,'bus_stats::bus_stats']]],
-  ['stats_5fdata_143',['stats_data',['../classbus__stats_1_1bus__stats_1_1stats__data.html',1,'bus_stats::bus_stats']]]
+  ['payload_5fsize_214',['payload_size',['../classbus__stats_1_1bus__stats_1_1payload__size.html',1,'bus_stats::bus_stats']]],
+  ['process_5fframes_215',['process_frames',['../classprocess__frames_1_1process__frames.html',1,'process_frames']]]
 ];

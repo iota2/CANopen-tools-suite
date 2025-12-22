@@ -1,4 +1,4 @@
-.TH "display_cli" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_cli" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -47,6 +47,7 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .ti -1c
 .RI "def \fBstop\fP (self)"
 .br
+.RI "Stop CLI display\&. "
 .in -1c
 .SS "Public Attributes"
 
@@ -96,6 +97,13 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Private instance for pointing to incoming bus stats\&. "
 .in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_stop_event\fP"
+.br
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue processed_frame, bool  fixed = \fCFalse\fP)"
@@ -138,8 +146,12 @@ Run CLI based CANopen display\&.
 Create a compact sparkline Text from a numeric history sequence\&. 
 .SS "def stop ( self)"
 
+.PP
+Stop CLI display\&. 
 .SH "Member Data Documentation"
 .PP 
+.SS "_stop_event\fC [private]\fP"
+
 .SS "console"
 
 .PP

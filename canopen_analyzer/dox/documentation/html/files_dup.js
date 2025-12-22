@@ -17,9 +17,7 @@ var files_dup =
     [ "display_cli.py", "display__cli_8py.html", [
       [ "display_cli", "classdisplay__cli_1_1display__cli.html", "classdisplay__cli_1_1display__cli" ]
     ] ],
-    [ "display_gui.py", "display__gui_8py.html", [
-      [ "display_gui", "classdisplay__gui_1_1display__gui.html", "classdisplay__gui_1_1display__gui" ]
-    ] ],
+    [ "display_gui.py", "display__gui_8py.html", "display__gui_8py" ],
     [ "display_tui.py", "display__tui_8py.html", "display__tui_8py" ],
     [ "eds_parser.py", "eds__parser_8py.html", [
       [ "eds_parser", "classeds__parser_1_1eds__parser.html", "classeds__parser_1_1eds__parser" ]

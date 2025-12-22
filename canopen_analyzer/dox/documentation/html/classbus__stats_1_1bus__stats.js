@@ -7,6 +7,7 @@ var classbus__stats_1_1bus__stats =
     [ "sdo_stats", "classbus__stats_1_1bus__stats_1_1sdo__stats.html", null ],
     [ "stats_data", "classbus__stats_1_1bus__stats_1_1stats__data.html", null ],
     [ "__init__", "classbus__stats_1_1bus__stats.html#a22dbbf611ba724011c476f362b1efeca", null ],
+    [ "_rate_sampler", "classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d", null ],
     [ "add_node", "classbus__stats_1_1bus__stats.html#ac8f70966bf334462b64f0bcf6e1f7474", null ],
     [ "count_talker", "classbus__stats_1_1bus__stats.html#a1bdcbcf5c0482abf7e2de86096f8e6c0", null ],
     [ "get_frame_count", "classbus__stats_1_1bus__stats.html#a9480e29b9457981a85869e59132b8e7c", null ],
@@ -22,6 +23,11 @@ var classbus__stats_1_1bus__stats =
     [ "update_rates", "classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced", null ],
     [ "update_sdo_request_time", "classbus__stats_1_1bus__stats.html#a2a6107d8e745cc7e16919053c332fea7", null ],
     [ "update_sdo_response_time", "classbus__stats_1_1bus__stats.html#a4d50a0e52bf7775a3c7b0906a4b8868a", null ],
+    [ "_lock", "classbus__stats_1_1bus__stats.html#ad37f5e32ae1664782c9fb2eb221a8525", null ],
+    [ "_rate_interval", "classbus__stats_1_1bus__stats.html#a08b380fce0fe1b4ec1d76651b71f8fb3", null ],
+    [ "_rate_sampler_stop", "classbus__stats_1_1bus__stats.html#a852d53227e1c00abda22d6aa2f598cde", null ],
+    [ "_rate_sampler_thread", "classbus__stats_1_1bus__stats.html#a407727c37132b0bb02453241a0c403b3", null ],
+    [ "_stats", "classbus__stats_1_1bus__stats.html#afd718a60ddf264f547832a13a1687c5d", null ],
     [ "bitrate", "classbus__stats_1_1bus__stats.html#a9ba628ef53aa2760ee08afab49765d42", null ],
     [ "log", "classbus__stats_1_1bus__stats.html#ab09a63eb35b270b5cdbead1983ebdccb", null ]
 ];

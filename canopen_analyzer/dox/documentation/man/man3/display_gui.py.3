@@ -1,4 +1,4 @@
-.TH "display_gui.py" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_gui.py" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,9 +10,16 @@ display_gui.py
 
 .in +1c
 .ti -1c
-.RI "class \fBdisplay_gui\fP"
+.RI "class \fBCANopenMainWindow\fP"
 .br
-.RI "Placeholder GUI display thread — for now consume queue and log the frames\&. "
+.RI "Main application window for the CANopen Analyzer GUI\&. "
+.ti -1c
+.RI "class \fBGUIUpdateWorker\fP"
+.br
+.RI "Background worker for delivering decoded CAN frames to the GUI\&. "
+.ti -1c
+.RI "class \fBMultiRateLineWidget\fP"
+.br
 .in -1c
 .SS "Namespaces"
 
@@ -20,6 +27,14 @@ display_gui.py
 .ti -1c
 .RI " \fBdisplay_gui\fP"
 .br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBdisplay_gui\fP (stats, processed_frame, fixed=False)"
+.br
+.RI "Launch the CANopen Analyzer GUI application\&. "
 .in -1c
 .SH "Author"
 .PP 

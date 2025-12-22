@@ -72,6 +72,7 @@ class display_cli(threading.Thread):
         @param fixed When True, tables operate in fixed-index mode; otherwise they show scrolling entries.
         @return None
         """
+
         super().__init__(daemon=True)
 
         ## Private instance for pointing to incoming processed frames.
@@ -111,6 +112,7 @@ class display_cli(threading.Thread):
 
     def sparkline(self, history, style="white"):
         """! Create a compact sparkline Text from a numeric history sequence."""
+
         if not history:
             return ""
         # ensure we operate on a plain list of floats
@@ -135,6 +137,7 @@ class display_cli(threading.Thread):
 
     def build_bus_stats_table(self):
         """! Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)."""
+
         snapshot = self.stats.get_snapshot()
 
         metric_labels = [
@@ -265,6 +268,7 @@ class display_cli(threading.Thread):
 
     def render_tables(self):
         """! Render tables for displaying CLI data."""
+
         # Protocol Data
         t_proto = Table(title="Protocol Data", expand=True, box=box.SQUARE, style="cyan")
         t_proto.add_column("Time", no_wrap=True)
@@ -327,6 +331,7 @@ class display_cli(threading.Thread):
 
     def run(self):
         """! Run CLI based CANopen display."""
+
         self.log.info("display_cli started")
         # Use Live to update the complete dashboard
         with Live(console=self.console, refresh_per_second=5, screen=True) as live:
@@ -405,6 +410,8 @@ class display_cli(threading.Thread):
                 self.log.info("display_cli exiting")
 
     def stop(self):
+        """! Stop CLI display."""
+
         self._stop_event.set()
         self.log.debug("display_cli stop requested")
 

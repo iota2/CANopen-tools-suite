@@ -6,6 +6,7 @@ var classprocess__frames_1_1process__frames =
     [ "save_frame_to_csv", "classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3", null ],
     [ "save_processed_frame", "classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320", null ],
     [ "stop", "classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
+    [ "_stop_event", "classprocess__frames_1_1process__frames.html#a2c9373a2aa1f4cdf3e6c936e81b17267", null ],
     [ "eds_map", "classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c", null ],
     [ "export", "classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd", null ],
     [ "export_file", "classprocess__frames_1_1process__frames.html#afdcb13a7e8e9ec20376d877dbae55960", null ],

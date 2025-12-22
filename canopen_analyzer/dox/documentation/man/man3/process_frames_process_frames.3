@@ -1,4 +1,4 @@
-.TH "process_frames" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "process_frames" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -99,6 +99,14 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .RI "\fBstats\fP"
 .br
 .RI "Reference to the \fBbus_stats\fP instance used for recording metrics\&. "
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_stop_event\fP"
+.br
+.RI "Internal event used to signal the run loop to stop\&. "
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
@@ -202,6 +210,10 @@ Save a fully processed CANopen frame in memory and export it to CSV\&. Converts 
 Request the processor thread to stop\&. Signals the internal stop event so the processing loop exits at the next opportunity\&. This method does not block waiting for thread exit; call \fCjoin()\fP on the thread object if synchronous shutdown is required\&. 
 .SH "Member Data Documentation"
 .PP 
+.SS "_stop_event\fC [private]\fP"
+
+.PP
+Internal event used to signal the run loop to stop\&. 
 .SS "eds_map"
 
 .PP

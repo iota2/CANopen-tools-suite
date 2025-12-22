@@ -80,7 +80,18 @@ except ImportError:
         from can.interfaces.pcap import PcapWriter   # older versions
     except ImportError:
         PcapWriter = None
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt6 import QtWidgets, QtCore, QtGui
+
+# ---- PyQt6 enum aliases (Qt6-safe) ----
+QtAlign = QtCore.Qt.AlignmentFlag
+QtContext = QtCore.Qt.ContextMenuPolicy
+QtDock = QtCore.Qt.DockWidgetArea
+QSel = QtWidgets.QAbstractItemView.SelectionBehavior
+QSelMode = QtWidgets.QAbstractItemView.SelectionMode
+QEdit = QtWidgets.QAbstractItemView.EditTrigger
+QResize = QtWidgets.QHeaderView.ResizeMode
+QComboSize = QtWidgets.QComboBox.SizeAdjustPolicy
+
 
 
 import logging
@@ -128,16 +139,46 @@ def color_for_cob(cob: int) -> QtGui.QColor:
     return QtGui.QColor(r, g, b)
 
 def color_for_type(ftype: str) -> QtGui.QColor:
+    """Row background colors tuned for dark mode readability."""
     if ftype == "PDO":
-        return QtGui.QColor(220, 240, 255)
+        return QtGui.QColor(45, 75, 110)     # blue
     if ftype == "SDO":
-        return QtGui.QColor(220, 255, 220)
+        return QtGui.QColor(45, 95, 65)      # green
     if ftype in ("Heartbeat", "Emergency", "Time"):
-        return QtGui.QColor(255, 250, 200)
-    return QtGui.QColor(245, 245, 245)
+        return QtGui.QColor(110, 95, 45)     # amber
+    return QtGui.QColor(40, 40, 40)          # default dark
 
 def bytes_to_hex_str(b: bytes) -> str:
     return " ".join(f"{x:02X}" for x in b)
+
+# ---------------- Theme helpers (Qt6) ----------------
+
+def apply_dark_theme(app: QtWidgets.QApplication):
+    palette = QtGui.QPalette()
+
+    palette.setColor(QtGui.QPalette.ColorRole.Window, QtGui.QColor(30, 30, 30))
+    palette.setColor(QtGui.QPalette.ColorRole.WindowText, QtGui.QColor(220, 220, 220))
+    palette.setColor(QtGui.QPalette.ColorRole.Base, QtGui.QColor(25, 25, 25))
+    palette.setColor(QtGui.QPalette.ColorRole.AlternateBase, QtGui.QColor(35, 35, 35))
+    palette.setColor(QtGui.QPalette.ColorRole.Text, QtGui.QColor(220, 220, 220))
+    palette.setColor(QtGui.QPalette.ColorRole.Button, QtGui.QColor(45, 45, 45))
+    palette.setColor(QtGui.QPalette.ColorRole.ButtonText, QtGui.QColor(220, 220, 220))
+    palette.setColor(QtGui.QPalette.ColorRole.Highlight, QtGui.QColor(90, 140, 200))
+    palette.setColor(QtGui.QPalette.ColorRole.HighlightedText, QtGui.QColor(0, 0, 0))
+
+    app.setPalette(palette)
+
+
+def apply_light_theme(app: QtWidgets.QApplication):
+    app.setPalette(app.style().standardPalette())
+
+
+def apply_os_theme(app: QtWidgets.QApplication):
+    """
+    Reset to OS / desktop theme.
+    Qt will pick GNOME/KDE dark/light automatically.
+    """
+    app.setPalette(app.style().standardPalette())
 
 # ---------------- ODVariableMapper ----------------
 class ODVariableMapper:
@@ -877,7 +918,7 @@ class COBHistogram(QtWidgets.QWidget):
             painter.setPen(QtGui.QPen(QtGui.QColor(80,80,80)))
             painter.drawRect(bar_rect)
             label = f"0x{cob:03X}"
-            painter.drawText(x, plot.bottom()-18, bar_width, 16, QtCore.Qt.AlignCenter, label)
+            painter.drawText(x, plot.bottom()-18, bar_width, 16, QtCore.Qt.AlignmentFlag.AlignCenter, label)
             x += bar_width + gap
         painter.end()
 
@@ -974,7 +1015,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.clear_filter_btn = QtWidgets.QPushButton("Clear Filter")
         self.mode_combo = QtWidgets.QComboBox(); self.mode_combo.addItems(["Fixed", "Sequential"])
         self.mode_combo.setMinimumContentsLength(12)
-        self.mode_combo.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        self.mode_combo.setSizeAdjustPolicy(QtWidgets.QComboBox.SizeAdjustPolicy.AdjustToContents)
         self.decimals_spin = QtWidgets.QSpinBox(); self.decimals_spin.setRange(0,8); self.decimals_spin.setValue(3)
 
         toolbar.addWidget(self.pause_btn); toolbar.addWidget(self.clear_btn)
@@ -993,11 +1034,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table = QtWidgets.QTableWidget(0, 11)
         headers = ["Time", "Node ID", "COB-ID", "Type", "Name", "Index", "Subindex", "Data Type", "Raw Data", "Decoded Data", "Count"]
         self.table.setHorizontalHeaderLabels(headers)
-        self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.table.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+        self.table.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.table.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table.setAlternatingRowColors(True)
         self.table.cellDoubleClicked.connect(self.on_table_double_click)
-        self.table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.table.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
         self.table.customContextMenuRequested.connect(self.context_menu)
         can_layout.addWidget(self.table)
         vmain.addLayout(can_layout)
@@ -1010,9 +1052,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.sdo_table = QtWidgets.QTableWidget(0, 11)
         self.sdo_table.setHorizontalHeaderLabels(headers)
-        self.sdo_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.sdo_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.sdo_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.sdo_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
+        self.sdo_table.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.sdo_table.setAlternatingRowColors(True)
+        self.sdo_table.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
         self.sdo_table.customContextMenuRequested.connect(self.context_menu_sdo)
         sdo_layout.addWidget(self.sdo_table)
         vmain.addLayout(sdo_layout)
@@ -1036,7 +1079,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.legend_dock = QtWidgets.QDockWidget("COB Legend", self)
         self.legend_list = QtWidgets.QListWidget()
         self.legend_dock.setWidget(self.legend_list)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.legend_dock)
+        self.addDockWidget(QtCore.Qt.DockWidgetArea.RightDockWidgetArea, self.legend_dock)
 
         # remote-control dock (SDO/PDO send)
         self.ctrl_dock = QtWidgets.QDockWidget("Remote SDO/PDO Control", self)
@@ -1104,7 +1147,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ctrl_layout.addStretch()
         self.ctrl_widget.setLayout(ctrl_layout)
         self.ctrl_dock.setWidget(self.ctrl_widget)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.ctrl_dock)
+        self.addDockWidget(QtCore.Qt.DockWidgetArea.LeftDockWidgetArea, self.ctrl_dock)
 
         # PDO repeat timer
         self.pdo_timer = QtCore.QTimer(self)
@@ -1113,10 +1156,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # menu: Export & View
         menubar = self.menuBar()
         export_menu = menubar.addMenu("Export")
-        act_export_csv = QtWidgets.QAction("Export Data to CSV", self)
-        act_export_hist = QtWidgets.QAction("Export Histogram CSV", self)
-        act_export_json = QtWidgets.QAction("Export Data to JSON", self)
-        act_export_pcap = QtWidgets.QAction("Export Data to PCAP", self)
+        act_export_csv = QtGui.QAction("Export Data to CSV", self)
+        act_export_hist = QtGui.QAction("Export Histogram CSV", self)
+        act_export_json = QtGui.QAction("Export Data to JSON", self)
+        act_export_pcap = QtGui.QAction("Export Data to PCAP", self)
         export_menu.addAction(act_export_csv)
         export_menu.addAction(act_export_json)
         export_menu.addAction(act_export_pcap)
@@ -1125,13 +1168,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         view_menu = menubar.addMenu("View")
         options_menu = view_menu.addMenu("Options")
-        self.show_special_action = QtWidgets.QAction("Show special frames", self, checkable=True)
+        self.show_special_action = QtGui.QAction("Show special frames", self, checkable=True)
         self.show_special_action.setChecked(True)  # default enabled
-        self.apply_units_action = QtWidgets.QAction("Apply unit scaling", self, checkable=True)
+        self.apply_units_action = QtGui.QAction("Apply unit scaling", self, checkable=True)
         self.apply_units_action.setChecked(True)   # default enabled
-        self.show_dtype_action = QtWidgets.QAction("Show Data Type column", self, checkable=True)
+        self.show_dtype_action = QtGui.QAction("Show Data Type column", self, checkable=True)
         self.show_dtype_action.setChecked(True)    # default enabled
-        self.sdo_autopop_action = QtWidgets.QAction("Auto-populate SDO Table", self, checkable=True)
+        self.sdo_autopop_action = QtGui.QAction("Auto-populate SDO Table", self, checkable=True)
         self.sdo_autopop_action.setChecked(False)  # default disabled
         self.sdo_autopop_action.toggled.connect(self.toggle_sdo_autopop)
         options_menu.addAction(self.show_special_action)
@@ -1139,8 +1182,24 @@ class MainWindow(QtWidgets.QMainWindow):
         options_menu.addAction(self.show_dtype_action)
         options_menu.addAction(self.sdo_autopop_action)
         follow_menu = view_menu.addMenu("Follow")
-        self.clear_follow_action = QtWidgets.QAction("Clear Follow", self)
+        self.clear_follow_action = QtGui.QAction("Clear Follow", self)
         follow_menu.addAction(self.clear_follow_action)
+        # ----- Theme menu -----
+        theme_menu = view_menu.addMenu("Theme")
+        self.theme_auto_action = QtGui.QAction("Auto (OS)", self, checkable=True)
+        self.theme_dark_action = QtGui.QAction("Dark", self, checkable=True)
+        self.theme_light_action = QtGui.QAction("Light", self, checkable=True)
+        theme_group = QtGui.QActionGroup(self)
+        theme_group.setExclusive(True)
+        theme_group.addAction(self.theme_auto_action)
+        theme_group.addAction(self.theme_dark_action)
+        theme_group.addAction(self.theme_light_action)
+        theme_menu.addAction(self.theme_auto_action)
+        theme_menu.addAction(self.theme_dark_action)
+        theme_menu.addAction(self.theme_light_action)
+
+        # Default: follow OS
+        self.theme_auto_action.setChecked(True)
 
         # connect signals
         self.pause_btn.clicked.connect(self.toggle_pause)
@@ -1161,6 +1220,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show_dtype_action.triggered.connect(self.toggle_dtype_column)
         self.apply_units_action.triggered.connect(lambda _: self.rebuild_table())
         self.clear_follow_action.triggered.connect(self.clear_follow)
+        self.theme_auto_action.triggered.connect(lambda: self.set_theme("auto"))
+        self.theme_dark_action.triggered.connect(lambda: self.set_theme("dark"))
+        self.theme_light_action.triggered.connect(lambda: self.set_theme("light"))
 
         # worker thread
         self.worker = CANWorker(channel=channel)
@@ -1179,19 +1241,19 @@ class MainWindow(QtWidgets.QMainWindow):
         # autosize columns and set decoded width fixed
         header = self.table.horizontalHeader()
         for c in range(0,9):
-            header.setSectionResizeMode(c, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(c, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         fm = self.table.fontMetrics()
         approx_char_width = fm.horizontalAdvance("W")
         decoded_px = approx_char_width * DECODED_CHAR_LIMIT
         self.table.setColumnWidth(9, decoded_px)
-        header.setSectionResizeMode(9, QtWidgets.QHeaderView.Fixed)
+        header.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeMode.Fixed)
         header.setStretchLastSection(False)
         # SDO table same configuration
         sh = self.sdo_table.horizontalHeader()
         for c in range(0,9):
-            sh.setSectionResizeMode(c, QtWidgets.QHeaderView.ResizeToContents)
+            sh.setSectionResizeMode(c, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.sdo_table.setColumnWidth(9, decoded_px)
-        sh.setSectionResizeMode(9, QtWidgets.QHeaderView.Fixed)
+        sh.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeMode.Fixed)
         sh.setStretchLastSection(False)
         # Map of (index, sub) -> row for Fixed-mode updates in SDO table
         self.sdo_row_map: Dict[Tuple[int,int], int] = {}
@@ -1224,7 +1286,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     if bold:
                         f = it.font(); f.setBold(True); it.setFont(f)
                     if center:
-                        it.setTextAlignment(QtCore.Qt.AlignCenter)
+                        it.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                     it.setBackground(color_for_type(ftype))
                     return it
 
@@ -1268,6 +1330,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mode_combo.setCurrentIndex(idx)
         self.table.horizontalHeader().setSectionHidden(7, not show_dtype)
         self.sdo_table.horizontalHeader().setSectionHidden(7, not show_dtype)
+        theme = self.settings.value("ui/theme", "auto")
+        if theme == "dark":
+            self.theme_dark_action.setChecked(True)
+            self.set_theme("dark")
+        elif theme == "light":
+            self.theme_light_action.setChecked(True)
+            self.set_theme("light")
+        else:
+            self.theme_auto_action.setChecked(True)
+            self.set_theme("auto")
 
     def save_settings(self):
         s = self.settings
@@ -1560,7 +1632,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if bold:
                 f = it.font(); f.setBold(True); it.setFont(f)
             if center:
-                it.setTextAlignment(QtCore.Qt.AlignCenter)
+                it.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             # keep coloring consistent
             it.setBackground(color_for_type(ftype))
 
@@ -1608,7 +1680,7 @@ class MainWindow(QtWidgets.QMainWindow):
         count_item = self.sdo_table.item(r, 10)
         if count_item is None:
             count_item = QtWidgets.QTableWidgetItem("1")
-            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            count_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.sdo_table.setItem(r, 10, count_item)
         else:
             try:
@@ -1680,7 +1752,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     count_item = self.table.item(r, 10)
                     if count_item is None:
                         count_item = QtWidgets.QTableWidgetItem("1")
-                        count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        count_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                         self.table.setItem(r, 10, count_item)
                     else:
                         try:
@@ -1696,7 +1768,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.set_row(row, frame)
             # Initialize Count column
             count_item = QtWidgets.QTableWidgetItem("1")
-            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            count_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.table.setItem(row, 10, count_item)
         else:
             row = self.table.rowCount()
@@ -1704,7 +1776,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.set_row(row, frame)
             # Initialize Count column for sequential rows
             count_item = QtWidgets.QTableWidgetItem("1")
-            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            count_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.table.setItem(row, 10, count_item)
 
         if self.table.rowCount() > 50000:
@@ -1718,7 +1790,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 f = it.font(); f.setBold(True); it.setFont(f)
             it.setBackground(bg)
             if center:
-                it.setTextAlignment(QtCore.Qt.AlignCenter)
+                it.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             return it
         self.table.setItem(row, 0, mkitem(frame["time"]))
         node_text = str(frame["node"]) if frame["type"] != "PDO" else ""
@@ -1744,7 +1816,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if mode == "Fixed":
             if count_item is None:
                 count_item = QtWidgets.QTableWidgetItem("1")
-                count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+                count_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                 self.table.setItem(row, 10, count_item)
             else:
                 try:
@@ -1755,12 +1827,12 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             # Sequential mode → always start at 1
             count_item = QtWidgets.QTableWidgetItem("1")
-            count_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            count_item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.table.setItem(row, 10, count_item)
 
         for c in (1,2,3,5,6):
             it = self.table.item(row, c)
-            if it: it.setTextAlignment(QtCore.Qt.AlignCenter)
+            if it: it.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
 
     def update_row(self, row: int, frame: dict):
         def settext(col, text, bold=False, center=False):
@@ -1772,7 +1844,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if bold:
                 f = it.font(); f.setBold(True); it.setFont(f)
             if center:
-                it.setTextAlignment(QtCore.Qt.AlignCenter)
+                it.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         settext(0, frame["time"])
         node_text = str(frame["node"]) if frame["type"] != "PDO" else ""
         settext(1, node_text, bold=(node_text!=""), center=True)
@@ -1969,6 +2041,23 @@ class MainWindow(QtWidgets.QMainWindow):
                 except Exception:
                     pass
 
+    def set_theme(self, mode: str):
+        app = QtWidgets.QApplication.instance()
+
+        if mode == "dark":
+            apply_dark_theme(app)
+        elif mode == "light":
+            apply_light_theme(app)
+        else:
+            apply_os_theme(app)
+
+        # Force tables to repaint properly
+        self.table.viewport().update()
+        self.sdo_table.viewport().update()
+
+        # Persist setting
+        self.settings.setValue("ui/theme", mode)
+
     # -------------- double click row ----------------
     def on_table_double_click(self, row: int, col: int):
         txt = self.format_row_details(row)
@@ -1977,7 +2066,7 @@ class MainWindow(QtWidgets.QMainWindow):
         dlg.setText(txt)
         copy_btn = dlg.addButton("Copy Details", QtWidgets.QMessageBox.AcceptRole)
         dlg.addButton("Close", QtWidgets.QMessageBox.RejectRole)
-        dlg.exec_()
+        dlg.exec()
         if dlg.clickedButton() == copy_btn:
             QtWidgets.QApplication.clipboard().setText(txt)
 
@@ -1996,7 +2085,7 @@ class MainWindow(QtWidgets.QMainWindow):
         yes = dlg.addButton(QtWidgets.QMessageBox.Yes)
         no = dlg.addButton(QtWidgets.QMessageBox.No)
         dlg.addButton(QtWidgets.QMessageBox.Cancel)
-        dlg.exec_()
+        dlg.exec()
         btn = dlg.clickedButton()
         if btn == yes:
             rows = range(self.table.rowCount())
@@ -2049,7 +2138,7 @@ class MainWindow(QtWidgets.QMainWindow):
             yes = dlg.addButton(QtWidgets.QMessageBox.Yes)
             no = dlg.addButton(QtWidgets.QMessageBox.No)
             dlg.addButton(QtWidgets.QMessageBox.Cancel)
-            dlg.exec_()
+            dlg.exec()
             btn = dlg.clickedButton()
             if btn == yes:
                 frames = list(self.buffer_frames)
@@ -2084,7 +2173,7 @@ class MainWindow(QtWidgets.QMainWindow):
             yes = dlg.addButton(QtWidgets.QMessageBox.Yes)
             no = dlg.addButton(QtWidgets.QMessageBox.No)
             dlg.addButton(QtWidgets.QMessageBox.Cancel)
-            dlg.exec_()
+            dlg.exec()
             btn = dlg.clickedButton()
 
             if btn == yes:
@@ -2246,11 +2335,12 @@ def main():
     args = parser.parse_args()
 
     app = QtWidgets.QApplication(sys.argv)
+    apply_dark_theme(app)
     app.setOrganizationName(APP_ORG)
     app.setApplicationName(APP_NAME)
     w = MainWindow(args.eds, args.interface)
     w.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 if __name__ == "__main__":
     main()

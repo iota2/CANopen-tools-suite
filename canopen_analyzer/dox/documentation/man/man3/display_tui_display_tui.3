@@ -1,4 +1,4 @@
-.TH "display_tui" 3 "Sun Dec 14 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_tui" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -111,6 +111,13 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .br
 .RI "Private instance for pointing to incoming bus stats\&. "
 .in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_last_bus_stats\fP"
+.br
+.in -1c
 .SH "Member Function Documentation"
 .PP 
 .SS "def run_textual ( cls,  stats_instance,  processed_frame_queue,  fixed = \fCFalse\fP)"
@@ -135,6 +142,8 @@ None
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_last_bus_stats\fC [private]\fP"
+
 .SS "bus_stats_table"
 
 .PP

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['enable_5flogging_170',['enable_logging',['../namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b',1,'analyzer_defs']]]
+  ['display_5fgui_270',['display_gui',['../namespacedisplay__gui.html#a8247158519186ad09cce5855219efdb0',1,'display_gui']]]
 ];

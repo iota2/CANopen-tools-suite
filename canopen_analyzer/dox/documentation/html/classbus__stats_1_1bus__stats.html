@@ -87,6 +87,8 @@ $(document).ready(function(){initNavTree('classbus__stats_1_1bus__stats.html',''
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classbus__stats_1_1bus__stats-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">bus_stats Class Reference</div>  </div>
@@ -178,6 +180,26 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a></td></tr>
 <tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance used for reporting and debugging.  <a href="classbus__stats_1_1bus__stats.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ab00450d192ca43f10fe896bd1428f60d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d">_rate_sampler</a> (self)</td></tr>
+<tr class="separator:ab00450d192ca43f10fe896bd1428f60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:ad37f5e32ae1664782c9fb2eb221a8525"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ad37f5e32ae1664782c9fb2eb221a8525">_lock</a></td></tr>
+<tr class="memdesc:ad37f5e32ae1664782c9fb2eb221a8525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread lock used to protect access to statistics data.  <a href="classbus__stats_1_1bus__stats.html#ad37f5e32ae1664782c9fb2eb221a8525">More...</a><br /></td></tr>
+<tr class="separator:ad37f5e32ae1664782c9fb2eb221a8525"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08b380fce0fe1b4ec1d76651b71f8fb3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a08b380fce0fe1b4ec1d76651b71f8fb3">_rate_interval</a></td></tr>
+<tr class="separator:a08b380fce0fe1b4ec1d76651b71f8fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a852d53227e1c00abda22d6aa2f598cde"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a852d53227e1c00abda22d6aa2f598cde">_rate_sampler_stop</a></td></tr>
+<tr class="separator:a852d53227e1c00abda22d6aa2f598cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a407727c37132b0bb02453241a0c403b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a407727c37132b0bb02453241a0c403b3">_rate_sampler_thread</a></td></tr>
+<tr class="separator:a407727c37132b0bb02453241a0c403b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd718a60ddf264f547832a13a1687c5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#afd718a60ddf264f547832a13a1687c5d">_stats</a></td></tr>
+<tr class="memdesc:afd718a60ddf264f547832a13a1687c5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of the <a class="el" href="classbus__stats_1_1bus__stats_1_1stats__data.html">bus_stats.stats_data</a> structure holding all metrics.  <a href="classbus__stats_1_1bus__stats.html#afd718a60ddf264f547832a13a1687c5d">More...</a><br /></td></tr>
+<tr class="separator:afd718a60ddf264f547832a13a1687c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a22dbbf611ba724011c476f362b1efeca"></a>
@@ -212,6 +234,41 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab00450d192ca43f10fe896bd1428f60d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab00450d192ca43f10fe896bd1428f60d">&#9670;&nbsp;</a></span>_rate_sampler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _rate_sampler </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Background thread: periodically call update_rates() so rates get sampled even when no frames arrive.</pre> <div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph" alt=""/></div>
+<map name="aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph" id="aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,120,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="168,5,275,32"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="ac8f70966bf334462b64f0bcf6e1f7474"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac8f70966bf334462b64f0bcf6e1f7474">&#9670;&nbsp;</a></span>add_node()</h2>
 
@@ -515,15 +572,6 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Reset bus stats count. </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classbus__stats_1_1bus__stats_a51829b63adb24ac48d350dee60181002_cgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_a51829b63adb24ac48d350dee60181002_cgraph" alt=""/></div>
-<map name="aclassbus__stats_1_1bus__stats_a51829b63adb24ac48d350dee60181002_cgraph" id="aclassbus__stats_1_1bus__stats_a51829b63adb24ac48d350dee60181002_cgraph">
-<area shape="rect" title="Reset bus stats count." alt="" coords="5,5,60,32"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="108,5,215,32"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -605,8 +653,8 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph" alt=""/></div>
 <map name="aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph" id="aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph">
 <area shape="rect" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="188,31,295,57"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#a825b83d3b22a7bee94353a6fc7433de3" title="Increment frame counters by FrameType." alt="" coords="5,5,140,32"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#a51829b63adb24ac48d350dee60181002" title="Reset bus stats count." alt="" coords="45,56,100,83"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d" title=" " alt="" coords="15,5,130,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#a825b83d3b22a7bee94353a6fc7433de3" title="Increment frame counters by FrameType." alt="" coords="5,56,140,83"/>
 </map>
 </div>
 
@@ -699,6 +747,120 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad37f5e32ae1664782c9fb2eb221a8525"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad37f5e32ae1664782c9fb2eb221a8525">&#9670;&nbsp;</a></span>_lock</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_lock</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Thread lock used to protect access to statistics data. </p>
+
+</div>
+</div>
+<a id="a08b380fce0fe1b4ec1d76651b71f8fb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08b380fce0fe1b4ec1d76651b71f8fb3">&#9670;&nbsp;</a></span>_rate_interval</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_rate_interval</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a852d53227e1c00abda22d6aa2f598cde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a852d53227e1c00abda22d6aa2f598cde">&#9670;&nbsp;</a></span>_rate_sampler_stop</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_rate_sampler_stop</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a407727c37132b0bb02453241a0c403b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a407727c37132b0bb02453241a0c403b3">&#9670;&nbsp;</a></span>_rate_sampler_thread</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_rate_sampler_thread</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd718a60ddf264f547832a13a1687c5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd718a60ddf264f547832a13a1687c5d">&#9670;&nbsp;</a></span>_stats</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_stats</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Instance of the <a class="el" href="classbus__stats_1_1bus__stats_1_1stats__data.html">bus_stats.stats_data</a> structure holding all metrics. </p>
+
+</div>
+</div>
 <a id="a9ba628ef53aa2760ee08afab49765d42"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ba628ef53aa2760ee08afab49765d42">&#9670;&nbsp;</a></span>bitrate</h2>
 
