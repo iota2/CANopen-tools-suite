@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('classdisplay__gui_1_1CANopenMainWindow
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classdisplay__gui_1_1CANopenMainWindow-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">CANopenMainWindow Class Reference</div>  </div>
@@ -264,6 +265,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a82007ce2e6c8c0c61e180af46023a476"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a82007ce2e6c8c0c61e180af46023a476">_settings_key_for_table</a> (self, str table_name)</td></tr>
 <tr class="memdesc:a82007ce2e6c8c0c61e180af46023a476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a QSettings key for storing table column widths.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a82007ce2e6c8c0c61e180af46023a476">More...</a><br /></td></tr>
 <tr class="separator:a82007ce2e6c8c0c61e180af46023a476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a2949e5197c5e4b6c24e045d78af4b2c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a2949e5197c5e4b6c24e045d78af4b2c3">_ui_timer</a></td></tr>
+<tr class="memdesc:a2949e5197c5e4b6c24e045d78af4b2c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Periodic GUI refresh timer (decoupled from CAN traffic)  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a2949e5197c5e4b6c24e045d78af4b2c3">More...</a><br /></td></tr>
+<tr class="separator:a2949e5197c5e4b6c24e045d78af4b2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a535a819fd0c00d2ae80937d2ea92a2a0"></a>
@@ -1236,10 +1243,9 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__gui_1_1CANopenMainWindow_ae07579f82da98a8619b1aba7d9cf2faf_cgraph.png" border="0" usemap="#aclassdisplay__gui_1_1CANopenMainWindow_ae07579f82da98a8619b1aba7d9cf2faf_cgraph" alt=""/></div>
 <map name="aclassdisplay__gui_1_1CANopenMainWindow_ae07579f82da98a8619b1aba7d9cf2faf_cgraph" id="aclassdisplay__gui_1_1CANopenMainWindow_ae07579f82da98a8619b1aba7d9cf2faf_cgraph">
-<area shape="rect" title="Handle a newly decoded CAN frame." alt="" coords="5,31,89,57"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a4485a4e310b2221fa0e8c7d476533f65" title="Update Bus Statistics dashboard widgets and rate graphs." alt="" coords="137,5,273,32"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf" title="Insert or update a row in a data table." alt="" coords="152,56,259,83"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa" title="Temporarily highlight a table row to indicate activity." alt="" coords="321,56,412,83"/>
+<area shape="rect" title="Handle a newly decoded CAN frame." alt="" coords="5,5,89,32"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf" title="Insert or update a row in a data table." alt="" coords="137,5,244,32"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa" title="Temporarily highlight a table row to indicate activity." alt="" coords="292,5,383,32"/>
 </map>
 </div>
 
@@ -1269,15 +1275,6 @@ Here is the call graph for this function:</div>
 <li>Historical frame-rate graphs for different CANopen traffic classes <dl class="section note"><dt>Note</dt><dd>The data semantics and grouping are kept consistent with the CLI implementation. </dd></dl>
 </li>
 </ul>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdisplay__gui_1_1CANopenMainWindow_a4485a4e310b2221fa0e8c7d476533f65_icgraph.png" border="0" usemap="#aclassdisplay__gui_1_1CANopenMainWindow_a4485a4e310b2221fa0e8c7d476533f65_icgraph" alt=""/></div>
-<map name="aclassdisplay__gui_1_1CANopenMainWindow_a4485a4e310b2221fa0e8c7d476533f65_icgraph" id="aclassdisplay__gui_1_1CANopenMainWindow_a4485a4e310b2221fa0e8c7d476533f65_icgraph">
-<area shape="rect" title="Update Bus Statistics dashboard widgets and rate graphs." alt="" coords="137,5,273,32"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf" title="Handle a newly decoded CAN frame." alt="" coords="5,5,89,32"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -1362,6 +1359,30 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a2949e5197c5e4b6c24e045d78af4b2c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2949e5197c5e4b6c24e045d78af4b2c3">&#9670;&nbsp;</a></span>_ui_timer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_ui_timer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Periodic GUI refresh timer (decoupled from CAN traffic) </p>
+
+</div>
+</div>
 <a id="adf0ff66d2d75c14e64b9f0738132fb27"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adf0ff66d2d75c14e64b9f0738132fb27">&#9670;&nbsp;</a></span>bus_labels</h2>
 

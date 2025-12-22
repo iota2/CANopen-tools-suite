@@ -128,7 +128,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a22dbbf611ba724011c476f362b1efeca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the <a class="el" href="classbus__stats_1_1bus__stats.html" title="Container class for all CANopen bus statistics.">bus_stats</a> object and its internal data structures.  <a href="classbus__stats_1_1bus__stats.html#a22dbbf611ba724011c476f362b1efeca">More...</a><br /></td></tr>
 <tr class="separator:a22dbbf611ba724011c476f362b1efeca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8f70966bf334462b64f0bcf6e1f7474"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ac8f70966bf334462b64f0bcf6e1f7474">add_node</a> (self, int node_id)</td></tr>
-<tr class="memdesc:ac8f70966bf334462b64f0bcf6e1f7474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add node to communicating nodes list.  <a href="classbus__stats_1_1bus__stats.html#ac8f70966bf334462b64f0bcf6e1f7474">More...</a><br /></td></tr>
+<tr class="memdesc:ac8f70966bf334462b64f0bcf6e1f7474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add or refresh a communicating node.  <a href="classbus__stats_1_1bus__stats.html#ac8f70966bf334462b64f0bcf6e1f7474">More...</a><br /></td></tr>
 <tr class="separator:ac8f70966bf334462b64f0bcf6e1f7474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bdcbcf5c0482abf7e2de86096f8e6c0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a1bdcbcf5c0482abf7e2de86096f8e6c0">count_talker</a> (self, int cob_id)</td></tr>
 <tr class="memdesc:a1bdcbcf5c0482abf7e2de86096f8e6c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increment TopTalkers counter for a COB-ID.  <a href="classbus__stats_1_1bus__stats.html#a1bdcbcf5c0482abf7e2de86096f8e6c0">More...</a><br /></td></tr>
@@ -161,6 +161,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a09ae5bd534d8dbec99a913ed75fe9848"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the start time parameter of bus stats.  <a href="classbus__stats_1_1bus__stats.html#a09ae5bd534d8dbec99a913ed75fe9848">More...</a><br /></td></tr>
 <tr class="separator:a09ae5bd534d8dbec99a913ed75fe9848"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26ca7c1c7fcdd35378e7be97727047a6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6">stop</a> (self)</td></tr>
+<tr class="memdesc:a26ca7c1c7fcdd35378e7be97727047a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop background threads cleanly (call on application exit).  <a href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6">More...</a><br /></td></tr>
 <tr class="separator:a26ca7c1c7fcdd35378e7be97727047a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab95b4bce7eb462bdaf41d216afbcfced"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced">update_rates</a> (self, float now=None, float interval=1.0)</td></tr>
 <tr class="memdesc:ab95b4bce7eb462bdaf41d216afbcfced"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute frames/s rates by differencing cumulative counters.  <a href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced">More...</a><br /></td></tr>
@@ -184,6 +185,7 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:ab00450d192ca43f10fe896bd1428f60d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d">_rate_sampler</a> (self)</td></tr>
+<tr class="memdesc:ab00450d192ca43f10fe896bd1428f60d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background thread: periodically call <a class="el" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters.">update_rates()</a> so rates get sampled even when no frames arrive.  <a href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d">More...</a><br /></td></tr>
 <tr class="separator:ab00450d192ca43f10fe896bd1428f60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -257,12 +259,14 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">Background thread: periodically call update_rates() so rates get sampled even when no frames arrive.</pre> <div class="dynheader">
+
+<p>Background thread: periodically call <a class="el" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters.">update_rates()</a> so rates get sampled even when no frames arrive. </p>
+<div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph" alt=""/></div>
 <map name="aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph" id="aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,120,32"/>
+<area shape="rect" title="Background thread: periodically call update_rates() so rates get sampled even when no frames arrive." alt="" coords="5,5,120,32"/>
 <area shape="rect" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="168,5,275,32"/>
 </map>
 </div>
@@ -295,7 +299,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Add node to communicating nodes list. </p>
+<p>Add or refresh a communicating node. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node_id</td><td>Received Node id as integer. </td></tr>
@@ -454,15 +458,6 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>None. </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classbus__stats_1_1bus__stats_a825b83d3b22a7bee94353a6fc7433de3_cgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_a825b83d3b22a7bee94353a6fc7433de3_cgraph" alt=""/></div>
-<map name="aclassbus__stats_1_1bus__stats_a825b83d3b22a7bee94353a6fc7433de3_cgraph" id="aclassbus__stats_1_1bus__stats_a825b83d3b22a7bee94353a6fc7433de3_cgraph">
-<area shape="rect" title="Increment frame counters by FrameType." alt="" coords="5,5,140,32"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="188,5,295,32"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -610,7 +605,9 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Stop background threads cleanly (call on application exit).</pre> 
+
+<p>Stop background threads cleanly (call on application exit). </p>
+
 </div>
 </div>
 <a id="ab95b4bce7eb462bdaf41d216afbcfced"></a>
@@ -652,9 +649,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph" alt=""/></div>
 <map name="aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph" id="aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph">
-<area shape="rect" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="188,31,295,57"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d" title=" " alt="" coords="15,5,130,32"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#a825b83d3b22a7bee94353a6fc7433de3" title="Increment frame counters by FrameType." alt="" coords="5,56,140,83"/>
+<area shape="rect" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="168,5,275,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d" title="Background thread: periodically call update_rates() so rates get sampled even when no frames arrive." alt="" coords="5,5,120,32"/>
 </map>
 </div>
 

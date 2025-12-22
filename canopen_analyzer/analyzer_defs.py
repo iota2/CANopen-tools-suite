@@ -96,6 +96,8 @@ MAX_STATS_SHOW = 5
 ## Maximum number of CANopen frames to be cached.
 MAX_FRAMES = 500
 
+## Seconds after which a node is considered inactive
+NODE_INACTIVE_TIMEOUT = 5.0
 
 # --------------------------------------------------------------------------
 # ----- Enumerations -----

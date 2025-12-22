@@ -16,6 +16,7 @@ var analyzer__defs_8py =
     [ "MAX_FRAMES", "analyzer__defs_8py.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
     [ "MAX_STATS_SHOW", "analyzer__defs_8py.html#aa6fda8207dcce3b56fd8ed0ff3ec827e", null ],
     [ "MIN_STATS_SHOW", "analyzer__defs_8py.html#a80c4d7f9c3a827951418fea4187ad0df", null ],
+    [ "NODE_INACTIVE_TIMEOUT", "analyzer__defs_8py.html#acce2a35315ca0ca1a6ebbe621df53a4e", null ],
     [ "PROTOCOL_TABLE_HEIGHT", "analyzer__defs_8py.html#ad34b850f413d130ec4a6f42787217af6", null ],
     [ "root_logger", "analyzer__defs_8py.html#af2fe9aec0484a8d331ffcbc182d64af3", null ],
     [ "STATS_GRAPH_WIDTH", "analyzer__defs_8py.html#a8df7572f27a774cf8035bd3d4e9cc752", null ]

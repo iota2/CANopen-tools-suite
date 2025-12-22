@@ -50,7 +50,7 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 .ti -1c
 .RI "def \fBadd_node\fP (self, int node_id)"
 .br
-.RI "Add node to communicating nodes list\&. "
+.RI "Add or refresh a communicating node\&. "
 .ti -1c
 .RI "def \fBcount_talker\fP (self, int cob_id)"
 .br
@@ -94,6 +94,7 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 .ti -1c
 .RI "def \fBstop\fP (self)"
 .br
+.RI "Stop background threads cleanly (call on application exit)\&. "
 .ti -1c
 .RI "def \fBupdate_rates\fP (self, float now=None, float interval=1\&.0)"
 .br
@@ -125,6 +126,7 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 .ti -1c
 .RI "def \fB_rate_sampler\fP (self)"
 .br
+.RI "Background thread: periodically call \fBupdate_rates()\fP so rates get sampled even when no frames arrive\&. "
 .in -1c
 .SS "Private Attributes"
 
@@ -158,15 +160,11 @@ Initialize the \fBbus_stats\fP object and its internal data structures\&. This c
 .SS "def _rate_sampler ( self)\fC [private]\fP"
 
 .PP
-.nf
-Background thread: periodically call update_rates() so rates get sampled even when no frames arrive.
-.fi
-.PP
- 
+Background thread: periodically call \fBupdate_rates()\fP so rates get sampled even when no frames arrive\&. 
 .SS "def add_node ( self, int node_id)"
 
 .PP
-Add node to communicating nodes list\&. 
+Add or refresh a communicating node\&. 
 .PP
 \fBParameters\fP
 .RS 4
@@ -276,11 +274,7 @@ Sets the start time parameter of bus stats\&.
 .SS "def stop ( self)"
 
 .PP
-.nf
-Stop background threads cleanly (call on application exit).
-.fi
-.PP
- 
+Stop background threads cleanly (call on application exit)\&. 
 .SS "def update_rates ( self, float  now = \fCNone\fP, float  interval = \fC1\&.0\fP)"
 
 .PP

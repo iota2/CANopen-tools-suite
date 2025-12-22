@@ -25,6 +25,7 @@ var classdisplay__gui_1_1CANopenMainWindow =
     [ "on_frame", "classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf", null ],
     [ "update_bus_stats", "classdisplay__gui_1_1CANopenMainWindow.html#a4485a4e310b2221fa0e8c7d476533f65", null ],
     [ "update_table", "classdisplay__gui_1_1CANopenMainWindow.html#a24fa222e8137e4a57b6322938d1175bf", null ],
+    [ "_ui_timer", "classdisplay__gui_1_1CANopenMainWindow.html#a2949e5197c5e4b6c24e045d78af4b2c3", null ],
     [ "bus_labels", "classdisplay__gui_1_1CANopenMainWindow.html#adf0ff66d2d75c14e64b9f0738132fb27", null ],
     [ "fixed", "classdisplay__gui_1_1CANopenMainWindow.html#a0ceb8ae554e8a185caf22e15c9487f4b", null ],
     [ "fixed_pdo", "classdisplay__gui_1_1CANopenMainWindow.html#a3078ce0e2c75accf21cd8df0224f542f", null ],

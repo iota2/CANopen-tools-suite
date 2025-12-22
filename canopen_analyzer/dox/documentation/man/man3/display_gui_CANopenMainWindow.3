@@ -217,6 +217,14 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Generate a QSettings key for storing table column widths\&. "
 .in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fB_ui_timer\fP"
+.br
+.RI "Periodic GUI refresh timer (decoupled from CAN traffic) "
+.in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
 .SS "def __init__ ( self, \fBbus_stats\fP stats, bool fixed)"
@@ -531,6 +539,10 @@ Row highlighting is applied to indicate recent activity\&.
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_ui_timer\fC [private]\fP"
+
+.PP
+Periodic GUI refresh timer (decoupled from CAN traffic) 
 .SS "bus_labels"
 
 .PP

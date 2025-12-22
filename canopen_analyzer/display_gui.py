@@ -542,6 +542,12 @@ class CANopenMainWindow(QMainWindow):
         ##  - False -> Sequential (rolling) display
         self.fixed = fixed
 
+        ## Periodic GUI refresh timer (decoupled from CAN traffic)
+        self._ui_timer = QTimer(self)
+        self._ui_timer.setInterval(500)  # ms (2 Hz is sufficient)
+        self._ui_timer.timeout.connect(self.update_bus_stats)
+        self._ui_timer.start()
+
         # Keys correspond to table row identifiers; values store
         # the most recent row data for efficient in-place updates.
         ## Fixed-row protocol data caches used when operating in Fixed mode.
@@ -1404,8 +1410,7 @@ class CANopenMainWindow(QMainWindow):
         # ------------------------------------------------------------------
 
         # Determine bus activity based on total observed frames.
-        active = bool(snap.frame_count.total)
-        self.lbl_state.setText("Active" if active else "Idle")
+        self.lbl_state.setText(getattr(snap.rates, "bus_state", "Idle"))
 
         # Current bus utilization percentage.
         util = getattr(snap.rates, "bus_util_percent", 0.0)
@@ -1726,9 +1731,6 @@ class CANopenMainWindow(QMainWindow):
                     self.proto_table, self.fixed_proto, key,
                     [t, cob, name, raw, dec, cnt]
                 )
-
-            # Refresh bus statistics after processing frame
-            self.update_bus_stats()
         except Exception as e:
             # Ignore interruptions during shutdown
             if isinstance(e, KeyboardInterrupt):
