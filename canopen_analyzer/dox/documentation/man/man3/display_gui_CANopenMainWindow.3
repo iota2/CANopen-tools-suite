@@ -37,6 +37,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Handle application shutdown and cleanup\&. "
 .ti -1c
+.RI "def \fBkeyPressEvent\fP (self, event)"
+.br
+.RI "Handle Ctrl+C copy from focused QTableWidget\&. "
+.ti -1c
 .RI "def \fBon_frame\fP (self, p)"
 .br
 .RI "Handle a newly decoded CAN frame\&. "
@@ -210,6 +214,14 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "def \fB_configure_table_columns\fP (self, table, str stretch_column_name)"
 .br
 .RI "Configure column resize behavior using column names instead of indices\&. "
+.ti -1c
+.RI "def \fB_copy_table_selection\fP (self, QTableWidget table)"
+.br
+.RI "Copy selected table cells to clipboard as TSV\&. "
+.ti -1c
+.RI "def \fB_enable_table_copy\fP (self, QTableWidget table)"
+.br
+.RI "Enable cell selection and Ctrl+C copy for a table\&. "
 .ti -1c
 .RI "def \fB_flash_row\fP (self, table, row)"
 .br
@@ -396,6 +408,14 @@ Configure column resize behavior using column names instead of indices\&.
 .RE
 .PP
 
+.SS "def _copy_table_selection ( self, QTableWidget table)\fC [private]\fP"
+
+.PP
+Copy selected table cells to clipboard as TSV\&. 
+.SS "def _enable_table_copy ( self, QTableWidget table)\fC [private]\fP"
+
+.PP
+Enable cell selection and Ctrl+C copy for a table\&. 
 .SS "def _flash_row ( self,  table,  row)\fC [private]\fP"
 
 .PP
@@ -528,6 +548,10 @@ Handle application shutdown and cleanup\&. Ensures that background worker thread
 .RE
 .PP
 
+.SS "def keyPressEvent ( self,  event)"
+
+.PP
+Handle Ctrl+C copy from focused QTableWidget\&. 
 .SS "def on_frame ( self,  p)"
 
 .PP

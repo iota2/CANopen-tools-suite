@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added Send SDO / PDO option to GUI.
 - Fixed bug that was causing only Counts to be updated in data tables in fixed mode.
 - Updated sample EDS files.
+- Added support for copying data from GUI data tables.
 
 ## [v0.17.0] - 2025-12-22
 

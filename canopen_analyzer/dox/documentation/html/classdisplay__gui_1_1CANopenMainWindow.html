@@ -130,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a849a9fe2d04232c2c11adf5dee2c48fa"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a849a9fe2d04232c2c11adf5dee2c48fa">closeEvent</a> (self, event)</td></tr>
 <tr class="memdesc:a849a9fe2d04232c2c11adf5dee2c48fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle application shutdown and cleanup.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a849a9fe2d04232c2c11adf5dee2c48fa">More...</a><br /></td></tr>
 <tr class="separator:a849a9fe2d04232c2c11adf5dee2c48fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7224b03642e3cfe85bd396f1f4b08f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f">keyPressEvent</a> (self, event)</td></tr>
+<tr class="memdesc:aaf7224b03642e3cfe85bd396f1f4b08f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle Ctrl+C copy from focused QTableWidget.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f">More...</a><br /></td></tr>
+<tr class="separator:aaf7224b03642e3cfe85bd396f1f4b08f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae07579f82da98a8619b1aba7d9cf2faf"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf">on_frame</a> (self, p)</td></tr>
 <tr class="memdesc:ae07579f82da98a8619b1aba7d9cf2faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a newly decoded CAN frame.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf">More...</a><br /></td></tr>
 <tr class="separator:ae07579f82da98a8619b1aba7d9cf2faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,6 +261,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:aff3a93b21f0581d59f7576542b1def80"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aff3a93b21f0581d59f7576542b1def80">_configure_table_columns</a> (self, table, str stretch_column_name)</td></tr>
 <tr class="memdesc:aff3a93b21f0581d59f7576542b1def80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure column resize behavior using column names instead of indices.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#aff3a93b21f0581d59f7576542b1def80">More...</a><br /></td></tr>
 <tr class="separator:aff3a93b21f0581d59f7576542b1def80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a594ad0f57548361886304d32440fabf1"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1">_copy_table_selection</a> (self, QTableWidget table)</td></tr>
+<tr class="memdesc:a594ad0f57548361886304d32440fabf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy selected table cells to clipboard as TSV.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1">More...</a><br /></td></tr>
+<tr class="separator:a594ad0f57548361886304d32440fabf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a025212a9fde24e970d7cd1d4c15c2321"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a025212a9fde24e970d7cd1d4c15c2321">_enable_table_copy</a> (self, QTableWidget table)</td></tr>
+<tr class="memdesc:a025212a9fde24e970d7cd1d4c15c2321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable cell selection and Ctrl+C copy for a table.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a025212a9fde24e970d7cd1d4c15c2321">More...</a><br /></td></tr>
+<tr class="separator:a025212a9fde24e970d7cd1d4c15c2321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b51adee27e0f9f28921a3f45c68f7fa"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa">_flash_row</a> (self, table, row)</td></tr>
 <tr class="memdesc:a7b51adee27e0f9f28921a3f45c68f7fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporarily highlight a table row to indicate activity.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa">More...</a><br /></td></tr>
 <tr class="separator:a7b51adee27e0f9f28921a3f45c68f7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -706,6 +715,91 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a594ad0f57548361886304d32440fabf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a594ad0f57548361886304d32440fabf1">&#9670;&nbsp;</a></span>_copy_table_selection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _copy_table_selection </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QTableWidget&#160;</td>
+          <td class="paramname"><em>table</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy selected table cells to clipboard as TSV. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph.png" border="0" usemap="#aclassdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph" alt=""/></div>
+<map name="aclassdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph" id="aclassdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph">
+<area shape="rect" title="Copy selected table cells to clipboard as TSV." alt="" coords="171,5,337,32"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f" title="Handle Ctrl+C copy from focused QTableWidget." alt="" coords="5,5,123,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a025212a9fde24e970d7cd1d4c15c2321"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a025212a9fde24e970d7cd1d4c15c2321">&#9670;&nbsp;</a></span>_enable_table_copy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _enable_table_copy </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QTableWidget&#160;</td>
+          <td class="paramname"><em>table</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable cell selection and Ctrl+C copy for a table. </p>
 
 </div>
 </div>
@@ -1324,6 +1418,45 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aaf7224b03642e3cfe85bd396f1f4b08f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf7224b03642e3cfe85bd396f1f4b08f">&#9670;&nbsp;</a></span>keyPressEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def keyPressEvent </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>event</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handle Ctrl+C copy from focused QTableWidget. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph.png" border="0" usemap="#aclassdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph" alt=""/></div>
+<map name="aclassdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph" id="aclassdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph">
+<area shape="rect" title="Handle Ctrl+C copy from focused QTableWidget." alt="" coords="5,5,123,32"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1" title="Copy selected table cells to clipboard as TSV." alt="" coords="171,5,337,32"/>
+</map>
+</div>
 
 </div>
 </div>

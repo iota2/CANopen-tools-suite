@@ -46,8 +46,8 @@ from PySide6.QtCharts import (
     QChart, QChartView, QLineSeries, QValueAxis
 )
 from PySide6.QtGui import (
-    QAction, QPainter, QColor,
-    QCursor, QFont, QPen, QIcon
+    QAction, QPainter, QColor, QCursor,
+    QFont, QPen, QIcon, QKeySequence
 )
 
 import analyzer_defs as analyzer_defs
@@ -899,6 +899,43 @@ class CANopenMainWindow(QMainWindow):
         # Install splitter as the central widget of the main window
         self.setCentralWidget(self.splitter)
 
+        # Enable table copy
+        self._enable_table_copy(self.proto_table)
+        self._enable_table_copy(self.pdo_table)
+        self._enable_table_copy(self.sdo_table)
+
+    def _enable_table_copy(self, table: QTableWidget):
+        """! Enable cell selection and Ctrl+C copy for a table."""
+
+        # Allow cell-level selection
+        table.setSelectionBehavior(QTableWidget.SelectItems)
+        table.setSelectionMode(QTableWidget.ExtendedSelection)
+
+        # Make table read-only but selectable
+        table.setEditTriggers(QTableWidget.NoEditTriggers)
+
+        # Enable keyboard focus (required for Ctrl+C)
+        table.setFocusPolicy(Qt.StrongFocus)
+
+    def _copy_table_selection(self, table: QTableWidget):
+        """! Copy selected table cells to clipboard as TSV."""
+
+        ranges = table.selectedRanges()
+        if not ranges:
+            return
+
+        r = ranges[0]
+        rows = []
+
+        for row in range(r.topRow(), r.bottomRow() + 1):
+            cols = []
+            for col in range(r.leftColumn(), r.rightColumn() + 1):
+                item = table.item(row, col)
+                cols.append(item.text() if item else "")
+            rows.append("\t".join(cols))
+
+        QApplication.clipboard().setText("\n".join(rows))
+
     def _make_titled_table(self, title, table):
         """! Create a titled table container with an integrated filter bar.
         @details
@@ -1490,6 +1527,16 @@ class CANopenMainWindow(QMainWindow):
                 if table.item(row, c)
             ]
         )
+
+    def keyPressEvent(self, event):
+        """! Handle Ctrl+C copy from focused QTableWidget."""
+
+        if event.matches(QKeySequence.Copy):
+            widget = self.focusWidget()
+            if isinstance(widget, QTableWidget):
+                self._copy_table_selection(widget)
+                return
+        super().keyPressEvent(event)
 
     def update_bus_stats(self):
         """! Update Bus Statistics dashboard widgets and rate graphs.

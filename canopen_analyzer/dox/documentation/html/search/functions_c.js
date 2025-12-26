@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['on_5fframe_315',['on_frame',['../classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf',1,'display_gui::CANopenMainWindow']]]
+  ['now_5fstr_320',['now_str',['../namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49',1,'analyzer_defs']]]
 ];

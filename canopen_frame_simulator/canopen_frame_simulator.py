@@ -485,7 +485,10 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
             for cob_id, mappings in tpdos:
                 data_bytes = b""
                 for (idx, subidx, size) in mappings:
-                    val = float((i + idx + subidx) % 200)
+                    # base value increments every 10th iteration
+                    cycles = i // 10
+                    val = float(((idx + subidx)/1000 + cycles + (cycles / 10)))
+
                     if size == 0x20:
                         data_bytes += struct.pack("<f", val)
                     elif size == 0x10:
@@ -506,6 +509,7 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
                 if 0x1400 <= idx <= 0x1BFF:
                     continue
 
+                # base value increments every 10th iteration
                 cycles = i // 10
                 base_val = entry["value"]
                 val = base_val + cycles
