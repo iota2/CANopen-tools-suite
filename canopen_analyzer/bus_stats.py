@@ -229,7 +229,7 @@ class bus_stats:
         self._stats.rates.history = {k: deque(maxlen=analyzer_defs.STATS_GRAPH_WIDTH) for k in keys}
 
         ## Logger instance used for reporting and debugging.
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
         # Timer for computing bus stats
         self._rate_interval = 1.0                # seconds, sampling period

@@ -121,9 +121,9 @@ Collaboration diagram for CANopenMainWindow:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a535a819fd0c00d2ae80937d2ea92a2a0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a535a819fd0c00d2ae80937d2ea92a2a0">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aa57ebe01934de43865125819a3c4af74">stats</a>, bool <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a0ceb8ae554e8a185caf22e15c9487f4b">fixed</a>)</td></tr>
-<tr class="memdesc:a535a819fd0c00d2ae80937d2ea92a2a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the main CANopen Analyzer GUI window.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a535a819fd0c00d2ae80937d2ea92a2a0">More...</a><br /></td></tr>
-<tr class="separator:a535a819fd0c00d2ae80937d2ea92a2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7f281afe17c65edbe990085f57c7271"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae7f281afe17c65edbe990085f57c7271">__init__</a> (self, queue.Queue() <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a">requested_frame</a>, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aa57ebe01934de43865125819a3c4af74">stats</a>, bool <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a0ceb8ae554e8a185caf22e15c9487f4b">fixed</a>)</td></tr>
+<tr class="memdesc:ae7f281afe17c65edbe990085f57c7271"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the main CANopen Analyzer GUI window.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae7f281afe17c65edbe990085f57c7271">More...</a><br /></td></tr>
+<tr class="separator:ae7f281afe17c65edbe990085f57c7271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a761fada55085b7d8b7896aa06d7240d0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0">clear_tables</a> (self)</td></tr>
 <tr class="memdesc:a761fada55085b7d8b7896aa06d7240d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all displayed data and reset statistics.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0">More...</a><br /></td></tr>
 <tr class="separator:a761fada55085b7d8b7896aa06d7240d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,6 +188,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af9aade33e4ca0f15067d6005207620b9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#af9aade33e4ca0f15067d6005207620b9">rate_sdo</a></td></tr>
 <tr class="memdesc:af9aade33e4ca0f15067d6005207620b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDO request/response frame rate graph.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#af9aade33e4ca0f15067d6005207620b9">More...</a><br /></td></tr>
 <tr class="separator:af9aade33e4ca0f15067d6005207620b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4a622f1e1275087c3558661cb25300a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a">requested_frame</a></td></tr>
+<tr class="memdesc:ab4a622f1e1275087c3558661cb25300a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue used to receive frames for sending over CAN bus.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a">More...</a><br /></td></tr>
+<tr class="separator:ab4a622f1e1275087c3558661cb25300a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace47c83f900a5ce72ddcfce478222e70"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ace47c83f900a5ce72ddcfce478222e70">sdo_filter</a></td></tr>
 <tr class="memdesc:ace47c83f900a5ce72ddcfce478222e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDO data filter.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ace47c83f900a5ce72ddcfce478222e70">More...</a><br /></td></tr>
 <tr class="separator:ace47c83f900a5ce72ddcfce478222e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -274,10 +277,13 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:a244742ae4559e6115110f21439ff4f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle display mode changes from the toolbar.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a244742ae4559e6115110f21439ff4f19">More...</a><br /></td></tr>
 <tr class="separator:a244742ae4559e6115110f21439ff4f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8c2e4bc162156c709d07b87fda5526a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab8c2e4bc162156c709d07b87fda5526a">_on_recv_sdo</a> (self)</td></tr>
+<tr class="memdesc:ab8c2e4bc162156c709d07b87fda5526a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback on click Receive SDO button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ab8c2e4bc162156c709d07b87fda5526a">More...</a><br /></td></tr>
 <tr class="separator:ab8c2e4bc162156c709d07b87fda5526a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dba4453db9ff5ad166ff500bcb79258"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a3dba4453db9ff5ad166ff500bcb79258">_on_send_pdo</a> (self)</td></tr>
+<tr class="memdesc:a3dba4453db9ff5ad166ff500bcb79258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback on click Send PDO button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a3dba4453db9ff5ad166ff500bcb79258">More...</a><br /></td></tr>
 <tr class="separator:a3dba4453db9ff5ad166ff500bcb79258"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a492266e261023c60c974499205895cce"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a492266e261023c60c974499205895cce">_on_send_sdo</a> (self)</td></tr>
+<tr class="memdesc:a492266e261023c60c974499205895cce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback on click Send SDO button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a492266e261023c60c974499205895cce">More...</a><br /></td></tr>
 <tr class="separator:a492266e261023c60c974499205895cce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae75b7102dbb441694a47853102954211"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211">_restore_column_widths</a> (self, QTableWidget table, str table_name)</td></tr>
 <tr class="memdesc:ae75b7102dbb441694a47853102954211"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore column widths for a table from persistent settings.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211">More...</a><br /></td></tr>
@@ -299,8 +305,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a2949e5197c5e4b6c24e045d78af4b2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a535a819fd0c00d2ae80937d2ea92a2a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a535a819fd0c00d2ae80937d2ea92a2a0">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="ae7f281afe17c65edbe990085f57c7271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7f281afe17c65edbe990085f57c7271">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,6 +316,12 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">queue.Queue()&#160;</td>
+          <td class="paramname"><em>requested_frame</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -983,6 +995,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Callback on click Receive SDO button. </p>
+
 </div>
 </div>
 <a id="a3dba4453db9ff5ad166ff500bcb79258"></a>
@@ -1009,6 +1023,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Callback on click Send PDO button. </p>
+
 </div>
 </div>
 <a id="a492266e261023c60c974499205895cce"></a>
@@ -1034,6 +1050,8 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Callback on click Send SDO button. </p>
 
 </div>
 </div>
@@ -1788,6 +1806,22 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>SDO request/response frame rate graph. </p>
+
+</div>
+</div>
+<a id="ab4a622f1e1275087c3558661cb25300a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4a622f1e1275087c3558661cb25300a">&#9670;&nbsp;</a></span>requested_frame</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">requested_frame</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queue used to receive frames for sending over CAN bus. </p>
 
 </div>
 </div>

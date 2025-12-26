@@ -517,7 +517,7 @@ class CANopenMainWindow(QMainWindow):
     ## remains visible before being cleared automatically.
     HEAT_CLEAR_MS = 600
 
-    def __init__(self, stats: bus_stats, fixed: bool):
+    def __init__(self, requested_frame:queue.Queue(), stats: bus_stats, fixed: bool):
         """! Construct the main CANopen Analyzer GUI window.
         @details
         Initializes the main window state, stores shared backend
@@ -533,6 +533,9 @@ class CANopenMainWindow(QMainWindow):
 
         # Initialize QMainWindow base class
         super().__init__()
+
+        ## Queue used to receive frames for sending over CAN bus.
+        self.requested_frame = requested_frame or queue.Queue()
 
         ## Reference to shared bus statistics backend
         self.stats = stats
@@ -772,34 +775,43 @@ class CANopenMainWindow(QMainWindow):
         pdo_send_btn.clicked.connect(self._on_send_pdo)
 
     def _on_send_sdo(self):
+        """! Callback on click Send SDO button."""
+
         try:
-            self.sniffer.send_sdo_download(
-                node_id=int(self.sdo_node_edit.text(), 0),
-                index=int(self.sdo_index_edit.text(), 0),
-                subindex=int(self.sdo_sub_edit.text(), 0),
-                value=int(self.sdo_value_edit.text(), 0),
-                size=int(self.sdo_size_combo.currentText()),
-            )
+            self.requested_frame.put({
+                "type": "sdo_download",
+                "node": int(self.sdo_node_edit.text(), 0),
+                "index": int(self.sdo_index_edit.text(), 0),
+                "sub": int(self.sdo_sub_edit.text(), 0),
+                "value": int(self.sdo_value_edit.text(), 0),
+                "size": int(self.sdo_size_combo.currentText()),
+            })
         except Exception as e:
             QToolTip.showText(QCursor.pos(), f"SDO send failed: {e}")
 
     def _on_recv_sdo(self):
+        """! Callback on click Receive SDO button."""
+
         try:
-            self.sniffer.send_sdo_upload_request(
-                node_id=int(self.sdo_recv_node_edit.text(), 0),
-                index=int(self.sdo_recv_index_edit.text(), 0),
-                subindex=int(self.sdo_recv_sub_edit.text(), 0),
-            )
+            self.requested_frame.put({
+                "type": "sdo_upload",
+                "node": int(self.sdo_recv_node_edit.text(), 0),
+                "index": int(self.sdo_recv_index_edit.text(), 0),
+                "sub": int(self.sdo_recv_sub_edit.text(), 0),
+            })
         except Exception as e:
             QToolTip.showText(QCursor.pos(), f"SDO receive failed: {e}")
 
     def _on_send_pdo(self):
+        """! Callback on click Send PDO button."""
+
         try:
             data = bytes(int(b, 16) for b in self.pdo_data_edit.text().split())
-            self.sniffer.send_raw_pdo(
-                cob_id=int(self.pdo_cob_edit.text(), 0),
-                data=data,
-            )
+            self.requested_frame.put({
+                "type": "pdo",
+                "cob": int(self.pdo_cob_edit.text(), 0),
+                "data": data,
+            })
         except Exception as e:
             QToolTip.showText(QCursor.pos(), f"PDO send failed: {e}")
 
@@ -1715,13 +1727,23 @@ class CANopenMainWindow(QMainWindow):
                 for c, v in enumerate(values):
                     table.setItem(row, c, QTableWidgetItem(str(v)))
             else:
-                # Increment frame count for existing row
-                item = table.item(row, count_col)
-                if item is None:
-                    item = QTableWidgetItem("1")
-                    table.setItem(row, count_col, item)
+                # Update non-count columns with latest values
+                for c, v in enumerate(values):
+                    if c == count_col:
+                        continue
+                    item = table.item(row, c)
+                    if item:
+                        item.setText(str(v))
+                    else:
+                        table.setItem(row, c, QTableWidgetItem(str(v)))
+
+                # Increment count
+                cnt_item = table.item(row, count_col)
+                if cnt_item is None:
+                    cnt_item = QTableWidgetItem("1")
+                    table.setItem(row, count_col, cnt_item)
                 else:
-                    item.setText(str(int(item.text()) + 1))
+                    cnt_item.setText(str(int(cnt_item.text()) + 1))
 
             # Highlight updated row
             self._flash_row(table, row)
@@ -1760,7 +1782,17 @@ class CANopenMainWindow(QMainWindow):
         # ------------------------------------------------------------------
         # Clear bus statistics table
         # ------------------------------------------------------------------
-        self.bus_table.setRowCount(0)
+        if hasattr(self, "bus_stats_table"):
+            self.bus_stats_table.setRowCount(0)
+
+        if hasattr(self, "proto_table"):
+            self.proto_table.setRowCount(0)
+
+        if hasattr(self, "pdo_table"):
+            self.pdo_table.setRowCount(0)
+
+        if hasattr(self, "sdo_table"):
+            self.sdo_table.setRowCount(0)
 
         # ------------------------------------------------------------------
         # Clear frame-rate graphs
@@ -1863,7 +1895,7 @@ class CANopenMainWindow(QMainWindow):
         super().closeEvent(event)
 
 
-def display_gui(stats, processed_frame, fixed=False):
+def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False):
     """! Launch the CANopen Analyzer GUI application.
     @details
     Creates the Qt application instance, initializes the main
@@ -1885,7 +1917,7 @@ def display_gui(stats, processed_frame, fixed=False):
     # Qt application and main window initialization
     # ------------------------------------------------------------------
     app = QApplication(sys.argv)
-    win = CANopenMainWindow(stats, fixed)
+    win = CANopenMainWindow(requested_frame, stats, fixed)
 
     # ------------------------------------------------------------------
     # Worker thread setup

@@ -18,6 +18,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Updated sniffer script for sends / receive SDOs and RPDOs.
+- Added option to sniffer script to pass node-id through CLI.
+- Added requested frames queue to send data over CAN.
+- Added Send SDO / PDO option to GUI.
+- Fixed bug that was causing only Counts to be updated in data tables in fixed mode.
+- Updated sample EDS files.
 
 ## [v0.17.0] - 2025-12-22
 

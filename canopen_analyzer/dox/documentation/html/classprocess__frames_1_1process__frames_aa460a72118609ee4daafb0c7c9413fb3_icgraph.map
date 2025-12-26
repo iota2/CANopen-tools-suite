@@ -1,7 +1,10 @@
 <map id="save_frame_to_csv" name="save_frame_to_csv">
-<area shape="rect" id="node1" title="Save a processed frame row to the processed CSV file." alt="" coords="467,53,615,80"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="236,5,419,61"/>
-<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="241,85,413,112"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,13,188,54"/>
-<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="75,85,118,112"/>
+<area shape="rect" id="node1" title="Save a processed frame row to the processed CSV file." alt="" coords="1017,61,1165,88"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="266,5,449,61"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="781,61,953,88"/>
+<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="765,113,969,154"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,59,188,101"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="601,61,643,88"/>
+<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title=" " alt="" coords="527,113,717,154"/>
+<area shape="rect" id="node8" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="236,95,479,137"/>
 </map>

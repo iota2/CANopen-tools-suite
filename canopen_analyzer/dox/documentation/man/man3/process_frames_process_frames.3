@@ -1,33 +1,13 @@
-.TH "process_frames" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "process_frames" 3 "Fri Dec 26 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-process_frames \- Processor thread that consumes CAN frames and updates statistics\&.  
-
+process_frames
 .SH SYNOPSIS
 .br
 .PP
 .PP
 Inherits Thread\&.
-.SH "Detailed Description"
-.PP 
-Processor thread that consumes CAN frames and updates statistics\&. 
-
-Consumes frames produced by the CAN sniffer, classifies them, updates \fBbus_stats\fP, optionally exports processed rows to CSV, and handles SDO/SDO-response bookkeeping using an EDS map\&.
-.PP
-The processor reads frame dictionaries from \fCraw_frame\fP, performs:
-.IP "\(bu" 2
-frame classification (NMT, SYNC, EMCY, TIME, PDO, SDO_REQ, SDO_RES, HB, UNKNOWN),
-.IP "\(bu" 2
-top-talker and node tracking,
-.IP "\(bu" 2
-SDO request/response timing and success/abort accounting,
-.IP "\(bu" 2
-payload-size accounting,
-.IP "\(bu" 2
-optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC\fBstop()\fP\fP and will close CSV resources on exit\&. 
-.PP
-
 .SS "Public Member Functions"
 
 .in +1c
@@ -100,6 +80,14 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .br
 .RI "Reference to the \fBbus_stats\fP instance used for recording metrics\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fB_sdo_has_index\fP (self, int cs)"
+.br
+.RI "Return True if SDO command specifier carries index/subindex\&. "
+.in -1c
 .SS "Private Attributes"
 
 .in +1c
@@ -131,6 +119,10 @@ Initialize the processor thread\&. The constructor stores references to required
 
 .SH "Member Function Documentation"
 .PP 
+.SS " bool _sdo_has_index ( self, int cs)\fC [private]\fP"
+
+.PP
+Return True if SDO command specifier carries index/subindex\&. 
 .SS "def run ( self)"
 
 .PP

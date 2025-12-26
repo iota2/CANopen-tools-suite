@@ -76,7 +76,7 @@ class eds_parser:
         """
 
         ## Logger instance scoped to this parser.
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
         ## Path to the EDS file supplied to this parser (or None).
         self.eds_path = eds_path

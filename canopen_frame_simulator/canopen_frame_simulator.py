@@ -56,7 +56,7 @@ def enable_logging():
     logging.basicConfig(
         filename="canopen_frame_simulator.log",
         filemode="w",
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s"
     )
     global log
@@ -69,50 +69,129 @@ def clean_int(val: str) -> int:
     return int(val.split(";")[0].strip(), 0)
 
 
-def parse_pdos_from_eds(eds_path):
-    """Parse all TPDO COB-IDs and mapping entries from EDS."""
+def parse_tpdos_from_eds(eds_path):
+    """Parse TPDO COB-IDs and mapping entries from EDS (CiA-301 compliant)."""
     cfg = configparser.ConfigParser(strict=False, delimiters=("="))
     cfg.optionxform = str
     cfg.read(eds_path)
 
-    pdos = []
-    for sec in cfg.sections():
-        if sec.startswith("180"):  # TPDO comm
-            map_sec = sec.replace("180", "1A0")
-            if map_sec in cfg:
-                try:
-                    cob_id = clean_int(cfg[f"{sec}sub1"]["DefaultValue"])
-                    num_mapped = clean_int(cfg[f"{map_sec}sub0"]["DefaultValue"])
-                    mappings = []
-                    for sub in range(1, num_mapped + 1):
-                        raw = clean_int(cfg[f"{map_sec}sub{sub}"]["DefaultValue"])
-                        index = (raw >> 16) & 0xFFFF
-                        subidx = (raw >> 8) & 0xFF
-                        size = raw & 0xFF
-                        mappings.append((index, subidx, size))
-                        log.debug(
-                            f"Parsed PDO {sec}: COB=0x{cob_id:X}, "
-                            f"index=0x{index:04X}, sub={subidx}, size={size}"
-                        )
-                    pdos.append((cob_id, mappings))
-                except Exception as e:
-                    log.warning(f"Failed parsing {map_sec}: {e}")
-    return pdos
+    tpdos = []
+
+    for n in range(0, 4):
+        comm_sec = f"180{n}"
+        map_sec = f"1A0{n}"
+
+        if comm_sec not in cfg or map_sec not in cfg:
+            continue
+
+        try:
+            # COB-ID from [180Xsub1]
+            cob_sec = f"{comm_sec}sub1"
+            if cob_sec not in cfg:
+                raise KeyError(f"{cob_sec} missing")
+
+            cob_id = clean_int(cfg[cob_sec]["DefaultValue"])
+
+            # number of mapped entries from [1A0Xsub0]
+            map0_sec = f"{map_sec}sub0"
+            if map0_sec not in cfg:
+                raise KeyError(f"{map0_sec} missing")
+
+            num_mapped = clean_int(cfg[map0_sec]["DefaultValue"])
+
+            mappings = []
+            for sub in range(1, num_mapped + 1):
+                mapn_sec = f"{map_sec}sub{sub}"
+                if mapn_sec not in cfg:
+                    raise KeyError(f"{mapn_sec} missing")
+
+                raw = clean_int(cfg[mapn_sec]["DefaultValue"])
+
+                index = (raw >> 16) & 0xFFFF
+                subidx = (raw >> 8) & 0xFF
+                size_bits = raw & 0xFF
+
+                mappings.append((index, subidx, size_bits))
+
+            tpdos.append((cob_id, mappings))
+
+            log.info(
+                f"Parsed TPDO {comm_sec}: COB=0x{cob_id:X}, mappings={len(mappings)}"
+            )
+
+        except Exception as e:
+            log.warning(f"Failed parsing TPDO {comm_sec}: {e}")
+
+    return tpdos
 
 
-def parse_sdos_from_eds(eds_path, pdos):
-    """Parse all SDO variables from EDS [2000..9FFF], excluding PDO-mapped ones."""
+def parse_rpdos_from_eds(eds_path):
+    """Parse RPDO COB-IDs and mapping entries from EDS (CiA-301 compliant)."""
     cfg = configparser.ConfigParser(strict=False, delimiters=("="))
     cfg.optionxform = str
     cfg.read(eds_path)
 
-    mapped_pairs = {(idx, sub) for _, mappings in pdos for (idx, sub, _) in mappings}
-    mapped_indices = {idx for _, mappings in pdos for (idx, _, _) in mappings}
+    rpdos = []
 
-    sdos = []
+    for n in range(0, 4):
+        comm_sec = f"140{n}"
+        map_sec = f"160{n}"
+
+        if comm_sec not in cfg or map_sec not in cfg:
+            continue
+
+        try:
+            # COB-ID is in [140Xsub1].DefaultValue
+            cob_sec = f"{comm_sec}sub1"
+            if cob_sec not in cfg:
+                raise KeyError(f"{cob_sec} missing")
+
+            cob_id = clean_int(cfg[cob_sec]["DefaultValue"])
+
+            # Number of mapped objects in [160Xsub0].DefaultValue
+            map0_sec = f"{map_sec}sub0"
+            if map0_sec not in cfg:
+                raise KeyError(f"{map0_sec} missing")
+
+            num_mapped = clean_int(cfg[map0_sec]["DefaultValue"])
+
+            mappings = []
+            for sub in range(1, num_mapped + 1):
+                mapn_sec = f"{map_sec}sub{sub}"
+                if mapn_sec not in cfg:
+                    raise KeyError(f"{mapn_sec} missing")
+
+                raw = clean_int(cfg[mapn_sec]["DefaultValue"])
+
+                index = (raw >> 16) & 0xFFFF
+                subidx = (raw >> 8) & 0xFF
+                size_bits = raw & 0xFF
+
+                mappings.append((index, subidx, size_bits))
+
+            rpdos.append((cob_id, mappings))
+
+            log.info(
+                f"Parsed RPDO {comm_sec}: COB=0x{cob_id:X}, mappings={len(mappings)}"
+            )
+
+        except Exception as e:
+            log.warning(f"Failed parsing RPDO {comm_sec}: {e}")
+
+    return rpdos
+
+
+def parse_sdos_from_eds(eds_path):
+    """Parse OD entries with AccessType for SDO handling."""
+    cfg = configparser.ConfigParser(strict=False, delimiters=("="))
+    cfg.optionxform = str
+    cfg.read(eds_path)
+
+    sdo_db = {}
+
     for sec in cfg.sections():
         try:
-            if not re.match(r'^(?:0x)?[0-9A-Fa-f]+(?:sub[0-9A-Fa-f]+)?$', sec):
+            if not re.fullmatch(r"(0x)?[0-9A-Fa-f]+(sub[0-9A-Fa-f]+)?", sec):
                 continue
 
             if "sub" in sec:
@@ -123,18 +202,24 @@ def parse_sdos_from_eds(eds_path, pdos):
                 idx = int(sec, 16)
                 subidx = 0
 
-            if not (0x2000 <= idx <= 0x9FFF):
+            access = cfg[sec].get("AccessType", "UNKNOWN").strip().lower()
+            if access == "unknown":
+                continue  # HARD RULE: invisible to SDO
+
+            if "DefaultValue" not in cfg[sec]:
                 continue
 
-            if (idx, subidx) in mapped_pairs or idx in mapped_indices:
-                continue
+            value = clean_int(cfg[sec]["DefaultValue"])
 
-            if "DefaultValue" in cfg[sec]:
-                val = clean_int(cfg[sec]["DefaultValue"])
-                sdos.append((idx, subidx, val))
+            sdo_db[(idx, subidx)] = {
+                "value": value,
+                "access": access,  # ro / wo / rw
+            }
+
         except Exception:
             continue
-    return sdos
+
+    return sdo_db
 
 
 def send_frame(bus, arb_id, data_bytes, delay=0.05, error=False):
@@ -152,21 +237,22 @@ def send_frame(bus, arb_id, data_bytes, delay=0.05, error=False):
     time.sleep(delay)
 
 
-def get_node_id_from_eds(eds_path):
-    """Extract Node ID from EDS file (fallback = 1)."""
-    cfg = configparser.ConfigParser(strict=False, delimiters=("="))
-    cfg.optionxform = str
+def get_node_id_from_eds(eds_path, default=0x01):
+    cfg = configparser.ConfigParser(strict=False)
     cfg.read(eds_path)
 
-    for section in cfg.sections():
-        if section.lower() in ("devicecomissioning", "devicecom", "communication"):
-            for key in cfg[section]:
-                if key.lower() in ("nodeid", "node_id", "node_id_defaultvalue", "defaultnodeid"):
+    for sec in cfg.sections():
+        if sec.lower() in ("devicecommissioning", "devicecomissioning", "communication"):
+            for key in cfg[sec]:
+                if key.lower() == "nodeid":
                     try:
-                        return int(cfg[section][key].split(";")[0].strip(), 0)
+                        nid = int(cfg[sec][key].split(";")[0], 0)
+                        if 1 <= nid <= 127:
+                            return nid
                     except Exception:
-                        continue
-    return 1
+                        pass
+
+    return default
 
 
 # ---------------- CANopen Services ----------------
@@ -241,80 +327,227 @@ def send_emcy(bus, node_id, error_code=0x1000, error_reg=0x01, manuf_bytes=None,
     send_frame(bus, 0x80 + node_id, data, error=error_frame)
 
 
+def handle_sdo_request(bus, msg, node_id, sdo_db):
+    if msg.arbitration_id != (0x600 + node_id):
+        return
+
+    data = msg.data
+    if len(data) < 4:
+        return
+
+    cs = data[0]
+    index = data[1] | (data[2] << 8)
+    sub = data[3]
+
+    key = (index, sub)
+    entry = sdo_db.get(key)
+
+    # Object not SDO-visible
+    if entry is None:
+        send_sdo_abort(bus, node_id, index, sub, 0x06020000)  # object does not exist
+        return
+
+    access = entry["access"]
+
+    # ---------------- READ ----------------
+    if cs == 0x40:
+        if access == "wo":
+            send_sdo_abort(bus, node_id, index, sub, 0x06010001)
+            return
+
+        value = entry["value"]
+        resp = bytearray(8)
+        resp[0] = 0x43
+        resp[1] = data[1]
+        resp[2] = data[2]
+        resp[3] = sub
+        resp[4:8] = int(value).to_bytes(4, "little", signed=False)
+
+        bus.send(can.Message(
+            arbitration_id=0x580 + node_id,
+            data=bytes(resp),
+            is_extended_id=False
+        ))
+        log.info(f"SDO READ  idx=0x{index:04X} sub={sub} → {value}")
+
+    # ---------------- WRITE ----------------
+    elif cs in (0x2F, 0x2B, 0x23):
+        if access == "ro":
+            send_sdo_abort(bus, node_id, index, sub, 0x06010002)
+            return
+
+        size = {0x2F: 1, 0x2B: 2, 0x23: 4}[cs]
+        value = int.from_bytes(data[4:4+size], "little")
+        entry["value"] = value
+
+        resp = bytearray(8)
+        resp[0] = 0x60
+        resp[1] = data[1]
+        resp[2] = data[2]
+        resp[3] = sub
+
+        bus.send(can.Message(
+            arbitration_id=0x580 + node_id,
+            data=bytes(resp),
+            is_extended_id=False
+        ))
+        log.info(f"SDO WRITE idx=0x{index:04X} sub={sub} ← {value}")
+
+
+def send_sdo_abort(bus, node_id, index, sub, abort_code):
+    resp = bytearray(8)
+    resp[0] = 0x80
+    resp[1] = index & 0xFF
+    resp[2] = (index >> 8) & 0xFF
+    resp[3] = sub
+    resp[4:8] = int(abort_code).to_bytes(4, "little")
+
+    bus.send(can.Message(
+        arbitration_id=0x580 + node_id,
+        data=bytes(resp),
+        is_extended_id=False
+    ))
+    log.info(
+        f"SDO ABORT idx=0x{index:04X} sub={sub} code=0x{abort_code:08X}"
+    )
+
+
+def handle_rpdo(msg, rpdos):
+    """Decode and log RPDO frames."""
+    for cob_id, mappings in rpdos:
+        if msg.arbitration_id != cob_id:
+            continue
+
+        data = msg.data
+        offset = 0
+        decoded = []
+
+        for (idx, sub, size_bits) in mappings:
+            size_bytes = size_bits // 8
+            raw = data[offset:offset + size_bytes]
+            val = int.from_bytes(raw, "little")
+            decoded.append(f"0x{idx:04X}:{sub}={val}")
+            offset += size_bytes
+
+        log.info(f"RPDO RX COB=0x{cob_id:X} → " + ", ".join(decoded))
+
+
 # ---------------- Main ----------------
-def main(interface="vcan0", count=5, delay:int=0, eds_path=None,
-         enable_log=False, with_timestamp=False, with_emcy=False, with_err=False):
+def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, enable_log=False,
+         with_timestamp=False, with_emcy=False, with_err=False, only_rx=False, only_tx=False):
 
     if enable_log:
         enable_logging()
 
     bus = can.interface.Bus(channel=interface, interface="socketcan")
 
-    pdos = parse_pdos_from_eds(eds_path) if eds_path else []
-    sdos = parse_sdos_from_eds(eds_path, pdos) if eds_path else []
-    node_id = get_node_id_from_eds(eds_path) if eds_path else 1
+    tpdos = parse_tpdos_from_eds(eds_path) if eds_path else []
+    rpdos = parse_rpdos_from_eds(eds_path) if eds_path else []
+    sdo_db = parse_sdos_from_eds(eds_path) if eds_path else {}
+
+    # Extract Node ID
+    if not node_id or node_id == 0x00:
+        node_id = get_node_id_from_eds(eds_path, default=0x01) if eds_path else 0x01
     manuf_bytes = get_manufacturer_from_eds(eds_path) if eds_path else None
 
     for i in tqdm(range(count), desc="Sending frames"):
 
-        # Heartbeat
-        send_heartbeat(bus, node_id)
+        if only_tx == False:
+            # RX handling (SDO + RPDO)
+            try:
+                msg = bus.recv(timeout=0.0)
+                if msg:
+                    handle_sdo_request(bus, msg, node_id, sdo_db)
+                    handle_rpdo(msg, rpdos)
+            except Exception:
+                pass
 
-        # Time Stamp (if enabled)
-        if with_timestamp:
-            send_timestamp(bus)
+        if only_rx == False:
+            # Heartbeat
+            send_heartbeat(bus, node_id)
 
-        # EMCY (if enabled): send every cycle. Every 10th iteration increment error_code and shift error register bit.
-        if with_emcy:
-            # base error code increments every 10th iteration
-            cycles = i // 10
-            error_code = 0x1000 + cycles
-            # compute err_reg as a single bit that shifts every 10th iteration
-            # bit_pos cycles through 0..7
-            bit_pos = cycles % 8
-            err_reg = (1 << bit_pos) & 0xFF
-            send_emcy(bus, node_id, error_code=error_code, error_reg=err_reg, manuf_bytes=manuf_bytes, error_frame=with_err)
+            # Time Stamp (if enabled)
+            if with_timestamp:
+                send_timestamp(bus)
 
-        # PDOs
-        for cob_id, mappings in pdos:
-            data_bytes = b""
-            for (idx, subidx, size) in mappings:
-                val = float((i + idx + subidx) % 200)
-                if size == 0x20:
-                    data_bytes += struct.pack("<f", val)
-                elif size == 0x10:
-                    data_bytes += int(val).to_bytes(2, "little")
-                elif size == 0x08:
-                    data_bytes += int(val).to_bytes(1, "little")
-                else:
-                    data_bytes += b"\x00" * (size // 8)
-            send_frame(bus, cob_id, data_bytes)
-
-        # SDOs
-        for (idx, sub, default) in sdos:
-            if i % 10 == 0:
+            # EMCY (if enabled): send every cycle. Every 10th iteration increment error_code and shift error register bit.
+            if with_emcy:
+                # base error code increments every 10th iteration
                 cycles = i // 10
-            val = default + cycles
-            sdo_resp = bytes([
-                0x4B if val <= 0xFF else 0x4F,
-                idx & 0xFF,
-                (idx >> 8) & 0xFF,
-                sub,
-            ]) + int(val).to_bytes(4, "little", signed=False)
-            send_frame(bus, 0x580 + node_id, sdo_resp)
+                error_code = 0x1000 + cycles
+                # compute err_reg as a single bit that shifts every 10th iteration
+                # bit_pos cycles through 0..7
+                bit_pos = cycles % 8
+                err_reg = (1 << bit_pos) & 0xFF
+                send_emcy(bus, node_id, error_code=error_code, error_reg=err_reg, manuf_bytes=manuf_bytes, error_frame=with_err)
+
+            # TPDOs
+            for cob_id, mappings in tpdos:
+                data_bytes = b""
+                for (idx, subidx, size) in mappings:
+                    val = float((i + idx + subidx) % 200)
+                    if size == 0x20:
+                        data_bytes += struct.pack("<f", val)
+                    elif size == 0x10:
+                        data_bytes += int(val).to_bytes(2, "little")
+                    elif size == 0x08:
+                        data_bytes += int(val).to_bytes(1, "little")
+                    else:
+                        data_bytes += b"\x00" * (size // 8)
+                send_frame(bus, cob_id, data_bytes)
+
+            # SDOs
+            for (idx, sub), entry in sdo_db.items():
+                # Only simulate RW objects
+                if entry["access"] != "rw":
+                    continue
+
+                # Exclude PDO communication & mapping objects
+                if 0x1400 <= idx <= 0x1BFF:
+                    continue
+
+                cycles = i // 10
+                base_val = entry["value"]
+                val = base_val + cycles
+
+                # Decide expedited size
+                if val <= 0xFF:
+                    cs = 0x2F   # expedited write, 1 byte
+                    data = int(val).to_bytes(1, "little")
+                    pad = b"\x00" * 3
+                else:
+                    cs = 0x23   # expedited write, 4 bytes
+                    data = int(val).to_bytes(4, "little")
+                    pad = b""
+
+                sdo_req = bytes([
+                    cs,
+                    idx & 0xFF,
+                    (idx >> 8) & 0xFF,
+                    sub,
+                ]) + data + pad
+
+                send_frame(bus, 0x600 + node_id, sdo_req)
+
+                log.info(
+                    f"SIM SDO TX idx=0x{idx:04X} sub={sub} val={val}"
+                )
 
         time.sleep(delay / 1000)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--interface", default="vcan0", help="socketcan interface (default: vcan0)")
+    parser.add_argument("--node-id", help="Node ID to be simulated")
     parser.add_argument("--count", type=int, default=5, help="number of update cycles to send")
-    parser.add_argument("--delay", type=int, default=0, help="enable delay in milli-seconds between CAN frames (default: 0)")
+    parser.add_argument("--delay", type=int, default=0, help="enable delay in milli-seconds between CAN frames (  default: 0)")
     parser.add_argument("--eds", help="EDS file path")
     parser.add_argument("--log", action="store_true", help="enable logging to canopen_frame_simulator.log")
     parser.add_argument("--with-timestamp", action="store_true", help="send Time Stamp (0x100)")
     parser.add_argument("--with-emcy", action="store_true", help="send Emergency (0x80 + NodeID)")
     parser.add_argument("--with-err", action="store_true", help="send ERROR-flag on EMCY frames (is_error_frame) to simulate bus error")
+    parser.add_argument("--only-rx", action="store_true", help="simulate only messages reception")
+    parser.add_argument("--only-tx", action="store_true", help="simulate only messages transmission")
     args = parser.parse_args()
-    main(args.interface, args.count, args.delay, args.eds, args.log,
-         args.with_timestamp, args.with_emcy, args.with_err)
+    main(args.interface, int(args.node_id), args.count, args.delay, args.eds, args.log,
+         args.with_timestamp, args.with_emcy, args.with_err, args.only_rx, args.only_tx,)

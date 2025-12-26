@@ -1,4 +1,4 @@
-.TH "CANopenMainWindow" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "CANopenMainWindow" 3 "Fri Dec 26 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP)"
+.RI "def \fB__init__\fP (self, queue\&.Queue() \fBrequested_frame\fP, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP)"
 .br
 .RI "Construct the main CANopen Analyzer GUI window\&. "
 .ti -1c
@@ -114,6 +114,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBrate_sdo\fP"
 .br
 .RI "SDO request/response frame rate graph\&. "
+.ti -1c
+.RI "\fBrequested_frame\fP"
+.br
+.RI "Queue used to receive frames for sending over CAN bus\&. "
 .ti -1c
 .RI "\fBsdo_filter\fP"
 .br
@@ -233,12 +237,15 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "def \fB_on_recv_sdo\fP (self)"
 .br
+.RI "Callback on click Receive SDO button\&. "
 .ti -1c
 .RI "def \fB_on_send_pdo\fP (self)"
 .br
+.RI "Callback on click Send PDO button\&. "
 .ti -1c
 .RI "def \fB_on_send_sdo\fP (self)"
 .br
+.RI "Callback on click Send SDO button\&. "
 .ti -1c
 .RI "def \fB_restore_column_widths\fP (self, QTableWidget table, str table_name)"
 .br
@@ -266,7 +273,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, \fBbus_stats\fP stats, bool fixed)"
+.SS "def __init__ ( self, queue\&.Queue() requested_frame, \fBbus_stats\fP stats, bool fixed)"
 
 .PP
 Construct the main CANopen Analyzer GUI window\&. Initializes the main window state, stores shared backend references, constructs all UI components, and restores any previously saved layout\&. The initial display mode (Fixed / Sequential) is derived from the caller and mirrors the behavior of the CLI implementation\&. 
@@ -445,10 +452,16 @@ Handle display mode changes from the toolbar\&. Switches between Fixed (aggregat
 
 .SS "def _on_recv_sdo ( self)\fC [private]\fP"
 
+.PP
+Callback on click Receive SDO button\&. 
 .SS "def _on_send_pdo ( self)\fC [private]\fP"
 
+.PP
+Callback on click Send PDO button\&. 
 .SS "def _on_send_sdo ( self)\fC [private]\fP"
 
+.PP
+Callback on click Send SDO button\&. 
 .SS "def _restore_column_widths ( self, QTableWidget table, str table_name)\fC [private]\fP"
 
 .PP
@@ -655,6 +668,10 @@ PDO frame rate graph\&.
 
 .PP
 SDO request/response frame rate graph\&. 
+.SS "requested_frame"
+
+.PP
+Queue used to receive frames for sending over CAN bus\&. 
 .SS "sdo_filter"
 
 .PP

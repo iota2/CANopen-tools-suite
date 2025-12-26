@@ -65,7 +65,7 @@ class canopen_sniffer(threading.Thread):
     shutdown via `stop()`. Logging is performed on a per-instance logger.
     """
 
-    def __init__(self, interface: str, raw_frame: queue.Queue = None, export: bool = False):
+    def __init__(self, interface: str, raw_frame: queue.Queue = None, requested_frame=None, export: bool = False):
         """! Initialize CAN sniffer thread and open resources.
         @details
         The constructor opens the socketcan Bus and attempts to connect a
@@ -80,11 +80,14 @@ class canopen_sniffer(threading.Thread):
         ## Queue used to push raw frames for downstream processing.
         self.raw_frame = raw_frame or queue.Queue()
 
+        ## Queue used to receive frames for sending over CAN bus.
+        self.requested_frame = requested_frame or queue.Queue()
+
         ## Thread stop event used to signal the run loop to exit.
         self._stop_event = threading.Event()
 
         ## Logger instance for this sniffer.
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
         ## CAN interface name used by the sniffer.
         self.interface = interface
@@ -141,11 +144,51 @@ class canopen_sniffer(threading.Thread):
 
     def _ensure_bus(self):
         """! Ensure CAN bus is available before transmitting."""
+
         if not getattr(self, "bus", None):
             raise RuntimeError("CAN bus not initialized")
 
+    def _handle_requested_frame(self):
+        """! Dispatch queued control commands from UI layers."""
+
+        try:
+            while True:
+                req = self.requested_frame.get_nowait()
+                self._dispatch_request(req)
+                self.requested_frame.task_done()
+        except queue.Empty:
+            pass
+
+    def _dispatch_request(self, req: dict):
+        rtype = req.get("type")
+
+        if rtype == "sdo_download":
+            self.send_sdo_download(
+                node_id=req["node"],
+                index=req["index"],
+                subindex=req["sub"],
+                value=req["value"],
+                size=req["size"],
+            )
+
+        elif rtype == "sdo_upload":
+            self.send_sdo_upload_request(
+                node_id=req["node"],
+                index=req["index"],
+                subindex=req["sub"],
+            )
+
+        elif rtype == "pdo":
+            self.send_raw_pdo(
+                cob_id=req["cob"],
+                data=req["data"],
+            )
+
+        else:
+            self.log.warning("Unknown request type: %s", rtype)
+
     # --- CSV export helper ---
-    def save_frame_to_csv(self, cob: int, error: bool, raw: str):
+    def save_frame_to_csv(self, type: str, cob: int, error: bool, raw: str):
         """! Save a received CAN frame (raw view) to the CSV export file.
         @details
         Writes a single CSV row with a serial number, timestamp, COB-ID,
@@ -156,12 +199,14 @@ class canopen_sniffer(threading.Thread):
         @param raw Hex string representation of the payload.
         @return None.
         """
+
         if not self.export_writer:
             return
         try:
             self.export_writer.writerow([
                 self.export_serial_number,
                 analyzer_defs.now_str(),
+                type,
                 f"0x{cob:03X}",
                 error,
                 raw
@@ -187,19 +232,20 @@ class canopen_sniffer(threading.Thread):
         Also logs the raw frame and triggers CSV export if enabled.
         @param msg The `can.Message` instance received from the bus.
         """
+
         # Total received data
         cob = msg.arbitration_id
         raw = msg.data
         error = msg.is_error_frame
 
-        frame = {"time": time.time(), "cob": cob, "error": error, "raw": raw}
+        frame = {"time": time.time(), "type": "rx", "cob": cob, "error": error, "raw": raw}
         # Push frame to queue
         self.raw_frame.put(frame)
 
-        self.log.debug(f"Raw frame: [{analyzer_defs.now_str()}] [0x{cob:03X}] [{error}] [{analyzer_defs.bytes_to_hex(raw)}]")
+        self.log.debug(f"Rx Raw frame: [{analyzer_defs.now_str()}] [0x{cob:03X}] [{error}] [{analyzer_defs.bytes_to_hex(raw)}]")
 
         # Export to CSV
-        self.save_frame_to_csv(cob, error, analyzer_defs.bytes_to_hex(raw))
+        self.save_frame_to_csv("rx", cob, error, analyzer_defs.bytes_to_hex(raw))
 
     # --- SDO Download (Expedited Write) ---
     def send_sdo_download(self, node_id: int, index: int, subindex: int, value: int, size: int):
@@ -236,11 +282,18 @@ class canopen_sniffer(threading.Thread):
         )
 
         self.bus.send(msg)
+        frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": analyzer_defs.bytes_to_hex(value)}
+        self.raw_frame.put(frame)
+
+        self.log.debug("SDO-REQ Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(payload)))
+
+        # Export to CSV
+        self.save_frame_to_csv("SDO-REQ Tx", cob_id, "", analyzer_defs.bytes_to_hex(value))
 
     # --- SDO Upload Request (Read) ---
     def send_sdo_upload_request(self, node_id: int, index: int, subindex: int):
         """! Send SDO upload request (read).
-        @param node_id Node ID (1–127)
+        @param node_id Node ID (1-127)
         @param index Object Dictionary index
         @param subindex Subindex
         """
@@ -296,6 +349,19 @@ class canopen_sniffer(threading.Thread):
 
         try:
             while not self._stop_event.is_set():
+
+                # Handle outgoing requests (NEW)
+                try:
+                    self._handle_requested_frame()
+                except can_exceptions.CanOperationError as e:
+                    # Happens when the underlying socket is closed during shutdown.
+                    # If we are stopping, treat silently; otherwise warn and break.
+                    if self._stop_event.is_set():
+                        self.log.warning("CanOperationError during shutdown: %s", e)
+                        break
+                    self.log.error("CAN operation error (send): %s", e)
+
+                # Handle incoming CAN frames
                 try:
                     msg = self.bus.recv(timeout=recv_timeout)
                 except (InterruptedError, KeyboardInterrupt):
@@ -307,9 +373,9 @@ class canopen_sniffer(threading.Thread):
                     # Happens when the underlying socket is closed during shutdown.
                     # If we are stopping, treat silently; otherwise warn and break.
                     if self._stop_event.is_set():
-                        self.log.debug("CanOperationError during shutdown: %s", e)
+                        self.log.warning("CanOperationError during shutdown: %s", e)
                         break
-                    self.log.warning("CAN operation error (recv): %s", e)
+                    self.log.error("CAN operation error (recv): %s", e)
                     break
                 except OSError as e:
                     # OSError like "Bad file descriptor" can also occur when socket is closed.

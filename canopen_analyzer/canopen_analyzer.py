@@ -120,17 +120,21 @@ def main():
     # Shared queue for processed frames
     processed_frame = queue.Queue()
 
+    # Shared queue for requested frames
+    requested_frame = queue.Queue()
+
     ## Create CANopen sniffer thread for raw CAN frame capture.
     sniffer = canopen_sniffer(interface=args.interface,
-                          raw_frame=raw_frame,
-                          export=args.export)
+                                raw_frame=raw_frame,
+                                requested_frame=requested_frame,
+                                export=args.export)
 
     ## Create frame processor thread for classification and stats update.
     processor = process_frames(stats=stats,
-                              raw_frame=raw_frame,
-                              processed_frame=processed_frame,
-                              eds_map=eds_map,
-                              export=args.export)
+                                raw_frame=raw_frame,
+                                processed_frame=processed_frame,
+                                eds_map=eds_map,
+                                export=args.export)
 
     ## Start background threads.
     sniffer.start()
@@ -151,7 +155,7 @@ def main():
             # fallback to legacy CLI thread if textual unavailable
             display = display_cli(stats=stats, processed_frame=processed_frame, fixed=args.fixed)
     elif args.mode == "gui":
-        display_gui(stats, processed_frame, fixed=args.fixed)
+        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame,fixed=args.fixed)
 
     if display:
         display.start()

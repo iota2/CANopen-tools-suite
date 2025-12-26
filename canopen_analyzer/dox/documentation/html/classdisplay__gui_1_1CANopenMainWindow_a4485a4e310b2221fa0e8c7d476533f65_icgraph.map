@@ -1,4 +1,0 @@
-<map id="update_bus_stats" name="update_bus_stats">
-<area shape="rect" id="node1" title="Update Bus Statistics dashboard widgets and rate graphs." alt="" coords="137,5,273,32"/>
-<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf" title="Handle a newly decoded CAN frame." alt="" coords="5,5,89,32"/>
-</map>

@@ -53,6 +53,13 @@ from eds_parser import eds_parser
 from bus_stats import bus_stats
 
 class process_frames(threading.Thread):
+
+    def _sdo_has_index(self, cs: int) -> bool:
+        """!
+        @brief Return True if SDO command specifier carries index/subindex.
+        """
+        return (cs & 0xE0) in (0x20, 0x40, 0x80)
+
     """! Processor thread that consumes CAN frames and updates statistics.
     @brief Consumes frames produced by the CAN sniffer, classifies them,
            updates @ref bus_stats, optionally exports processed rows to CSV, and
@@ -92,7 +99,7 @@ class process_frames(threading.Thread):
         self._stop_event = threading.Event()
 
         ## Logger instance scoped to this processor.
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
         ## EDS map/parser used to resolve (index, subindex) -> name strings.
         self.eds_map = eds_map
@@ -149,24 +156,37 @@ class process_frames(threading.Thread):
         @param decoded  Decoded frame payload in human-readable form.
         """
 
+        now = analyzer_defs.now_str()
+
         frame = {
-            "time": analyzer_defs.now_str(),
+            "time": now,
             "cob": cob,
             "type": ftype,
             "index": index,
             "sub": sub,
             "name": name,
             "raw": raw,
-            "decoded": decoded
+            "decoded": decoded,
         }
 
-        self.log.debug(
-            "Processed frame: [%s] [%s] [0x%03X] [0x%04X] [0x%02X] [%s] [%s] [%s]",
-            analyzer_defs.now_str(), ftype.name, cob, index, sub, name, raw, decoded
+        # Decide log level once
+        is_od_frame = ftype in (
+            analyzer_defs.frame_type.PDO,
+            analyzer_defs.frame_type.SDO_REQ,
+            analyzer_defs.frame_type.SDO_RES,
         )
 
-        # push frame to queue
-        self.processed_frame.put(frame)
+        log_fn = self.log.debug
+        if is_od_frame and index == 0x0000:
+            log_fn = self.log.error
+
+        log_fn(
+            "Processed frame: [%s] [%s] [0x%03X] [0x%04X] [0x%02X] [%s] [%s] [%s]",
+            now, ftype.name, cob, index, sub, name, raw, decoded)
+
+        # Drop unresolved OD frames only
+        if not (is_od_frame and index == 0x0000):
+            self.processed_frame.put(frame)
 
     def save_frame_to_csv(self, cob: int, ftype: analyzer_defs.frame_type, index: int, sub: int, name: str, raw: str, decoded: str):
         """! Save a processed frame row to the processed CSV file.
@@ -250,6 +270,10 @@ class process_frames(threading.Thread):
                 except queue.Empty:
                     continue
 
+                # Need not to process transmission frames
+                if frame.get("type") == "tx":
+                    continue
+
                 # Extract fields (defensive)
                 cob = frame.get("cob")
                 error = frame.get("error")
@@ -314,13 +338,46 @@ class process_frames(threading.Thread):
                 # SDO request (client->server)
                 if ftype == analyzer_defs.frame_type.SDO_REQ and raw and len(raw) >= 4:
                     try:
+                        cs = raw[0]
                         index = raw[2] << 8 | raw[1]
                         sub = raw[3]
-                        self.stats.update_sdo_request_time(index, sub)
-                        name = self.eds_map.name_map.get((index, sub), f"0x{index:04X}:{sub}")
 
-                        # Save the frame
-                        self.save_processed_frame(cob, ftype, index, sub, name, raw, decoded="")
+                        self.stats.update_sdo_request_time(index, sub)
+
+                        name = self.eds_map.name_map.get(
+                            (index, sub), f"0x{index:04X}:{sub}"
+                        )
+
+                        decoded = ""
+                        payload_len = 0
+
+                        # ---- UPLOAD REQUEST (READ) ----
+                        if cs == 0x40:
+                            decoded = "READ"
+
+                        # ---- DOWNLOAD REQUEST (WRITE) ----
+                        elif cs in (0x2F, 0x2B, 0x23):
+                            unused = (cs >> 2) & 0x03
+                            payload_len = 4 - unused
+                            payload = raw[4:4 + payload_len]
+                            val = int.from_bytes(payload, "little")
+                            decoded = str(val)
+
+                        # ---- ABORT (rare in REQ) ----
+                        elif cs == 0x80:
+                            decoded = "ABORT"
+
+                        try:
+                            self.stats.increment_payload(
+                                analyzer_defs.frame_type.SDO_REQ, payload_len
+                            )
+                        except Exception:
+                            pass
+
+                        self.save_processed_frame(
+                            cob, ftype, index, sub, name, raw, decoded
+                        )
+
                     except Exception:
                         self.log.warning("Malformed SDO request frame while recording req time")
 
@@ -332,35 +389,54 @@ class process_frames(threading.Thread):
                     else:
                         index, sub = 0, 0
 
-                    # detect abort
-                    if raw and raw[0] == 0x80:
+                    cs = raw[0] if raw else 0x00
+
+                    # ---- ABORT ----
+                    if cs == 0x80 and raw and len(raw) >= 8:
                         self.stats.increment_sdo_abort()
-                        decoded = "ABORT"
+                        abort_code = int.from_bytes(raw[4:8], "little")
+                        decoded = f"ABORT 0x{abort_code:08X}"
                         payload_len = 0
-                    else:
-                        # assume expedited/data in bytes 4+
+
+                    # ---- EXPEDITED UPLOAD RESPONSE ----
+                    elif cs in (0x43, 0x4B, 0x4F) and raw and len(raw) == 8:
                         self.stats.increment_sdo_success()
-                        payload = raw[4:] if raw and len(raw) > 4 else b""
-                        payload_len = len(payload)
-                        if payload_len:
-                            val = int.from_bytes(payload, "little")
-                            decoded = str(val)
-                        else:
-                            decoded = ""
+
+                        # Number of unused bytes encoded in CS
+                        n_unused = (cs >> 2) & 0x03
+                        data_len = 4 - n_unused
+
+                        payload = raw[4:4 + data_len]
+                        val = int.from_bytes(payload, "little")
+                        decoded = str(val)
+                        payload_len = data_len
+
+                    # ---- DOWNLOAD ACK (no data) ----
+                    elif cs == 0x60:
+                        self.stats.increment_sdo_success()
+                        decoded = "OK"
+                        payload_len = 0
+
+                    else:
+                        decoded = ""
+                        payload_len = 0
 
                     try:
-                        self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, payload_len)
+                        self.stats.increment_payload(
+                            analyzer_defs.frame_type.SDO_RES, payload_len
+                        )
                     except Exception:
                         pass
 
-                    # update response latency if request recorded
                     self.stats.update_sdo_response_time(index, sub)
 
-                    # Get name from EDS map
-                    name = self.eds_map.name_map.get((index, sub), f"0x{index:04X}:{sub}")
+                    name = self.eds_map.name_map.get(
+                        (index, sub), f"0x{index:04X}:{sub}"
+                    )
 
-                    # Save the frame
-                    self.save_processed_frame(cob, ftype, index, sub, name, raw, decoded)
+                    self.save_processed_frame(
+                        cob, ftype, index, sub, name, raw, decoded
+                    )
 
                 # PDO frame
                 elif ftype == analyzer_defs.frame_type.PDO:

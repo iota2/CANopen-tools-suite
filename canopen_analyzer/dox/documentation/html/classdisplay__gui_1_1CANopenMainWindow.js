@@ -1,6 +1,6 @@
 var classdisplay__gui_1_1CANopenMainWindow =
 [
-    [ "__init__", "classdisplay__gui_1_1CANopenMainWindow.html#a535a819fd0c00d2ae80937d2ea92a2a0", null ],
+    [ "__init__", "classdisplay__gui_1_1CANopenMainWindow.html#ae7f281afe17c65edbe990085f57c7271", null ],
     [ "_adjust_bus_table_height", "classdisplay__gui_1_1CANopenMainWindow.html#a94ffcdf4bdc98224f44388443eb1e657", null ],
     [ "_apply_filter", "classdisplay__gui_1_1CANopenMainWindow.html#a370a24be6156c8005288d20934a0e8fb", null ],
     [ "_autosize_columns", "classdisplay__gui_1_1CANopenMainWindow.html#abbad18b8e103ad98f1550ff4a4a3a993", null ],
@@ -45,6 +45,7 @@ var classdisplay__gui_1_1CANopenMainWindow =
     [ "rate_misc", "classdisplay__gui_1_1CANopenMainWindow.html#a692dccfb286da085c50701bb0655e44a", null ],
     [ "rate_pdo", "classdisplay__gui_1_1CANopenMainWindow.html#ad18bd90639b22805e6d23ba2ec4e4334", null ],
     [ "rate_sdo", "classdisplay__gui_1_1CANopenMainWindow.html#af9aade33e4ca0f15067d6005207620b9", null ],
+    [ "requested_frame", "classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a", null ],
     [ "sdo_filter", "classdisplay__gui_1_1CANopenMainWindow.html#ace47c83f900a5ce72ddcfce478222e70", null ],
     [ "sdo_index_edit", "classdisplay__gui_1_1CANopenMainWindow.html#a497d36e63e668e24b5cf43050ee5a356", null ],
     [ "sdo_node_edit", "classdisplay__gui_1_1CANopenMainWindow.html#aef1f02b7d6312a977b750dc2219ed388", null ],

@@ -1,5 +1,10 @@
 var NAVTREEINDEX1 =
 {
+"functions_e.html":[2,3,0,5],
+"functions_f.html":[2,3,0,6],
+"functions_func.html":[2,3,1],
+"functions_g.html":[2,3,0,7],
+"functions_h.html":[2,3,0,8],
 "functions_i.html":[2,3,0,9],
 "functions_l.html":[2,3,0,10],
 "functions_m.html":[2,3,0,11],
@@ -60,7 +65,7 @@ var NAVTREEINDEX1 =
 "namespacecanopen__sniffer.html":[1,0,3],
 "namespacedisplay__cli.html":[1,0,4],
 "namespacedisplay__gui.html":[1,0,5],
-"namespacedisplay__gui.html#a8247158519186ad09cce5855219efdb0":[1,0,5,3],
+"namespacedisplay__gui.html#aa2626e4b626b5d62f4e77894376a8f74":[1,0,5,3],
 "namespacedisplay__tui.html":[1,0,6],
 "namespacedisplay__tui.html#a0ac8512426efbd5aed951550c0939686":[1,0,6,1],
 "namespaceeds__parser.html":[1,0,7],

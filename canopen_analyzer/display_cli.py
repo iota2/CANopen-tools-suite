@@ -88,7 +88,7 @@ class display_cli(threading.Thread):
         self.console = Console()
 
         ## Logger instance for CLI display.
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
         self._stop_event = threading.Event()
 

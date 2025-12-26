@@ -1,6 +1,7 @@
 var classprocess__frames_1_1process__frames =
 [
     [ "__init__", "classprocess__frames_1_1process__frames.html#ae9017521a9672251ad6a11dcd1d6103d", null ],
+    [ "_sdo_has_index", "classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a", null ],
     [ "run", "classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0", null ],
     [ "save_frame", "classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46", null ],
     [ "save_frame_to_csv", "classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3", null ],
