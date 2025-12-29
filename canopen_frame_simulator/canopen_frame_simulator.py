@@ -233,7 +233,6 @@ def send_frame(bus, arb_id, data_bytes, delay=0.05, error=False):
                       is_extended_id=False,
                       is_error_frame=bool(error))
     bus.send(msg)
-    log.info(f"Sent frame COB=0x{arb_id:X}, data={data_bytes.hex(' ')}, error={error}")
     time.sleep(delay)
 
 
@@ -283,6 +282,8 @@ def get_manufacturer_from_eds(eds_path):
 
 def send_heartbeat(bus, node_id):
     """Send heartbeat (0x700 + NodeID)."""
+
+    log.debug(f"[HB] cob={0x700 + node_id} data={bytes([0x05])}")
     send_frame(bus, 0x700 + node_id, bytes([0x05]))  # 0x05 means Operational
 
 
@@ -307,6 +308,7 @@ def send_timestamp(bus):
     days_since_base = max(0, min(days_since_base, 0xFFFF))
 
     data = ms_after_midnight.to_bytes(4, "little") + days_since_base.to_bytes(2, "little")
+    log.debug(f"[TIME] cob={0x100} data={data.hex()}")
     send_frame(bus, 0x100, data)
 
 
@@ -324,6 +326,8 @@ def send_emcy(bus, node_id, error_code=0x1000, error_reg=0x01, manuf_bytes=None,
     data = int(error_code).to_bytes(2, "little") + bytes([int(error_reg) & 0xFF]) + manuf
     if len(data) < 8:
         data = data + b"\x00" * (8 - len(data))
+
+    log.debug(f"[EMCY] cob={0x80 + node_id} data={data.hex()}")
     send_frame(bus, 0x80 + node_id, data, error=error_frame)
 
 
@@ -414,6 +418,7 @@ def send_sdo_abort(bus, node_id, index, sub, abort_code):
 
 def handle_rpdo(msg, rpdos):
     """Decode and log RPDO frames."""
+
     for cob_id, mappings in rpdos:
         if msg.arbitration_id != cob_id:
             continue
@@ -497,6 +502,9 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
                         data_bytes += int(val).to_bytes(1, "little")
                     else:
                         data_bytes += b"\x00" * (size // 8)
+
+                    log.debug(f"[TPDO] cob={cob_id} idx=0x{idx:04X} sub={subidx} data={data_bytes.hex()}")
+
                 send_frame(bus, cob_id, data_bytes)
 
             # SDOs
@@ -531,11 +539,8 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
                     sub,
                 ]) + data + pad
 
+                log.debug(f"[SDO REQ] cob={0x600 + node_id} idx=0x{idx:04X} sub={sub} data={sdo_req.hex()}")
                 send_frame(bus, 0x600 + node_id, sdo_req)
-
-                log.info(
-                    f"SIM SDO TX idx=0x{idx:04X} sub={sub} val={val}"
-                )
 
         time.sleep(delay / 1000)
 

@@ -1026,9 +1026,9 @@ class CANopenMainWindow(QMainWindow):
         for visual consistency.
         """
 
-        t = QTableWidget(0, 8)
+        t = QTableWidget(0, 9)
         t.setHorizontalHeaderLabels(
-            ["Time", "COB-ID", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
+            ["Time", "COB-ID", "Dir", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
         )
         t.setAlternatingRowColors(True)
 
@@ -1890,11 +1890,16 @@ class CANopenMainWindow(QMainWindow):
                 analyzer_defs.frame_type.SDO_REQ,
                 analyzer_defs.frame_type.SDO_RES
             ):
-                key = (p["cob"], p["index"], p["sub"])
+                # SDO direction derived strictly from frame type
+                dir = "REQ" if ftype == analyzer_defs.frame_type.SDO_REQ else "RESP"
+
+                # Fixed-mode key MUST include direction
+                key = (ftype, p["cob"], p["index"], p["sub"])
+
                 self.update_table(
                     self.sdo_table, self.fixed_sdo, key,
                     [
-                        t, cob, p.get("name"),
+                        t, cob, dir, p.get("name"),
                         f"0x{p['index']:04X}", f"0x{p['sub']:02X}",
                         raw, dec, cnt
                     ]
