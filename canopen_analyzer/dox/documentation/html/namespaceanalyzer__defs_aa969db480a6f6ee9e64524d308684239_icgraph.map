@@ -1,10 +1,12 @@
 <map id="bytes_to_hex" name="bytes_to_hex">
-<area shape="rect" id="node1" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1043,65,1152,92"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="266,5,449,61"/>
-<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="765,58,995,99"/>
-<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="778,123,982,165"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,62,188,103"/>
-<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="533,58,711,99"/>
-<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title=" " alt="" coords="527,123,717,165"/>
-<area shape="rect" id="node8" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="236,98,479,139"/>
+<area shape="rect" id="node1" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1043,134,1152,160"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="266,40,449,96"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="765,61,995,102"/>
+<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send raw PDO frame." alt="" coords="789,126,971,168"/>
+<area shape="rect" id="node9" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="778,192,982,233"/>
+<area shape="rect" id="node10" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="Send SDO upload request (read)." alt="" coords="787,258,973,314"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,97,188,138"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="533,61,711,102"/>
+<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title=" " alt="" coords="527,158,717,200"/>
+<area shape="rect" id="node8" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="236,133,479,174"/>
 </map>

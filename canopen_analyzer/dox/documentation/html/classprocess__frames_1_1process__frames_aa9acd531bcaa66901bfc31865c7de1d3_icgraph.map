@@ -1,0 +1,12 @@
+<map id="save_frame_to_csv" name="save_frame_to_csv">
+<area shape="rect" id="node1" title="Save a processed frame row to the processed CSV file." alt="" coords="1017,109,1165,135"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="266,26,449,82"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="781,50,953,77"/>
+<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send raw PDO frame." alt="" coords="776,101,959,143"/>
+<area shape="rect" id="node9" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="765,167,969,208"/>
+<area shape="rect" id="node10" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="Send SDO upload request (read)." alt="" coords="775,233,960,289"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,80,188,121"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="601,50,643,77"/>
+<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title=" " alt="" coords="527,133,717,175"/>
+<area shape="rect" id="node8" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="236,116,479,157"/>
+</map>

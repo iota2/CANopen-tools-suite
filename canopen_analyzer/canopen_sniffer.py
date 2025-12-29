@@ -282,13 +282,14 @@ class canopen_sniffer(threading.Thread):
         )
 
         self.bus.send(msg)
-        frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": analyzer_defs.bytes_to_hex(value)}
+        # frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": analyzer_defs.bytes_to_hex(value)}
+        frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
         self.raw_frame.put(frame)
 
-        self.log.debug("SDO-REQ Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(payload)))
+        self.log.debug("SDO-Download Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(payload)))
 
         # Export to CSV
-        self.save_frame_to_csv("SDO-REQ Tx", cob_id, "", analyzer_defs.bytes_to_hex(value))
+        self.save_frame_to_csv("SDO-Download Tx", cob_id, "", analyzer_defs.bytes_to_hex(value))
 
     # --- SDO Upload Request (Read) ---
     def send_sdo_upload_request(self, node_id: int, index: int, subindex: int):
@@ -316,6 +317,15 @@ class canopen_sniffer(threading.Thread):
 
         self.bus.send(msg)
 
+        frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
+        self.raw_frame.put(frame)
+
+        self.log.debug("SDO-Upload Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(payload)))
+
+        # Export to CSV
+        self.save_frame_to_csv("SDO-Upload Tx", cob_id, "", analyzer_defs.bytes_to_hex(payload))
+
+
     # --- Raw PDO Send ---
     def send_raw_pdo(self, cob_id: int, data: bytes):
         """! Send raw PDO frame.
@@ -335,6 +345,15 @@ class canopen_sniffer(threading.Thread):
         )
 
         self.bus.send(msg)
+
+        frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
+        self.raw_frame.put(frame)
+
+        self.log.debug("PDO Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(data)))
+
+        # Export to CSV
+        self.save_frame_to_csv("PDO Tx", cob_id, "", analyzer_defs.bytes_to_hex(data))
+
 
     def run(self):
         """! Main loop of the sniffer thread.

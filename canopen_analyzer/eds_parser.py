@@ -81,8 +81,14 @@ class eds_parser:
         ## Path to the EDS file supplied to this parser (or None).
         self.eds_path = eds_path
 
-        ## Mapping of COB-ID -> list of (index, subindex, size) tuples.
+        ## Mapping of all PDO COB-ID -> list of (index, subindex, size) tuples.
         self.pdo_map = {}
+
+        ## Mapping of TPDO COB-ID -> list of (index, subindex, size) tuples.
+        self.tpdo_map = {}
+
+        ## Mapping of RPDO COB-ID -> list of (index, subindex, size) tuples.
+        self.rpdo_map = {}
 
         ## Mapping of (index, subindex) -> human-readable ParameterName.
         self.name_map = {}
@@ -93,9 +99,17 @@ class eds_parser:
         if eds_path:
             try:
                 self.name_map = self.build_name_map()
-                self.pdo_map = self.parse_pdo_map()
+                cfg = configparser.ConfigParser(strict=False)
+                cfg.optionxform = str
+                cfg.read(self.eds_path)
+
+                self.tpdo_map = self.parse_pdo_map("1A", "18", cfg)
+                self.rpdo_map = self.parse_pdo_map("16", "14", cfg)
+                # Optional: keep legacy merged view
+                self.pdo_map = {**self.tpdo_map, **self.rpdo_map}
+
                 self.log_pdo_mapping_consistency()
-                self.log.info(f"Loaded EDS: {self.eds_path} (pdo_map={len(self.pdo_map)}, names={len(self.name_map)})")
+                self.log.info(f"Loaded EDS: {self.eds_path} (rpdo_map={len(self.rpdo_map)}, tpdo_map={len(self.tpdo_map)}, pdo_map={len(self.pdo_map)}, names={len(self.name_map)})")
             except Exception as e:
                 self.log.warning(f"Failed to parse EDS '{self.eds_path}': {e}")
 
@@ -137,50 +151,57 @@ class eds_parser:
             name_map.setdefault((idx, 0), parent)
         return name_map
 
-    def parse_pdo_map(self):
+    def parse_pdo_map(self, map_prefix: str, comm_prefix: str, cfg):
         """! Parse PDO mapping entries from the EDS file.
         @details
-        Scans for 1Axx (RPDO/TPDO mapping) sections and their subentries to
+        Scans for PDO sections and their subentries to
         extract the mapped Object Dictionary indices, subindexes and sizes.
-        For each mapping found, the corresponding communication object (18xx)
+        - 14xx for TPDO communication parameters
+        - 16xx for TPDO mapping parameters
+        - 18xx for RPDO communication parameters
+        - 1Axx for RPDO mapping parameters
+        For each mapping found, the corresponding communication object (14xx/18xx)
         is checked for a COB-ID (sub1 DefaultValue) and the mapping is stored
         keyed by that COB-ID. Also builds a cob_name_overrides dictionary
         containing readable field names (using the name_map) for each COB-ID.
         @return dict Mapping of cob_id (int) -> list of (index:int, sub:int, size:int).
         """
-        cfg = configparser.ConfigParser(strict=False)
-        cfg.optionxform = str
-        cfg.read(self.eds_path)
-        pdo_map = {}
-        cob_name_overrides = {}
+
+        result = {}
+
         for sec in cfg.sections():
-            if sec.upper().startswith("1A") and "SUB" not in sec.upper():
-                try:
-                    entries = []
-                    subidx = 1
-                    while f"{sec}sub{subidx}" in cfg:
-                        raw = analyzer_defs.clean_int_with_comment(cfg[f"{sec}sub{subidx}"]["DefaultValue"])
-                        index = (raw >> 16) & 0xFFFF
-                        sub = (raw >> 8) & 0xFF
-                        size = raw & 0xFF
-                        entries.append((index, sub, size))
-                        subidx += 1
-                    comm_sec = sec.replace("1A", "18", 1)
-                    comm_sub1 = f"{comm_sec}sub1"
-                    if comm_sub1 in cfg:
-                        cob_id = analyzer_defs.clean_int_with_comment(cfg[comm_sub1]["DefaultValue"])
-                        pdo_map[cob_id] = entries
-                        names = []
-                        for (idx, sub, _) in entries:
-                            pname = (self.name_map.get((idx, sub))
-                                     or self.name_map.get((idx, 0))
-                                     or f"0x{idx:04X}:{sub}")
-                            names.append(pname)
-                        cob_name_overrides[cob_id] = names
-                except Exception:
+            if not sec.upper().startswith(map_prefix) or "SUB" in sec.upper():
+                continue
+
+            try:
+                entries = []
+                subidx = 1
+                while f"{sec}sub{subidx}" in cfg:
+                    raw = analyzer_defs.clean_int_with_comment(
+                        cfg[f"{sec}sub{subidx}"]["DefaultValue"]
+                    )
+                    index = (raw >> 16) & 0xFFFF
+                    sub = (raw >> 8) & 0xFF
+                    size = raw & 0xFF
+                    entries.append((index, sub, size))
+                    subidx += 1
+
+                # Resolve communication object (COB-ID)
+                comm_sec = sec.replace(map_prefix, comm_prefix, 1)
+                comm_sub1 = f"{comm_sec}sub1"
+                if comm_sub1 not in cfg:
                     continue
-        self.cob_name_overrides = cob_name_overrides
-        return pdo_map
+
+                cob_id = analyzer_defs.clean_int_with_comment(
+                    cfg[comm_sub1]["DefaultValue"]
+                )
+
+                result[cob_id] = entries
+
+            except Exception:
+                continue
+
+        return result
 
     def log_pdo_mapping_consistency(self):
         """! Emit warnings for PDO mappings that lack ParameterName information.

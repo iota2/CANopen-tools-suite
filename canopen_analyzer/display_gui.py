@@ -1009,9 +1009,9 @@ class CANopenMainWindow(QMainWindow):
         (index, subindex, name) alongside raw and decoded values.
         """
 
-        t = QTableWidget(0, 8)
+        t = QTableWidget(0, 9)
         t.setHorizontalHeaderLabels(
-            ["Time", "COB-ID", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
+            ["Time", "COB-ID", "Dir", "Name", "Index", "Sub", "Raw", "Decoded", "Count"]
         )
         t.setAlternatingRowColors(True)
 
@@ -1877,11 +1877,15 @@ class CANopenMainWindow(QMainWindow):
 
             # Dispatch frame based on type
             if ftype == analyzer_defs.frame_type.PDO:
+                # PDO direction derived strictly from frame type
+                dir = "TX" if p["dir"] == 'TX' else "RX"
+                print(f"[NP] on_frame dir = {dir}")
+
                 key = (p["cob"], p["index"], p["sub"])
                 self.update_table(
                     self.pdo_table, self.fixed_pdo, key,
                     [
-                        t, cob, p.get("name"),
+                        t, cob, dir, p.get("name"),
                         f"0x{p['index']:04X}", f"0x{p['sub']:02X}",
                         raw, dec, cnt
                     ]
