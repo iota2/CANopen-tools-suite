@@ -41,8 +41,8 @@ try:
     from textual.binding import Binding
     from textual.containers import Horizontal, Vertical
     from textual.widgets import (
-        Header, Footer, DataTable, Static,
-        Switch, Input, Button, Rule
+        Header, Footer, DataTable, Static, Switch,
+        Input, Button, RadioSet, RadioButton
     )
     from textual import events
 except Exception:
@@ -199,173 +199,136 @@ class display_tui:
                         yield self.sdo_table
 
                 # Add remote node controls
-                with Vertical():
+                with Vertical(classes="root remote"):
                     header = Static("[b]Remote Node Control[/b]", classes="header remote")
-                    header.styles.height = 1
                     yield header
 
-                    with Horizontal():
-                        # Send SDO -----------------------------------------
-                        with Vertical(classes="remote-col") as col:
-                            col.styles.height = "auto"
-                            col.styles.align = ("left", "top")
-                            col.styles.padding = 0
-                            col.styles.gap = 0
+                    with Horizontal(classes="row remote"):
+                        # SDO send -----------------------------------------
+                        with Vertical(classes="column remote"):
                             yield Static("[b]Send SDO[/b]", classes="subheader remote send sdo")
                             yield Static("")
 
-                            with Horizontal(classes="content remote sdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote sdo send"):
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_node = Input("0x01")
-                                self.sdo_send_node.styles.width = 50
+                                self.sdo_send_node.styles.width = 20
                                 yield self.sdo_send_node
 
-                            with Horizontal(classes="content remote sdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote sdo send"):
                                 lbl = Input("Index", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_index = Input("0x6000")
-                                self.sdo_send_index.styles.width = 50
+                                self.sdo_send_index.styles.width = 20
                                 yield self.sdo_send_index
 
-                            with Horizontal(classes="content remote sdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_sub = Input("0x00")
-                                self.sdo_send_sub.styles.width = 50
+                                self.sdo_send_sub.styles.width = 20
                                 yield self.sdo_send_sub
 
-                            with Horizontal(classes="content remote sdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
-                                lbl = Input("Value", disabled=True, classes="content remote sdo send")
+                            with Horizontal(classes="content remote sdo send"):
+                                lbl = Input("Data", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_value = Input("1")
-                                self.sdo_send_value.styles.width = 50
+                                self.sdo_send_value = Input("00 00 00 00 00 00 00 00")
+                                self.sdo_send_value.styles.width = 30
                                 yield self.sdo_send_value
 
-                            with Horizontal(classes="content remote sdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote sdo send"):
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_repeat_value = Input("1")
-                                self.sdo_send_repeat_value.styles.width = 50
+                                self.sdo_send_repeat_value = Input("1000")
+                                self.sdo_send_repeat_value.styles.width = 20
                                 yield self.sdo_send_repeat_value
                                 self.sdo_send_repeat = Switch()
                                 yield self.sdo_send_repeat
 
-                            with Horizontal(classes="content remote sdo send") as row:
-                                row.styles.height = "auto"
                                 self.sdo_send_btn = Button("Send", classes="button remote")
-                                self.sdo_send_btn.styles.width = 35
+                                self.sdo_send_btn.styles.width = 29
                                 yield self.sdo_send_btn
 
-                        # Receive SDO --------------------------------------
-                        with Vertical(classes="remote-col"):
+                        # SDO receive --------------------------------------
+                        with Vertical(classes="column remote"):
                             yield Static("[b]Receive SDO[/b]", classes="subheader remote sdo receive")
                             yield Static("")
 
-                            with Horizontal(classes="content remote sdo receive") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote sdo receive"):
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_node = Input("0x01")
-                                self.sdo_recv_node.styles.width = 50
+                                self.sdo_recv_node.styles.width = 20
                                 yield self.sdo_recv_node
 
-                            with Horizontal(classes="content remote sdo receive") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote sdo receive"):
                                 lbl = Input("Index", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_index = Input("0x6000")
-                                self.sdo_recv_index.styles.width = 50
+                                self.sdo_recv_index.styles.width = 20
                                 yield self.sdo_recv_index
 
-                            with Horizontal(classes="content remote sdo receive") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_sub = Input("0x00")
-                                self.sdo_recv_sub.styles.width = 50
+                                self.sdo_recv_sub.styles.width = 20
                                 yield self.sdo_recv_sub
 
-                            with Horizontal(classes="content remote sdo receive") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote sdo receive"):
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_recv_repeat_value = Input("1")
-                                self.sdo_recv_repeat_value.styles.width = 50
+                                self.sdo_recv_repeat_value = Input("1000")
+                                self.sdo_recv_repeat_value.styles.width = 20
                                 yield self.sdo_recv_repeat_value
                                 self.sdo_recv_repeat = Switch()
                                 yield self.sdo_recv_repeat
 
-                            with Horizontal(classes="content remote sdo receive") as row:
-                                row.styles.height = "auto"
                                 self.sdo_recv_btn = Button("Send", classes="button remote")
-                                self.sdo_recv_btn.styles.width = 35
+                                self.sdo_recv_btn.styles.width = 29
                                 yield self.sdo_recv_btn
 
-                        # Send PDO -----------------------------------------
-                        with Vertical(classes="remote-col"):
-                            yield Static("[b]Send PDO[/b]", classes="subheader remote send pdo")
+                        # PDO send -----------------------------------------
+                        with Vertical(classes="column remote"):
+                            yield Static("[b]Send PDO[/b]", classes="subheader remote pdo send")
                             yield Static("")
 
-                            with Horizontal(classes="content remote pdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote pdo send"):
                                 lbl = Input("COB ID", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.pdo_cob = Input("0x202")
-                                self.pdo_cob.styles.width = 50
+                                self.pdo_cob.styles.width = 20
                                 yield self.pdo_cob
 
-                            with Horizontal(classes="content remote pdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote pdo send"):
                                 lbl = Input("Data", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.pdo_data = Input("00 00 00 00 00 00 00 00")
-                                self.pdo_data.styles.width = 50
+                                self.pdo_data.styles.width = 30
                                 yield self.pdo_data
 
-                            with Horizontal(classes="content remote pdo send") as row:
-                                row.styles.height = "auto"
-                                row.styles.align = ("left", "top")
+                            with Horizontal(classes="content remote pdo send"):
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.pdo_send_repeat_value = Input("1")
-                                self.pdo_send_repeat_value.styles.width = 50
+                                self.pdo_send_repeat_value = Input("1000")
+                                self.pdo_send_repeat_value.styles.width = 20
                                 yield self.pdo_send_repeat_value
                                 self.pdo_repeat = Switch()
                                 yield self.pdo_repeat
 
-                            with Horizontal(classes="content remote pdo send") as row:
-                                row.styles.height = "auto"
                                 self.pdo_send_btn = Button("Send", classes="button remote")
-                                self.pdo_send_btn.styles.width = 35
+                                self.pdo_send_btn.styles.width = 29
                                 yield self.pdo_send_btn
 
                 # footer with key hints
@@ -531,6 +494,9 @@ class display_tui:
                             pass
                 except Exception:
                     pass
+
+                self.sdo_send_node.focus()
+                self.sdo_send_node.action_select_all()
 
             def sparkline_text(self, history, width=None):
                 """! Create a compact sparkline string from a numeric history sequence."""
@@ -1170,36 +1136,40 @@ class display_tui:
                 content-align: center middle;
             }
 
+            .root.remote {
+                max-height: 15;
+            }
             .header.remote {
-                color: seagreen;
-                content-align: center middle;
+                color: black;
                 background: lightgrey;
+                content-align: center middle;
             }
             .subheader.remote.sdo.send {
                 color: blue;
-                content-align: center middle;
                 background: mediumblue;
-            }
-            .remote-col {
-                padding-right: 1;
-                padding-left: 1;
-                content-align: left top;
+                content-align: center middle;
             }
             .subheader.remote.sdo.receive {
                 color: green;
-                content-align: center middle;
                 background: lightgreen;
+                content-align: center middle;
             }
             .subheader.remote.pdo.send {
                 color: red;
-                content-align: center middle;
                 background: lightsalmon;
+                content-align: center middle;
+            }
+            .row.remote {
+                content-align: center middle;
+            }
+            .column.remote {
+                padding: 0 1;
+                content-align: left middle;
             }
 
             .content.remote.sdo.send {
                 color: blue;
                 content-align: left top;
-                height: 3;
             }
             .content.remote.sdo.receive {
                 color: green;
@@ -1209,11 +1179,15 @@ class display_tui:
                 color: red;
                 content-align: left top;
             }
+            .radio.remote {
+                width: 80;
+                height: 5;
+            }
             .button.remote {
                 color: white;
                 background: grey;
-                margin: 1 0 0 45;
                 text-style: bold;
+                height: 3;
             }
             '''
 
