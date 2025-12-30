@@ -47,6 +47,12 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .br
 .RI "Logger instance for TUI display\&. "
 .ti -1c
+.RI "\fBpdo_cob\fP"
+.br
+.ti -1c
+.RI "\fBpdo_data\fP"
+.br
+.ti -1c
 .RI "\fBpdo_display\fP"
 .br
 .RI "PDO data display buffer\&. "
@@ -54,6 +60,15 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .RI "\fBpdo_next_index\fP"
 .br
 .RI "PDO data indices to indicate next fill position (top-down)\&. "
+.ti -1c
+.RI "\fBpdo_repeat\fP"
+.br
+.ti -1c
+.RI "\fBpdo_send_btn\fP"
+.br
+.ti -1c
+.RI "\fBpdo_send_repeat_value\fP"
+.br
 .ti -1c
 .RI "\fBpdo_table\fP"
 .br
@@ -78,6 +93,45 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .RI "\fBsdo_next_index\fP"
 .br
 .RI "SDO data indices to indicate next fill position (top-down)\&. "
+.ti -1c
+.RI "\fBsdo_recv_btn\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_index\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_node\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_repeat\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_repeat_value\fP"
+.br
+.ti -1c
+.RI "\fBsdo_recv_sub\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_btn\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_index\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_node\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_repeat\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_repeat_value\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_sub\fP"
+.br
+.ti -1c
+.RI "\fBsdo_send_value\fP"
+.br
 .ti -1c
 .RI "\fBsdo_table\fP"
 .br
@@ -185,6 +239,10 @@ SDO data dict keys -> rows mapping for fixed mode\&.
 
 .PP
 Logger instance for TUI display\&. 
+.SS "pdo_cob"
+
+.SS "pdo_data"
+
 .SS "pdo_display"
 
 .PP
@@ -193,6 +251,12 @@ PDO data display buffer\&.
 
 .PP
 PDO data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
+.SS "pdo_repeat"
+
+.SS "pdo_send_btn"
+
+.SS "pdo_send_repeat_value"
+
 .SS "pdo_table"
 
 .PP
@@ -225,6 +289,32 @@ SDO data display buffer\&.
 
 .PP
 SDO data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
+.SS "sdo_recv_btn"
+
+.SS "sdo_recv_index"
+
+.SS "sdo_recv_node"
+
+.SS "sdo_recv_repeat"
+
+.SS "sdo_recv_repeat_value"
+
+.SS "sdo_recv_sub"
+
+.SS "sdo_send_btn"
+
+.SS "sdo_send_index"
+
+.SS "sdo_send_node"
+
+.SS "sdo_send_repeat"
+
+.SS "sdo_send_repeat_value"
+
+.SS "sdo_send_sub"
+
+.SS "sdo_send_value"
+
 .SS "sdo_table"
 
 .PP
