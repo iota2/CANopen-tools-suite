@@ -1879,8 +1879,6 @@ class CANopenMainWindow(QMainWindow):
             if ftype == analyzer_defs.frame_type.PDO:
                 # PDO direction derived strictly from frame type
                 dir = "TX" if p["dir"] == 'TX' else "RX"
-                print(f"[NP] on_frame dir = {dir}")
-
                 key = (p["cob"], p["index"], p["sub"])
                 self.update_table(
                     self.pdo_table, self.fixed_pdo, key,
