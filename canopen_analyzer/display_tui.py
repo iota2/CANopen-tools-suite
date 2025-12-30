@@ -217,7 +217,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Node ID", classes="content remote sdo send")
+                                lbl = Input("Node ID", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_node = Input("0x01")
@@ -227,7 +227,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Index", classes="content remote sdo send")
+                                lbl = Input("Index", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_index = Input("0x6000")
@@ -237,7 +237,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Sub", classes="content remote sdo send")
+                                lbl = Input("Sub", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_sub = Input("0x00")
@@ -247,7 +247,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Value", classes="content remote sdo send")
+                                lbl = Input("Value", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_value = Input("1")
@@ -257,7 +257,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Repeat (ms)", classes="content remote sdo send")
+                                lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_send_repeat_value = Input("1")
@@ -280,7 +280,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo receive") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Node ID", classes="content remote sdo receive")
+                                lbl = Input("Node ID", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_node = Input("0x01")
@@ -290,7 +290,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo receive") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Index", classes="content remote sdo receive")
+                                lbl = Input("Index", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_index = Input("0x6000")
@@ -300,7 +300,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo receive") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Sub", classes="content remote sdo receive")
+                                lbl = Input("Sub", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_sub = Input("0x00")
@@ -310,7 +310,7 @@ class display_tui:
                             with Horizontal(classes="content remote sdo receive") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Repeat (ms)", classes="content remote sdo receive")
+                                lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.sdo_recv_repeat_value = Input("1")
@@ -333,7 +333,7 @@ class display_tui:
                             with Horizontal(classes="content remote pdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("COB ID", classes="content remote pdo send")
+                                lbl = Input("COB ID", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.pdo_cob = Input("0x202")
@@ -343,7 +343,7 @@ class display_tui:
                             with Horizontal(classes="content remote pdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Data", classes="content remote pdo send")
+                                lbl = Input("Data", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.pdo_data = Input("00 00 00 00 00 00 00 00")
@@ -353,7 +353,7 @@ class display_tui:
                             with Horizontal(classes="content remote pdo send") as row:
                                 row.styles.height = "auto"
                                 row.styles.align = ("left", "top")
-                                lbl = Input("Repeat (ms)", classes="content remote pdo send")
+                                lbl = Input("Repeat (ms)", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
                                 self.pdo_send_repeat_value = Input("1")
@@ -1119,13 +1119,6 @@ class display_tui:
                     ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
                     self.notify(msg, title="SDO Data")
 
-                else:
-                    # Unhandled keys: show brief footer hint
-                    try:
-                        self.notify( "Keys: n=Proto b=Bus p=PDO s=SDO q=Quit",title="Warning", severity="warning")
-                    except Exception:
-                        pass
-
             # Textual CSS styles for titles
             CSS = r'''
 
@@ -1134,11 +1127,6 @@ class display_tui:
             }
             .right-col {
                 padding-left: 1;    /* adds space to the left */
-            }
-            .remote-col {
-                padding-right: 1;
-                padding-left: 1;
-                content-align: left top;
             }
 
             /* Added title header styles */
@@ -1191,6 +1179,11 @@ class display_tui:
                 color: blue;
                 content-align: center middle;
                 background: mediumblue;
+            }
+            .remote-col {
+                padding-right: 1;
+                padding-left: 1;
+                content-align: left top;
             }
             .subheader.remote.sdo.receive {
                 color: green;
