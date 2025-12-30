@@ -293,6 +293,7 @@ class display_cli(threading.Thread):
         t_pdo = Table(title="PDO Data", expand=True, box=box.SQUARE, style="green")
         t_pdo.add_column("Time", no_wrap=True)
         t_pdo.add_column("COB-ID", width=8)
+        t_pdo.add_column("Dir", width=4)
         t_pdo.add_column("Name")
         t_pdo.add_column("Index")
         t_pdo.add_column("Sub")
@@ -302,15 +303,16 @@ class display_cli(threading.Thread):
 
         frames = list(self.fixed_pdo.values())[-analyzer_defs.DATA_TABLE_HEIGHT:] if self.fixed else list(self.pdo_frames)[-analyzer_defs.DATA_TABLE_HEIGHT:]
         while len(frames) < analyzer_defs.DATA_TABLE_HEIGHT:
-            frames.append({"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
+            frames.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for f in frames:
             decoded = Text(str(f.get("decoded", "")), style="bold green") if f.get("decoded") else ""
-            t_pdo.add_row(f["time"], f["cob"], f.get("name", ""), f.get("index", ""), f.get("sub", ""), f.get("raw", ""), decoded, str(f.get("count", "")))
+            t_pdo.add_row(f["time"], f["cob"], f["dir"], f.get("name", ""), f.get("index", ""), f.get("sub", ""), f.get("raw", ""), decoded, str(f.get("count", "")))
 
         # SDO table
         t_sdo = Table(title="SDO Data", expand=True, box=box.SQUARE, style="magenta")
         t_sdo.add_column("Time", no_wrap=True)
         t_sdo.add_column("COB-ID", width=8)
+        t_sdo.add_column("Dir", width=6)
         t_sdo.add_column("Name")
         t_sdo.add_column("Index")
         t_sdo.add_column("Sub")
@@ -320,10 +322,10 @@ class display_cli(threading.Thread):
 
         sdos = list(self.fixed_sdo.values())[-analyzer_defs.DATA_TABLE_HEIGHT:] if self.fixed else list(self.sdo_frames)[-analyzer_defs.DATA_TABLE_HEIGHT:]
         while len(sdos) < analyzer_defs.DATA_TABLE_HEIGHT:
-            sdos.append({"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
+            sdos.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for s in sdos:
             decoded = Text(str(s.get("decoded", "")), style="bold magenta") if s.get("decoded") else ""
-            t_sdo.add_row(s["time"], s["cob"], s.get("name", ""), s.get("index", ""), s.get("sub", ""), s.get("raw", ""), decoded, str(s.get("count", "")))
+            t_sdo.add_row(s["time"], s["cob"], s["dir"], s.get("name", ""), s.get("index", ""), s.get("sub", ""), s.get("raw", ""), decoded, str(s.get("count", "")))
 
         # Grid layout (two columns)
         layout = Table.grid(expand=True)
@@ -353,6 +355,7 @@ class display_cli(threading.Thread):
                             name = pframe.get("name", "")
                             raw = pframe.get("raw", "")
                             decoded = pframe.get("decoded", "")
+                            dirc = pframe.get("dir", "")
 
                             # Format cob/index/sub as hex strings for display
                             cob_s = f"0x{cob:03X}" if isinstance(cob, int) else str(cob)
@@ -363,7 +366,7 @@ class display_cli(threading.Thread):
                             type_name = ftype.name if isinstance(ftype, analyzer_defs.frame_type) else str(ftype)
                             if ftype == analyzer_defs.frame_type.PDO:
                                 key = (cob, idx, sub)
-                                row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": decoded, "count": 1}
+                                row = {"time": t, "cob": cob_s, "dir": dirc, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": decoded, "count": 1}
                                 if self.fixed:
                                     prev = self.fixed_pdo.get(key)
                                     if prev:
@@ -373,7 +376,7 @@ class display_cli(threading.Thread):
                                     self.pdo_frames.append(row)
                             elif ftype in (analyzer_defs.frame_type.SDO_REQ, analyzer_defs.frame_type.SDO_RES):
                                 key = (cob, idx, sub)
-                                row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": decoded, "count": 1}
+                                row = {"time": t, "cob": cob_s, "dir": dirc, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": decoded, "count": 1}
                                 if self.fixed:
                                     prev = self.fixed_sdo.get(key)
                                     if prev:
@@ -416,4 +419,3 @@ class display_cli(threading.Thread):
 
         self._stop_event.set()
         self.log.debug("display_cli stop requested")
-

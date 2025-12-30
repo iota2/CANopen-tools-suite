@@ -134,8 +134,8 @@ class display_tui:
 
                 # Display buffers (fixed-size lists) used for top-down filling in scrolling mode.
                 blank_proto = {"time": "", "cob": "", "type": "", "raw": "", "decoded": "", "count": ""}
-                blank_pdo = {"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""}
-                blank_sdo = {"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""}
+                blank_pdo = {"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""}
+                blank_sdo = {"time": "", "cob": "", "dir": "","name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""}
 
                 ## Protocol data display buffer
                 self.proto_display = [copy.deepcopy(blank_proto) for _ in range(analyzer_defs.PROTOCOL_TABLE_HEIGHT)]
@@ -290,7 +290,8 @@ class display_tui:
                 self.pdo_table.clear(columns=True)
                 self.pdo_table.add_column("Time", width=12)
                 self.pdo_table.add_column("COB-ID", width=6)
-                self.pdo_table.add_column("Name", width=45)
+                self.pdo_table.add_column("Dir", width=4)
+                self.pdo_table.add_column("Name", width=40)
                 self.pdo_table.add_column("Index", width=6)
                 self.pdo_table.add_column("Sub", width=5)
                 self.pdo_table.add_column("Raw Data", width=25)
@@ -301,7 +302,8 @@ class display_tui:
                 self.sdo_table.clear(columns=True)
                 self.sdo_table.add_column("Time", width=12)
                 self.sdo_table.add_column("COB-ID", width=6)
-                self.sdo_table.add_column("Name", width=45)
+                self.sdo_table.add_column("Dir", width=6)
+                self.sdo_table.add_column("Name", width=38)
                 self.sdo_table.add_column("Index", width=6)
                 self.sdo_table.add_column("Sub", width=5)
                 self.sdo_table.add_column("Raw Data", width=25)
@@ -339,13 +341,13 @@ class display_tui:
                     # pdo
                     for row in self.pdo_display:
                         try:
-                            self.pdo_table.add_row(row.get("time",""), row.get("cob",""), row.get("name",""), row.get("index",""), row.get("sub",""), row.get("raw",""), str(row.get("decoded","")), str(row.get("count","")))
+                            self.pdo_table.add_row(row.get("time",""), row.get("cob",""), row.get("dir", ""), row.get("name",""), row.get("index",""), row.get("sub",""), row.get("raw",""), str(row.get("decoded","")), str(row.get("count","")))
                         except Exception:
                             pass
                     # sdo
                     for row in self.sdo_display:
                         try:
-                            self.sdo_table.add_row(row.get("time",""), row.get("cob",""), row.get("name",""), row.get("index",""), row.get("sub",""), row.get("raw",""), str(row.get("decoded","")), str(row.get("count","")))
+                            self.sdo_table.add_row(row.get("time",""), row.get("cob",""), row.get("dir", ""), row.get("name",""), row.get("index",""), row.get("sub",""), row.get("raw",""), str(row.get("decoded","")), str(row.get("count","")))
                         except Exception:
                             pass
                 except Exception:
@@ -396,6 +398,7 @@ class display_tui:
                     name = pframe.get("name", "")
                     raw = pframe.get("raw", "")
                     decoded = pframe.get("decoded", "")
+                    dirc = pframe.get("dir", "")
 
                     cob_s = f"0x{cob:03X}" if isinstance(cob, int) else str(cob)
                     idx_s = f"0x{idx:04X}" if isinstance(idx, int) else str(idx)
@@ -407,14 +410,14 @@ class display_tui:
                     if cls.fixed:
                         if ftype == analyzer_defs.frame_type.PDO:
                             key = (cob, idx, sub)
-                            row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
+                            row = {"time": t, "cob": cob_s, "dir": dirc, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
                             prev = self.fixed_pdo.get(key)
                             if prev:
                                 row["count"] = prev.get("count", 1) + 1
                             self.fixed_pdo[key] = row
                         elif ftype in (analyzer_defs.frame_type.SDO_REQ, analyzer_defs.frame_type.SDO_RES):
                             key = (cob, idx, sub)
-                            row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
+                            row = {"time": t, "cob": cob_s, "dir": dirc, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
                             prev = self.fixed_sdo.get(key)
                             if prev:
                                 row["count"] = prev.get("count", 1) + 1
@@ -429,7 +432,7 @@ class display_tui:
                     else:
                         # scrolling mode
                         if ftype == analyzer_defs.frame_type.PDO:
-                            row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
+                            row = {"time": t, "cob": cob_s, "dir": dirc, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
                             placed = False
                             try:
                                 for i in range(len(self.pdo_display)):
@@ -450,7 +453,7 @@ class display_tui:
                                         pass
 
                         elif ftype in (analyzer_defs.frame_type.SDO_REQ, analyzer_defs.frame_type.SDO_RES):
-                            row = {"time": t, "cob": cob_s, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
+                            row = {"time": t, "cob": cob_s, "dir": dirc, "name": name, "index": idx_s, "sub": sub_s, "raw": raw, "decoded": str(decoded), "count": 1}
                             placed = False
                             try:
                                 for i in range(len(self.sdo_display)):
@@ -630,7 +633,7 @@ class display_tui:
                     if remaining > 0:
                         pdos.extend(blank_pdos[:remaining])
                         while len(pdos) < analyzer_defs.DATA_TABLE_HEIGHT:
-                            pdos.append({"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
+                            pdos.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
                 else:
                     # scrolling mode uses the display buffer / deque (keep as-is)
                     pdos = list(self.pdo_display)
@@ -640,6 +643,7 @@ class display_tui:
                         self.pdo_table.add_row(
                             p.get("time", ""),
                             p.get("cob", ""),
+                            p.get("dir", ""),
                             p.get("name", ""),
                             p.get("index", ""),
                             p.get("sub", ""),
@@ -662,7 +666,7 @@ class display_tui:
                     if remaining > 0:
                         sdos.extend(blank_sdos[:remaining])
                         while len(sdos) < analyzer_defs.DATA_TABLE_HEIGHT:
-                            sdos.append({"time": "", "cob": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
+                            sdos.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
                 else:
                     sdos = list(self.sdo_display)
 
@@ -671,6 +675,7 @@ class display_tui:
                         self.sdo_table.add_row(
                             s.get("time", ""),
                             s.get("cob", ""),
+                            s.get("dir", ""),
                             s.get("name", ""),
                             s.get("index", ""),
                             s.get("sub", ""),
