@@ -1,0 +1,4 @@
+<map id="keyPressEvent" name="keyPressEvent">
+<area shape="rect" id="node1" title="Handle Ctrl+C copy from focused QTableWidget." alt="" coords="5,5,123,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1" title="Copy selected table cells to clipboard as TSV." alt="" coords="171,5,337,32"/>
+</map>

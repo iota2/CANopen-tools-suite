@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['save_5fframe_294',['save_frame',['../classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46',1,'process_frames::process_frames']]],
-  ['save_5fframe_5fto_5fcsv_295',['save_frame_to_csv',['../classcanopen__sniffer_1_1canopen__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172',1,'canopen_sniffer.canopen_sniffer.save_frame_to_csv()'],['../classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3',1,'process_frames.process_frames.save_frame_to_csv(self, int cob, analyzer_defs.frame_type ftype, int index, int sub, str name, str raw, str decoded)']]],
-  ['save_5fprocessed_5fframe_296',['save_processed_frame',['../classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320',1,'process_frames::process_frames']]],
-  ['set_5fstart_5ftime_297',['set_start_time',['../classbus__stats_1_1bus__stats.html#a09ae5bd534d8dbec99a913ed75fe9848',1,'bus_stats::bus_stats']]],
-  ['sparkline_298',['sparkline',['../classdisplay__cli_1_1display__cli.html#a1716b97b8fa04faf79e5df60d9fb3489',1,'display_cli::display_cli']]],
-  ['stop_299',['stop',['../classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'bus_stats.bus_stats.stop()'],['../classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480',1,'canopen_sniffer.canopen_sniffer.stop()'],['../classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'display_cli.display_cli.stop()'],['../classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'display_gui.GUIUpdateWorker.stop()'],['../classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'process_frames.process_frames.stop()']]]
+  ['render_5ftables_340',['render_tables',['../classdisplay__cli_1_1display__cli.html#a1602e5a067d7cbe99e22f10101f9e381',1,'display_cli::display_cli']]],
+  ['reset_341',['reset',['../classbus__stats_1_1bus__stats.html#a51829b63adb24ac48d350dee60181002',1,'bus_stats::bus_stats']]],
+  ['resizeevent_342',['resizeEvent',['../classdisplay__gui_1_1MultiRateLineWidget.html#a0815964d2d7e4debf9b3e7cff7840436',1,'display_gui::MultiRateLineWidget']]],
+  ['run_343',['run',['../classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0',1,'canopen_sniffer.canopen_sniffer.run()'],['../classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0',1,'display_cli.display_cli.run()'],['../classdisplay__gui_1_1GUIUpdateWorker.html#ad22709b2e67308af35f55680d5a026e0',1,'display_gui.GUIUpdateWorker.run()'],['../classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0',1,'process_frames.process_frames.run()']]],
+  ['run_5ftextual_344',['run_textual',['../classdisplay__tui_1_1display__tui.html#a06d308c260a5e945f80724fcd934a8c7',1,'display_tui::display_tui']]]
 ];

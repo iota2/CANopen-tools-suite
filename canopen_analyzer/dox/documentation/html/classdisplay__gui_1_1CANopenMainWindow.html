@@ -121,15 +121,18 @@ Collaboration diagram for CANopenMainWindow:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a535a819fd0c00d2ae80937d2ea92a2a0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a535a819fd0c00d2ae80937d2ea92a2a0">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aa57ebe01934de43865125819a3c4af74">stats</a>, bool <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a0ceb8ae554e8a185caf22e15c9487f4b">fixed</a>)</td></tr>
-<tr class="memdesc:a535a819fd0c00d2ae80937d2ea92a2a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the main CANopen Analyzer GUI window.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a535a819fd0c00d2ae80937d2ea92a2a0">More...</a><br /></td></tr>
-<tr class="separator:a535a819fd0c00d2ae80937d2ea92a2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7f281afe17c65edbe990085f57c7271"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae7f281afe17c65edbe990085f57c7271">__init__</a> (self, queue.Queue() <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a">requested_frame</a>, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aa57ebe01934de43865125819a3c4af74">stats</a>, bool <a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a0ceb8ae554e8a185caf22e15c9487f4b">fixed</a>)</td></tr>
+<tr class="memdesc:ae7f281afe17c65edbe990085f57c7271"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the main CANopen Analyzer GUI window.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae7f281afe17c65edbe990085f57c7271">More...</a><br /></td></tr>
+<tr class="separator:ae7f281afe17c65edbe990085f57c7271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a761fada55085b7d8b7896aa06d7240d0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0">clear_tables</a> (self)</td></tr>
 <tr class="memdesc:a761fada55085b7d8b7896aa06d7240d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all displayed data and reset statistics.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0">More...</a><br /></td></tr>
 <tr class="separator:a761fada55085b7d8b7896aa06d7240d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a849a9fe2d04232c2c11adf5dee2c48fa"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a849a9fe2d04232c2c11adf5dee2c48fa">closeEvent</a> (self, event)</td></tr>
 <tr class="memdesc:a849a9fe2d04232c2c11adf5dee2c48fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle application shutdown and cleanup.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a849a9fe2d04232c2c11adf5dee2c48fa">More...</a><br /></td></tr>
 <tr class="separator:a849a9fe2d04232c2c11adf5dee2c48fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7224b03642e3cfe85bd396f1f4b08f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f">keyPressEvent</a> (self, event)</td></tr>
+<tr class="memdesc:aaf7224b03642e3cfe85bd396f1f4b08f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle Ctrl+C copy from focused QTableWidget.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f">More...</a><br /></td></tr>
+<tr class="separator:aaf7224b03642e3cfe85bd396f1f4b08f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae07579f82da98a8619b1aba7d9cf2faf"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf">on_frame</a> (self, p)</td></tr>
 <tr class="memdesc:ae07579f82da98a8619b1aba7d9cf2faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a newly decoded CAN frame.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae07579f82da98a8619b1aba7d9cf2faf">More...</a><br /></td></tr>
 <tr class="separator:ae07579f82da98a8619b1aba7d9cf2faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,9 +172,20 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae34ca3af9e134197585f22c51544b1ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae34ca3af9e134197585f22c51544b1ab">mode_combo</a></td></tr>
 <tr class="memdesc:ae34ca3af9e134197585f22c51544b1ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mode selection combo box.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae34ca3af9e134197585f22c51544b1ab">More...</a><br /></td></tr>
 <tr class="separator:ae34ca3af9e134197585f22c51544b1ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd76a1d0c000e11cb1639d07d71a9d2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#abd76a1d0c000e11cb1639d07d71a9d2d">pdo_cob_edit</a></td></tr>
+<tr class="separator:abd76a1d0c000e11cb1639d07d71a9d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0571ec9996e1bd9b388440d45a4447ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a0571ec9996e1bd9b388440d45a4447ed">pdo_data_edit</a></td></tr>
+<tr class="separator:a0571ec9996e1bd9b388440d45a4447ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fc9f2dcf42c86be777d4c517be98129"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a2fc9f2dcf42c86be777d4c517be98129">pdo_filter</a></td></tr>
 <tr class="memdesc:a2fc9f2dcf42c86be777d4c517be98129"><td class="mdescLeft">&#160;</td><td class="mdescRight">PDO data filter.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a2fc9f2dcf42c86be777d4c517be98129">More...</a><br /></td></tr>
 <tr class="separator:a2fc9f2dcf42c86be777d4c517be98129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2359820cc5b387139fc83b0e64165d3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a2359820cc5b387139fc83b0e64165d3e">pdo_interval</a></td></tr>
+<tr class="separator:a2359820cc5b387139fc83b0e64165d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe41527737804de522bcd9cbaafebcc3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#afe41527737804de522bcd9cbaafebcc3">pdo_repeat_chk</a></td></tr>
+<tr class="separator:afe41527737804de522bcd9cbaafebcc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87be647a6e4ddee08f5fad000e52ce89"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a87be647a6e4ddee08f5fad000e52ce89">pdo_timer</a></td></tr>
+<tr class="memdesc:a87be647a6e4ddee08f5fad000e52ce89"><td class="mdescLeft">&#160;</td><td class="mdescRight">PDO write repeat timer.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a87be647a6e4ddee08f5fad000e52ce89">More...</a><br /></td></tr>
+<tr class="separator:a87be647a6e4ddee08f5fad000e52ce89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afabd0f2aa2b5108c03a144fd1fd7ce1c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#afabd0f2aa2b5108c03a144fd1fd7ce1c">proto_filter</a></td></tr>
 <tr class="memdesc:afabd0f2aa2b5108c03a144fd1fd7ce1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protocol data filter.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#afabd0f2aa2b5108c03a144fd1fd7ce1c">More...</a><br /></td></tr>
 <tr class="separator:afabd0f2aa2b5108c03a144fd1fd7ce1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,9 +198,42 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af9aade33e4ca0f15067d6005207620b9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#af9aade33e4ca0f15067d6005207620b9">rate_sdo</a></td></tr>
 <tr class="memdesc:af9aade33e4ca0f15067d6005207620b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDO request/response frame rate graph.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#af9aade33e4ca0f15067d6005207620b9">More...</a><br /></td></tr>
 <tr class="separator:af9aade33e4ca0f15067d6005207620b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4a622f1e1275087c3558661cb25300a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a">requested_frame</a></td></tr>
+<tr class="memdesc:ab4a622f1e1275087c3558661cb25300a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue used to receive frames for sending over CAN bus.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ab4a622f1e1275087c3558661cb25300a">More...</a><br /></td></tr>
+<tr class="separator:ab4a622f1e1275087c3558661cb25300a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace47c83f900a5ce72ddcfce478222e70"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ace47c83f900a5ce72ddcfce478222e70">sdo_filter</a></td></tr>
 <tr class="memdesc:ace47c83f900a5ce72ddcfce478222e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDO data filter.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ace47c83f900a5ce72ddcfce478222e70">More...</a><br /></td></tr>
 <tr class="separator:ace47c83f900a5ce72ddcfce478222e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a497d36e63e668e24b5cf43050ee5a356"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a497d36e63e668e24b5cf43050ee5a356">sdo_index_edit</a></td></tr>
+<tr class="separator:a497d36e63e668e24b5cf43050ee5a356"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef1f02b7d6312a977b750dc2219ed388"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aef1f02b7d6312a977b750dc2219ed388">sdo_node_edit</a></td></tr>
+<tr class="separator:aef1f02b7d6312a977b750dc2219ed388"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2797e2af73fa7ed5094edb29283b9e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ad2797e2af73fa7ed5094edb29283b9e9">sdo_read_interval</a></td></tr>
+<tr class="separator:ad2797e2af73fa7ed5094edb29283b9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2acdcfe8a413f9d6b50e6ca2598d50bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a2acdcfe8a413f9d6b50e6ca2598d50bc">sdo_read_repeat_chk</a></td></tr>
+<tr class="separator:a2acdcfe8a413f9d6b50e6ca2598d50bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a457744281abb33013e2bf81839eb25db"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a457744281abb33013e2bf81839eb25db">sdo_read_timer</a></td></tr>
+<tr class="memdesc:a457744281abb33013e2bf81839eb25db"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDO read repeat timer.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a457744281abb33013e2bf81839eb25db">More...</a><br /></td></tr>
+<tr class="separator:a457744281abb33013e2bf81839eb25db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac183eb83e45179cd99daa6c6463582f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ac183eb83e45179cd99daa6c6463582f7">sdo_recv_index_edit</a></td></tr>
+<tr class="separator:ac183eb83e45179cd99daa6c6463582f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9174147602acea708caabe51d6d400f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a9174147602acea708caabe51d6d400f0">sdo_recv_node_edit</a></td></tr>
+<tr class="separator:a9174147602acea708caabe51d6d400f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1582c880f7476dc368762f48ac2c214b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a1582c880f7476dc368762f48ac2c214b">sdo_recv_sub_edit</a></td></tr>
+<tr class="separator:a1582c880f7476dc368762f48ac2c214b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbb779f64a84654974ed289fd2ea09d0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#adbb779f64a84654974ed289fd2ea09d0">sdo_size_combo</a></td></tr>
+<tr class="separator:adbb779f64a84654974ed289fd2ea09d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88611335e1a56d83e16c8d5598c44655"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a88611335e1a56d83e16c8d5598c44655">sdo_sub_edit</a></td></tr>
+<tr class="separator:a88611335e1a56d83e16c8d5598c44655"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86ba8227b42f7af47139c676af190311"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a86ba8227b42f7af47139c676af190311">sdo_value_edit</a></td></tr>
+<tr class="separator:a86ba8227b42f7af47139c676af190311"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a618864c016ed57f42c9c00f3be5d6c7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a618864c016ed57f42c9c00f3be5d6c7b">sdo_write_interval</a></td></tr>
+<tr class="separator:a618864c016ed57f42c9c00f3be5d6c7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8839aaa47cfb5065c7e6ed8e2cb30a08"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a8839aaa47cfb5065c7e6ed8e2cb30a08">sdo_write_repeat_chk</a></td></tr>
+<tr class="separator:a8839aaa47cfb5065c7e6ed8e2cb30a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab351befc9bc5e807bdf44dc1b9812351"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab351befc9bc5e807bdf44dc1b9812351">sdo_write_timer</a></td></tr>
+<tr class="memdesc:ab351befc9bc5e807bdf44dc1b9812351"><td class="mdescLeft">&#160;</td><td class="mdescRight">SDO write repeat timer.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ab351befc9bc5e807bdf44dc1b9812351">More...</a><br /></td></tr>
+<tr class="separator:ab351befc9bc5e807bdf44dc1b9812351"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cddb5e40c21eadd2ded85bc51f79822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a6cddb5e40c21eadd2ded85bc51f79822">settings</a></td></tr>
 <tr class="memdesc:a6cddb5e40c21eadd2ded85bc51f79822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Persistent settings store used for window geometry, dock layout, and column width restoration.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a6cddb5e40c21eadd2ded85bc51f79822">More...</a><br /></td></tr>
 <tr class="separator:a6cddb5e40c21eadd2ded85bc51f79822"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,7 +268,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:ac5ff8b42e54c95ec7acb332000aacda6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the central widget containing protocol, PDO, and SDO tables.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ac5ff8b42e54c95ec7acb332000aacda6">More...</a><br /></td></tr>
 <tr class="separator:ac5ff8b42e54c95ec7acb332000aacda6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01fd244fe0d314bb425ddb129eb78b12"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a01fd244fe0d314bb425ddb129eb78b12">_build_left_dock</a> (self)</td></tr>
-<tr class="memdesc:a01fd244fe0d314bb425ddb129eb78b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the Remote Node Control dock.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a01fd244fe0d314bb425ddb129eb78b12">More...</a><br /></td></tr>
+<tr class="memdesc:a01fd244fe0d314bb425ddb129eb78b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build Remote Node Control dock (SDO / PDO send &amp; receive).  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a01fd244fe0d314bb425ddb129eb78b12">More...</a><br /></td></tr>
 <tr class="separator:a01fd244fe0d314bb425ddb129eb78b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e89f0447f2eb5f8f6d1354d11e527e9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a5e89f0447f2eb5f8f6d1354d11e527e9">_build_menu</a> (self)</td></tr>
 <tr class="memdesc:a5e89f0447f2eb5f8f6d1354d11e527e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the main application menu bar.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a5e89f0447f2eb5f8f6d1354d11e527e9">More...</a><br /></td></tr>
@@ -235,6 +282,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:aff3a93b21f0581d59f7576542b1def80"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#aff3a93b21f0581d59f7576542b1def80">_configure_table_columns</a> (self, table, str stretch_column_name)</td></tr>
 <tr class="memdesc:aff3a93b21f0581d59f7576542b1def80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure column resize behavior using column names instead of indices.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#aff3a93b21f0581d59f7576542b1def80">More...</a><br /></td></tr>
 <tr class="separator:aff3a93b21f0581d59f7576542b1def80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a594ad0f57548361886304d32440fabf1"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1">_copy_table_selection</a> (self, QTableWidget table)</td></tr>
+<tr class="memdesc:a594ad0f57548361886304d32440fabf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy selected table cells to clipboard as TSV.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1">More...</a><br /></td></tr>
+<tr class="separator:a594ad0f57548361886304d32440fabf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a025212a9fde24e970d7cd1d4c15c2321"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a025212a9fde24e970d7cd1d4c15c2321">_enable_table_copy</a> (self, QTableWidget table)</td></tr>
+<tr class="memdesc:a025212a9fde24e970d7cd1d4c15c2321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable cell selection and Ctrl+C copy for a table.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a025212a9fde24e970d7cd1d4c15c2321">More...</a><br /></td></tr>
+<tr class="separator:a025212a9fde24e970d7cd1d4c15c2321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b51adee27e0f9f28921a3f45c68f7fa"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa">_flash_row</a> (self, table, row)</td></tr>
 <tr class="memdesc:a7b51adee27e0f9f28921a3f45c68f7fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporarily highlight a table row to indicate activity.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a7b51adee27e0f9f28921a3f45c68f7fa">More...</a><br /></td></tr>
 <tr class="separator:a7b51adee27e0f9f28921a3f45c68f7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,6 +306,15 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a244742ae4559e6115110f21439ff4f19"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a244742ae4559e6115110f21439ff4f19">_on_mode_changed</a> (self, text)</td></tr>
 <tr class="memdesc:a244742ae4559e6115110f21439ff4f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle display mode changes from the toolbar.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a244742ae4559e6115110f21439ff4f19">More...</a><br /></td></tr>
 <tr class="separator:a244742ae4559e6115110f21439ff4f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8c2e4bc162156c709d07b87fda5526a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ab8c2e4bc162156c709d07b87fda5526a">_on_recv_sdo</a> (self)</td></tr>
+<tr class="memdesc:ab8c2e4bc162156c709d07b87fda5526a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback on click Receive SDO button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ab8c2e4bc162156c709d07b87fda5526a">More...</a><br /></td></tr>
+<tr class="separator:ab8c2e4bc162156c709d07b87fda5526a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dba4453db9ff5ad166ff500bcb79258"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a3dba4453db9ff5ad166ff500bcb79258">_on_send_pdo</a> (self)</td></tr>
+<tr class="memdesc:a3dba4453db9ff5ad166ff500bcb79258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback on click Send PDO button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a3dba4453db9ff5ad166ff500bcb79258">More...</a><br /></td></tr>
+<tr class="separator:a3dba4453db9ff5ad166ff500bcb79258"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a492266e261023c60c974499205895cce"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a492266e261023c60c974499205895cce">_on_send_sdo</a> (self)</td></tr>
+<tr class="memdesc:a492266e261023c60c974499205895cce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback on click Send SDO button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a492266e261023c60c974499205895cce">More...</a><br /></td></tr>
+<tr class="separator:a492266e261023c60c974499205895cce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae75b7102dbb441694a47853102954211"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211">_restore_column_widths</a> (self, QTableWidget table, str table_name)</td></tr>
 <tr class="memdesc:ae75b7102dbb441694a47853102954211"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore column widths for a table from persistent settings.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211">More...</a><br /></td></tr>
 <tr class="separator:ae75b7102dbb441694a47853102954211"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,6 +327,15 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a82007ce2e6c8c0c61e180af46023a476"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a82007ce2e6c8c0c61e180af46023a476">_settings_key_for_table</a> (self, str table_name)</td></tr>
 <tr class="memdesc:a82007ce2e6c8c0c61e180af46023a476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a QSettings key for storing table column widths.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a82007ce2e6c8c0c61e180af46023a476">More...</a><br /></td></tr>
 <tr class="separator:a82007ce2e6c8c0c61e180af46023a476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae59eb991b174ba213451e6833e095aff"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#ae59eb991b174ba213451e6833e095aff">_toggle_pdo_repeat</a> (self, bool checked)</td></tr>
+<tr class="memdesc:ae59eb991b174ba213451e6833e095aff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for PDO repeat toggle button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#ae59eb991b174ba213451e6833e095aff">More...</a><br /></td></tr>
+<tr class="separator:ae59eb991b174ba213451e6833e095aff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79fb58b5d86cded0da369153191f2094"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a79fb58b5d86cded0da369153191f2094">_toggle_sdo_read_repeat</a> (self, bool checked)</td></tr>
+<tr class="memdesc:a79fb58b5d86cded0da369153191f2094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for SDO read repeat toggle button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a79fb58b5d86cded0da369153191f2094">More...</a><br /></td></tr>
+<tr class="separator:a79fb58b5d86cded0da369153191f2094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a543b98fc543c78c9ccc38c089f440f1c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__gui_1_1CANopenMainWindow.html#a543b98fc543c78c9ccc38c089f440f1c">_toggle_sdo_write_repeat</a> (self, bool checked)</td></tr>
+<tr class="memdesc:a543b98fc543c78c9ccc38c089f440f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for SDO write repeat toggle button.  <a href="classdisplay__gui_1_1CANopenMainWindow.html#a543b98fc543c78c9ccc38c089f440f1c">More...</a><br /></td></tr>
+<tr class="separator:a543b98fc543c78c9ccc38c089f440f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -273,8 +344,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a2949e5197c5e4b6c24e045d78af4b2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a535a819fd0c00d2ae80937d2ea92a2a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a535a819fd0c00d2ae80937d2ea92a2a0">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="ae7f281afe17c65edbe990085f57c7271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7f281afe17c65edbe990085f57c7271">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,6 +355,12 @@ Private Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">queue.Queue()&#160;</td>
+          <td class="paramname"><em>requested_frame</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -508,8 +585,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Build the Remote Node Control dock. </p>
-<p>Constructs the left-side dock widget that hosts controls related to remote CANopen node interaction. This includes actions such as network scanning and manual PDO/SDO transmission. </p><dl class="section note"><dt>Note</dt><dd>The dock layout mirrors the logical grouping used in the CLI command interface but presents controls in a GUI form. </dd></dl>
+<p>Build Remote Node Control dock (SDO / PDO send &amp; receive). </p>
+<p>Provides GUI controls for manual SDO download/upload and raw PDO transmission. This dock is a thin UI layer that delegates all CAN transmission to <a class="el" href="namespacecanopen__sniffer.html">canopen_sniffer</a> APIs. </p>
 
 </div>
 </div>
@@ -668,6 +745,91 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a594ad0f57548361886304d32440fabf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a594ad0f57548361886304d32440fabf1">&#9670;&nbsp;</a></span>_copy_table_selection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _copy_table_selection </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QTableWidget&#160;</td>
+          <td class="paramname"><em>table</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy selected table cells to clipboard as TSV. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph.png" border="0" usemap="#aclassdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph" alt=""/></div>
+<map name="aclassdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph" id="aclassdisplay__gui_1_1CANopenMainWindow_a594ad0f57548361886304d32440fabf1_icgraph">
+<area shape="rect" title="Copy selected table cells to clipboard as TSV." alt="" coords="171,5,337,32"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f" title="Handle Ctrl+C copy from focused QTableWidget." alt="" coords="5,5,123,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a025212a9fde24e970d7cd1d4c15c2321"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a025212a9fde24e970d7cd1d4c15c2321">&#9670;&nbsp;</a></span>_enable_table_copy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _enable_table_copy </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QTableWidget&#160;</td>
+          <td class="paramname"><em>table</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable cell selection and Ctrl+C copy for a table. </p>
 
 </div>
 </div>
@@ -933,6 +1095,90 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="ab8c2e4bc162156c709d07b87fda5526a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8c2e4bc162156c709d07b87fda5526a">&#9670;&nbsp;</a></span>_on_recv_sdo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _on_recv_sdo </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback on click Receive SDO button. </p>
+
+</div>
+</div>
+<a id="a3dba4453db9ff5ad166ff500bcb79258"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dba4453db9ff5ad166ff500bcb79258">&#9670;&nbsp;</a></span>_on_send_pdo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _on_send_pdo </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback on click Send PDO button. </p>
+
+</div>
+</div>
+<a id="a492266e261023c60c974499205895cce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a492266e261023c60c974499205895cce">&#9670;&nbsp;</a></span>_on_send_sdo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _on_send_sdo </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback on click Send SDO button. </p>
+
+</div>
+</div>
 <a id="ae75b7102dbb441694a47853102954211"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae75b7102dbb441694a47853102954211">&#9670;&nbsp;</a></span>_restore_column_widths()</h2>
 
@@ -1138,6 +1384,120 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ae59eb991b174ba213451e6833e095aff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae59eb991b174ba213451e6833e095aff">&#9670;&nbsp;</a></span>_toggle_pdo_repeat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _toggle_pdo_repeat </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>checked</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback for PDO repeat toggle button. </p>
+
+</div>
+</div>
+<a id="a79fb58b5d86cded0da369153191f2094"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79fb58b5d86cded0da369153191f2094">&#9670;&nbsp;</a></span>_toggle_sdo_read_repeat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _toggle_sdo_read_repeat </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>checked</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback for SDO read repeat toggle button. </p>
+
+</div>
+</div>
+<a id="a543b98fc543c78c9ccc38c089f440f1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a543b98fc543c78c9ccc38c089f440f1c">&#9670;&nbsp;</a></span>_toggle_sdo_write_repeat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _toggle_sdo_write_repeat </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>checked</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Callback for SDO write repeat toggle button. </p>
+
+</div>
+</div>
 <a id="a761fada55085b7d8b7896aa06d7240d0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a761fada55085b7d8b7896aa06d7240d0">&#9670;&nbsp;</a></span>clear_tables()</h2>
 
@@ -1202,6 +1562,45 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aaf7224b03642e3cfe85bd396f1f4b08f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf7224b03642e3cfe85bd396f1f4b08f">&#9670;&nbsp;</a></span>keyPressEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def keyPressEvent </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>event</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handle Ctrl+C copy from focused QTableWidget. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph.png" border="0" usemap="#aclassdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph" alt=""/></div>
+<map name="aclassdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph" id="aclassdisplay__gui_1_1CANopenMainWindow_aaf7224b03642e3cfe85bd396f1f4b08f_cgraph">
+<area shape="rect" title="Handle Ctrl+C copy from focused QTableWidget." alt="" coords="5,5,123,32"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a594ad0f57548361886304d32440fabf1" title="Copy selected table cells to clipboard as TSV." alt="" coords="171,5,337,32"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -1579,6 +1978,34 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="abd76a1d0c000e11cb1639d07d71a9d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd76a1d0c000e11cb1639d07d71a9d2d">&#9670;&nbsp;</a></span>pdo_cob_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pdo_cob_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0571ec9996e1bd9b388440d45a4447ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0571ec9996e1bd9b388440d45a4447ed">&#9670;&nbsp;</a></span>pdo_data_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pdo_data_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2fc9f2dcf42c86be777d4c517be98129"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2fc9f2dcf42c86be777d4c517be98129">&#9670;&nbsp;</a></span>pdo_filter</h2>
 
@@ -1592,6 +2019,50 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>PDO data filter. </p>
+
+</div>
+</div>
+<a id="a2359820cc5b387139fc83b0e64165d3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2359820cc5b387139fc83b0e64165d3e">&#9670;&nbsp;</a></span>pdo_interval</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pdo_interval</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afe41527737804de522bcd9cbaafebcc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe41527737804de522bcd9cbaafebcc3">&#9670;&nbsp;</a></span>pdo_repeat_chk</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pdo_repeat_chk</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a87be647a6e4ddee08f5fad000e52ce89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87be647a6e4ddee08f5fad000e52ce89">&#9670;&nbsp;</a></span>pdo_timer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pdo_timer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>PDO write repeat timer. </p>
 
 </div>
 </div>
@@ -1659,6 +2130,22 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ab4a622f1e1275087c3558661cb25300a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4a622f1e1275087c3558661cb25300a">&#9670;&nbsp;</a></span>requested_frame</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">requested_frame</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queue used to receive frames for sending over CAN bus. </p>
+
+</div>
+</div>
 <a id="ace47c83f900a5ce72ddcfce478222e70"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ace47c83f900a5ce72ddcfce478222e70">&#9670;&nbsp;</a></span>sdo_filter</h2>
 
@@ -1672,6 +2159,206 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>SDO data filter. </p>
+
+</div>
+</div>
+<a id="a497d36e63e668e24b5cf43050ee5a356"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a497d36e63e668e24b5cf43050ee5a356">&#9670;&nbsp;</a></span>sdo_index_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_index_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef1f02b7d6312a977b750dc2219ed388"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef1f02b7d6312a977b750dc2219ed388">&#9670;&nbsp;</a></span>sdo_node_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_node_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2797e2af73fa7ed5094edb29283b9e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2797e2af73fa7ed5094edb29283b9e9">&#9670;&nbsp;</a></span>sdo_read_interval</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_read_interval</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2acdcfe8a413f9d6b50e6ca2598d50bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2acdcfe8a413f9d6b50e6ca2598d50bc">&#9670;&nbsp;</a></span>sdo_read_repeat_chk</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_read_repeat_chk</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a457744281abb33013e2bf81839eb25db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a457744281abb33013e2bf81839eb25db">&#9670;&nbsp;</a></span>sdo_read_timer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_read_timer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>SDO read repeat timer. </p>
+
+</div>
+</div>
+<a id="ac183eb83e45179cd99daa6c6463582f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac183eb83e45179cd99daa6c6463582f7">&#9670;&nbsp;</a></span>sdo_recv_index_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_recv_index_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9174147602acea708caabe51d6d400f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9174147602acea708caabe51d6d400f0">&#9670;&nbsp;</a></span>sdo_recv_node_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_recv_node_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1582c880f7476dc368762f48ac2c214b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1582c880f7476dc368762f48ac2c214b">&#9670;&nbsp;</a></span>sdo_recv_sub_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_recv_sub_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adbb779f64a84654974ed289fd2ea09d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbb779f64a84654974ed289fd2ea09d0">&#9670;&nbsp;</a></span>sdo_size_combo</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_size_combo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88611335e1a56d83e16c8d5598c44655"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88611335e1a56d83e16c8d5598c44655">&#9670;&nbsp;</a></span>sdo_sub_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_sub_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a86ba8227b42f7af47139c676af190311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86ba8227b42f7af47139c676af190311">&#9670;&nbsp;</a></span>sdo_value_edit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_value_edit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a618864c016ed57f42c9c00f3be5d6c7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a618864c016ed57f42c9c00f3be5d6c7b">&#9670;&nbsp;</a></span>sdo_write_interval</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_write_interval</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8839aaa47cfb5065c7e6ed8e2cb30a08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8839aaa47cfb5065c7e6ed8e2cb30a08">&#9670;&nbsp;</a></span>sdo_write_repeat_chk</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_write_repeat_chk</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab351befc9bc5e807bdf44dc1b9812351"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab351befc9bc5e807bdf44dc1b9812351">&#9670;&nbsp;</a></span>sdo_write_timer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sdo_write_timer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>SDO write repeat timer. </p>
 
 </div>
 </div>

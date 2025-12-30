@@ -86,21 +86,19 @@ $(document).ready(function(){initNavTree('classprocess__frames_1_1process__frame
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classprocess__frames_1_1process__frames-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">process_frames Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Processor thread that consumes CAN frames and updates statistics.  
- <a href="classprocess__frames_1_1process__frames.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for process_frames:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames__inherit__graph.png" border="0" usemap="#aprocess__frames_inherit__map" alt="Inheritance graph"/></div>
 <map name="aprocess__frames_inherit__map" id="aprocess__frames_inherit__map">
-<area shape="rect" title="Processor thread that consumes CAN frames and updates statistics." alt="" coords="5,80,131,107"/>
+<area shape="rect" title=" " alt="" coords="5,80,131,107"/>
 <area shape="rect" title=" " alt="" coords="35,5,101,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
@@ -109,21 +107,11 @@ Collaboration diagram for process_frames:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames__coll__graph.png" border="0" usemap="#aprocess__frames_coll__map" alt="Collaboration graph"/></div>
 <map name="aprocess__frames_coll__map" id="aprocess__frames_coll__map">
-<area shape="rect" title="Processor thread that consumes CAN frames and updates statistics." alt="" coords="5,80,131,107"/>
+<area shape="rect" title=" " alt="" coords="5,80,131,107"/>
 <area shape="rect" title=" " alt="" coords="35,5,101,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Processor thread that consumes CAN frames and updates statistics. </p>
-<p>Consumes frames produced by the CAN sniffer, classifies them, updates <a class="el" href="namespacebus__stats.html">bus_stats</a>, optionally exports processed rows to CSV, and handles SDO/SDO-response bookkeeping using an EDS map.</p>
-<p>The processor reads frame dictionaries from <code>raw_frame</code>, performs:</p><ul>
-<li>frame classification (NMT, SYNC, EMCY, TIME, PDO, SDO_REQ, SDO_RES, HB, UNKNOWN),</li>
-<li>top-talker and node tracking,</li>
-<li>SDO request/response timing and success/abort accounting,</li>
-<li>payload-size accounting,</li>
-<li>optional CSV export of decoded/processed rows. The thread is stoppable via <code><a class="el" href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop.">stop()</a></code> and will close CSV resources on exit. </li>
-</ul>
-</div><table class="memberdecls">
+<table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae9017521a9672251ad6a11dcd1d6103d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ae9017521a9672251ad6a11dcd1d6103d">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a>, <a class="el" href="classeds__parser_1_1eds__parser.html">eds_parser</a> <a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, bool <a class="el" href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=False)</td></tr>
@@ -132,15 +120,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad22709b2e67308af35f55680d5a026e0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0">run</a> (self)</td></tr>
 <tr class="memdesc:ad22709b2e67308af35f55680d5a026e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main processing loop.  <a href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0">More...</a><br /></td></tr>
 <tr class="separator:ad22709b2e67308af35f55680d5a026e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f9f5b6ac0079572b112f640bf56ac46"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46">save_frame</a> (self, int cob, <a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a> ftype, int index, int sub, str name, str raw, str decoded)</td></tr>
-<tr class="memdesc:a7f9f5b6ac0079572b112f640bf56ac46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed CANopen frame for downstream use or logging.  <a href="classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46">More...</a><br /></td></tr>
-<tr class="separator:a7f9f5b6ac0079572b112f640bf56ac46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa460a72118609ee4daafb0c7c9413fb3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3">save_frame_to_csv</a> (self, int cob, <a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a> ftype, int index, int sub, str name, str raw, str decoded)</td></tr>
-<tr class="memdesc:aa460a72118609ee4daafb0c7c9413fb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed CSV file.  <a href="classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3">More...</a><br /></td></tr>
-<tr class="separator:aa460a72118609ee4daafb0c7c9413fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fbf128e28e552b765b7f779197d3320"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320">save_processed_frame</a> (self, int cob, <a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a> ftype, int index, int sub, str name, str raw, str decoded)</td></tr>
-<tr class="memdesc:a4fbf128e28e552b765b7f779197d3320"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a fully processed CANopen frame in memory and export it to CSV.  <a href="classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320">More...</a><br /></td></tr>
-<tr class="separator:a4fbf128e28e552b765b7f779197d3320"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a978c143f89b0822beb716185289b7bcf"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a978c143f89b0822beb716185289b7bcf">save_frame</a> (self, int cob, <a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a> ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)</td></tr>
+<tr class="memdesc:a978c143f89b0822beb716185289b7bcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed CANopen frame for downstream use or logging.  <a href="classprocess__frames_1_1process__frames.html#a978c143f89b0822beb716185289b7bcf">More...</a><br /></td></tr>
+<tr class="separator:a978c143f89b0822beb716185289b7bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9acd531bcaa66901bfc31865c7de1d3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa9acd531bcaa66901bfc31865c7de1d3">save_frame_to_csv</a> (self, int cob, <a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a> ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)</td></tr>
+<tr class="memdesc:aa9acd531bcaa66901bfc31865c7de1d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed CSV file.  <a href="classprocess__frames_1_1process__frames.html#aa9acd531bcaa66901bfc31865c7de1d3">More...</a><br /></td></tr>
+<tr class="separator:aa9acd531bcaa66901bfc31865c7de1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af72c85667f791c7f82aa7b89ac4acf11"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11">save_processed_frame</a> (self, int cob, <a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a> ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)</td></tr>
+<tr class="memdesc:af72c85667f791c7f82aa7b89ac4acf11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a fully processed CANopen frame in memory and export it to CSV.  <a href="classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11">More...</a><br /></td></tr>
+<tr class="separator:af72c85667f791c7f82aa7b89ac4acf11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26ca7c1c7fcdd35378e7be97727047a6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6">stop</a> (self)</td></tr>
 <tr class="memdesc:a26ca7c1c7fcdd35378e7be97727047a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request the processor thread to stop.  <a href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6">More...</a><br /></td></tr>
 <tr class="separator:a26ca7c1c7fcdd35378e7be97727047a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +165,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aa57ebe01934de43865125819a3c4af74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a></td></tr>
 <tr class="memdesc:aa57ebe01934de43865125819a3c4af74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to the <a class="el" href="namespacebus__stats.html">bus_stats</a> instance used for recording metrics.  <a href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">More...</a><br /></td></tr>
 <tr class="separator:aa57ebe01934de43865125819a3c4af74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a2c327b400fe52a2eebc76e7c41123b2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a">_sdo_has_index</a> (self, int cs)</td></tr>
+<tr class="memdesc:a2c327b400fe52a2eebc76e7c41123b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return True if SDO command specifier carries index/subindex.  <a href="classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a">More...</a><br /></td></tr>
+<tr class="separator:a2c327b400fe52a2eebc76e7c41123b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -250,6 +244,44 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2c327b400fe52a2eebc76e7c41123b2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c327b400fe52a2eebc76e7c41123b2a">&#9670;&nbsp;</a></span>_sdo_has_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool _sdo_has_index </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return True if SDO command specifier carries index/subindex. </p>
+
+</div>
+</div>
 <a id="ad22709b2e67308af35f55680d5a026e0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad22709b2e67308af35f55680d5a026e0">&#9670;&nbsp;</a></span>run()</h2>
 
@@ -275,18 +307,18 @@ Here is the call graph for this function:</div>
 <map name="aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph">
 <area shape="rect" title="Main processing loop." alt="" coords="5,53,48,80"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="563,137,731,164"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,112,268,139"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,112,268,139"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="339,46,492,87"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="366,112,465,139"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3" title="Save a processed frame row to the processed CSV file." alt="" coords="341,163,489,189"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="316,214,515,255"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a978c143f89b0822beb716185289b7bcf" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="366,112,465,139"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa9acd531bcaa66901bfc31865c7de1d3" title="Save a processed frame row to the processed CSV file." alt="" coords="341,163,489,189"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af7adf7c35981de206cae05750cfdeb0f" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="316,214,515,255"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a7f9f5b6ac0079572b112f640bf56ac46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f9f5b6ac0079572b112f640bf56ac46">&#9670;&nbsp;</a></span>save_frame()</h2>
+<a id="a978c143f89b0822beb716185289b7bcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a978c143f89b0822beb716185289b7bcf">&#9670;&nbsp;</a></span>save_frame()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,6 +340,12 @@ Here is the call graph for this function:</div>
           <td></td>
           <td class="paramtype"><a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a>&#160;</td>
           <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -363,8 +401,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_cgraph" alt=""/></div>
-<map name="aclassprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_cgraph" id="aclassprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_cgraph">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_cgraph" id="aclassprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_cgraph">
 <area shape="rect" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="5,5,104,32"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="152,5,320,32"/>
 </map>
@@ -372,18 +410,18 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_icgraph" alt=""/></div>
-<map name="aclassprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_icgraph" id="aclassprocess__frames_1_1process__frames_a7f9f5b6ac0079572b112f640bf56ac46_icgraph">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_icgraph" id="aclassprocess__frames_1_1process__frames_a978c143f89b0822beb716185289b7bcf_icgraph">
 <area shape="rect" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="316,5,415,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
 <area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="aa460a72118609ee4daafb0c7c9413fb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa460a72118609ee4daafb0c7c9413fb3">&#9670;&nbsp;</a></span>save_frame_to_csv()</h2>
+<a id="aa9acd531bcaa66901bfc31865c7de1d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9acd531bcaa66901bfc31865c7de1d3">&#9670;&nbsp;</a></span>save_frame_to_csv()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -405,6 +443,12 @@ Here is the caller graph for this function:</div>
           <td></td>
           <td class="paramtype"><a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a>&#160;</td>
           <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -460,8 +504,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_cgraph" alt=""/></div>
-<map name="aclassprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_cgraph" id="aclassprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_cgraph">
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_cgraph" id="aclassprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_cgraph">
 <area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="5,5,153,32"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="201,5,369,32"/>
 </map>
@@ -469,20 +513,25 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_icgraph" alt=""/></div>
-<map name="aclassprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_icgraph" id="aclassprocess__frames_1_1process__frames_aa460a72118609ee4daafb0c7c9413fb3_icgraph">
-<area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="467,42,615,69"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a90d7c754b31a88d68fa2debe477261e8" title="Handle a received CAN message." alt="" coords="236,5,419,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4fbf128e28e552b765b7f779197d3320" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="241,71,413,98"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,5,188,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="75,71,118,98"/>
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_icgraph" id="aclassprocess__frames_1_1process__frames_aa9acd531bcaa66901bfc31865c7de1d3_icgraph">
+<area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="1017,109,1165,135"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="266,26,449,82"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="781,50,953,77"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send raw PDO frame." alt="" coords="776,101,959,143"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="765,167,969,208"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="Send SDO upload request (read)." alt="" coords="775,233,960,289"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,80,188,121"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="601,50,643,77"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title=" " alt="" coords="527,133,717,175"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="236,116,479,157"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a4fbf128e28e552b765b7f779197d3320"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fbf128e28e552b765b7f779197d3320">&#9670;&nbsp;</a></span>save_processed_frame()</h2>
+<a id="af72c85667f791c7f82aa7b89ac4acf11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af72c85667f791c7f82aa7b89ac4acf11">&#9670;&nbsp;</a></span>save_processed_frame()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -504,6 +553,12 @@ Here is the caller graph for this function:</div>
           <td></td>
           <td class="paramtype"><a class="el" href="classanalyzer__defs_1_1frame__type.html">analyzer_defs.frame_type</a>&#160;</td>
           <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -544,7 +599,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Save a fully processed CANopen frame in memory and export it to CSV. </p>
-<p>Converts the raw and decoded payloads into hexadecimal string representations if necessary, then delegates the storage of the processed frame to <a class="el" href="classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46">save_frame</a> and its CSV export to <a class="el" href="classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3">save_frame_to_csv</a>. This function ensures consistent formatting for both in-memory data and CSV output. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Converts the raw and decoded payloads into hexadecimal string representations if necessary, then delegates the storage of the processed frame to <a class="el" href="classprocess__frames_1_1process__frames.html#a978c143f89b0822beb716185289b7bcf">save_frame</a> and its CSV export to <a class="el" href="classprocess__frames_1_1process__frames.html#aa9acd531bcaa66901bfc31865c7de1d3">save_frame_to_csv</a>. This function ensures consistent formatting for both in-memory data and CSV output. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cob</td><td>The CANopen COB-ID of the processed frame. </td></tr>
     <tr><td class="paramname">ftype</td><td>The frame type as an instance of defs.frame_type. </td></tr>
@@ -559,21 +614,21 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_cgraph" alt=""/></div>
-<map name="aclassprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_cgraph" id="aclassprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_cgraph">
+<div class="center"><img src="classprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_cgraph" id="aclassprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_cgraph">
 <area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="5,97,177,123"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="248,5,401,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f9f5b6ac0079572b112f640bf56ac46" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="275,71,374,98"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa460a72118609ee4daafb0c7c9413fb3" title="Save a processed frame row to the processed CSV file." alt="" coords="251,122,399,149"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#adea2a4942ab2e9b485f0f4acb670a172" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="225,173,424,215"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a978c143f89b0822beb716185289b7bcf" title="Save a processed CANopen frame for downstream use or logging." alt="" coords="275,71,374,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa9acd531bcaa66901bfc31865c7de1d3" title="Save a processed frame row to the processed CSV file." alt="" coords="251,122,399,149"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af7adf7c35981de206cae05750cfdeb0f" title="Save a received CAN frame (raw view) to the CSV export file." alt="" coords="225,173,424,215"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="472,122,640,149"/>
 </map>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_icgraph" alt=""/></div>
-<map name="aclassprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_icgraph" id="aclassprocess__frames_1_1process__frames_a4fbf128e28e552b765b7f779197d3320_icgraph">
+<div class="center"><img src="classprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_icgraph" id="aclassprocess__frames_1_1process__frames_af72c85667f791c7f82aa7b89ac4acf11_icgraph">
 <area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
 <area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
 </map>

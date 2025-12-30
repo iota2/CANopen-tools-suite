@@ -2,5 +2,5 @@
 <area shape="rect" id="node1" title=" " alt="" coords="5,56,72,83"/>
 <area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html" title="CANopen bus sniffer thread." alt="" coords="120,5,245,32"/>
 <area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html" title="Rich&#45;based CLI display thread that consumes processed_frame queue and renders Protocol,..." alt="" coords="137,56,228,83"/>
-<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html" title="Processor thread that consumes CAN frames and updates statistics." alt="" coords="120,107,245,133"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html" title=" " alt="" coords="120,107,245,133"/>
 </map>

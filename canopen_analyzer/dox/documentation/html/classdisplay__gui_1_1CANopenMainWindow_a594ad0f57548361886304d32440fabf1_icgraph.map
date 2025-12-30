@@ -1,0 +1,4 @@
+<map id="_copy_table_selection" name="_copy_table_selection">
+<area shape="rect" id="node1" title="Copy selected table cells to clipboard as TSV." alt="" coords="171,5,337,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#aaf7224b03642e3cfe85bd396f1f4b08f" title="Handle Ctrl+C copy from focused QTableWidget." alt="" coords="5,5,123,32"/>
+</map>

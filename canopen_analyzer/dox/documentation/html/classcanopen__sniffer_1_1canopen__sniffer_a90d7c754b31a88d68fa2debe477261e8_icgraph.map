@@ -1,4 +1,0 @@
-<map id="handle_message" name="handle_message">
-<area shape="rect" id="node1" title="Handle a received CAN message." alt="" coords="96,5,228,32"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,5,48,32"/>
-</map>

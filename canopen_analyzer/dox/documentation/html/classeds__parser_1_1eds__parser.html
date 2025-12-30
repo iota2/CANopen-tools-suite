@@ -114,9 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a55ddf37eb28c77078dafb3d7659fcee5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a55ddf37eb28c77078dafb3d7659fcee5">log_pdo_mapping_consistency</a> (self)</td></tr>
 <tr class="memdesc:a55ddf37eb28c77078dafb3d7659fcee5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emit warnings for PDO mappings that lack ParameterName information.  <a href="classeds__parser_1_1eds__parser.html#a55ddf37eb28c77078dafb3d7659fcee5">More...</a><br /></td></tr>
 <tr class="separator:a55ddf37eb28c77078dafb3d7659fcee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4ee978b95866a92faf3dd0275d2f64a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#aa4ee978b95866a92faf3dd0275d2f64a">parse_pdo_map</a> (self)</td></tr>
-<tr class="memdesc:aa4ee978b95866a92faf3dd0275d2f64a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse PDO mapping entries from the EDS file.  <a href="classeds__parser_1_1eds__parser.html#aa4ee978b95866a92faf3dd0275d2f64a">More...</a><br /></td></tr>
-<tr class="separator:aa4ee978b95866a92faf3dd0275d2f64a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a302fbdb20e8a40ceb107b4ee0c9e2708"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a302fbdb20e8a40ceb107b4ee0c9e2708">parse_pdo_map</a> (self, str map_prefix, str comm_prefix, cfg)</td></tr>
+<tr class="memdesc:a302fbdb20e8a40ceb107b4ee0c9e2708"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse PDO mapping entries from the EDS file.  <a href="classeds__parser_1_1eds__parser.html#a302fbdb20e8a40ceb107b4ee0c9e2708">More...</a><br /></td></tr>
+<tr class="separator:a302fbdb20e8a40ceb107b4ee0c9e2708"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -133,8 +133,14 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a379b3d2f78238184664fb872f44c6f96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of (index, subindex) -&gt; human-readable ParameterName.  <a href="classeds__parser_1_1eds__parser.html#a379b3d2f78238184664fb872f44c6f96">More...</a><br /></td></tr>
 <tr class="separator:a379b3d2f78238184664fb872f44c6f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac960737f47148af2dd1db69a47a9c803"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#ac960737f47148af2dd1db69a47a9c803">pdo_map</a></td></tr>
-<tr class="memdesc:ac960737f47148af2dd1db69a47a9c803"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of COB-ID -&gt; list of (index, subindex, size) tuples.  <a href="classeds__parser_1_1eds__parser.html#ac960737f47148af2dd1db69a47a9c803">More...</a><br /></td></tr>
+<tr class="memdesc:ac960737f47148af2dd1db69a47a9c803"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of all PDO COB-ID -&gt; list of (index, subindex, size) tuples.  <a href="classeds__parser_1_1eds__parser.html#ac960737f47148af2dd1db69a47a9c803">More...</a><br /></td></tr>
 <tr class="separator:ac960737f47148af2dd1db69a47a9c803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0096ab8a10c84f0e442bfd8e45ecb10a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a0096ab8a10c84f0e442bfd8e45ecb10a">rpdo_map</a></td></tr>
+<tr class="memdesc:a0096ab8a10c84f0e442bfd8e45ecb10a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of RPDO COB-ID -&gt; list of (index, subindex, size) tuples.  <a href="classeds__parser_1_1eds__parser.html#a0096ab8a10c84f0e442bfd8e45ecb10a">More...</a><br /></td></tr>
+<tr class="separator:a0096ab8a10c84f0e442bfd8e45ecb10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69e7785d2d689e897019d011958e9a52"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a69e7785d2d689e897019d011958e9a52">tpdo_map</a></td></tr>
+<tr class="memdesc:a69e7785d2d689e897019d011958e9a52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of TPDO COB-ID -&gt; list of (index, subindex, size) tuples.  <a href="classeds__parser_1_1eds__parser.html#a69e7785d2d689e897019d011958e9a52">More...</a><br /></td></tr>
+<tr class="separator:a69e7785d2d689e897019d011958e9a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a50e50f7214b77463663d40b1d793543e"></a>
@@ -216,8 +222,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa4ee978b95866a92faf3dd0275d2f64a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4ee978b95866a92faf3dd0275d2f64a">&#9670;&nbsp;</a></span>parse_pdo_map()</h2>
+<a id="a302fbdb20e8a40ceb107b4ee0c9e2708"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a302fbdb20e8a40ceb107b4ee0c9e2708">&#9670;&nbsp;</a></span>parse_pdo_map()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,19 +232,47 @@ Public Attributes</h2></td></tr>
           <td class="memname">def parse_pdo_map </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>map_prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>comm_prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cfg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Parse PDO mapping entries from the EDS file. </p>
-<p>Scans for 1Axx (RPDO/TPDO mapping) sections and their subentries to extract the mapped Object Dictionary indices, subindexes and sizes. For each mapping found, the corresponding communication object (18xx) is checked for a COB-ID (sub1 DefaultValue) and the mapping is stored keyed by that COB-ID. Also builds a cob_name_overrides dictionary containing readable field names (using the name_map) for each COB-ID. </p><dl class="section return"><dt>Returns</dt><dd>dict Mapping of cob_id (int) -&gt; list of (index:int, sub:int, size:int). </dd></dl>
+<p>Scans for PDO sections and their subentries to extract the mapped Object Dictionary indices, subindexes and sizes.</p><ul>
+<li>14xx for TPDO communication parameters</li>
+<li>16xx for TPDO mapping parameters</li>
+<li>18xx for RPDO communication parameters</li>
+<li>1Axx for RPDO mapping parameters For each mapping found, the corresponding communication object (14xx/18xx) is checked for a COB-ID (sub1 DefaultValue) and the mapping is stored keyed by that COB-ID. Also builds a cob_name_overrides dictionary containing readable field names (using the name_map) for each COB-ID. <dl class="section return"><dt>Returns</dt><dd>dict Mapping of cob_id (int) -&gt; list of (index:int, sub:int, size:int). </dd></dl>
+</li>
+</ul>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classeds__parser_1_1eds__parser_aa4ee978b95866a92faf3dd0275d2f64a_cgraph.png" border="0" usemap="#aclasseds__parser_1_1eds__parser_aa4ee978b95866a92faf3dd0275d2f64a_cgraph" alt=""/></div>
-<map name="aclasseds__parser_1_1eds__parser_aa4ee978b95866a92faf3dd0275d2f64a_cgraph" id="aclasseds__parser_1_1eds__parser_aa4ee978b95866a92faf3dd0275d2f64a_cgraph">
+<div class="center"><img src="classeds__parser_1_1eds__parser_a302fbdb20e8a40ceb107b4ee0c9e2708_cgraph.png" border="0" usemap="#aclasseds__parser_1_1eds__parser_a302fbdb20e8a40ceb107b4ee0c9e2708_cgraph" alt=""/></div>
+<map name="aclasseds__parser_1_1eds__parser_a302fbdb20e8a40ceb107b4ee0c9e2708_cgraph" id="aclasseds__parser_1_1eds__parser_a302fbdb20e8a40ceb107b4ee0c9e2708_cgraph">
 <area shape="rect" title="Parse PDO mapping entries from the EDS file." alt="" coords="5,13,131,39"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#ade1dc6064bd699e210017b9dd7559ffe" title="Get value after splitting the string." alt="" coords="179,5,331,47"/>
 </map>
@@ -323,7 +357,39 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Mapping of COB-ID -&gt; list of (index, subindex, size) tuples. </p>
+<p>Mapping of all PDO COB-ID -&gt; list of (index, subindex, size) tuples. </p>
+
+</div>
+</div>
+<a id="a0096ab8a10c84f0e442bfd8e45ecb10a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0096ab8a10c84f0e442bfd8e45ecb10a">&#9670;&nbsp;</a></span>rpdo_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rpdo_map</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mapping of RPDO COB-ID -&gt; list of (index, subindex, size) tuples. </p>
+
+</div>
+</div>
+<a id="a69e7785d2d689e897019d011958e9a52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69e7785d2d689e897019d011958e9a52">&#9670;&nbsp;</a></span>tpdo_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tpdo_map</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mapping of TPDO COB-ID -&gt; list of (index, subindex, size) tuples. </p>
 
 </div>
 </div>

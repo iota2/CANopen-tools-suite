@@ -1,4 +1,0 @@
-<map id="increment_frame" name="increment_frame">
-<area shape="rect" id="node1" title="Increment frame counters by FrameType." alt="" coords="5,5,140,32"/>
-<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="188,5,295,32"/>
-</map>

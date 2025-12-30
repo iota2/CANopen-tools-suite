@@ -1,4 +1,4 @@
-.TH "display_gui" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_gui" 3 "Tue Dec 30 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,13 +25,13 @@ display_gui
 
 .in +1c
 .ti -1c
-.RI "def \fBdisplay_gui\fP (stats, processed_frame, fixed=False)"
+.RI "def \fBdisplay_gui\fP (stats, processed_frame=None, requested_frame=None, fixed=False)"
 .br
 .RI "Launch the CANopen Analyzer GUI application\&. "
 .in -1c
 .SH "Function Documentation"
 .PP 
-.SS "def display_gui\&.display_gui ( stats,  processed_frame,  fixed = \fCFalse\fP)"
+.SS "def display_gui\&.display_gui ( stats,  processed_frame = \fCNone\fP,  requested_frame = \fCNone\fP,  fixed = \fCFalse\fP)"
 
 .PP
 Launch the CANopen Analyzer GUI application\&. Creates the Qt application instance, initializes the main window, and starts a background worker thread to deliver decoded CAN frames to the GUI\&. This function also installs proper Ctrl+C (SIGINT) handling so that the application shuts down cleanly when run from a terminal\&. 

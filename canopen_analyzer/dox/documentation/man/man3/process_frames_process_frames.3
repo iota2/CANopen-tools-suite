@@ -1,33 +1,13 @@
-.TH "process_frames" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "process_frames" 3 "Tue Dec 30 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-process_frames \- Processor thread that consumes CAN frames and updates statistics\&.  
-
+process_frames
 .SH SYNOPSIS
 .br
 .PP
 .PP
 Inherits Thread\&.
-.SH "Detailed Description"
-.PP 
-Processor thread that consumes CAN frames and updates statistics\&. 
-
-Consumes frames produced by the CAN sniffer, classifies them, updates \fBbus_stats\fP, optionally exports processed rows to CSV, and handles SDO/SDO-response bookkeeping using an EDS map\&.
-.PP
-The processor reads frame dictionaries from \fCraw_frame\fP, performs:
-.IP "\(bu" 2
-frame classification (NMT, SYNC, EMCY, TIME, PDO, SDO_REQ, SDO_RES, HB, UNKNOWN),
-.IP "\(bu" 2
-top-talker and node tracking,
-.IP "\(bu" 2
-SDO request/response timing and success/abort accounting,
-.IP "\(bu" 2
-payload-size accounting,
-.IP "\(bu" 2
-optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC\fBstop()\fP\fP and will close CSV resources on exit\&. 
-.PP
-
 .SS "Public Member Functions"
 
 .in +1c
@@ -40,15 +20,15 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .br
 .RI "Main processing loop\&. "
 .ti -1c
-.RI "def \fBsave_frame\fP (self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.RI "def \fBsave_frame\fP (self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)"
 .br
 .RI "Save a processed CANopen frame for downstream use or logging\&. "
 .ti -1c
-.RI "def \fBsave_frame_to_csv\fP (self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.RI "def \fBsave_frame_to_csv\fP (self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)"
 .br
 .RI "Save a processed frame row to the processed CSV file\&. "
 .ti -1c
-.RI "def \fBsave_processed_frame\fP (self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.RI "def \fBsave_processed_frame\fP (self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)"
 .br
 .RI "Save a fully processed CANopen frame in memory and export it to CSV\&. "
 .ti -1c
@@ -100,6 +80,14 @@ optional CSV export of decoded/processed rows\&. The thread is stoppable via \fC
 .br
 .RI "Reference to the \fBbus_stats\fP instance used for recording metrics\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fB_sdo_has_index\fP (self, int cs)"
+.br
+.RI "Return True if SDO command specifier carries index/subindex\&. "
+.in -1c
 .SS "Private Attributes"
 
 .in +1c
@@ -131,11 +119,15 @@ Initialize the processor thread\&. The constructor stores references to required
 
 .SH "Member Function Documentation"
 .PP 
+.SS " bool _sdo_has_index ( self, int cs)\fC [private]\fP"
+
+.PP
+Return True if SDO command specifier carries index/subindex\&. 
 .SS "def run ( self)"
 
 .PP
 Main processing loop\&. Non-blocking, interruptable loop that pulls frame dicts from \fCraw_frame\fP, classifies frames, updates \fCself\&.stats\fP, resolves names via \fCself\&.eds_map\fP, decodes simple SDO payloads (expedited/data), exports CSV rows (if enabled), and logs the processed frame details\&. Ensures resources are closed on exit\&. 
-.SS "def save_frame ( self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.SS "def save_frame ( self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)"
 
 .PP
 Save a processed CANopen frame for downstream use or logging\&. Constructs a dictionary representing a fully decoded CANopen frame and appends it to the internal list of processed frames\&. Each stored frame includes timestamp, COB-ID, frame type, Object Dictionary indices, and decoded payload\&. A debug log entry is also generated with formatted frame details\&. 
@@ -158,7 +150,7 @@ Save a processed CANopen frame for downstream use or logging\&. Constructs a dic
 .RE
 .PP
 
-.SS "def save_frame_to_csv ( self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.SS "def save_frame_to_csv ( self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)"
 
 .PP
 Save a processed frame row to the processed CSV file\&. Writes a CSV row with serial number, timestamp, frame classification, OD address, name, raw hex payload and decoded value\&. Periodically flushes and \fCfsyncs\fP the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
@@ -181,7 +173,7 @@ Save a processed frame row to the processed CSV file\&. Writes a CSV row with se
 .RE
 .PP
 
-.SS "def save_processed_frame ( self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, int index, int sub, str name, str raw, str decoded)"
+.SS "def save_processed_frame ( self, int cob, \fBanalyzer_defs\&.frame_type\fP ftype, bool is_tx, int index, int sub, str name, str raw, str decoded)"
 
 .PP
 Save a fully processed CANopen frame in memory and export it to CSV\&. Converts the raw and decoded payloads into hexadecimal string representations if necessary, then delegates the storage of the processed frame to \fBsave_frame\fP and its CSV export to \fBsave_frame_to_csv\fP\&. This function ensures consistent formatting for both in-memory data and CSV output\&. 

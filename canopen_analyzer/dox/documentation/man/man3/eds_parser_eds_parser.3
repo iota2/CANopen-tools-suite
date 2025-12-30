@@ -1,4 +1,4 @@
-.TH "eds_parser" 3 "Mon Dec 22 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "eds_parser" 3 "Tue Dec 30 2025" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -35,7 +35,7 @@ Provides utilities to extract ParameterName mappings and PDO mappings from an ED
 .br
 .RI "Emit warnings for PDO mappings that lack ParameterName information\&. "
 .ti -1c
-.RI "def \fBparse_pdo_map\fP (self)"
+.RI "def \fBparse_pdo_map\fP (self, str map_prefix, str comm_prefix, cfg)"
 .br
 .RI "Parse PDO mapping entries from the EDS file\&. "
 .in -1c
@@ -61,7 +61,15 @@ Provides utilities to extract ParameterName mappings and PDO mappings from an ED
 .ti -1c
 .RI "\fBpdo_map\fP"
 .br
-.RI "Mapping of COB-ID -> list of (index, subindex, size) tuples\&. "
+.RI "Mapping of all PDO COB-ID -> list of (index, subindex, size) tuples\&. "
+.ti -1c
+.RI "\fBrpdo_map\fP"
+.br
+.RI "Mapping of RPDO COB-ID -> list of (index, subindex, size) tuples\&. "
+.ti -1c
+.RI "\fBtpdo_map\fP"
+.br
+.RI "Mapping of TPDO COB-ID -> list of (index, subindex, size) tuples\&. "
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
@@ -100,15 +108,25 @@ None
 .RE
 .PP
 
-.SS "def parse_pdo_map ( self)"
+.SS "def parse_pdo_map ( self, str map_prefix, str comm_prefix,  cfg)"
 
 .PP
-Parse PDO mapping entries from the EDS file\&. Scans for 1Axx (RPDO/TPDO mapping) sections and their subentries to extract the mapped Object Dictionary indices, subindexes and sizes\&. For each mapping found, the corresponding communication object (18xx) is checked for a COB-ID (sub1 DefaultValue) and the mapping is stored keyed by that COB-ID\&. Also builds a cob_name_overrides dictionary containing readable field names (using the name_map) for each COB-ID\&. 
+Parse PDO mapping entries from the EDS file\&. Scans for PDO sections and their subentries to extract the mapped Object Dictionary indices, subindexes and sizes\&.
+.IP "\(bu" 2
+14xx for TPDO communication parameters
+.IP "\(bu" 2
+16xx for TPDO mapping parameters
+.IP "\(bu" 2
+18xx for RPDO communication parameters
+.IP "\(bu" 2
+1Axx for RPDO mapping parameters For each mapping found, the corresponding communication object (14xx/18xx) is checked for a COB-ID (sub1 DefaultValue) and the mapping is stored keyed by that COB-ID\&. Also builds a cob_name_overrides dictionary containing readable field names (using the name_map) for each COB-ID\&. 
 .PP
 \fBReturns\fP
 .RS 4
 dict Mapping of cob_id (int) -> list of (index:int, sub:int, size:int)\&. 
 .RE
+.PP
+
 .PP
 
 .SH "Member Data Documentation"
@@ -132,7 +150,15 @@ Mapping of (index, subindex) -> human-readable ParameterName\&.
 .SS "pdo_map"
 
 .PP
-Mapping of COB-ID -> list of (index, subindex, size) tuples\&. 
+Mapping of all PDO COB-ID -> list of (index, subindex, size) tuples\&. 
+.SS "rpdo_map"
+
+.PP
+Mapping of RPDO COB-ID -> list of (index, subindex, size) tuples\&. 
+.SS "tpdo_map"
+
+.PP
+Mapping of TPDO COB-ID -> list of (index, subindex, size) tuples\&. 
 
 .SH "Author"
 .PP 
