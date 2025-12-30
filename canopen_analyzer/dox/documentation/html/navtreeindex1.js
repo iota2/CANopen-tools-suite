@@ -1,5 +1,17 @@
 var NAVTREEINDEX1 =
 {
+"classprocess__frames_1_1process__frames.html#ae9017521a9672251ad6a11dcd1d6103d":[2,0,7,0,0],
+"classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd":[2,0,7,0,9],
+"classprocess__frames_1_1process__frames.html#af72c85667f791c7f82aa7b89ac4acf11":[2,0,7,0,5],
+"classprocess__frames_1_1process__frames.html#afdcb13a7e8e9ec20376d877dbae55960":[2,0,7,0,10],
+"display__cli_8py.html":[3,0,4],
+"display__gui_8py.html":[3,0,5],
+"display__gui_8py.html#aa2626e4b626b5d62f4e77894376a8f74":[3,0,5,3],
+"display__tui_8py.html":[3,0,6],
+"display__tui_8py.html#a0ac8512426efbd5aed951550c0939686":[3,0,6,1],
+"eds__parser_8py.html":[3,0,7],
+"files.html":[3,0],
+"functions.html":[2,3,0],
 "functions.html":[2,3,0,0],
 "functions_a.html":[2,3,0,1],
 "functions_b.html":[2,3,0,2],

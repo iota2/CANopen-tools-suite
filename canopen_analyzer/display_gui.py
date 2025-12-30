@@ -34,11 +34,11 @@ import signal
 
 from PySide6.QtCore import (
     Qt, QObject, Signal, QThread, QEvent,
-    QSettings, QTimer, QMargins
+    QSettings, QTimer, QMargins, Slot
 )
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QTableWidget, QTableWidgetItem, QDockWidget, QSplitter,
+    QTableWidget, QTableWidgetItem, QDockWidget, QSplitter, QCheckBox,
     QPushButton, QLineEdit, QComboBox, QToolBar, QToolTip,
     QLabel, QHeaderView, QFrame, QGridLayout, QProgressBar
 )
@@ -560,6 +560,20 @@ class CANopenMainWindow(QMainWindow):
         ## Fixed-row SDO data caches used when operating in Fixed mode.
         self.fixed_sdo = {}
 
+        ## SDO write repeat timer
+        self.sdo_write_timer = QTimer(self)
+
+        ## SDO read repeat timer
+        self.sdo_read_timer = QTimer(self)
+
+        ## PDO write repeat timer
+        self.pdo_timer = QTimer(self)
+
+        # Connect repeat timers to respective callback
+        self.sdo_write_timer.timeout.connect(self._on_send_sdo)
+        self.sdo_read_timer.timeout.connect(self._on_recv_sdo)
+        self.pdo_timer.timeout.connect(self._on_send_pdo)
+
         ## Persistent settings store used for window geometry,
         ## dock layout, and column width restoration.
         self.settings = QSettings(analyzer_defs.APP_ORG, analyzer_defs.APP_NAME)
@@ -694,15 +708,13 @@ class CANopenMainWindow(QMainWindow):
         # ==========================================================
         layout.addWidget(QLabel("<b>Send SDO (Write)</b>"))
 
-        self.sdo_node_edit = QLineEdit("0x02")
+        self.sdo_node_edit = QLineEdit("0x01")
         self.sdo_index_edit = QLineEdit("0x6000")
         self.sdo_sub_edit = QLineEdit("0x00")
         self.sdo_value_edit = QLineEdit("1")
 
         self.sdo_size_combo = QComboBox()
         self.sdo_size_combo.addItems(["1", "2", "4"])
-
-        sdo_send_btn = QPushButton("Send SDO")
 
         grid = QGridLayout()
         grid.addWidget(QLabel("Node ID"), 0, 0)
@@ -715,8 +727,23 @@ class CANopenMainWindow(QMainWindow):
         grid.addWidget(self.sdo_value_edit, 3, 1)
         grid.addWidget(QLabel("Size (bytes)"), 4, 0)
         grid.addWidget(self.sdo_size_combo, 4, 1)
-
         layout.addLayout(grid)
+
+        self.sdo_write_repeat_chk = QCheckBox("Repeat")
+        self.sdo_write_interval = QLineEdit("1000")
+        self.sdo_write_interval.setFixedWidth(70)
+
+        repeat_layout = QHBoxLayout()
+        repeat_layout.addWidget(self.sdo_write_repeat_chk)
+        repeat_layout.addWidget(self.sdo_write_interval)
+        repeat_layout.addWidget(QLabel("ms"))
+        layout.addLayout(repeat_layout)
+
+        self.sdo_write_repeat_chk.stateChanged.connect(
+            self._toggle_sdo_write_repeat
+        )
+
+        sdo_send_btn = QPushButton("Send SDO")
         layout.addWidget(sdo_send_btn)
 
         # ==========================================================
@@ -725,11 +752,10 @@ class CANopenMainWindow(QMainWindow):
         layout.addSpacing(8)
         layout.addWidget(QLabel("<b>Receive SDO (Read)</b>"))
 
-        self.sdo_recv_node_edit = QLineEdit("0x02")
+        self.sdo_recv_node_edit = QLineEdit("0x01")
         self.sdo_recv_index_edit = QLineEdit("0x6000")
         self.sdo_recv_sub_edit = QLineEdit("0x00")
 
-        sdo_recv_btn = QPushButton("Receive SDO")
 
         grid = QGridLayout()
         grid.addWidget(QLabel("Node ID"), 0, 0)
@@ -738,8 +764,24 @@ class CANopenMainWindow(QMainWindow):
         grid.addWidget(self.sdo_recv_index_edit, 1, 1)
         grid.addWidget(QLabel("Sub"), 2, 0)
         grid.addWidget(self.sdo_recv_sub_edit, 2, 1)
-
         layout.addLayout(grid)
+
+        self.sdo_read_repeat_chk = QCheckBox("Repeat")
+        self.sdo_read_interval = QLineEdit("1000")
+        self.sdo_read_interval.setFixedWidth(70)
+
+        repeat_layout = QHBoxLayout()
+        repeat_layout.addWidget(self.sdo_read_repeat_chk)
+        repeat_layout.addWidget(self.sdo_read_interval)
+        repeat_layout.addWidget(QLabel("ms"))
+
+        layout.addLayout(repeat_layout)
+
+        self.sdo_read_repeat_chk.stateChanged.connect(
+            self._toggle_sdo_read_repeat
+        )
+
+        sdo_recv_btn = QPushButton("Receive SDO")
         layout.addWidget(sdo_recv_btn)
 
         # ==========================================================
@@ -748,18 +790,32 @@ class CANopenMainWindow(QMainWindow):
         layout.addSpacing(8)
         layout.addWidget(QLabel("<b>Send PDO</b>"))
 
-        self.pdo_cob_edit = QLineEdit("0x181")
+        self.pdo_cob_edit = QLineEdit("0x202")
         self.pdo_data_edit = QLineEdit("00 00 00 00 00 00 00 00")
-
-        pdo_send_btn = QPushButton("Send PDO")
 
         grid = QGridLayout()
         grid.addWidget(QLabel("COB-ID"), 0, 0)
         grid.addWidget(self.pdo_cob_edit, 0, 1)
         grid.addWidget(QLabel("Data (hex)"), 1, 0)
         grid.addWidget(self.pdo_data_edit, 1, 1)
-
         layout.addLayout(grid)
+
+        self.pdo_repeat_chk = QCheckBox("Repeat")
+        self.pdo_interval = QLineEdit("1000")
+        self.pdo_interval.setFixedWidth(70)
+
+        repeat_layout = QHBoxLayout()
+        repeat_layout.addWidget(self.pdo_repeat_chk)
+        repeat_layout.addWidget(self.pdo_interval)
+        repeat_layout.addWidget(QLabel("ms"))
+
+        layout.addLayout(repeat_layout)
+
+        self.pdo_repeat_chk.stateChanged.connect(
+            self._toggle_pdo_repeat
+        )
+
+        pdo_send_btn = QPushButton("Send PDO")
         layout.addWidget(pdo_send_btn)
 
         layout.addStretch(1)
@@ -774,6 +830,9 @@ class CANopenMainWindow(QMainWindow):
         sdo_recv_btn.clicked.connect(self._on_recv_sdo)
         pdo_send_btn.clicked.connect(self._on_send_pdo)
 
+    # ==========================================================
+    # SDO handlers
+    # ==========================================================
     def _on_send_sdo(self):
         """! Callback on click Send SDO button."""
 
@@ -802,6 +861,25 @@ class CANopenMainWindow(QMainWindow):
         except Exception as e:
             QToolTip.showText(QCursor.pos(), f"SDO receive failed: {e}")
 
+    def _toggle_sdo_write_repeat(self, checked: bool):
+        """! Callback for SDO write repeat toggle button."""
+
+        if checked:
+            self.sdo_write_timer.start(int(self.sdo_write_interval.text()))
+        else:
+            self.sdo_write_timer.stop()
+
+    def _toggle_sdo_read_repeat(self, checked: bool):
+        """! Callback for SDO read repeat toggle button."""
+
+        if checked:
+            self.sdo_read_timer.start(int(self.sdo_read_interval.text()))
+        else:
+            self.sdo_read_timer.stop()
+
+    # ==========================================================
+    # PDO handlers
+    # ==========================================================
     def _on_send_pdo(self):
         """! Callback on click Send PDO button."""
 
@@ -814,6 +892,14 @@ class CANopenMainWindow(QMainWindow):
             })
         except Exception as e:
             QToolTip.showText(QCursor.pos(), f"PDO send failed: {e}")
+
+    def _toggle_pdo_repeat(self, checked: bool):
+        """! Callback for PDO repeat toggle button."""
+
+        if checked:
+            self.pdo_timer.start(int(self.pdo_interval.text()))
+        else:
+            self.pdo_timer.stop()
 
     def _build_central(self):
         """! Build the central widget containing protocol, PDO, and SDO tables.

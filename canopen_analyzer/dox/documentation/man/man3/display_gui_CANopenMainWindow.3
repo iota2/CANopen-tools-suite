@@ -103,6 +103,16 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "PDO data filter\&. "
 .ti -1c
+.RI "\fBpdo_interval\fP"
+.br
+.ti -1c
+.RI "\fBpdo_repeat_chk\fP"
+.br
+.ti -1c
+.RI "\fBpdo_timer\fP"
+.br
+.RI "PDO write repeat timer\&. "
+.ti -1c
 .RI "\fBproto_filter\fP"
 .br
 .RI "Protocol data filter\&. "
@@ -133,6 +143,16 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBsdo_node_edit\fP"
 .br
 .ti -1c
+.RI "\fBsdo_read_interval\fP"
+.br
+.ti -1c
+.RI "\fBsdo_read_repeat_chk\fP"
+.br
+.ti -1c
+.RI "\fBsdo_read_timer\fP"
+.br
+.RI "SDO read repeat timer\&. "
+.ti -1c
 .RI "\fBsdo_recv_index_edit\fP"
 .br
 .ti -1c
@@ -150,6 +170,16 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .ti -1c
 .RI "\fBsdo_value_edit\fP"
 .br
+.ti -1c
+.RI "\fBsdo_write_interval\fP"
+.br
+.ti -1c
+.RI "\fBsdo_write_repeat_chk\fP"
+.br
+.ti -1c
+.RI "\fBsdo_write_timer\fP"
+.br
+.RI "SDO write repeat timer\&. "
 .ti -1c
 .RI "\fBsettings\fP"
 .br
@@ -274,6 +304,18 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "str \fB_settings_key_for_table\fP (self, str table_name)"
 .br
 .RI "Generate a QSettings key for storing table column widths\&. "
+.ti -1c
+.RI "def \fB_toggle_pdo_repeat\fP (self, bool checked)"
+.br
+.RI "Callback for PDO repeat toggle button\&. "
+.ti -1c
+.RI "def \fB_toggle_sdo_read_repeat\fP (self, bool checked)"
+.br
+.RI "Callback for SDO read repeat toggle button\&. "
+.ti -1c
+.RI "def \fB_toggle_sdo_write_repeat\fP (self, bool checked)"
+.br
+.RI "Callback for SDO write repeat toggle button\&. "
 .in -1c
 .SS "Private Attributes"
 
@@ -533,6 +575,18 @@ Fully-qualified QSettings key for column width storage\&.
 .RE
 .PP
 
+.SS "def _toggle_pdo_repeat ( self, bool checked)\fC [private]\fP"
+
+.PP
+Callback for PDO repeat toggle button\&. 
+.SS "def _toggle_sdo_read_repeat ( self, bool checked)\fC [private]\fP"
+
+.PP
+Callback for SDO read repeat toggle button\&. 
+.SS "def _toggle_sdo_write_repeat ( self, bool checked)\fC [private]\fP"
+
+.PP
+Callback for SDO write repeat toggle button\&. 
 .SS "def clear_tables ( self)"
 
 .PP
@@ -676,6 +730,14 @@ Mode selection combo box\&.
 
 .PP
 PDO data filter\&. 
+.SS "pdo_interval"
+
+.SS "pdo_repeat_chk"
+
+.SS "pdo_timer"
+
+.PP
+PDO write repeat timer\&. 
 .SS "proto_filter"
 
 .PP
@@ -704,6 +766,14 @@ SDO data filter\&.
 
 .SS "sdo_node_edit"
 
+.SS "sdo_read_interval"
+
+.SS "sdo_read_repeat_chk"
+
+.SS "sdo_read_timer"
+
+.PP
+SDO read repeat timer\&. 
 .SS "sdo_recv_index_edit"
 
 .SS "sdo_recv_node_edit"
@@ -716,6 +786,14 @@ SDO data filter\&.
 
 .SS "sdo_value_edit"
 
+.SS "sdo_write_interval"
+
+.SS "sdo_write_repeat_chk"
+
+.SS "sdo_write_timer"
+
+.PP
+SDO write repeat timer\&. 
 .SS "settings"
 
 .PP
