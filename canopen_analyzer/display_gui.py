@@ -1853,6 +1853,14 @@ class CANopenMainWindow(QMainWindow):
         @param values List of column values to insert/update.
         """
 
+        # Resolve Name column index dynamically
+        name_col = None
+        for c in range(table.columnCount()):
+            hdr = table.horizontalHeaderItem(c)
+            if hdr and hdr.text() == "Name":
+                name_col = c
+                break
+
         # Index of the count column (last column)
         count_col = table.columnCount() - 1
 
@@ -1865,7 +1873,13 @@ class CANopenMainWindow(QMainWindow):
                 fixed_map[key] = row
                 table.insertRow(row)
                 for c, v in enumerate(values):
-                    table.setItem(row, c, QTableWidgetItem(str(v)))
+                    item = QTableWidgetItem(str(v))
+
+                    # Apply tooltip for Name column
+                    if c == name_col and v:
+                        item.setToolTip(str(v))
+
+                    table.setItem(row, c, item)
             else:
                 # Update non-count columns with latest values
                 for c, v in enumerate(values):
@@ -1874,8 +1888,16 @@ class CANopenMainWindow(QMainWindow):
                     item = table.item(row, c)
                     if item:
                         item.setText(str(v))
+                        if c == name_col and v:
+                            item.setToolTip(str(v))
                     else:
-                        table.setItem(row, c, QTableWidgetItem(str(v)))
+                        item = QTableWidgetItem(str(v))
+
+                        # Apply tooltip for Name column
+                        if c == name_col and v:
+                            item.setToolTip(str(v))
+
+                        table.setItem(row, c, item)
 
                 # Increment count
                 cnt_item = table.item(row, count_col)
@@ -1892,7 +1914,13 @@ class CANopenMainWindow(QMainWindow):
             row = table.rowCount()
             table.insertRow(row)
             for c, v in enumerate(values):
-                table.setItem(row, c, QTableWidgetItem(str(v)))
+                item = QTableWidgetItem(str(v))
+
+                # Apply tooltip for Name column
+                if c == name_col and v:
+                    item.setToolTip(str(v))
+
+                table.setItem(row, c, item)
 
             # Highlight newly added row
             self._flash_row(table, row)
