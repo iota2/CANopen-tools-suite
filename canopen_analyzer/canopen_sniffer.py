@@ -56,8 +56,6 @@ import analyzer_defs as analyzer_defs
 
 class canopen_sniffer(threading.Thread):
     """! CANopen bus sniffer thread.
-    @brief Threaded CAN sniffer which reads frames from a socketcan interface,
-           optionally exports raw frames to CSV and pushes frames to a processing queue.
     @details
     The sniffer opens a `socketcan` interface, receives `can.Message` frames,
     enqueues them on `raw_frame` for downstream processing, and optionally writes
@@ -75,6 +73,7 @@ class canopen_sniffer(threading.Thread):
         @param raw_frame `queue.Queue` instance to push received frames for processing.
         @param export If True, enable CSV export of raw frames to a file.
         """
+
         super().__init__(daemon=True)
 
         ## Queue used to push raw frames for downstream processing.
@@ -160,6 +159,8 @@ class canopen_sniffer(threading.Thread):
             pass
 
     def _dispatch_request(self, req: dict):
+        """! Send request frame on CAN bus."""
+
         rtype = req.get("type")
 
         if rtype == "sdo_download":
@@ -190,6 +191,7 @@ class canopen_sniffer(threading.Thread):
     # --- CSV export helper ---
     def save_frame_to_csv(self, type: str, cob: int, error: bool, raw: str):
         """! Save a received CAN frame (raw view) to the CSV export file.
+
         @details
         Writes a single CSV row with a serial number, timestamp, COB-ID,
         error flag and raw payload. Periodically flushes and fsyncs the file
@@ -226,6 +228,7 @@ class canopen_sniffer(threading.Thread):
     # --- Message handling ---
     def handle_received_message(self, msg: can.Message):
         """! Handle a received CAN message.
+
         @details
         Extracts arbitration id, raw payload and error flag, builds a small
         frame dictionary containing a timestamp and pushes it to `raw_frame`.
@@ -250,7 +253,8 @@ class canopen_sniffer(threading.Thread):
     # --- SDO Download (Expedited Write) ---
     def send_sdo_download(self, node_id: int, index: int, subindex: int, value: int, size: int):
         """! Send expedited SDO download (write).
-        @param node_id Node ID (1–127)
+
+        @param node_id Node ID (1-127)
         @param index Object Dictionary index
         @param subindex Subindex
         @param value Integer value to write
@@ -294,6 +298,7 @@ class canopen_sniffer(threading.Thread):
     # --- SDO Upload Request (Read) ---
     def send_sdo_upload_request(self, node_id: int, index: int, subindex: int):
         """! Send SDO upload request (read).
+
         @param node_id Node ID (1-127)
         @param index Object Dictionary index
         @param subindex Subindex
@@ -314,7 +319,6 @@ class canopen_sniffer(threading.Thread):
             data=bytes(payload),
             is_extended_id=False
         )
-
         self.bus.send(msg)
 
         frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
@@ -329,6 +333,7 @@ class canopen_sniffer(threading.Thread):
     # --- Raw PDO Send ---
     def send_raw_pdo(self, cob_id: int, data: bytes):
         """! Send raw PDO frame.
+
         @param cob_id PDO COB-ID
         @param data Up to 8 bytes
         """
@@ -343,7 +348,6 @@ class canopen_sniffer(threading.Thread):
             data=data,
             is_extended_id=False
         )
-
         self.bus.send(msg)
 
         frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
@@ -357,6 +361,7 @@ class canopen_sniffer(threading.Thread):
 
     def run(self):
         """! Main loop of the sniffer thread.
+
         @details
         Continuously receives frames from the CAN bus using a short timeout,
         handles interrupt-like exceptions gracefully, and delegates message

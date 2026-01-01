@@ -1,4 +1,4 @@
-.TH "canopen_sniffer" 3 "Wed Dec 31 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "canopen_sniffer" 3 "Thu Jan 1 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,8 +13,6 @@ Inherits Thread\&.
 .PP 
 CANopen bus sniffer thread\&. 
 
-Threaded CAN sniffer which reads frames from a socketcan interface, optionally exports raw frames to CSV and pushes frames to a processing queue\&.
-.PP
 The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP frames, enqueues them on \fCraw_frame\fP for downstream processing, and optionally writes raw frames to a CSV file for offline analysis\&. The thread supports a graceful shutdown via \fC\fBstop()\fP\fP\&. Logging is performed on a per-instance logger\&. 
 .SS "Public Member Functions"
 
@@ -106,6 +104,7 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "def \fB_dispatch_request\fP (self, dict req)"
 .br
+.RI "Send request frame on CAN bus\&. "
 .ti -1c
 .RI "def \fB_ensure_bus\fP (self)"
 .br
@@ -144,6 +143,8 @@ Initialize CAN sniffer thread and open resources\&. The constructor opens the so
 .PP 
 .SS "def _dispatch_request ( self, dict req)\fC [private]\fP"
 
+.PP
+Send request frame on CAN bus\&. 
 .SS "def _ensure_bus ( self)\fC [private]\fP"
 
 .PP
@@ -155,85 +156,91 @@ Dispatch queued control commands from UI layers\&.
 .SS "def handle_received_message ( self, can\&.Message msg)"
 
 .PP
-Handle a received CAN message\&. Extracts arbitration id, raw payload and error flag, builds a small frame dictionary containing a timestamp and pushes it to \fCraw_frame\fP\&. Also logs the raw frame and triggers CSV export if enabled\&. 
+Handle a received CAN message\&. 
 .PP
-\fBParameters\fP
-.RS 4
-\fImsg\fP The \fCcan\&.Message\fP instance received from the bus\&. 
-.RE
-.PP
+.nf
+   @details
+   Extracts arbitration id, raw payload and error flag, builds a small
+   frame dictionary containing a timestamp and pushes it to `raw_frame`.
+   Also logs the raw frame and triggers CSV export if enabled.
+   @param msg The `can.Message` instance received from the bus.
 
+.fi
+.PP
+ 
 .SS "def run ( self)"
 
 .PP
-Main loop of the sniffer thread\&. Continuously receives frames from the CAN bus using a short timeout, handles interrupt-like exceptions gracefully, and delegates message processing to \fChandle_received_message\fP\&. On exit, CSV file and bus resources are closed/shutdown cleanly\&. 
+Main loop of the sniffer thread\&. 
+.PP
+.nf
+   @details
+   Continuously receives frames from the CAN bus using a short timeout,
+   handles interrupt-like exceptions gracefully, and delegates message
+   processing to `handle_received_message`. On exit, CSV file and bus resources
+   are closed/shutdown cleanly.
+
+.fi
+.PP
+ 
 .SS "def save_frame_to_csv ( self, str type, int cob, bool error, str raw)"
 
 .PP
-Save a received CAN frame (raw view) to the CSV export file\&. Writes a single CSV row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
+Save a received CAN frame (raw view) to the CSV export file\&. 
 .PP
-\fBParameters\fP
-.RS 4
-\fIcob\fP COB-ID as integer of the CAN frame\&. 
-.br
-\fIerror\fP Boolean indicating whether the frame is an error frame\&. 
-.br
-\fIraw\fP Hex string representation of the payload\&. 
-.RE
-.PP
-\fBReturns\fP
-.RS 4
-None\&. 
-.RE
-.PP
+.nf
+   @details
+   Writes a single CSV row with a serial number, timestamp, COB-ID,
+   error flag and raw payload. Periodically flushes and fsyncs the file
+   according to `defs.FSYNC_EVERY`.
+   @param cob COB-ID as integer of the CAN frame.
+   @param error Boolean indicating whether the frame is an error frame.
+   @param raw Hex string representation of the payload.
+   @return None.
 
+.fi
+.PP
+ 
 .SS "def send_raw_pdo ( self, int cob_id, bytes data)"
 
 .PP
 Send raw PDO frame\&. 
 .PP
-\fBParameters\fP
-.RS 4
-\fIcob_id\fP PDO COB-ID 
-.br
-\fIdata\fP Up to 8 bytes 
-.RE
-.PP
+.nf
+   @param cob_id PDO COB-ID
+   @param data Up to 8 bytes
 
+.fi
+.PP
+ 
 .SS "def send_sdo_download ( self, int node_id, int index, int subindex, int value, int size)"
 
 .PP
 Send expedited SDO download (write)\&. 
 .PP
-\fBParameters\fP
-.RS 4
-\fInode_id\fP Node ID (1–127) 
-.br
-\fIindex\fP Object Dictionary index 
-.br
-\fIsubindex\fP Subindex 
-.br
-\fIvalue\fP Integer value to write 
-.br
-\fIsize\fP Data size in bytes (1,2,4) 
-.RE
-.PP
+.nf
+   @param node_id Node ID (1-127)
+   @param index Object Dictionary index
+   @param subindex Subindex
+   @param value Integer value to write
+   @param size Data size in bytes (1,2,4)
 
+.fi
+.PP
+ 
 .SS "def send_sdo_upload_request ( self, int node_id, int index, int subindex)"
 
 .PP
 Send SDO upload request (read)\&. 
 .PP
-\fBParameters\fP
-.RS 4
-\fInode_id\fP Node ID (1-127) 
-.br
-\fIindex\fP Object Dictionary index 
-.br
-\fIsubindex\fP Subindex 
-.RE
-.PP
+.nf
+   @param node_id Node ID (1-127)
+   @param index Object Dictionary index
+   @param subindex Subindex
 
+.fi
+.PP
+ 
 .SS "def stop ( self, bool  shutdown_bus = \fCTrue\fP)"
 
 .PP

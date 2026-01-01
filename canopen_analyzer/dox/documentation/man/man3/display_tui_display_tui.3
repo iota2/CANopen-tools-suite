@@ -1,4 +1,4 @@
-.TH "display_tui" 3 "Wed Dec 31 2025" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_tui" 3 "Thu Jan 1 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -16,7 +16,7 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 
 .in +1c
 .ti -1c
-.RI "def \fBrun_textual\fP (cls, stats_instance, processed_frame_queue, \fBfixed\fP=False)"
+.RI "def \fBrun_textual\fP (cls, \fBstats\fP, \fBprocessed_frame\fP=None, \fBrequested_frame\fP=None, \fBfixed\fP=False)"
 .br
 .RI "Start the Textual-based CANopen TUI\&. "
 .in -1c
@@ -127,6 +127,9 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .RI "\fBsdo_send_repeat_value\fP"
 .br
 .ti -1c
+.RI "\fBsdo_send_size\fP"
+.br
+.ti -1c
 .RI "\fBsdo_send_sub\fP"
 .br
 .ti -1c
@@ -161,6 +164,10 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .br
 .RI "TUI display refresh rate (seconds) "
 .ti -1c
+.RI "\fBrequested_frame\fP = None"
+.br
+.RI "Private instance for pointing to outgoing frames\&. "
+.ti -1c
 .RI "\fBstats\fP = None"
 .br
 .RI "Private instance for pointing to incoming bus stats\&. "
@@ -172,19 +179,25 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .RI "\fB_last_bus_stats\fP"
 .br
 .RI "Content for the Graph column to render\&. "
+.ti -1c
+.RI "\fB_repeat_tasks\fP"
+.br
+.RI "Timer for repeating remote node control\&. "
 .in -1c
 .SH "Member Function Documentation"
 .PP 
-.SS "def run_textual ( cls,  stats_instance,  processed_frame_queue,  fixed = \fCFalse\fP)"
+.SS "def run_textual ( cls,  stats,  processed_frame = \fCNone\fP,  requested_frame = \fCNone\fP,  fixed = \fCFalse\fP)"
 
 .PP
 Start the Textual-based CANopen TUI\&. This method initializes and launches the Textual application that renders all live CANopen monitoring tables (Protocol, PDO, SDO, Bus Stats)\&. It sets up shared state used by the UI update loop, including statistics, frame queues, and the fixed/scrolling display mode\&. 
 .PP
 \fBParameters\fP
 .RS 4
-\fIstats_instance\fP The shared stats object providing real-time bus statistics and rate histories\&. 
+\fIstats\fP The shared stats object providing real-time bus statistics and rate histories\&. 
 .br
-\fIprocessed_frame_queue\fP Queue delivering processed CANopen frames from the background sniffer thread\&. 
+\fIprocessed_frame\fP Queue delivering processed CANopen frames from the background sniffer thread\&. 
+.br
+\fIrequested_frame\fP Queue delivering CANopen frames to the background sniffer thread\&. 
 .br
 \fIfixed\fP When True, tables operate in fixed-index mode; otherwise they show scrolling entries\&. 
 .RE
@@ -213,6 +226,10 @@ Primary path: add row using native renders\&.
 Fallback path: coerce all fields to strings to avoid DataTable rendering failures\&.
 .PP
 Suppress any remaining rendering errors to keep the TUI responsive\&. 
+.SS "_repeat_tasks\fC [private]\fP"
+
+.PP
+Timer for repeating remote node control\&. 
 .SS "bus_stats_table"
 
 .PP
@@ -281,6 +298,10 @@ TUI Element for protocol data table\&.
 
 .PP
 TUI display refresh rate (seconds) 
+.SS "requested_frame = None\fC [static]\fP"
+
+.PP
+Private instance for pointing to outgoing frames\&. 
 .SS "sdo_display"
 
 .PP
@@ -310,6 +331,8 @@ SDO data indices to indicate next fill position (top-down)\&. When full, we roll
 .SS "sdo_send_repeat"
 
 .SS "sdo_send_repeat_value"
+
+.SS "sdo_send_size"
 
 .SS "sdo_send_sub"
 

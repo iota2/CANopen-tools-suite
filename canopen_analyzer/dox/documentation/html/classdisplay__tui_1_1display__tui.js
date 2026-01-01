@@ -1,7 +1,8 @@
 var classdisplay__tui_1_1display__tui =
 [
-    [ "run_textual", "classdisplay__tui_1_1display__tui.html#a06d308c260a5e945f80724fcd934a8c7", null ],
+    [ "run_textual", "classdisplay__tui_1_1display__tui.html#a0dd591b0c361f5bc4c0ef5f120b746b6", null ],
     [ "_last_bus_stats", "classdisplay__tui_1_1display__tui.html#a910bf18994fa84a67853bf6b3948360c", null ],
+    [ "_repeat_tasks", "classdisplay__tui_1_1display__tui.html#a49303ca1ae5b6e50bc574e96d8a15344", null ],
     [ "bus_stats_table", "classdisplay__tui_1_1display__tui.html#a13322e7aa50616f0af270c661d2ffb1c", null ],
     [ "fixed", "classdisplay__tui_1_1display__tui.html#a0ceb8ae554e8a185caf22e15c9487f4b", null ],
     [ "fixed_pdo", "classdisplay__tui_1_1display__tui.html#a3078ce0e2c75accf21cd8df0224f542f", null ],
@@ -32,6 +33,7 @@ var classdisplay__tui_1_1display__tui =
     [ "sdo_send_node", "classdisplay__tui_1_1display__tui.html#a308a5010fe10dff4e9283cf2f96c165b", null ],
     [ "sdo_send_repeat", "classdisplay__tui_1_1display__tui.html#a42f3d550b6eb15da2f54e23f81c4c1b2", null ],
     [ "sdo_send_repeat_value", "classdisplay__tui_1_1display__tui.html#a826f2295fbe91d04a99d01f3b5943541", null ],
+    [ "sdo_send_size", "classdisplay__tui_1_1display__tui.html#a478a4add2d453631337aff8eb439c636", null ],
     [ "sdo_send_sub", "classdisplay__tui_1_1display__tui.html#affbc71862cb5f89145fd40dafec5359a", null ],
     [ "sdo_send_value", "classdisplay__tui_1_1display__tui.html#abf01630f775b9b75832ab2049eff92c8", null ],
     [ "sdo_table", "classdisplay__tui_1_1display__tui.html#a6f82f6e9d1c2c1beaa4902841472c690", null ],
