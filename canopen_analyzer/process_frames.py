@@ -497,13 +497,12 @@ class process_frames(threading.Thread):
                             cob=cob,
                             ftype=ftype,
                             is_tx=is_tx,
-                            index=0,
-                            sub=0,
-                            name="",
+                            index=0xFFFF,
+                            sub=0xFF,
+                            name="??",
                             raw=raw,
                             decoded="No reference in EDS"
                         )
-
 
                 # TIME frame
                 elif ftype == analyzer_defs.frame_type.TIME:

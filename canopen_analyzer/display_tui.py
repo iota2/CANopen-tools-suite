@@ -40,7 +40,10 @@ try:
     from textual.app import App, ComposeResult
     from textual.binding import Binding
     from textual.containers import Horizontal, Vertical
-    from textual.widgets import Header, Footer, DataTable, Static
+    from textual.widgets import (
+        Header, Footer, DataTable, Static,
+        Switch, Input, Button, RadioSet, RadioButton
+    )
     from textual import events
 except Exception:
     App = None  # textual may be missing
@@ -68,6 +71,9 @@ class display_tui:
     ## Private instance for pointing to incoming processed frames.
     processed_frame = None
 
+    ## Private instance for pointing to outgoing frames.
+    requested_frame = None
+
     ## Private instance for pointing to incoming flag whether to keep display in fixed mode or not.
     fixed = False
 
@@ -75,15 +81,16 @@ class display_tui:
     refresh_interval = 0.2
 
     @classmethod
-    def run_textual(cls, stats_instance, processed_frame_queue, fixed=False):
+    def run_textual(cls, stats, processed_frame=None, requested_frame=None, fixed=False):
         """! Start the Textual-based CANopen TUI.
         @details
         This method initializes and launches the Textual application that renders
         all live CANopen monitoring tables (Protocol, PDO, SDO, Bus Stats). It sets
         up shared state used by the UI update loop, including statistics, frame
         queues, and the fixed/scrolling display mode.
-        @param stats_instance The shared stats object providing real-time bus statistics and rate histories.
-        @param processed_frame_queue Queue delivering processed CANopen frames from the background sniffer thread.
+        @param stats The shared stats object providing real-time bus statistics and rate histories.
+        @param processed_frame Queue delivering processed CANopen frames from the background sniffer thread.
+        @param requested_frame Queue delivering CANopen frames to the background sniffer thread.
         @param fixed When True, tables operate in fixed-index mode; otherwise they show scrolling entries.
         @return None
         """
@@ -92,8 +99,9 @@ class display_tui:
         if App is None:
             raise RuntimeError("textual is not installed. Install with: pip install textual")
         # set class attrs
-        cls.stats = stats_instance
-        cls.processed_frame = processed_frame_queue
+        cls.stats = stats
+        cls.processed_frame = processed_frame
+        cls.requested_frame = requested_frame
         cls.fixed = fixed
 
         # Define the actual App class inside this method so that the module
@@ -122,6 +130,9 @@ class display_tui:
 
                 ## Logger instance for TUI display.
                 self.logger = logging.getLogger(self.__class__.__name__)
+
+                ## Timer for repeating remote node control
+                self._repeat_tasks = {}
 
                 ## Protocol data dict keys -> rows mapping for fixed mode
                 self.fixed_proto = {}
@@ -161,110 +172,188 @@ class display_tui:
             def compose(self) -> ComposeResult:
                 """! Textual compose callback."""
 
+                # Application header
                 yield Header()
+
                 # two-column layout (left: proto + pdo, right: bus stats + sdo)
                 with Horizontal():
-                    with Vertical(classes="left-col"):
+                    with Vertical(classes="left column"):
                         yield Static("[b]Protocol Data[/b]", classes="header protocol")
                         ## TUI Element for protocol data table
                         self.proto_table = DataTable(zebra_stripes=True, show_cursor=False, classes="table protocol")
+                        self.proto_table.styles.height = analyzer_defs.PROTOCOL_TABLE_HEIGHT + 1
                         yield self.proto_table
 
                         yield Static("")
                         yield Static("[b]PDO Data[/b]", classes="header pdo")
                         ## TUI Element for PDO data table
                         self.pdo_table = DataTable(zebra_stripes=True, show_cursor=False, classes="table pdo")
+                        self.pdo_table.styles.height = analyzer_defs.DATA_TABLE_HEIGHT + 1
                         yield self.pdo_table
 
-                    with Vertical(classes="right-col"):
+                    with Vertical(classes="right column"):
                         # Bus Stats now a DataTable with columns: Metric, Value, Graph
                         yield Static("[b]Bus Stats[/b]", classes="header busstats")
                         ## TUI Element for bus stats table
                         self.bus_stats_table = DataTable(zebra_stripes=True, show_cursor=False, classes="table busstats")
+                        self.bus_stats_table.styles.height = analyzer_defs.PROTOCOL_TABLE_HEIGHT + 1
                         yield self.bus_stats_table
 
                         yield Static("")
                         ## TUI Element for SDO data table
                         yield Static("[b]SDO Data[/b]", classes="header sdo")
                         self.sdo_table = DataTable(zebra_stripes=True, show_cursor=False, classes="table sdo")
+                        self.sdo_table.styles.height = analyzer_defs.DATA_TABLE_HEIGHT + 1
                         yield self.sdo_table
+
+                # Add remote node controls
+                with Vertical(classes="root remote"):
+                    header = Static("[b]Remote Node Control[/b]", classes="header remote")
+                    yield header
+
+                    with Horizontal(classes="row remote"):
+                        # SDO send -----------------------------------------
+                        with Vertical(classes="column remote"):
+                            yield Static("[b]Send SDO[/b]", classes="subheader remote send sdo")
+                            yield Static("")
+
+                            with Horizontal(classes="content remote sdo send"):
+                                lbl = Input("Node ID", disabled=True, classes="content remote sdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_send_node = Input("0x01")
+                                self.sdo_send_node.styles.width = 20
+                                yield self.sdo_send_node
+
+                            with Horizontal(classes="content remote sdo send"):
+                                lbl = Input("Index", disabled=True, classes="content remote sdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_send_index = Input("0x6000")
+                                self.sdo_send_index.styles.width = 20
+                                yield self.sdo_send_index
+
+                                lbl = Input("Sub", disabled=True, classes="content remote sdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_send_sub = Input("0x00")
+                                self.sdo_send_sub.styles.width = 20
+                                yield self.sdo_send_sub
+
+                            with Horizontal(classes="content remote sdo send"):
+                                lbl = Input("Data", disabled=True, classes="content remote sdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_send_value = Input("1")
+                                self.sdo_send_value.styles.width = 20
+                                yield self.sdo_send_value
+
+                                lbl = Input("Size", disabled=True, classes="content remote sdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                # --- Size selector ---
+                                self.sdo_send_size = RadioSet(classes="radio remote")
+                                with self.sdo_send_size:
+                                    yield RadioButton("1", value=True)
+                                    yield RadioButton("2")
+                                    yield RadioButton("4")
+
+                                self.sdo_send_size.styles.width = 20
+                                yield self.sdo_send_size
+
+                            with Horizontal(classes="content remote sdo send"):
+                                lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_send_repeat_value = Input("1000")
+                                self.sdo_send_repeat_value.styles.width = 20
+                                yield self.sdo_send_repeat_value
+                                self.sdo_send_repeat = Switch()
+                                yield self.sdo_send_repeat
+
+                                self.sdo_send_btn = Button("Send", classes="button remote")
+                                self.sdo_send_btn.styles.width = 29
+                                yield self.sdo_send_btn
+
+                        # SDO receive --------------------------------------
+                        with Vertical(classes="column remote"):
+                            yield Static("[b]Receive SDO[/b]", classes="subheader remote sdo receive")
+                            yield Static("")
+
+                            with Horizontal(classes="content remote sdo receive"):
+                                lbl = Input("Node ID", disabled=True, classes="content remote sdo receive")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_recv_node = Input("0x01")
+                                self.sdo_recv_node.styles.width = 20
+                                yield self.sdo_recv_node
+
+                            with Horizontal(classes="content remote sdo receive"):
+                                lbl = Input("Index", disabled=True, classes="content remote sdo receive")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_recv_index = Input("0x6000")
+                                self.sdo_recv_index.styles.width = 20
+                                yield self.sdo_recv_index
+
+                                lbl = Input("Sub", disabled=True, classes="content remote sdo receive")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_recv_sub = Input("0x00")
+                                self.sdo_recv_sub.styles.width = 20
+                                yield self.sdo_recv_sub
+
+                            with Horizontal(classes="content remote sdo receive"):
+                                lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo receive")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.sdo_recv_repeat_value = Input("1000")
+                                self.sdo_recv_repeat_value.styles.width = 20
+                                yield self.sdo_recv_repeat_value
+                                self.sdo_recv_repeat = Switch()
+                                yield self.sdo_recv_repeat
+
+                                self.sdo_recv_btn = Button("Send", classes="button remote")
+                                self.sdo_recv_btn.styles.width = 29
+                                yield self.sdo_recv_btn
+
+                        # PDO send -----------------------------------------
+                        with Vertical(classes="column remote"):
+                            yield Static("[b]Send PDO[/b]", classes="subheader remote pdo send")
+                            yield Static("")
+
+                            with Horizontal(classes="content remote pdo send"):
+                                lbl = Input("COB ID", disabled=True, classes="content remote pdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.pdo_cob = Input("0x202")
+                                self.pdo_cob.styles.width = 20
+                                yield self.pdo_cob
+
+                            with Horizontal(classes="content remote pdo send"):
+                                lbl = Input("Data", disabled=True, classes="content remote pdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.pdo_data = Input("00 00 00 00 00 00 00 00")
+                                self.pdo_data.styles.width = 30
+                                yield self.pdo_data
+
+                            with Horizontal(classes="content remote pdo send"):
+                                lbl = Input("Repeat (ms)", disabled=True, classes="content remote pdo send")
+                                lbl.styles.width = 20
+                                yield lbl
+                                self.pdo_send_repeat_value = Input("1000")
+                                self.pdo_send_repeat_value.styles.width = 20
+                                yield self.pdo_send_repeat_value
+                                self.pdo_repeat = Switch()
+                                yield self.pdo_repeat
+
+                                self.pdo_send_btn = Button("Send", classes="button remote")
+                                self.pdo_send_btn.styles.width = 29
+                                yield self.pdo_send_btn
 
                 # footer with key hints
                 yield Footer()
-
-            def _copy_to_clipboard_or_file(self, text: str, filename: str = f"/tmp/{analyzer_defs.APP_NAME}.log"):
-                """! Try to copy to clipboard using pyperclip; if unavailable, write to filename."""
-
-                try:
-                    pyperclip.copy(text)
-                    return True, "Copied to clipboard"
-                except Exception:
-                    self.logger.exception(f"Failed in copying table to clipboard, using temp file <{filename}> for fallback")
-                    # fallback: write to tmp file
-                    try:
-                        with open(filename, "w", encoding="utf-8") as f:
-                            f.write(text)
-                        return False, f"Wrote to {filename}"
-                    except Exception as e:
-                        self.logger.exception(f"Failed to copy/write: {e}")
-                        return False, f"Failed to copy/write: {e}"
-
-            def _dump_table_rows(self, table) -> str:
-                """! Return textual dump of a DataTable's rows.
-                @details
-                Tries several APIs depending on Textual version and avoids dumping internal RowKey objects.
-                """
-
-                lines = []
-                try:
-                    # Preferred: use row_count + get_row_at
-                    if hasattr(table, "row_count") and getattr(table, "row_count"):
-                        try:
-                            for i in range(table.row_count):
-                                try:
-                                    row = table.get_row_at(i)
-                                    if not row:
-                                        continue
-                                    if hasattr(row, "cells"):
-                                        lines.append("	".join(str(c) for c in row.cells))
-                                    elif isinstance(row, (list, tuple)):
-                                        lines.append("	".join(str(c) for c in row))
-                                    else:
-                                        # fallback to str(row)
-                                        lines.append(str(row))
-                                except Exception:
-                                    continue
-                        except Exception:
-                            pass
-                    else:
-                        # Fallback: try the table.rows mapping but attempt to convert values
-                        rows_attr = getattr(table, "rows", None)
-                        if rows_attr:
-                            try:
-                                for k, v in (rows_attr.items() if hasattr(rows_attr, 'items') else enumerate(rows_attr)):
-                                    try:
-                                        if hasattr(table, "get_row"):
-                                            try:
-                                                row = table.get_row(k)
-                                                if row and hasattr(row, "cells"):
-                                                    lines.append("	".join(str(c) for c in row.cells))
-                                                    continue
-                                            except Exception:
-                                                pass
-
-                                        if hasattr(v, "cells"):
-                                            lines.append("	".join(str(c) for c in v.cells))
-                                        elif isinstance(v, (list, tuple)):
-                                            lines.append("	".join(str(c) for c in v))
-                                        else:
-                                            lines.append(str(v))
-                                    except Exception:
-                                        continue
-                            except Exception:
-                                pass
-                except Exception:
-                    pass
-                return "\n".join(lines) if lines else "<no rows>"
 
             async def on_mount(self) -> None:
                 """! Textual on_mount callback"""
@@ -353,7 +442,189 @@ class display_tui:
                 except Exception:
                     pass
 
-            def sparkline_text(self, history, width=None):
+                self.sdo_send_node.focus()
+                self.sdo_send_node.action_select_all()
+
+            async def on_button_pressed(self, event: Button.Pressed) -> None:
+                """! Handle button press events from the Remote Node Control panel.
+                @details
+                Dispatches the button press to the appropriate handler based on
+                which action button was pressed (Send SDO, Receive SDO, or Send PDO).
+                - This method acts as a central event router for all Button widgets
+                defined in the Remote Node Control UI.
+                - The actual request construction and queueing logic is delegated
+                to the corresponding helper methods.
+                @param event Button press event containing the pressed button instance.
+                @return None
+                """
+
+                btn = event.button
+
+                if btn is self.sdo_send_btn:
+                    self._send_sdo_request()
+                elif btn is self.sdo_recv_btn:
+                    self._recv_sdo_request()
+                elif btn is self.pdo_send_btn:
+                    self._send_pdo()
+
+            async def on_switch_changed(self, event: Switch.Changed) -> None:
+                """! Handle repeat switch state changes.
+                @details
+                Enables or disables periodic transmission of SDO or PDO requests
+                based on the state of the associated repeat switch.
+                - When a repeat switch is enabled, a Textual timer is created using
+                the configured interval value (in milliseconds).
+                - When disabled, any existing timer for the corresponding action
+                is stopped and removed.
+                - Each repeat timer invokes the same request handler used for
+                one-shot button presses.
+                @param event Switch change event containing the toggled switch instance.
+                @return None
+                """
+
+                sw = event.switch
+
+                if sw is self.sdo_send_repeat:
+                    self._toggle_repeat(
+                        key="sdo_send",
+                        enabled=sw.value,
+                        interval_ms=self.sdo_send_repeat_value.value,
+                        callback=self._send_sdo_request,
+                    )
+
+                elif sw is self.sdo_recv_repeat:
+                    self._toggle_repeat(
+                        key="sdo_recv",
+                        enabled=sw.value,
+                        interval_ms=self.sdo_recv_repeat_value.value,
+                        callback=self._recv_sdo_request,
+                    )
+
+                elif sw is self.pdo_repeat:
+                    self._toggle_repeat(
+                        key="pdo_send",
+                        enabled=sw.value,
+                        interval_ms=self.pdo_send_repeat_value.value,
+                        callback=self._send_pdo,
+                    )
+
+            async def on_key(self, event: events.Key) -> None:
+                """! Textual callback of detecting key press"""
+
+                k = event.key
+                try:
+                    if k in ("q", "Q"):
+                        await self.action_quit()
+                        return
+                except Exception:
+                    # some textual versions may not allow awaiting action_quit here; fallback to stop
+                    try:
+                        self.exit()
+                        return
+                    except Exception:
+                        pass
+
+                # Copy/dump handlers mapped to single-letter keys
+                if k in ("n", "N"):
+                    dump = "== Protocol ==\n" + self._dump_table_rows(self.proto_table)
+                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_protocol.txt")
+                    self.notify(msg, title="Protocol Data")
+                    return
+
+                elif k in ("b", "B"):
+                    # Bus Stats
+                    dump = "== BUS STATS ==\n" + self._dump_table_rows(self.bus_stats_table)
+                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_bus_stats.txt")
+                    self.notify(msg, title="Bus Stats")
+                    return
+
+                elif k in ("p", "P"):
+                    # PDO Data
+                    dump = "== PDO ==\n" + self._dump_table_rows(self.pdo_table)
+                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_pdo.txt")
+                    self.notify(msg, title="PDO Data")
+
+                elif k in ("s", "S"):
+                    # SDO Data
+                    dump = "== SDO ==\n" + self._dump_table_rows(self.sdo_table)
+                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
+                    self.notify(msg, title="SDO Data")
+
+            def _copy_to_clipboard_or_file(self, text: str, filename: str = f"/tmp/{analyzer_defs.APP_NAME}.log"):
+                """! Try to copy to clipboard using pyperclip; if unavailable, write to filename."""
+
+                try:
+                    pyperclip.copy(text)
+                    return True, "Copied to clipboard"
+                except Exception:
+                    self.logger.exception(f"Failed in copying table to clipboard, using temp file <{filename}> for fallback")
+                    # fallback: write to tmp file
+                    try:
+                        with open(filename, "w", encoding="utf-8") as f:
+                            f.write(text)
+                        return False, f"Wrote to {filename}"
+                    except Exception as e:
+                        self.logger.exception(f"Failed to copy/write: {e}")
+                        return False, f"Failed to copy/write: {e}"
+
+            def _dump_table_rows(self, table) -> str:
+                """! Return textual dump of a DataTable's rows.
+                @details
+                Tries several APIs depending on Textual version and avoids dumping internal RowKey objects.
+                """
+
+                lines = []
+                try:
+                    # Preferred: use row_count + get_row_at
+                    if hasattr(table, "row_count") and getattr(table, "row_count"):
+                        try:
+                            for i in range(table.row_count):
+                                try:
+                                    row = table.get_row_at(i)
+                                    if not row:
+                                        continue
+                                    if hasattr(row, "cells"):
+                                        lines.append("	".join(str(c) for c in row.cells))
+                                    elif isinstance(row, (list, tuple)):
+                                        lines.append("	".join(str(c) for c in row))
+                                    else:
+                                        # fallback to str(row)
+                                        lines.append(str(row))
+                                except Exception:
+                                    continue
+                        except Exception:
+                            pass
+                    else:
+                        # Fallback: try the table.rows mapping but attempt to convert values
+                        rows_attr = getattr(table, "rows", None)
+                        if rows_attr:
+                            try:
+                                for k, v in (rows_attr.items() if hasattr(rows_attr, 'items') else enumerate(rows_attr)):
+                                    try:
+                                        if hasattr(table, "get_row"):
+                                            try:
+                                                row = table.get_row(k)
+                                                if row and hasattr(row, "cells"):
+                                                    lines.append("	".join(str(c) for c in row.cells))
+                                                    continue
+                                            except Exception:
+                                                pass
+
+                                        if hasattr(v, "cells"):
+                                            lines.append("	".join(str(c) for c in v.cells))
+                                        elif isinstance(v, (list, tuple)):
+                                            lines.append("	".join(str(c) for c in v))
+                                        else:
+                                            lines.append(str(v))
+                                    except Exception:
+                                        continue
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+                return "\n".join(lines) if lines else "<no rows>"
+
+            def _sparkline_text(self, history, width=None):
                 """! Create a compact sparkline string from a numeric history sequence."""
 
                 if not history:
@@ -722,22 +993,25 @@ class display_tui:
                         return []
 
                 def add_metric(label, value, hist_key=None, data=None):
-                    """!
-                    @brief Add a single Bus Statistics metric row to the TUI table.
+                    """! Add a single Bus Statistics metric row to the TUI table.
                     @details
                     This helper inserts one row into the Bus Stats DataTable.
                     The row consists of:
                     - A metric label (left column)
                     - A value (middle column)
                     - Either a sparkline graph or custom renderable (right column)
-
+                    @note
                     The graph column behavior depends on the inputs:
-                    - If @p hist_key is provided, a sparkline is generated using
+                    - If `hist_key` is provided, a sparkline is generated using
                       historical data associated with that key.
-                    - Otherwise, @p data is used directly as the graph/renderable.
+                    - Otherwise, `data` is used directly as the graph/renderable.
 
                     A fallback path is included to handle rendering issues by
                     coercing all fields to strings if necessary.
+                    @param label Metric table to be displayed.
+                    @param value Value corresponding to the label.
+                    @param hist_key Historical data.
+                    @param data Data to be used as the graph.
                     """
 
                     ## Content for the Graph column to render.
@@ -749,7 +1023,7 @@ class display_tui:
                         hist = get_hist(hist_key)
 
                         ## Convert history samples into a sparkline render.
-                        graph = self.sparkline_text(hist)
+                        graph = self._sparkline_text(hist)
                     else:
                         ## Use explicitly provided render/data for graph column.
                         graph = data
@@ -813,7 +1087,7 @@ class display_tui:
                     sdo_hist = list(sdo_hist_res) if sdo_hist_res else list(sdo_hist_req) if sdo_hist_req else []
                 # add combined SDO graph
                 try:
-                    self.bus_stats_table.add_row("SDO Frames/s", f"{sdo_val:.1f}", self.sparkline_text(sdo_hist))
+                    self.bus_stats_table.add_row("SDO Frames/s", f"{sdo_val:.1f}", self._sparkline_text(sdo_hist))
                 except Exception:
                     pass
 
@@ -897,68 +1171,143 @@ class display_tui:
                 except Exception:
                     self._last_bus_stats = None
 
+            def _send_sdo_request(self):
+                """! Send an SDO download (write) request.
+                @details
+                Builds an SDO download request from the Send SDO UI fields
+                (node ID, index, sub-index, value, and size) and enqueues it
+                into the shared requested_frame queue for processing by the
+                CANopen backend.
+                - All numeric fields are parsed using base autodetection (base=0).
+                - The SDO size is obtained from the currently selected Size radio button.
+                - On parsing or validation failure, an error notification is shown
+                    to the user and no request is queued.
+                @return None
+                """
 
-            async def on_key(self, event: events.Key) -> None:
-                """! Textual callback of detecting key press"""
-
-                k = event.key
                 try:
-                    if k in ("q", "Q"):
-                        await self.action_quit()
-                        return
+                    req = {
+                        "type": "sdo_download",
+                        "node": int(self.sdo_send_node.value, 0),
+                        "index": int(self.sdo_send_index.value, 0),
+                        "sub": int(self.sdo_send_sub.value, 0),
+                        "value": int(self.sdo_send_value.value, 0),
+                        "size": self._get_selected_sdo_size()
+                    }
+                    cls.requested_frame.put(req)
+                except Exception as e:
+                    self.notify(str(e), severity="error")
+
+            def _recv_sdo_request(self):
+                """! Send an SDO upload (read) request.
+                @details
+                Builds an SDO upload request from the Receive SDO UI fields
+                (node ID, index, and sub-index) and enqueues it into the
+                shared requested_frame queue.
+                - All numeric fields are parsed using base autodetection (base=0).
+                - Any parsing or validation error is reported to the user
+                via a notification and the request is not queued.
+                @return None
+                """
+
+                try:
+                    req = {
+                        "type": "sdo_upload",
+                        "node": int(self.sdo_recv_node.value, 0),
+                        "index": int(self.sdo_recv_index.value, 0),
+                        "sub": int(self.sdo_recv_sub.value, 0),
+                    }
+                    cls.requested_frame.put(req)
+                except Exception as e:
+                    self.notify(str(e), severity="error")
+
+            def _send_pdo(self):
+                """! Send a PDO frame.
+                @details
+                Parses the PDO COB-ID and data payload from the Send PDO UI fields,
+                converts the hexadecimal data string into a byte array, and enqueues
+                the PDO request into the shared requested_frame queue.
+                - The data field is expected to be a space-separated hexadecimal string.
+                - Invalid hex values or parsing errors will trigger a user notification
+                and prevent the request from being queued.
+                @return None
+                """
+
+                try:
+                    data = bytes(int(b, 16) for b in str(self.pdo_data.value).split())
+                    req = {
+                        "type": "pdo",
+                        "cob": int(self.pdo_cob.value, 0),
+                        "data": data,
+                    }
+                    cls.requested_frame.put(req)
+                except Exception as e:
+                    self.notify(str(e), severity="error")
+
+            def _get_selected_sdo_size(self) -> int:
+                """! Get the selected SDO data size.
+                @details
+                Determines the currently selected SDO size from the Size RadioButton
+                group in the Send SDO UI.
+                - Iterates over all RadioButton widgets in the size selector.
+                - The selected button is identified by its boolean value state.
+                - The label text of the selected button is converted to an integer.
+                - If no selection is found, a default size of 1 is returned.
+                @return int Selected SDO size (default = 1).
+                """
+
+                for btn in self.sdo_send_size.query(RadioButton):
+                    if btn.value:
+                        return int(str(btn.label))
+
+                return 1
+
+            def _toggle_repeat(self, key: str, enabled: bool, interval_ms: str, callback):
+                """! Enable or disable a repeating request timer.
+                    @details
+                    Starts or stops a periodic timer that repeatedly invokes the given
+                    callback function at the specified interval.
+                    - If a timer already exists for the given key, it is stopped and removed.
+                    - When disabled, no new timer is created.
+                    - The interval is specified in milliseconds and internally converted
+                      to seconds.
+                    - A minimum interval of 50 ms is enforced to avoid excessive scheduling.
+                    @param key Unique identifier for the repeat timer.
+                    @param enabled Whether the repeat timer should be active.
+                    @param interval_ms Repeat interval in milliseconds (string input).
+                    @param callback Callable to invoke on each timer tick.
+                    @return None
+                """
+
+                # stop existing timer
+                if key in self._repeat_tasks:
+                    try:
+                        self._repeat_tasks[key].stop()
+                    except Exception:
+                        pass
+                    del self._repeat_tasks[key]
+
+                if not enabled:
+                    return
+
+                try:
+                    interval = max(0.05, int(interval_ms) / 1000.0)
                 except Exception:
-                    # some textual versions may not allow awaiting action_quit here; fallback to stop
-                    try:
-                        self.exit()
-                        return
-                    except Exception:
-                        pass
+                    interval = 1.0
 
-                # Copy/dump handlers mapped to single-letter keys
-                if k in ("n", "N"):
-                    dump = "== Protocol ==\n" + self._dump_table_rows(self.proto_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_protocol.txt")
-                    self.notify(msg, title="Protocol Data")
-                    return
+                self._repeat_tasks[key] = self.set_interval(interval, callback)
 
-                elif k in ("b", "B"):
-                    # Bus Stats
-                    dump = "== BUS STATS ==\n" + self._dump_table_rows(self.bus_stats_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_bus_stats.txt")
-                    self.notify(msg, title="Bus Stats")
-                    return
-
-                elif k in ("p", "P"):
-                    # PDO Data
-                    dump = "== PDO ==\n" + self._dump_table_rows(self.pdo_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_pdo.txt")
-                    self.notify(msg, title="PDO Data")
-
-                elif k in ("s", "S"):
-                    # SDO Data
-                    dump = "== SDO ==\n" + self._dump_table_rows(self.sdo_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
-                    self.notify(msg, title="SDO Data")
-
-                else:
-                    # Unhandled keys: show brief footer hint
-                    try:
-                        self.notify( "Keys: n=Proto b=Bus p=PDO s=SDO q=Quit",title="Warning", severity="warning")
-                    except Exception:
-                        pass
 
             # Textual CSS styles for titles
             CSS = r'''
 
-            .left-col {
-                padding-right: 2;   /* adds space to the right */
+            .left.column {
+                padding-right: 1;
+            }
+            .right.column {
+                padding-left: 1;
             }
 
-            .right-col {
-                padding-left: 2;    /* adds space to the left */
-            }
-
-            /* Added title header styles */
             .header.protocol {
                 color: seagreen;
                 content-align: center middle;
@@ -968,11 +1317,11 @@ class display_tui:
                 color: seagreen;
                 content-align: center middle;
             }
-
             .header.busstats {
                 color: peru;
-                content-align: center middle;
                 background: lightgrey;
+                text-style: bold;
+                content-align: center middle;
             }
             .table.busstats {
                 color: peru;
@@ -981,8 +1330,9 @@ class display_tui:
 
             .header.pdo {
                 color: slateblue;
-                content-align: center middle;
                 background: lightgrey;
+                text-style: bold;
+                content-align: center middle;
             }
             .table.pdo {
                 color: slateblue;
@@ -991,12 +1341,71 @@ class display_tui:
 
             .header.sdo {
                 color: mediumorchid;
-                content-align: center middle;
                 background: lightgrey;
+                text-style: bold;
+                content-align: center middle;
             }
             .table.sdo {
                 color: mediumorchid;
                 content-align: center middle;
+            }
+
+            .root.remote {
+                max-height: 15;
+            }
+            .header.remote {
+                color: royalblue;
+                background: lightgrey;
+                text-style: bold;
+                content-align: center middle;
+            }
+            .subheader.remote.sdo.send {
+                color: white;
+                background: steelblue;
+                content-align: center middle;
+            }
+            .subheader.remote.sdo.receive {
+                color: black;
+                background: darkseagreen;
+                content-align: center middle;
+            }
+            .subheader.remote.pdo.send {
+                color: black;
+                background: goldenrod;
+                content-align: center middle;
+            }
+            .row.remote {
+                content-align: center middle;
+            }
+            .column.remote {
+                padding: 0 1;
+                content-align: left middle;
+            }
+
+            .content.remote.sdo.send {
+                color: steelblue;
+                text-style: bold;
+                content-align: left top;
+            }
+            .content.remote.sdo.receive {
+                color: darkseagreen;
+                text-style: bold;
+                content-align: left top;
+            }
+            .content.remote.pdo.send {
+                color: goldenrod;
+                text-style: bold;
+                content-align: left top;
+            }
+            .button.remote {
+                color: white;
+                background: grey;
+                text-style: bold;
+            }
+            .radio.remote {
+                layout: horizontal;
+                padding: 0 1;
+                text-style: bold;
             }
             '''
 

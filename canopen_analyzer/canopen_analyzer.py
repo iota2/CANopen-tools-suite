@@ -149,7 +149,7 @@ def main():
     elif args.mode == "tui":
         try:
             analyzer_defs.log.info("Loading TUI interface")
-            display_tui.run_textual(stats, processed_frame, fixed=args.fixed)
+            display_tui.run_textual(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
         except Exception as e:
             analyzer_defs.log.exception("Failed to start Textual TUI: %s", e)
             # fallback to legacy CLI thread if textual unavailable

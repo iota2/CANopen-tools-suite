@@ -94,9 +94,8 @@ class GUIUpdateWorker(QObject):
 
 
 class MultiRateLineWidget(QWidget):
-    """
-    Multi-series FPS graph widget (full-width graph).
-
+    """! Multi-series FPS graph widget (full-width graph).
+    @details
     UX:
       - Graph spans full width
       - Series name + FPS overlaid on top of graph
@@ -108,6 +107,7 @@ class MultiRateLineWidget(QWidget):
 
     def __init__(self, series_defs):
         """! Frame rate widget initialization."""
+
         super().__init__()
 
         ## Maximum number of samples retained per rate series
@@ -686,8 +686,7 @@ class CANopenMainWindow(QMainWindow):
         self.clear_tables()
 
     def _build_left_dock(self):
-        """!
-        @brief Build Remote Node Control dock (SDO / PDO send & receive).
+        """! Build Remote Node Control dock (SDO / PDO send & receive).
         @details
         Provides GUI controls for manual SDO download/upload and
         raw PDO transmission. This dock is a thin UI layer that
@@ -845,6 +844,14 @@ class CANopenMainWindow(QMainWindow):
                 "value": int(self.sdo_value_edit.text(), 0),
                 "size": int(self.sdo_size_combo.currentText()),
             })
+            req = {
+                "type": "sdo_download",
+                "node": int(self.sdo_node_edit.text(), 0),
+                "index": int(self.sdo_index_edit.text(), 0),
+                "sub": int(self.sdo_sub_edit.text(), 0),
+                "value": int(self.sdo_value_edit.text(), 0),
+                "size": int(self.sdo_size_combo.currentText()),
+            }
         except Exception as e:
             QToolTip.showText(QCursor.pos(), f"SDO send failed: {e}")
 
@@ -1147,8 +1154,8 @@ class CANopenMainWindow(QMainWindow):
 
     def _configure_table_columns(self, table, stretch_column_name: str):
         """! Configure column resize behavior using column names instead of indices.
-        @param table: QTableWidget instance
-        @param stretch_column_name: Header text of column to stretch (e.g. "Decoded")
+        @param table QTableWidget instance
+        @param stretch_column_name Header text of column to stretch (e.g. "Decoded")
         """
 
         header = table.horizontalHeader()
