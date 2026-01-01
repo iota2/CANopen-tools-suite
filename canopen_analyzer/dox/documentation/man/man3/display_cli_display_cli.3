@@ -33,6 +33,10 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. "
 .ti -1c
+.RI "def \fBinput_loop\fP (self)"
+.br
+.RI "Capture user keystrokes and update remote command input\&. "
+.ti -1c
 .RI "def \fBrender_tables\fP (self)"
 .br
 .RI "Render tables for displaying CLI data\&. "
@@ -89,6 +93,14 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Protocol data buffer used only for rendering rows (not for rate calc)\&. "
 .ti -1c
+.RI "\fBremote_cmd_history\fP"
+.br
+.RI "Remote node control command history (last 3 commands) "
+.ti -1c
+.RI "\fBremote_cmd_input\fP"
+.br
+.RI "Placeholder for current user input (CLI-rendered only) "
+.ti -1c
 .RI "\fBsdo_frames\fP"
 .br
 .RI "SDO data buffer used only for rendering rows (not for rate calc)\&. "
@@ -100,6 +112,10 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .SS "Private Attributes"
 
 .in +1c
+.ti -1c
+.RI "\fB_input_caret\fP"
+.br
+.RI "Input caret for user inputs in remote node control\&. "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -132,6 +148,10 @@ None
 
 .PP
 Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. 
+.SS "def input_loop ( self)"
+
+.PP
+Capture user keystrokes and update remote command input\&. 
 .SS "def render_tables ( self)"
 
 .PP
@@ -150,6 +170,10 @@ Create a compact sparkline Text from a numeric history sequence\&.
 Stop CLI display\&. 
 .SH "Member Data Documentation"
 .PP 
+.SS "_input_caret\fC [private]\fP"
+
+.PP
+Input caret for user inputs in remote node control\&. 
 .SS "_stop_event\fC [private]\fP"
 
 .SS "console"
@@ -188,6 +212,14 @@ Private instance for pointing to incoming processed frames\&.
 
 .PP
 Protocol data buffer used only for rendering rows (not for rate calc)\&. 
+.SS "remote_cmd_history"
+
+.PP
+Remote node control command history (last 3 commands) 
+.SS "remote_cmd_input"
+
+.PP
+Placeholder for current user input (CLI-rendered only) 
 .SS "sdo_frames"
 
 .PP

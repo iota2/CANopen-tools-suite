@@ -1,7 +1,13 @@
 <map id="run" name="run">
-<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,31,48,57"/>
-<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,5,264,32"/>
-<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a1602e5a067d7cbe99e22f10101f9e381" title="Render tables for displaying CLI data." alt="" coords="125,56,235,83"/>
-<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#abe06cf6d0565d9ba766f02681f989a2c" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="312,56,475,83"/>
-<area shape="rect" id="node5" href="$classdisplay__cli_1_1display__cli.html#a1716b97b8fa04faf79e5df60d9fb3489" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="523,56,605,83"/>
+<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,192,48,219"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#aad3d653f36c6ed08025a3372850fc4c0" title="Capture user keystrokes and update remote command input." alt="" coords="135,136,225,163"/>
+<area shape="rect" id="node8" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,192,264,219"/>
+<area shape="rect" id="node9" href="$classdisplay__cli_1_1display__cli.html#a1602e5a067d7cbe99e22f10101f9e381" title="Render tables for displaying CLI data." alt="" coords="125,253,235,280"/>
+<area shape="rect" id="node3" href="$classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,5,527,32"/>
+<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,56,461,83"/>
+<area shape="rect" id="node5" href="$classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="312,107,559,133"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="346,158,525,199"/>
+<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="344,223,527,265"/>
+<area shape="rect" id="node10" href="$classdisplay__cli_1_1display__cli.html#abe06cf6d0565d9ba766f02681f989a2c" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="354,289,517,316"/>
+<area shape="rect" id="node11" href="$classdisplay__cli_1_1display__cli.html#a1716b97b8fa04faf79e5df60d9fb3489" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="607,289,689,316"/>
 </map>

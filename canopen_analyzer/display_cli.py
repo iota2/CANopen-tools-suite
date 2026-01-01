@@ -38,6 +38,11 @@ Display rendering errors are handled gracefully to avoid terminating the UI.
 import time
 import logging
 
+import sys
+import termios
+import tty
+import select
+
 from collections import deque
 
 import threading
@@ -109,6 +114,15 @@ class display_cli(threading.Thread):
 
         ## SDO data dict keys -> rows mapping for fixed mode
         self.fixed_sdo = {}
+
+        ## Remote node control command history (last 3 commands)
+        self.remote_cmd_history = deque(maxlen=3)
+
+        ## Placeholder for current user input (CLI-rendered only)
+        self.remote_cmd_input = ""
+
+        ## Input caret for user inputs in remote node control
+        self._input_caret = "█"
 
     def sparkline(self, history, style="white"):
         """! Create a compact sparkline Text from a numeric history sequence."""
@@ -268,6 +282,44 @@ class display_cli(threading.Thread):
 
         return t
 
+    def input_loop(self):
+        """! Capture user keystrokes and update remote command input."""
+
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+
+        try:
+            tty.setcbreak(fd)  # character-by-character input
+
+            while not self._stop_event.is_set():
+                r, _, _ = select.select([sys.stdin], [], [], 0.05)
+                if not r:
+                    continue
+
+                ch = sys.stdin.read(1)
+
+                # ENTER → commit command
+                if ch in ("\n", "\r"):
+                    if self.remote_cmd_input.strip():
+                        self.remote_cmd_history.append(self.remote_cmd_input.strip())
+                    self.remote_cmd_input = ""
+
+                # BACKSPACE
+                elif ch in ("\x7f", "\b"):
+                    self.remote_cmd_input = self.remote_cmd_input[:-1]
+
+                # CTRL+C
+                elif ch == "\x03":
+                    self.stop()
+                    break
+
+                # Printable characters
+                elif ch.isprintable():
+                    self.remote_cmd_input += ch
+
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
     def render_tables(self):
         """! Render tables for displaying CLI data."""
 
@@ -327,16 +379,50 @@ class display_cli(threading.Thread):
             decoded = Text(str(s.get("decoded", "")), style="bold magenta") if s.get("decoded") else ""
             t_sdo.add_row(s["time"], s["cob"], s["dir"], s.get("name", ""), s.get("index", ""), s.get("sub", ""), s.get("raw", ""), decoded, str(s.get("count", "")))
 
+        # Remote Node Example
+        t_sample = Table(title="Remote Node Sample", expand=True, box=box.SQUARE, style="purple")
+        t_sample.add_column("Command (Sample)", no_wrap=True)
+        t_sample.add_row(Text("> send sdo node-id index sub data size<1,2,4> <repeat(ms)>", style="bold cyan"))
+        t_sample.add_row(Text("\t\t > send sdo stop", style="cyan"))
+        t_sample.add_row(Text("> recv sdo node-id index sub <repeat(ms)>", style="bold magenta"))
+        t_sample.add_row(Text("\t\t > recv sdo stop", style="magenta"))
+        t_sample.add_row(Text("> send pdo cob-id data <repeat(ms)>", style="bold green"))
+        t_sample.add_row(Text("\t\t > send pdo stop", style="green"))
+
+        # Remote Node Control
+        t_remote = Table(title="Remote Node Control", expand=True, box=box.SQUARE, style="red")
+        t_remote.add_column("Command", no_wrap=True)
+        # Last 5 commands (most recent at bottom)
+        history = list(self.remote_cmd_history)
+        while len(history) < 5:
+            history.insert(0, "")
+
+        for cmd in history:
+            t_remote.add_row(cmd or "")
+
+        # Input line
+        cursor = self._input_caret
+        t_remote.add_row(Text(f"> {self.remote_cmd_input}{cursor}", style="bold red"))
+
         # Grid layout (two columns)
         layout = Table.grid(expand=True)
         layout.add_row(t_proto, None, t_bus)
         layout.add_row(t_pdo, None, t_sdo)
+        layout.add_row(t_sample, None, t_remote)
+
         return layout
 
     def run(self):
         """! Run CLI based CANopen display."""
 
         self.log.info("display_cli started")
+
+        input_thread = threading.Thread(
+            target=self.input_loop,
+            daemon=True
+        )
+        input_thread.start()
+
         # Use Live to update the complete dashboard
         with Live(console=self.console, refresh_per_second=5, screen=True) as live:
             try:
