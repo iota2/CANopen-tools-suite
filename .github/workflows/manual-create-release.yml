@@ -127,7 +127,7 @@ jobs:
               echo "Found CHANGELOG section start for ${TAG} at line ${START_LINE}"
 
               if [ -n "$BASE" ]; then
-                BASE_HEADER_RE="^##[[:space:]]*(?:\\[v?${BASE_STRIPPED}\\]|v?${BASE_STRIPPED})"
+                BASE_HEADER_RE="^##[[:space:]]*\[[[:space:]]*v?${BASE_STRIPPED}[[:space:]]*\]
                 START_BASE_LINE=$(grep -n -E "$BASE_HEADER_RE" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
                 if [ -n "$START_BASE_LINE" ]; then
                   END_LINE=$(( START_BASE_LINE - 1 ))
@@ -183,13 +183,23 @@ jobs:
           echo "notes_written=true" >> "$GITHUB_OUTPUT"
           echo "compare_url=${COMPARE_URL:-}" >> "$GITHUB_OUTPUT"
 
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add VERSION
+          git commit -m "chore(release): bump version to ${{ steps.bump_major.outputs.new_version }}"
+
+      - name: Create and push tag
+        run: |
+          git tag ${{ steps.bump_major.outputs.new_version }}
+          git push origin ${{ steps.bump_major.outputs.new_version }}
+
       - name: Create GitHub release
         uses: actions/create-release@v1
         with:
-          tag_name: "${{ steps.tagpick.outputs.tag }}"
-          release_name: "${{ steps.tagpick.outputs.tag }}"
-          body: "${{ steps.gen_notes.outputs.body }}"
-          draft: false
-          prerelease: false
+          tag_name: ${{ steps.bump_major.outputs.new_version }}
+          release_name: ${{ steps.bump_major.outputs.new_version }}
+          body: "Manual major release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
