@@ -45,9 +45,6 @@ jobs:
 
       - name: Show bumped version
         run: echo "Bumped release version to ${{ steps.bump_major.outputs.new_version }}"
-        with:
-          fetch-depth: 0
-          persist-credentials: true
 
       - name: Determine tag to release
         id: tagpick
