@@ -99,96 +99,20 @@ jobs:
 
           echo "base=${BASE:-}" >> "$GITHUB_OUTPUT"
 
-      - name: Generate compact release notes from CHANGELOG.md - fallback to git log
+      - name: Generate compact release notes
         id: gen_notes
         run: |
-          set -euo pipefail
-
-          TAG="${{ steps.tagpick.outputs.tag }}"
-          BASE="${{ steps.basepick.outputs.base }}"
-          echo "Selected tag: $TAG"
-          if [ -n "$BASE" ]; then
-            echo "Base tag: $BASE"
-          else
-            echo "Base tag: <none>"
-          fi
-
-          TAG_STRIPPED="${TAG#v}"
-          BASE_STRIPPED="${BASE#v}"
-
-          RELEASE_BODY=""
-          COMPARE_URL=""
-
-          if [ -f CHANGELOG.md ]; then
-            HEADER_RE="^##[[:space:]]*(?:\\[v?${TAG_STRIPPED}\\]|v?${TAG_STRIPPED})"
-            START_LINE=$(grep -n -E "$HEADER_RE" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
-
-            if [ -n "$START_LINE" ]; then
-              echo "Found CHANGELOG section start for ${TAG} at line ${START_LINE}"
-
-              if [ -n "$BASE" ]; then
-                BASE_HEADER_RE="^##[[:space:]]*\[[[:space:]]*v?${BASE_STRIPPED}[[:space:]]*\]
-                START_BASE_LINE=$(grep -n -E "$BASE_HEADER_RE" CHANGELOG.md | head -n1 | cut -d: -f1 || true)
-                if [ -n "$START_BASE_LINE" ]; then
-                  END_LINE=$(( START_BASE_LINE - 1 ))
-                else
-                  echo "Base tag ${BASE} not found in CHANGELOG.md; will extract until EOF"
-                  END_LINE=$(wc -l < CHANGELOG.md)
-                fi
-              else
-                NEXT_REL=$(tail -n +"$((START_LINE+1))" CHANGELOG.md | grep -n -E '^##[[:space:]]*' | head -n1 | cut -d: -f1 || true)
-                if [ -n "$NEXT_REL" ]; then
-                  END_LINE=$(( START_LINE + NEXT_REL - 1 ))
-                else
-                  END_LINE=$(wc -l < CHANGELOG.md)
-                fi
-              fi
-
-              echo "Extracting CHANGELOG lines ${START_LINE}..${END_LINE}"
-
-              sed -n "${START_LINE},${END_LINE}p" CHANGELOG.md > release_body_raw.txt
-
-              # Remove version headers, section headers, and all blank lines
-              awk '{
-                if ($0 ~ /^##[[:space:]]*/ || $0 ~ /^###[:space:]]*/ || $0 ~ /^[[:space:]]*$/) next;
-                print $0
-              }' release_body_raw.txt > release_body.txt
-
-              RELEASE_BODY="$(cat release_body.txt || true)"
-            else
-              echo "No matching section found for ${TAG} in CHANGELOG.md"
-            fi
-          else
-            echo "CHANGELOG.md not found; will fallback to git log"
-          fi
-
-          # Fallback to git log if empty
-          if [ -z "${RELEASE_BODY}" ]; then
-            if [ -n "$BASE" ]; then
-              RANGE="${BASE}..${TAG}"
-              COMPARE_URL="https://github.com/${{ github.repository }}/compare/${BASE}...${TAG}"
-              NOTES=$(git log --pretty=format:'- %s (%an)' "${RANGE}" || true)
-            else
-              COMPARE_URL="https://github.com/${{ github.repository }}/tree/${TAG}"
-              NOTES=$(git log --pretty=format:'- %s (%an)' "${TAG}" || true)
-            fi
-
-            RELEASE_BODY="${NOTES:-No changelog entries (no commits in range).}"
-          fi
-
-          echo "body<<EOF" >> "$GITHUB_OUTPUT"
-          echo "${RELEASE_BODY}" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          echo "notes_written=true" >> "$GITHUB_OUTPUT"
-          echo "compare_url=${COMPARE_URL:-}" >> "$GITHUB_OUTPUT"
+          python3 tools/generate_release_notes.py \
+            --tag "${{ steps.tagpick.outputs.tag }}" \
+            --base "${{ steps.basepick.outputs.base }}" \
+            --repo "${{ github.repository }}"
 
       - name: Commit version bump
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add VERSION
-          git commit -m "chore(release): bump version to ${{ steps.bump_major.outputs.new_version }}"
+          git commit -m "chore(release): bump version to ${{ steps.bump_major.outputs.new_version }}" || echo "No version change to commit"
 
       - name: Create and push tag
         run: |
