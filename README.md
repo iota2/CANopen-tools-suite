@@ -173,3 +173,9 @@ python canopen_node_monitor_cli.py --interface vcan0 --local-eds local.eds --rem
 ---
 
 ⚡ This suite is designed for **testing, debugging, and visualizing CANopen networks** with minimal setup.
+
+## 3rd Party License
+
+This project uses PySide6 under the terms of the LGPL-3.0 license.
+PySide6 is dynamically linked and remains unmodified.
+
