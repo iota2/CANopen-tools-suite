@@ -93,11 +93,50 @@ MIN_STATS_SHOW = 3
 ## Maximum number of values to be shown in Bus stats window.
 MAX_STATS_SHOW = 5
 
+## Maximum number remote node control commands to store in CLI.
+MAX_CLI_CMD_HISTORY = 5
+
 ## Maximum number of CANopen frames to be cached.
 MAX_FRAMES = 500
 
-## Seconds after which a node is considered inactive
+## Seconds after which a node is considered inactive.
 NODE_INACTIVE_TIMEOUT = 5.0
+
+## Default Node-ID for Send SDO.
+DEFAULT_SDO_SEND_NODE_ID = "0x01"
+
+## Default Index for Send SDO.
+DEFAULT_SDO_SEND_INDEX = "0x6000"
+
+## Default Sub-Index for Send SDO.
+DEFAULT_SDO_SEND_SUB = "0x00"
+
+## Default Data for Send SDO.
+DEFAULT_SDO_SEND_DATA = "1"
+
+## Default Repeat-Time for Send SDO.
+DEFAULT_SDO_SEND_REPEAT_TIME = "1000"
+
+## Default Node-ID for Receive SDO.
+DEFAULT_SDO_RECV_NODE_ID = "0x01"
+
+## Default Index for Receive SDO.
+DEFAULT_SDO_RECV_INDEX = "0x6000"
+
+## Default Sub-Index for Receive SDO.
+DEFAULT_SDO_RECV_SUB = "0x00"
+
+## Default Repeat-Time for Receive SDO.
+DEFAULT_SDO_RECV_REPEAT_TIME = "1000"
+
+## Default COB-ID for Send PDO.
+DEFAULT_PDO_SEND_COB_ID = "0x202"
+
+## Default Data for Send PDO.
+DEFAULT_PDO_SEND_DATA = "00 00 00 00 00 00 00 00"
+
+## Default Repeat-Time for Send PDO.
+DEFAULT_PDO_SEND_REPEAT_TIME = "1000"
 
 # --------------------------------------------------------------------------
 # ----- Enumerations -----

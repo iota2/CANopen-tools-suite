@@ -1,7 +1,19 @@
 <map id="run" name="run">
-<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,31,48,57"/>
-<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,5,264,32"/>
-<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a1602e5a067d7cbe99e22f10101f9e381" title="Render tables for displaying CLI data." alt="" coords="125,56,235,83"/>
-<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#abe06cf6d0565d9ba766f02681f989a2c" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="312,56,475,83"/>
-<area shape="rect" id="node5" href="$classdisplay__cli_1_1display__cli.html#a1716b97b8fa04faf79e5df60d9fb3489" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="523,56,605,83"/>
+<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,416,48,443"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,233,229,260"/>
+<area shape="rect" id="node13" href="$classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,416,239,443"/>
+<area shape="rect" id="node17" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,467,264,493"/>
+<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,81,535,108"/>
+<area shape="rect" id="node8" href="$classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,132,527,159"/>
+<area shape="rect" id="node9" href="$classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,183,461,209"/>
+<area shape="rect" id="node10" href="$classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="312,233,559,260"/>
+<area shape="rect" id="node11" href="$classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="346,285,525,326"/>
+<area shape="rect" id="node12" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="344,350,527,391"/>
+<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#aa3061b7d2aaefa86fd296b3a5e478f02" title="Parse hex or decimal value." alt="" coords="628,5,724,32"/>
+<area shape="rect" id="node5" href="$classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d" title="Parse space&#45;separated hex bytes." alt="" coords="607,56,745,83"/>
+<area shape="rect" id="node6" href="$classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="622,107,730,133"/>
+<area shape="rect" id="node7" href="$classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="793,132,900,159"/>
+<area shape="rect" id="node14" href="$classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,416,521,443"/>
+<area shape="rect" id="node16" href="$classdisplay__cli_1_1display__cli.html#a96eac299cf440987d4131ed4ad4729a6" title="Build Remote Node Control status title." alt="" coords="357,467,513,493"/>
+<area shape="rect" id="node15" href="$classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="631,416,721,443"/>
 </map>

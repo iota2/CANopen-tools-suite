@@ -1,5 +1,0 @@
-<map id="build_bus_stats_table" name="build_bus_stats_table">
-<area shape="rect" id="node1" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="255,5,417,32"/>
-<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a1602e5a067d7cbe99e22f10101f9e381" title="Render tables for displaying CLI data." alt="" coords="96,5,207,32"/>
-<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
-</map>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['enable_5flogging_344',['enable_logging',['../namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b',1,'analyzer_defs']]],
-  ['eventfilter_345',['eventFilter',['../classdisplay__gui_1_1MultiRateLineWidget.html#a8ffa780eb95614720fcfeab3c46d0f23',1,'display_gui::MultiRateLineWidget']]]
+  ['enable_5flogging_378',['enable_logging',['../namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b',1,'analyzer_defs']]],
+  ['eventfilter_379',['eventFilter',['../classdisplay__gui_1_1MultiRateLineWidget.html#a8ffa780eb95614720fcfeab3c46d0f23',1,'display_gui::MultiRateLineWidget']]]
 ];

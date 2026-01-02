@@ -1,4 +1,4 @@
-.TH "display_cli" 3 "Thu Jan 1 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_cli" 3 "Fri Jan 2 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,25 +25,13 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBprocessed_frame\fP, bool \fBfixed\fP=False)"
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBprocessed_frame\fP, \fBrequested_frame\fP=None, bool \fBfixed\fP=False)"
 .br
 .RI "Initialize CLI based CANopen display\&. "
-.ti -1c
-.RI "def \fBbuild_bus_stats_table\fP (self)"
-.br
-.RI "Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. "
-.ti -1c
-.RI "def \fBrender_tables\fP (self)"
-.br
-.RI "Render tables for displaying CLI data\&. "
 .ti -1c
 .RI "def \fBrun\fP (self)"
 .br
 .RI "Run CLI based CANopen display\&. "
-.ti -1c
-.RI "def \fBsparkline\fP (self, history, style='white')"
-.br
-.RI "Create a compact sparkline Text from a numeric history sequence\&. "
 .ti -1c
 .RI "def \fBstop\fP (self)"
 .br
@@ -89,6 +77,18 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Protocol data buffer used only for rendering rows (not for rate calc)\&. "
 .ti -1c
+.RI "\fBremote_cmd_history\fP"
+.br
+.RI "Remote node control command history\&. "
+.ti -1c
+.RI "\fBremote_cmd_input\fP"
+.br
+.RI "Placeholder for current user input (CLI-rendered only) "
+.ti -1c
+.RI "\fBrequested_frame\fP"
+.br
+.RI "Outgoing requested frames\&. "
+.ti -1c
 .RI "\fBsdo_frames\fP"
 .br
 .RI "SDO data buffer used only for rendering rows (not for rate calc)\&. "
@@ -97,16 +97,72 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Private instance for pointing to incoming bus stats\&. "
 .in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB_build_bus_stats_table\fP (self)"
+.br
+.RI "Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. "
+.ti -1c
+.RI "def \fB_handle_remote_command\fP (self, str cmd)"
+.br
+.RI "Parse and dispatch remote node control commands with defaults and status feedback\&. "
+.ti -1c
+.RI "def \fB_input_loop\fP (self)"
+.br
+.RI "Capture user keystrokes and update remote command input\&. "
+.ti -1c
+.RI "int \fB_parse_hex\fP (self, str value)"
+.br
+.RI "Parse hex or decimal value\&. "
+.ti -1c
+.RI "bytes \fB_parse_hex_bytes\fP (self, str data)"
+.br
+.RI "Parse space-separated hex bytes\&. "
+.ti -1c
+.RI "str \fB_remote_status_title\fP (self)"
+.br
+.RI "Build Remote Node Control status title\&. "
+.ti -1c
+.RI "def \fB_render_tables\fP (self)"
+.br
+.RI "Render tables for displaying CLI data\&. "
+.ti -1c
+.RI "str \fB_repeat_status_icon\fP (self, str key)"
+.br
+.RI "Return status icon for a repeat task\&. "
+.ti -1c
+.RI "def \fB_sparkline\fP (self, history, style='white')"
+.br
+.RI "Create a compact sparkline Text from a numeric history sequence\&. "
+.ti -1c
+.RI "def \fB_start_repeat\fP (self, key, interval_ms, callback)"
+.br
+.RI "Start a repeating task\&. "
+.ti -1c
+.RI "def \fB_stop_repeat\fP (self, key)"
+.br
+.RI "Stop a repeating task\&. "
+.in -1c
 .SS "Private Attributes"
 
 .in +1c
+.ti -1c
+.RI "\fB_input_caret\fP"
+.br
+.RI "Input caret for user inputs in remote node control\&. "
+.ti -1c
+.RI "\fB_repeat_tasks\fP"
+.br
+.RI "Repeat timers for remote commands (key -> threading\&.Event) "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue processed_frame, bool  fixed = \fCFalse\fP)"
+.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue processed_frame,  requested_frame = \fCNone\fP, bool  fixed = \fCFalse\fP)"
 
 .PP
 Initialize CLI based CANopen display\&. This thread initializes and launches the CLI application that renders all live CANopen monitoring tables (Protocol, PDO, SDO, Bus Stats)\&. It sets up shared state used by the UI update loop, including statistics, frame queues, and the fixed/scrolling display mode\&. 
@@ -128,28 +184,68 @@ None
 
 .SH "Member Function Documentation"
 .PP 
-.SS "def build_bus_stats_table ( self)"
+.SS "def _build_bus_stats_table ( self)\fC [private]\fP"
 
 .PP
 Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. 
-.SS "def render_tables ( self)"
+.SS "def _handle_remote_command ( self, str cmd)\fC [private]\fP"
+
+.PP
+Parse and dispatch remote node control commands with defaults and status feedback\&. 
+.SS "def _input_loop ( self)\fC [private]\fP"
+
+.PP
+Capture user keystrokes and update remote command input\&. 
+.SS " int _parse_hex ( self, str value)\fC [private]\fP"
+
+.PP
+Parse hex or decimal value\&. 
+.SS " bytes _parse_hex_bytes ( self, str data)\fC [private]\fP"
+
+.PP
+Parse space-separated hex bytes\&. 
+.SS " str _remote_status_title ( self)\fC [private]\fP"
+
+.PP
+Build Remote Node Control status title\&. 
+.SS "def _render_tables ( self)\fC [private]\fP"
 
 .PP
 Render tables for displaying CLI data\&. 
+.SS " str _repeat_status_icon ( self, str key)\fC [private]\fP"
+
+.PP
+Return status icon for a repeat task\&. 
+.SS "def _sparkline ( self,  history,  style = \fC'white'\fP)\fC [private]\fP"
+
+.PP
+Create a compact sparkline Text from a numeric history sequence\&. 
+.SS "def _start_repeat ( self,  key,  interval_ms,  callback)\fC [private]\fP"
+
+.PP
+Start a repeating task\&. 
+.SS "def _stop_repeat ( self,  key)\fC [private]\fP"
+
+.PP
+Stop a repeating task\&. 
 .SS "def run ( self)"
 
 .PP
 Run CLI based CANopen display\&. 
-.SS "def sparkline ( self,  history,  style = \fC'white'\fP)"
-
-.PP
-Create a compact sparkline Text from a numeric history sequence\&. 
 .SS "def stop ( self)"
 
 .PP
 Stop CLI display\&. 
 .SH "Member Data Documentation"
 .PP 
+.SS "_input_caret\fC [private]\fP"
+
+.PP
+Input caret for user inputs in remote node control\&. 
+.SS "_repeat_tasks\fC [private]\fP"
+
+.PP
+Repeat timers for remote commands (key -> threading\&.Event) 
 .SS "_stop_event\fC [private]\fP"
 
 .SS "console"
@@ -188,6 +284,18 @@ Private instance for pointing to incoming processed frames\&.
 
 .PP
 Protocol data buffer used only for rendering rows (not for rate calc)\&. 
+.SS "remote_cmd_history"
+
+.PP
+Remote node control command history\&. 
+.SS "remote_cmd_input"
+
+.PP
+Placeholder for current user input (CLI-rendered only) 
+.SS "requested_frame"
+
+.PP
+Outgoing requested frames\&. 
 .SS "sdo_frames"
 
 .PP

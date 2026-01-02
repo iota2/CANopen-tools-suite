@@ -1,0 +1,5 @@
+<map id="_remote_status_title" name="_remote_status_title">
+<area shape="rect" id="node1" title="Build Remote Node Control status title." alt="" coords="263,5,419,32"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
+<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
+</map>
