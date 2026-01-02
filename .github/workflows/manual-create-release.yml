@@ -31,6 +31,9 @@ jobs:
     steps:
       - name: Checkout (full history and tags)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # full history
+          fetch-tags: true    # ensure tags are available
 
       - name: Bump MAJOR version (reset minor & patch)
         id: bump_major
