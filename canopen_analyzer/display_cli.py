@@ -65,7 +65,7 @@ class display_cli(threading.Thread):
     rate calculation or use bitrate directly.
     """
 
-    def __init__(self, stats: bus_stats, processed_frame: queue.Queue, fixed: bool = False):
+    def __init__(self, stats: bus_stats, processed_frame: queue.Queue, requested_frame=None, fixed: bool = False):
         """! Initialize CLI based CANopen display.
         @details
         This thread initializes and launches the CLI application that renders
@@ -82,6 +82,9 @@ class display_cli(threading.Thread):
 
         ## Private instance for pointing to incoming processed frames.
         self.processed_frame = processed_frame
+
+        ## Outgoing requested frames
+        self.requested_frame = requested_frame
 
         ## Private instance for pointing to incoming bus stats.
         self.stats = stats
@@ -115,8 +118,8 @@ class display_cli(threading.Thread):
         ## SDO data dict keys -> rows mapping for fixed mode
         self.fixed_sdo = {}
 
-        ## Remote node control command history (last 3 commands)
-        self.remote_cmd_history = deque(maxlen=3)
+        ## Remote node control command history
+        self.remote_cmd_history = deque(maxlen=analyzer_defs.MAX_CLI_CMD_HISTORY)
 
         ## Placeholder for current user input (CLI-rendered only)
         self.remote_cmd_input = ""
@@ -124,7 +127,10 @@ class display_cli(threading.Thread):
         ## Input caret for user inputs in remote node control
         self._input_caret = "█"
 
-    def sparkline(self, history, style="white"):
+        ## Repeat timers for remote commands (key -> threading.Event)
+        self._repeat_tasks = {}
+
+    def _sparkline(self, history, style="white"):
         """! Create a compact sparkline Text from a numeric history sequence."""
 
         if not history:
@@ -149,7 +155,20 @@ class display_cli(threading.Thread):
         except Exception:
             return ""
 
-    def build_bus_stats_table(self):
+    def _parse_hex(self, value: str) -> int:
+        """! Parse hex or decimal value."""
+
+        return int(value, 0)
+
+    def _parse_hex_bytes(self, data: str) -> bytes:
+        """! Parse space-separated hex bytes."""
+
+        parts = data.replace(",", " ").split()
+        if len(parts) != 8:
+            raise ValueError("PDO data must be exactly 8 bytes")
+        return bytes(int(b, 16) for b in parts)
+
+    def _build_bus_stats_table(self):
         """! Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)."""
 
         snapshot = self.stats.get_snapshot()
@@ -185,7 +204,7 @@ class display_cli(threading.Thread):
         # PDO
         pdo_val = float(rates_latest.get("pdo", 0.0)) if isinstance(rates_latest, dict) else 0.0
         pdo_hist = rates_hist.get("pdo", []) if isinstance(rates_hist, dict) else []
-        t.add_row("PDO Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "green") if pdo_hist else "")
+        t.add_row("PDO Frames/s", f"{pdo_val:.1f}", self._sparkline(pdo_hist, "green") if pdo_hist else "")
 
         # SDO (request + response)
         sdo_res = float(rates_latest.get("sdo_res", 0.0)) if isinstance(rates_latest, dict) else 0.0
@@ -204,22 +223,22 @@ class display_cli(threading.Thread):
                 sdo_hist = list(sdo_hist_req)
         except Exception:
             sdo_hist = list(sdo_hist_res) if sdo_hist_res else list(sdo_hist_req) if sdo_hist_req else []
-        t.add_row("SDO Frames/s", f"{sdo_val:.1f}", self.sparkline(sdo_hist, "magenta") if sdo_hist else "")
+        t.add_row("SDO Frames/s", f"{sdo_val:.1f}", self._sparkline(sdo_hist, "magenta") if sdo_hist else "")
 
         # Heart beat
         pdo_val = float(rates_latest.get("hb", 0.0)) if isinstance(rates_latest, dict) else 0.0
         pdo_hist = rates_hist.get("hb", []) if isinstance(rates_hist, dict) else []
-        t.add_row("HB Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
+        t.add_row("HB Frames/s", f"{pdo_val:.1f}", self._sparkline(pdo_hist, "cyan") if pdo_hist else "")
 
         # Emergency Messages
         pdo_val = float(rates_latest.get("emcy", 0.0)) if isinstance(rates_latest, dict) else 0.0
         pdo_hist = rates_hist.get("emcy", []) if isinstance(rates_hist, dict) else []
-        t.add_row("EMCY Frames/s", f"{pdo_val:.1f}", self.sparkline(pdo_hist, "cyan") if pdo_hist else "")
+        t.add_row("EMCY Frames/s", f"{pdo_val:.1f}", self._sparkline(pdo_hist, "cyan") if pdo_hist else "")
 
         # Total frames/s
         total_val = float(rates_latest.get("total", 0.0)) if isinstance(rates_latest, dict) else 0.0
         total_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Total Frames/s", f"{total_val:.1f}", self.sparkline(total_hist, "yellow") if total_hist else "")
+        t.add_row("Total Frames/s", f"{total_val:.1f}", self._sparkline(total_hist, "yellow") if total_hist else "")
 
         # Peak frames/s
         peak_val = float(getattr(snapshot.rates, "peak_fps", 0.0))
@@ -237,7 +256,7 @@ class display_cli(threading.Thread):
 
         idle = max(0.0, 100.0 - util) if util is not None else 0.0
         util_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Bus Util %", f"{util:.2f}%" if util is not None else "-", self.sparkline(util_hist, "grey") if util_hist else "")
+        t.add_row("Bus Util %", f"{util:.2f}%" if util is not None else "-", self._sparkline(util_hist, "grey") if util_hist else "")
         t.add_row("Bus Idle %", f"{idle:.2f}%" if util is not None else "-", "")
 
         # SDO stats & response time
@@ -282,7 +301,227 @@ class display_cli(threading.Thread):
 
         return t
 
-    def input_loop(self):
+    def _start_repeat(self, key, interval_ms, callback):
+        """! Start a repeating task."""
+
+        self._stop_repeat(key)
+
+        stop_event = threading.Event()
+        self._repeat_tasks[key] = stop_event
+
+        def loop():
+            interval = max(0.05, interval_ms / 1000.0)
+            while not stop_event.wait(interval):
+                callback()
+
+        threading.Thread(target=loop, daemon=True).start()
+
+    def _stop_repeat(self, key):
+        """! Stop a repeating task."""
+
+        ev = self._repeat_tasks.pop(key, None)
+        if ev:
+            ev.set()
+
+    def _repeat_status_icon(self, key: str) -> str:
+        """! Return status icon for a repeat task."""
+
+        return "🟢" if key in self._repeat_tasks else "🔴"
+
+    def _remote_status_title(self) -> str:
+        """! Build Remote Node Control status title."""
+
+        return (
+            "Remote Node Control Status - "
+            f"Send SDO {self._repeat_status_icon('sdo_send')} | "
+            f"Recv SDO {self._repeat_status_icon('sdo_recv')} | "
+            f"Send PDO {self._repeat_status_icon('pdo_send')}"
+        )
+
+    def _handle_remote_command(self, cmd: str):
+        """! Parse and dispatch remote node control commands with defaults and status feedback."""
+
+        tokens = cmd.strip().split()
+        if not tokens:
+            return
+
+        def ok(msg):      # success (single-shot)
+            self.remote_cmd_history.append(Text(f"🟩 {msg}", style="green"))
+
+        def repeat(msg):  # repeat started
+            self.remote_cmd_history.append(Text(f"🟢 {msg} > Repeat Started.", style="yellow"))
+
+        def stopped(msg):  # repeat stopped
+            self.remote_cmd_history.append(Text(f"🔴 {msg} > Repeat Stopped.", style="yellow"))
+
+        def not_running(msg):  # stop when not running
+            self.remote_cmd_history.append(Text(f"🟡 {msg} > Repeat Not Running.", style="yellow"))
+
+        def err(msg, e):
+            self.remote_cmd_history.append(
+                Text(f"🟥 {msg} > Parsing Error: {e}", style="red")
+            )
+
+        try:
+            # ============================================================
+            # SEND SDO
+            # ============================================================
+            if tokens[:2] == ["send", "sdo"]:
+                key = "sdo_send"
+
+                # ---- STOP ----
+                if len(tokens) == 3 and tokens[2] == "stop":
+                    if key in self._repeat_tasks:
+                        self._stop_repeat(key)
+                        stopped(cmd)
+                    else:
+                        not_running(cmd)
+                    return
+
+                # ---- defaults ----
+                node = self._parse_hex(analyzer_defs.DEFAULT_SDO_SEND_NODE_ID)
+                index = self._parse_hex(analyzer_defs.DEFAULT_SDO_SEND_INDEX)
+                sub = self._parse_hex(analyzer_defs.DEFAULT_SDO_SEND_SUB)
+                value = self._parse_hex(analyzer_defs.DEFAULT_SDO_SEND_DATA)
+                size = 1
+                repeat_ms = None
+
+                # ---- argument resolution ----
+                if len(tokens) == 3:
+                    repeat_ms = int(tokens[2])
+                elif len(tokens) >= 7:
+                    node = self._parse_hex(tokens[2])
+                    index = self._parse_hex(tokens[3])
+                    sub = self._parse_hex(tokens[4])
+                    value = self._parse_hex(tokens[5])
+                    size = int(tokens[6])
+                    if size not in (1, 2, 4):
+                        raise ValueError("SDO size must be 1, 2, or 4.")
+                    if len(tokens) == 8:
+                        repeat_ms = int(tokens[7])
+                elif len(tokens) != 2:
+                    raise ValueError("Invalid send sdo syntax.")
+
+                def send_once():
+                    self.requested_frame.put({
+                        "type": "sdo_download",
+                        "node": node,
+                        "index": index,
+                        "sub": sub,
+                        "value": value,
+                        "size": size,
+                    })
+
+                if repeat_ms:
+                    self._start_repeat(key, repeat_ms, send_once)
+                    repeat(cmd)
+                else:
+                    send_once()
+                    ok(cmd)
+                return
+
+            # ============================================================
+            # RECV SDO
+            # ============================================================
+            if tokens[:2] == ["recv", "sdo"]:
+                key = "sdo_recv"
+
+                # ---- STOP ----
+                if len(tokens) == 3 and tokens[2] == "stop":
+                    if key in self._repeat_tasks:
+                        self._stop_repeat(key)
+                        stopped(cmd)
+                    else:
+                        not_running(cmd)
+                    return
+
+                # ---- defaults ----
+                node = self._parse_hex(analyzer_defs.DEFAULT_SDO_RECV_NODE_ID)
+                index = self._parse_hex(analyzer_defs.DEFAULT_SDO_RECV_INDEX)
+                sub = self._parse_hex(analyzer_defs.DEFAULT_SDO_RECV_SUB)
+                repeat_ms = None
+
+                # ---- argument resolution ----
+                if len(tokens) == 3:
+                    repeat_ms = int(tokens[2])
+                elif len(tokens) >= 5:
+                    node = self._parse_hex(tokens[2])
+                    index = self._parse_hex(tokens[3])
+                    sub = self._parse_hex(tokens[4])
+                    if len(tokens) == 6:
+                        repeat_ms = int(tokens[5])
+                elif len(tokens) != 2:
+                    raise ValueError("Invalid recv sdo syntax.")
+
+                def recv_once():
+                    self.requested_frame.put({
+                        "type": "sdo_upload",
+                        "node": node,
+                        "index": index,
+                        "sub": sub,
+                    })
+
+                if repeat_ms:
+                    self._start_repeat(key, repeat_ms, recv_once)
+                    repeat(cmd)
+                else:
+                    recv_once()
+                    ok(cmd)
+                return
+
+            # ============================================================
+            # SEND PDO
+            # ============================================================
+            if tokens[:2] == ["send", "pdo"]:
+                key = "pdo_send"
+
+                # ---- STOP ----
+                if len(tokens) == 3 and tokens[2] == "stop":
+                    if key in self._repeat_tasks:
+                        self._stop_repeat(key)
+                        stopped(cmd)
+                    else:
+                        not_running(cmd)
+                    return
+
+                # ---- defaults ----
+                cob = self._parse_hex(analyzer_defs.DEFAULT_PDO_SEND_COB_ID)
+                data = self._parse_hex_bytes(analyzer_defs.DEFAULT_PDO_SEND_DATA)
+                repeat_ms = None
+
+                # ---- argument resolution ----
+                if len(tokens) == 3:
+                    repeat_ms = int(tokens[2])
+                elif len(tokens) >= 4:
+                    cob = self._parse_hex(tokens[2])
+                    data = self._parse_hex_bytes(" ".join(tokens[3:11]))
+                    if len(tokens) == 12:
+                        repeat_ms = int(tokens[11])
+                elif len(tokens) != 2:
+                    raise ValueError("Invalid send pdo syntax.")
+
+                def send_pdo():
+                    self.requested_frame.put({
+                        "type": "pdo",
+                        "cob": cob,
+                        "data": data,
+                    })
+
+                if repeat_ms:
+                    self._start_repeat(key, repeat_ms, send_pdo)
+                    repeat(cmd)
+                else:
+                    send_pdo()
+                    ok(cmd)
+                return
+
+            # ============================================================
+            raise ValueError("Unknown command.")
+
+        except Exception as e:
+            err(cmd, e)
+
+    def _input_loop(self):
         """! Capture user keystrokes and update remote command input."""
 
         fd = sys.stdin.fileno()
@@ -300,8 +539,9 @@ class display_cli(threading.Thread):
 
                 # ENTER → commit command
                 if ch in ("\n", "\r"):
-                    if self.remote_cmd_input.strip():
-                        self.remote_cmd_history.append(self.remote_cmd_input.strip())
+                    cmd = self.remote_cmd_input.strip()
+                    if cmd:
+                        self._handle_remote_command(cmd)
                     self.remote_cmd_input = ""
 
                 # BACKSPACE
@@ -320,10 +560,10 @@ class display_cli(threading.Thread):
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
-    def render_tables(self):
+    def _render_tables(self):
         """! Render tables for displaying CLI data."""
 
-        # Protocol Data
+        # Protocol Data -----------------------------------------------------
         t_proto = Table(title="Protocol Data", expand=True, box=box.SQUARE, style="cyan")
         t_proto.add_column("Time", no_wrap=True)
         t_proto.add_column("COB-ID", width=8)
@@ -338,10 +578,10 @@ class display_cli(threading.Thread):
         for p in protos:
             t_proto.add_row(p["time"], p["cob"], p["type"], p["raw"], p["decoded"], str(p.get("count", "")))
 
-        # Bus Stats
-        t_bus = self.build_bus_stats_table()
+        # Bus Stats -----------------------------------------------------
+        t_bus = self._build_bus_stats_table()
 
-        # PDO table
+        # PDO table -----------------------------------------------------
         t_pdo = Table(title="PDO Data", expand=True, box=box.SQUARE, style="green")
         t_pdo.add_column("Time", no_wrap=True)
         t_pdo.add_column("COB-ID", width=8)
@@ -360,7 +600,7 @@ class display_cli(threading.Thread):
             decoded = Text(str(f.get("decoded", "")), style="bold green") if f.get("decoded") else ""
             t_pdo.add_row(f["time"], f["cob"], f["dir"], f.get("name", ""), f.get("index", ""), f.get("sub", ""), f.get("raw", ""), decoded, str(f.get("count", "")))
 
-        # SDO table
+        # SDO table -----------------------------------------------------
         t_sdo = Table(title="SDO Data", expand=True, box=box.SQUARE, style="magenta")
         t_sdo.add_column("Time", no_wrap=True)
         t_sdo.add_column("COB-ID", width=8)
@@ -379,36 +619,58 @@ class display_cli(threading.Thread):
             decoded = Text(str(s.get("decoded", "")), style="bold magenta") if s.get("decoded") else ""
             t_sdo.add_row(s["time"], s["cob"], s["dir"], s.get("name", ""), s.get("index", ""), s.get("sub", ""), s.get("raw", ""), decoded, str(s.get("count", "")))
 
-        # Remote Node Example
-        t_sample = Table(title="Remote Node Sample", expand=True, box=box.SQUARE, style="purple")
-        t_sample.add_column("Command (Sample)", no_wrap=True)
-        t_sample.add_row(Text("> send sdo node-id index sub data size<1,2,4> <repeat(ms)>", style="bold cyan"))
-        t_sample.add_row(Text("\t\t > send sdo stop", style="cyan"))
-        t_sample.add_row(Text("> recv sdo node-id index sub <repeat(ms)>", style="bold magenta"))
-        t_sample.add_row(Text("\t\t > recv sdo stop", style="magenta"))
-        t_sample.add_row(Text("> send pdo cob-id data <repeat(ms)>", style="bold green"))
-        t_sample.add_row(Text("\t\t > send pdo stop", style="green"))
-
-        # Remote Node Control
-        t_remote = Table(title="Remote Node Control", expand=True, box=box.SQUARE, style="red")
-        t_remote.add_column("Command", no_wrap=True)
+        # Remote Node Control -----------------------------------------------------
+        t_remote = Table(title="Remote Node Control", expand=True, box=box.SQUARE, style="purple")
+        t_remote.add_column("User Inputs:", no_wrap=True)
         # Last 5 commands (most recent at bottom)
         history = list(self.remote_cmd_history)
         while len(history) < 5:
             history.insert(0, "")
 
         for cmd in history:
-            t_remote.add_row(cmd or "")
+            t_remote.add_row(cmd)
 
         # Input line
         cursor = self._input_caret
-        t_remote.add_row(Text(f"> {self.remote_cmd_input}{cursor}", style="bold red"))
+        t_remote.add_row(Text(f"> {self.remote_cmd_input}{cursor}", style="bold purple"))
+
+        # Remote Node Status -----------------------------------------------------
+        t_status = Table(title=self._remote_status_title(), expand=True, box=box.SQUARE, style="purple")
+        t_status.add_column("Commands", no_wrap=True)
+
+        # Send SDO
+        t_status.add_row(Text("> send sdo"\
+                                f" node-id[{analyzer_defs.DEFAULT_SDO_SEND_NODE_ID}]"\
+                                f" index[{analyzer_defs.DEFAULT_SDO_SEND_INDEX}]"\
+                                f" sub[{analyzer_defs.DEFAULT_SDO_SEND_SUB}]"\
+                                f" data[{analyzer_defs.DEFAULT_SDO_SEND_DATA}]"\
+                                f" size<1/2/4>"\
+                                f" <repeat(ms)>[{analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME}]",
+                                style="bold cyan"))
+        t_status.add_row(Text("\t\t > send sdo stop", style="cyan"))
+
+        # Receive SDO
+        t_status.add_row(Text("> recv sdo"\
+                                f" node-id[{analyzer_defs.DEFAULT_SDO_RECV_NODE_ID}]"\
+                                f" index[{analyzer_defs.DEFAULT_SDO_RECV_INDEX}]"\
+                                f" sub[{analyzer_defs.DEFAULT_SDO_RECV_SUB}]"\
+                                f" <repeat(ms)>[{analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME}]",
+                                style="bold magenta"))
+        t_status.add_row(Text("\t\t > recv sdo stop", style="magenta"))
+
+        # Send PDO
+        t_status.add_row(Text("> send pdo"\
+                                f" cob-id[{analyzer_defs.DEFAULT_PDO_SEND_COB_ID}]"\
+                                f" data[{analyzer_defs.DEFAULT_PDO_SEND_DATA}]"
+                                f" <repeat(ms)>[{analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME}]",
+                                style="bold green"))
+        t_status.add_row(Text("\t\t > send pdo stop", style="green"))
 
         # Grid layout (two columns)
         layout = Table.grid(expand=True)
         layout.add_row(t_proto, None, t_bus)
         layout.add_row(t_pdo, None, t_sdo)
-        layout.add_row(t_sample, None, t_remote)
+        layout.add_row(t_remote, None, t_status)
 
         return layout
 
@@ -418,7 +680,7 @@ class display_cli(threading.Thread):
         self.log.info("display_cli started")
 
         input_thread = threading.Thread(
-            target=self.input_loop,
+            target=self._input_loop,
             daemon=True
         )
         input_thread.start()
@@ -492,7 +754,7 @@ class display_cli(threading.Thread):
                         pass
 
                     # render and push to live
-                    live.update(self.render_tables())
+                    live.update(self._render_tables())
 
                     # small sleep to reduce busy-loop
                     time.sleep(0.05)

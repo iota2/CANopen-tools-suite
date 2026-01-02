@@ -1,8 +1,0 @@
-<map id="input_loop" name="input_loop">
-<area shape="rect" id="node1" title="Capture user keystrokes and update remote command input." alt="" coords="5,107,96,133"/>
-<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="176,5,359,32"/>
-<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="242,56,293,83"/>
-<area shape="rect" id="node4" href="$classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="144,107,391,133"/>
-<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="178,158,357,199"/>
-<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="176,223,359,265"/>
-</map>

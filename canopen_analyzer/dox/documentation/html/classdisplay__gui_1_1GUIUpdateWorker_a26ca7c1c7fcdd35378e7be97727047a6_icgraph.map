@@ -1,5 +1,5 @@
 <map id="stop" name="stop">
 <area shape="rect" id="node1" title="Stop the worker." alt="" coords="387,13,437,39"/>
-<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#aad3d653f36c6ed08025a3372850fc4c0" title="Capture user keystrokes and update remote command input." alt="" coords="196,5,339,47"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="196,5,339,47"/>
 <area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,148,47"/>
 </map>

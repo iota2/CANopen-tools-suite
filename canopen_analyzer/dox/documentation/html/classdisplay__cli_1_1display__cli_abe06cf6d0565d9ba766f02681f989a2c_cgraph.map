@@ -1,4 +1,0 @@
-<map id="build_bus_stats_table" name="build_bus_stats_table">
-<area shape="rect" id="node1" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="5,5,168,32"/>
-<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a1716b97b8fa04faf79e5df60d9fb3489" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="216,5,299,32"/>
-</map>

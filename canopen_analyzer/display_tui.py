@@ -221,7 +221,7 @@ class display_tui:
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_node = Input("0x01")
+                                self.sdo_send_node = Input(analyzer_defs.DEFAULT_SDO_SEND_NODE_ID)
                                 self.sdo_send_node.styles.width = 20
                                 yield self.sdo_send_node
 
@@ -229,14 +229,14 @@ class display_tui:
                                 lbl = Input("Index", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_index = Input("0x6000")
+                                self.sdo_send_index = Input(analyzer_defs.DEFAULT_SDO_SEND_INDEX)
                                 self.sdo_send_index.styles.width = 20
                                 yield self.sdo_send_index
 
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_sub = Input("0x00")
+                                self.sdo_send_sub = Input(analyzer_defs.DEFAULT_SDO_SEND_SUB)
                                 self.sdo_send_sub.styles.width = 20
                                 yield self.sdo_send_sub
 
@@ -244,7 +244,7 @@ class display_tui:
                                 lbl = Input("Data", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_value = Input("1")
+                                self.sdo_send_value = Input(analyzer_defs.DEFAULT_SDO_SEND_DATA)
                                 self.sdo_send_value.styles.width = 20
                                 yield self.sdo_send_value
 
@@ -265,7 +265,7 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_send_repeat_value = Input("1000")
+                                self.sdo_send_repeat_value = Input(analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME)
                                 self.sdo_send_repeat_value.styles.width = 20
                                 yield self.sdo_send_repeat_value
                                 self.sdo_send_repeat = Switch()
@@ -284,7 +284,7 @@ class display_tui:
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_recv_node = Input("0x01")
+                                self.sdo_recv_node = Input(analyzer_defs.DEFAULT_SDO_RECV_NODE_ID)
                                 self.sdo_recv_node.styles.width = 20
                                 yield self.sdo_recv_node
 
@@ -292,14 +292,14 @@ class display_tui:
                                 lbl = Input("Index", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_recv_index = Input("0x6000")
+                                self.sdo_recv_index = Input(analyzer_defs.DEFAULT_SDO_RECV_INDEX)
                                 self.sdo_recv_index.styles.width = 20
                                 yield self.sdo_recv_index
 
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_recv_sub = Input("0x00")
+                                self.sdo_recv_sub = Input(analyzer_defs.DEFAULT_SDO_RECV_SUB)
                                 self.sdo_recv_sub.styles.width = 20
                                 yield self.sdo_recv_sub
 
@@ -307,7 +307,7 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.sdo_recv_repeat_value = Input("1000")
+                                self.sdo_recv_repeat_value = Input(analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME)
                                 self.sdo_recv_repeat_value.styles.width = 20
                                 yield self.sdo_recv_repeat_value
                                 self.sdo_recv_repeat = Switch()
@@ -326,7 +326,7 @@ class display_tui:
                                 lbl = Input("COB ID", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.pdo_cob = Input("0x202")
+                                self.pdo_cob = Input(analyzer_defs.DEFAULT_PDO_SEND_COB_ID)
                                 self.pdo_cob.styles.width = 20
                                 yield self.pdo_cob
 
@@ -334,7 +334,7 @@ class display_tui:
                                 lbl = Input("Data", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.pdo_data = Input("00 00 00 00 00 00 00 00")
+                                self.pdo_data = Input(analyzer_defs.DEFAULT_PDO_SEND_DATA)
                                 self.pdo_data.styles.width = 30
                                 yield self.pdo_data
 
@@ -342,7 +342,7 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
-                                self.pdo_send_repeat_value = Input("1000")
+                                self.pdo_send_repeat_value = Input(analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME)
                                 self.pdo_send_repeat_value.styles.width = 20
                                 yield self.pdo_send_repeat_value
                                 self.pdo_repeat = Switch()

@@ -707,9 +707,9 @@ class CANopenMainWindow(QMainWindow):
         # ==========================================================
         layout.addWidget(QLabel("<b>Send SDO (Write)</b>"))
 
-        self.sdo_node_edit = QLineEdit("0x01")
-        self.sdo_index_edit = QLineEdit("0x6000")
-        self.sdo_sub_edit = QLineEdit("0x00")
+        self.sdo_node_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_NODE_ID)
+        self.sdo_index_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_INDEX)
+        self.sdo_sub_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_SUB)
         self.sdo_value_edit = QLineEdit("1")
 
         self.sdo_size_combo = QComboBox()
@@ -729,7 +729,7 @@ class CANopenMainWindow(QMainWindow):
         layout.addLayout(grid)
 
         self.sdo_write_repeat_chk = QCheckBox("Repeat")
-        self.sdo_write_interval = QLineEdit("1000")
+        self.sdo_write_interval = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME)
         self.sdo_write_interval.setFixedWidth(70)
 
         repeat_layout = QHBoxLayout()
@@ -751,9 +751,9 @@ class CANopenMainWindow(QMainWindow):
         layout.addSpacing(8)
         layout.addWidget(QLabel("<b>Receive SDO (Read)</b>"))
 
-        self.sdo_recv_node_edit = QLineEdit("0x01")
-        self.sdo_recv_index_edit = QLineEdit("0x6000")
-        self.sdo_recv_sub_edit = QLineEdit("0x00")
+        self.sdo_recv_node_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_NODE_ID)
+        self.sdo_recv_index_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_INDEX)
+        self.sdo_recv_sub_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_SUB)
 
 
         grid = QGridLayout()
@@ -766,7 +766,7 @@ class CANopenMainWindow(QMainWindow):
         layout.addLayout(grid)
 
         self.sdo_read_repeat_chk = QCheckBox("Repeat")
-        self.sdo_read_interval = QLineEdit("1000")
+        self.sdo_read_interval = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME)
         self.sdo_read_interval.setFixedWidth(70)
 
         repeat_layout = QHBoxLayout()
@@ -789,8 +789,8 @@ class CANopenMainWindow(QMainWindow):
         layout.addSpacing(8)
         layout.addWidget(QLabel("<b>Send PDO</b>"))
 
-        self.pdo_cob_edit = QLineEdit("0x202")
-        self.pdo_data_edit = QLineEdit("00 00 00 00 00 00 00 00")
+        self.pdo_cob_edit = QLineEdit(analyzer_defs.DEFAULT_PDO_SEND_COB_ID)
+        self.pdo_data_edit = QLineEdit(analyzer_defs.DEFAULT_PDO_SEND_DATA)
 
         grid = QGridLayout()
         grid.addWidget(QLabel("COB-ID"), 0, 0)
@@ -800,7 +800,7 @@ class CANopenMainWindow(QMainWindow):
         layout.addLayout(grid)
 
         self.pdo_repeat_chk = QCheckBox("Repeat")
-        self.pdo_interval = QLineEdit("1000")
+        self.pdo_interval = QLineEdit(f"{analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME}")
         self.pdo_interval.setFixedWidth(70)
 
         repeat_layout = QHBoxLayout()

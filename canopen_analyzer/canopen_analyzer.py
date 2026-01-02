@@ -143,9 +143,7 @@ def main():
     # create chosen display thread
     display = None
     if args.mode == "cli":
-        display = display_cli(stats=stats,
-                             processed_frame=processed_frame,
-                             fixed=args.fixed)
+        display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
     elif args.mode == "tui":
         try:
             analyzer_defs.log.info("Loading TUI interface")
@@ -153,9 +151,9 @@ def main():
         except Exception as e:
             analyzer_defs.log.exception("Failed to start Textual TUI: %s", e)
             # fallback to legacy CLI thread if textual unavailable
-            display = display_cli(stats=stats, processed_frame=processed_frame, fixed=args.fixed)
+            display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
     elif args.mode == "gui":
-        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame,fixed=args.fixed)
+        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
 
     if display:
         display.start()

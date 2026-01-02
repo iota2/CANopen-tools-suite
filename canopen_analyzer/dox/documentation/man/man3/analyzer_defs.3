@@ -1,4 +1,4 @@
-.TH "analyzer_defs" 3 "Thu Jan 1 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "analyzer_defs" 3 "Fri Jan 2 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -58,6 +58,54 @@ analyzer_defs
 .br
 .RI "Default CAN interface to be loaded\&. "
 .ti -1c
+.RI "string \fBDEFAULT_PDO_SEND_COB_ID\fP = '0x202'"
+.br
+.RI "Default COB-ID for Send PDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_PDO_SEND_DATA\fP = '00 00 00 00 00 00 00 00'"
+.br
+.RI "Default Data for Send PDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_PDO_SEND_REPEAT_TIME\fP = '1000'"
+.br
+.RI "Default Repeat-Time for Send PDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_INDEX\fP = '0x6000'"
+.br
+.RI "Default Index for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_NODE_ID\fP = '0x01'"
+.br
+.RI "Default Node-ID for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_REPEAT_TIME\fP = '1000'"
+.br
+.RI "Default Repeat-Time for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_SUB\fP = '0x00'"
+.br
+.RI "Default Sub-Index for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_DATA\fP = '1'"
+.br
+.RI "Default Data for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_INDEX\fP = '0x6000'"
+.br
+.RI "Default Index for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_NODE_ID\fP = '0x01'"
+.br
+.RI "Default Node-ID for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_REPEAT_TIME\fP = '1000'"
+.br
+.RI "Default Repeat-Time for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_SUB\fP = '0x00'"
+.br
+.RI "Default Sub-Index for Send SDO\&. "
+.ti -1c
 .RI "int \fBFSYNC_EVERY\fP = 50"
 .br
 .RI "Frequency of filesystem synchronization (every N rows)\&. "
@@ -69,6 +117,10 @@ analyzer_defs
 .RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
 .br
 .RI "Default Logging level\&. "
+.ti -1c
+.RI "int \fBMAX_CLI_CMD_HISTORY\fP = 5"
+.br
+.RI "Maximum number remote node control commands to store in CLI\&. "
 .ti -1c
 .RI "int \fBMAX_FRAMES\fP = 500"
 .br
@@ -169,6 +221,54 @@ Default CAN bus bit rate (in bits per second)\&.
 
 .PP
 Default CAN interface to be loaded\&. 
+.SS "string DEFAULT_PDO_SEND_COB_ID = '0x202'"
+
+.PP
+Default COB-ID for Send PDO\&. 
+.SS "string DEFAULT_PDO_SEND_DATA = '00 00 00 00 00 00 00 00'"
+
+.PP
+Default Data for Send PDO\&. 
+.SS "string DEFAULT_PDO_SEND_REPEAT_TIME = '1000'"
+
+.PP
+Default Repeat-Time for Send PDO\&. 
+.SS "string DEFAULT_SDO_RECV_INDEX = '0x6000'"
+
+.PP
+Default Index for Receive SDO\&. 
+.SS "string DEFAULT_SDO_RECV_NODE_ID = '0x01'"
+
+.PP
+Default Node-ID for Receive SDO\&. 
+.SS "string DEFAULT_SDO_RECV_REPEAT_TIME = '1000'"
+
+.PP
+Default Repeat-Time for Receive SDO\&. 
+.SS "string DEFAULT_SDO_RECV_SUB = '0x00'"
+
+.PP
+Default Sub-Index for Receive SDO\&. 
+.SS "string DEFAULT_SDO_SEND_DATA = '1'"
+
+.PP
+Default Data for Send SDO\&. 
+.SS "string DEFAULT_SDO_SEND_INDEX = '0x6000'"
+
+.PP
+Default Index for Send SDO\&. 
+.SS "string DEFAULT_SDO_SEND_NODE_ID = '0x01'"
+
+.PP
+Default Node-ID for Send SDO\&. 
+.SS "string DEFAULT_SDO_SEND_REPEAT_TIME = '1000'"
+
+.PP
+Default Repeat-Time for Send SDO\&. 
+.SS "string DEFAULT_SDO_SEND_SUB = '0x00'"
+
+.PP
+Default Sub-Index for Send SDO\&. 
 .SS "int FSYNC_EVERY = 50"
 
 .PP
@@ -181,6 +281,10 @@ Module-level convenience logger (will propagate to root_logger handler)\&. Creat
 
 .PP
 Default Logging level\&. Set default log level to INFO\&. 
+.SS "int MAX_CLI_CMD_HISTORY = 5"
+
+.PP
+Maximum number remote node control commands to store in CLI\&. 
 .SS "int MAX_FRAMES = 500"
 
 .PP

@@ -1,4 +1,4 @@
-.TH "analyzer_defs.py" 3 "Thu Jan 1 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "analyzer_defs.py" 3 "Fri Jan 2 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -65,6 +65,54 @@ analyzer_defs.py
 .br
 .RI "Default CAN interface to be loaded\&. "
 .ti -1c
+.RI "string \fBDEFAULT_PDO_SEND_COB_ID\fP = '0x202'"
+.br
+.RI "Default COB-ID for Send PDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_PDO_SEND_DATA\fP = '00 00 00 00 00 00 00 00'"
+.br
+.RI "Default Data for Send PDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_PDO_SEND_REPEAT_TIME\fP = '1000'"
+.br
+.RI "Default Repeat-Time for Send PDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_INDEX\fP = '0x6000'"
+.br
+.RI "Default Index for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_NODE_ID\fP = '0x01'"
+.br
+.RI "Default Node-ID for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_REPEAT_TIME\fP = '1000'"
+.br
+.RI "Default Repeat-Time for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_RECV_SUB\fP = '0x00'"
+.br
+.RI "Default Sub-Index for Receive SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_DATA\fP = '1'"
+.br
+.RI "Default Data for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_INDEX\fP = '0x6000'"
+.br
+.RI "Default Index for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_NODE_ID\fP = '0x01'"
+.br
+.RI "Default Node-ID for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_REPEAT_TIME\fP = '1000'"
+.br
+.RI "Default Repeat-Time for Send SDO\&. "
+.ti -1c
+.RI "string \fBDEFAULT_SDO_SEND_SUB\fP = '0x00'"
+.br
+.RI "Default Sub-Index for Send SDO\&. "
+.ti -1c
 .RI "int \fBFSYNC_EVERY\fP = 50"
 .br
 .RI "Frequency of filesystem synchronization (every N rows)\&. "
@@ -76,6 +124,10 @@ analyzer_defs.py
 .RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
 .br
 .RI "Default Logging level\&. "
+.ti -1c
+.RI "int \fBMAX_CLI_CMD_HISTORY\fP = 5"
+.br
+.RI "Maximum number remote node control commands to store in CLI\&. "
 .ti -1c
 .RI "int \fBMAX_FRAMES\fP = 500"
 .br
