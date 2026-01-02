@@ -31,6 +31,20 @@ jobs:
     steps:
       - name: Checkout (full history and tags)
         uses: actions/checkout@v4
+
+      - name: Bump MAJOR version (reset minor & patch)
+        id: bump_major
+        run: |
+          set -e
+          CURRENT=$(cat VERSION | sed 's/^v//')
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          NEW_MAJOR=$((MAJOR + 1))
+          NEW_VERSION="v${NEW_MAJOR}.0.0"
+          echo "$NEW_VERSION" > VERSION
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Show bumped version
+        run: echo "Bumped release version to ${{ steps.bump_major.outputs.new_version }}"
         with:
           fetch-depth: 0
           persist-credentials: true
