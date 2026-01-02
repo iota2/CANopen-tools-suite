@@ -124,6 +124,8 @@ jobs:
         with:
           tag_name: ${{ steps.bump_major.outputs.new_version }}
           release_name: ${{ steps.bump_major.outputs.new_version }}
-          body: "Manual major release"
+          body: ${{ steps.gen_notes.outputs.body }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

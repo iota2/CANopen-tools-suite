@@ -18,26 +18,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
-## [v0.26.0] - 2026-01-02
-
 - Create release notes script, and use it in Release Job.
-
-## [v0.25.0] - 2026-01-02
-
-- Manual release script added bump version commit and release log generation.
-
-## [v0.24.0] - 2026-01-02
-
-- Manual release script fix for pulling tags.
-
-## [v0.23.0] - 2026-01-02
-
-- Fixed manual release script bugs.
-
-## [v0.22.0] - 2026-01-02
-
-- Updated manual release script to bump major version and reset minor.
 
 ## [v0.21.0] - 2026-01-02
 
