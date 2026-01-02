@@ -45,9 +45,13 @@ jobs:
 
       - name: Show bumped version
         run: echo "Bumped release version to ${{ steps.bump_major.outputs.new_version }}"
+        uses: actions/create-release@v1
         with:
-          fetch-depth: 0
-          persist-credentials: true
+           tag_name: "${{ steps.tagpick.outputs.tag }}"
+           release_name: "${{ steps.tagpick.outputs.tag }}"
+           body: "${{ steps.gen_notes.outputs.body }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Determine tag to release
         id: tagpick
