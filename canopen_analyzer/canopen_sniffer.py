@@ -56,7 +56,6 @@ import canopen
 
 from scapy.utils import PcapWriter
 from scapy.data import DLT_CAN_SOCKETCAN
-from can import Logger
 
 import analyzer_defs as analyzer_defs
 
