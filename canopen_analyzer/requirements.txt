@@ -22,5 +22,8 @@ rich>=13.7.0        # Rich tables & CLI rendering
 # Optional GUI backend (not required by default)
 PySide6>=6.6        # GUI placeholder backend
 
+# CAN packet saving
+scapy>=2.7.0        # Saving PCAP frames
+
 # Utilities
 pyyaml>=6.0.1       # Config & metadata helpers

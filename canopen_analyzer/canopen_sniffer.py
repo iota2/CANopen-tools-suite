@@ -10,20 +10,20 @@
 
 """!
 @file canopen_sniffer.py
-@brief Threaded CANopen raw frame sniffer and CSV exporter.
+@brief Threaded CANopen raw frame sniffer and exporter.
 @details
 This module implements the @ref canopen_sniffer thread, which connects to a
 SocketCAN interface, receives raw CAN frames, and forwards them for further
 processing.
 
-The sniffer optionally exports raw frames to CSV and attempts to attach to
-a CANopen network object for future extensions.
+The sniffer optionally exports raw frames to export file and attempts to
+attach to a CANopen network object for future extensions.
 
 ### Responsibilities
 - Open and manage the CAN socket interface
 - Receive raw CAN frames in a non-blocking loop
 - Push received frames to a shared processing queue
-- Optionally export raw frames to CSV
+- Optionally export raw frames to file
 - Perform graceful shutdown of CAN resources
 
 ### Design Notes
@@ -42,7 +42,9 @@ during shutdown or transient failures.
 
 import os
 import csv
+import json
 import time
+import struct
 import logging
 
 import threading
@@ -52,6 +54,9 @@ import can
 from can import exceptions as can_exceptions
 import canopen
 
+from scapy.utils import PcapWriter
+from scapy.data import DLT_CAN_SOCKETCAN
+
 import analyzer_defs as analyzer_defs
 
 class canopen_sniffer(threading.Thread):
@@ -59,19 +64,19 @@ class canopen_sniffer(threading.Thread):
     @details
     The sniffer opens a `socketcan` interface, receives `can.Message` frames,
     enqueues them on `raw_frame` for downstream processing, and optionally writes
-    raw frames to a CSV file for offline analysis. The thread supports a graceful
+    raw frames to an export file for offline analysis. The thread supports a graceful
     shutdown via `stop()`. Logging is performed on a per-instance logger.
     """
 
-    def __init__(self, interface: str, raw_frame: queue.Queue = None, requested_frame=None, export: bool = False):
+    def __init__(self, interface: str, raw_frame: queue.Queue = None, requested_frame=None, export: str | None = None):
         """! Initialize CAN sniffer thread and open resources.
         @details
         The constructor opens the socketcan Bus and attempts to connect a
-        CANopen Network (non-fatal). If CSV export is enabled, the CSV file
+        CANopen Network (non-fatal). If export is enabled, the export file
         and writer are created and a header row is persisted.
         @param interface CAN interface name as string (e.g., "can0" or "vcan0").
         @param raw_frame `queue.Queue` instance to push received frames for processing.
-        @param export If True, enable CSV export of raw frames to a file.
+        @param export `csv`, `json`, `pcap`: enable export of raw frames to a file.
         """
 
         super().__init__(daemon=True)
@@ -91,27 +96,28 @@ class canopen_sniffer(threading.Thread):
         ## CAN interface name used by the sniffer.
         self.interface = interface
 
-        ## Flag indicating whether CSV export is enabled.
-        self.export = export
+        ## Flag indicating whether export is enabled.
+        self.export = export  # None | csv | json | pcap
 
-        ## CSV file name used when export is enabled.
-        self.export_filename = f"{analyzer_defs.APP_NAME}_raw.csv"
+        ## File name used when export is enabled.
+        self.export_filename = None
 
-        ## File object for CSV export (or None if not exporting).
+        ## File object for export (or None if not exporting).
         self.export_file = None
 
-        ## csv.writer instance used to write CSV rows (or None).
+        ## Writer instance used to write exported data (or None).
         self.export_writer = None
 
         ## Export serial number (incremented for each exported row).
         self.export_serial_number = 1
 
-        if self.export:
+        if self.export == "csv":
             try:
+                self.export_filename = f"{analyzer_defs.APP_NAME}_raw.csv"
                 self.export_file = open(self.export_filename, "w", newline="")
                 self.export_writer = csv.writer(self.export_file)
                 self.export_writer.writerow(
-                    ["S.No.", "Time", "COB-ID", "Error", "Raw"]
+                    ["S.No.", "Time", "Type", "COB-ID", "Error", "Raw"]
                 )
                 # persist header
                 try:
@@ -122,6 +128,34 @@ class canopen_sniffer(threading.Thread):
                 self.log.info(f"CSV export enabled → {self.export_filename}")
             except Exception as e:
                 self.log.exception("Failed to open CSV export file: %s", e)
+                self.export = False
+
+        elif self.export == "json":
+            try:
+                self.export_filename = f"{analyzer_defs.APP_NAME}_raw.json"
+                self.export_file = open(self.export_filename, "w")
+
+                # JSON array start
+                self.export_file.write("[\n")
+                self._json_first = True
+
+                self.log.info(f"JSON export enabled → {self.export_filename}")
+            except Exception as e:
+                self.log.exception("Failed to open JSON export file: %s", e)
+                self.export = False
+
+        elif self.export == "pcap":
+            try:
+                self.export_filename = f"{analyzer_defs.APP_NAME}_raw.pcap"
+                self.pcap_writer = PcapWriter(
+                    self.export_filename,
+                    append=False,
+                    sync=True,
+                    linktype=DLT_CAN_SOCKETCAN
+                )
+                self.log.info("PCAP export enabled (Scapy, SocketCAN) → %s", self.export_filename)
+            except Exception as e:
+                self.log.exception("Failed to open PCAP export file: %s", e)
                 self.export = False
 
         # Open CAN socket
@@ -140,6 +174,15 @@ class canopen_sniffer(threading.Thread):
             self.log.info(f"Connected Network on {interface}")
         except Exception:
             self.log.warning("Network connection failed (not critical)")
+
+    def _json_safe_raw_frame(self, frame: dict) -> dict:
+        return {
+            "time": analyzer_defs.now_str(),
+            "type": frame["type"],
+            "cob": frame["cob"],
+            "error": frame["error"],
+            "raw": analyzer_defs.bytes_to_hex(frame["raw"]),
+        }
 
     def _ensure_bus(self):
         """! Ensure CAN bus is available before transmitting."""
@@ -188,42 +231,92 @@ class canopen_sniffer(threading.Thread):
         else:
             self.log.warning("Unknown request type: %s", rtype)
 
-    # --- CSV export helper ---
-    def save_frame_to_csv(self, type: str, cob: int, error: bool, raw: str):
-        """! Save a received CAN frame (raw view) to the CSV export file.
-
+    # --- File export helper ---
+    def export_raw_frame(self, frame: dict, msg: can.Message | None = None):
+        """! Save a received CAN frame (raw view) to an export file.
         @details
-        Writes a single CSV row with a serial number, timestamp, COB-ID,
+        Writes a single row with a serial number, timestamp, COB-ID,
         error flag and raw payload. Periodically flushes and fsyncs the file
         according to `defs.FSYNC_EVERY`.
-        @param cob COB-ID as integer of the CAN frame.
-        @param error Boolean indicating whether the frame is an error frame.
-        @param raw Hex string representation of the payload.
+        @param frame Frame to be exported.
+        @param msg CANopen message to be exported.
         @return None.
         """
 
-        if not self.export_writer:
+        if not self.export:
             return
-        try:
-            self.export_writer.writerow([
-                self.export_serial_number,
-                analyzer_defs.now_str(),
-                type,
-                f"0x{cob:03X}",
-                error,
-                raw
-            ])
-            self.export_serial_number += 1
-            # flush and fsync periodically
-            try:
-                self.export_file.flush()
-                if (self.export_serial_number % analyzer_defs.FSYNC_EVERY) == 0:
-                    os.fsync(self.export_file.fileno())
-            except Exception:
-                pass
-        except Exception as e:
-            self.log.error("CSV export failed: %s", e)
 
+        if self.export == "csv":
+            try:
+                self.export_writer.writerow([
+                    self.export_serial_number,
+                    analyzer_defs.now_str(),
+                    frame["type"],
+                    f"0x{frame['cob']:03X}",
+                    frame["error"],
+                    analyzer_defs.bytes_to_hex(frame["raw"]),
+                ])
+                self.export_serial_number += 1
+                # flush and fsync periodically
+                try:
+                    self.export_file.flush()
+                    if (self.export_serial_number % analyzer_defs.FSYNC_EVERY) == 0:
+                        os.fsync(self.export_file.fileno())
+                except Exception:
+                    pass
+            except Exception as e:
+                self.log.error("CSV export failed: %s", e)
+
+        elif self.export == "json":
+            try:
+                obj = self._json_safe_raw_frame(frame)
+
+                if not self._json_first:
+                    self.export_file.write(",\n")
+                self._json_first = False
+
+                json.dump(obj, self.export_file, indent=2, ensure_ascii=False)
+
+                try:
+                    self.export_file.flush()
+                except Exception:
+                    pass
+
+            except Exception as e:
+                self.log.error("JSON export failed: %s", e)
+
+        elif self.export == "pcap" and msg is not None and self.pcap_writer:
+            try:
+                # --- CAN ID (29-bit, then flags) ---
+                can_id = msg.arbitration_id & 0x1FFFFFFF
+
+                if msg.is_extended_id:
+                    can_id |= 0x80000000  # CAN_EFF_FLAG
+                if msg.is_remote_frame:
+                    can_id |= 0x40000000  # CAN_RTR_FLAG
+
+                # IMPORTANT:
+                # CANopen EMCY is NOT a SocketCAN error frame
+                if msg.is_error_frame and msg.arbitration_id == 0:
+                    can_id |= 0x20000000  # CAN_ERR_FLAG
+
+                # --- DLC must be actual data length ---
+                data = bytes(msg.data)
+                can_dlc = len(data)
+                data = data.ljust(8, b"\x00")
+
+                # --- MUST be network (big-endian) ---
+                frame = struct.pack(
+                    "!IB3x8s",
+                    can_id,
+                    can_dlc,
+                    data
+                )
+
+                self.pcap_writer.write(frame)
+
+            except Exception as e:
+                self.log.error("PCAP export failed: %s", e)
 
     # --- Message handling ---
     def handle_received_message(self, msg: can.Message):
@@ -232,7 +325,7 @@ class canopen_sniffer(threading.Thread):
         @details
         Extracts arbitration id, raw payload and error flag, builds a small
         frame dictionary containing a timestamp and pushes it to `raw_frame`.
-        Also logs the raw frame and triggers CSV export if enabled.
+        Also logs the raw frame and triggers export if enabled.
         @param msg The `can.Message` instance received from the bus.
         """
 
@@ -242,13 +335,11 @@ class canopen_sniffer(threading.Thread):
         error = msg.is_error_frame
 
         frame = {"time": time.time(), "type": "rx", "cob": cob, "error": error, "raw": raw}
-        # Push frame to queue
+        # Push frame to queue and export if enabled.
         self.raw_frame.put(frame)
+        self.export_raw_frame(frame, msg)
 
         self.log.debug(f"Rx Raw frame: [{analyzer_defs.now_str()}] [0x{cob:03X}] [{error}] [{analyzer_defs.bytes_to_hex(raw)}]")
-
-        # Export to CSV
-        self.save_frame_to_csv("rx", cob, error, analyzer_defs.bytes_to_hex(raw))
 
     # --- SDO Download (Expedited Write) ---
     def send_sdo_download(self, node_id: int, index: int, subindex: int, value: int, size: int):
@@ -286,14 +377,12 @@ class canopen_sniffer(threading.Thread):
         )
 
         self.bus.send(msg)
-        # frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": analyzer_defs.bytes_to_hex(value)}
         frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
+        # Push frame to queue and export if enabled.
         self.raw_frame.put(frame)
+        self.export_raw_frame(frame, msg)
 
         self.log.debug("SDO-Download Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(payload)))
-
-        # Export to CSV
-        self.save_frame_to_csv("SDO-Download Tx", cob_id, "", analyzer_defs.bytes_to_hex(value))
 
     # --- SDO Upload Request (Read) ---
     def send_sdo_upload_request(self, node_id: int, index: int, subindex: int):
@@ -322,13 +411,11 @@ class canopen_sniffer(threading.Thread):
         self.bus.send(msg)
 
         frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
+        # Push frame to queue and export if enabled.
         self.raw_frame.put(frame)
+        self.export_raw_frame(frame, msg)
 
         self.log.debug("SDO-Upload Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(payload)))
-
-        # Export to CSV
-        self.save_frame_to_csv("SDO-Upload Tx", cob_id, "", analyzer_defs.bytes_to_hex(payload))
-
 
     # --- Raw PDO Send ---
     def send_raw_pdo(self, cob_id: int, data: bytes):
@@ -351,13 +438,11 @@ class canopen_sniffer(threading.Thread):
         self.bus.send(msg)
 
         frame = {"time": analyzer_defs.now_str(), "type": "tx", "cob": cob_id, "error": "", "raw": msg.data}
+        # Push frame to queue and export if enabled.
         self.raw_frame.put(frame)
+        self.export_raw_frame(frame, msg)
 
         self.log.debug("PDO Tx Raw frame: [%s] [0x%03X] [%s] [%s]", analyzer_defs.now_str(), cob_id, "", analyzer_defs.bytes_to_hex(bytes(data)))
-
-        # Export to CSV
-        self.save_frame_to_csv("PDO Tx", cob_id, "", analyzer_defs.bytes_to_hex(data))
-
 
     def run(self):
         """! Main loop of the sniffer thread.
@@ -365,7 +450,7 @@ class canopen_sniffer(threading.Thread):
         @details
         Continuously receives frames from the CAN bus using a short timeout,
         handles interrupt-like exceptions gracefully, and delegates message
-        processing to `handle_received_message`. On exit, CSV file and bus resources
+        processing to `handle_received_message`. On exit, export file and bus resources
         are closed/shutdown cleanly.
         """
         self.log.info("Sniffer thread started (interface=%s)", self.interface)
@@ -428,19 +513,46 @@ class canopen_sniffer(threading.Thread):
                         self.handle_received_message(msg)
                     except Exception:
                         self.log.exception("Exception while handling message")
+
         finally:
-            # Always attempt to flush/close CSV (if any) and shutdown bus safely.
-            if getattr(self, "export_file", None):
-                try:
+            # Always attempt to flush/close export (if any) and shutdown resources safely.
+            try:
+                export_file = getattr(self, "export_file", None)
+
+                if export_file:
+                    # Format-specific finalization
+                    if self.export == "json":
+                        try:
+                            export_file.write("\n]\n")
+                        except Exception:
+                            pass
+
+                    # Best-effort flush + fsync for file-based exports
                     try:
-                        self.export_file.flush()
-                        os.fsync(self.export_file.fileno())
+                        export_file.flush()
+                        os.fsync(export_file.fileno())
                     except Exception:
                         pass
-                    self.export_file.close()
-                    self.log.info("Raw CSV export file closed")
-                except Exception:
-                    self.log.exception("Failed to close raw CSV file")
+
+                    try:
+                        export_file.close()
+                    except Exception:
+                        pass
+
+                # PCAP writer has its own close semantics
+                pcap_writer = getattr(self, "pcap_writer", None)
+                if pcap_writer:
+                    try:
+                        pcap_writer.close()
+                        self.log.info("PCAP writer closed")
+                    except Exception as e:
+                        self.log.warning("Failed to close PCAP writer: %s", e)
+
+                if export_file or pcap_writer:
+                    self.log.info("Raw export resources closed")
+
+            except Exception:
+                self.log.exception("Failed during raw export cleanup")
 
             # shutdown bus
             try:

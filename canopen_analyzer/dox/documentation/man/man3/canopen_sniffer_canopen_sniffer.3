@@ -1,4 +1,4 @@
-.TH "canopen_sniffer" 3 "Fri Jan 2 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "canopen_sniffer" 3 "Sat Jan 3 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,14 +13,18 @@ Inherits Thread\&.
 .PP 
 CANopen bus sniffer thread\&. 
 
-The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP frames, enqueues them on \fCraw_frame\fP for downstream processing, and optionally writes raw frames to a CSV file for offline analysis\&. The thread supports a graceful shutdown via \fC\fBstop()\fP\fP\&. Logging is performed on a per-instance logger\&. 
+The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP frames, enqueues them on \fCraw_frame\fP for downstream processing, and optionally writes raw frames to an export file for offline analysis\&. The thread supports a graceful shutdown via \fC\fBstop()\fP\fP\&. Logging is performed on a per-instance logger\&. 
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, str \fBinterface\fP, queue\&.Queue \fBraw_frame\fP=None, \fBrequested_frame\fP=None, bool \fBexport\fP=False)"
+.RI "def \fB__init__\fP (self, str \fBinterface\fP, queue\&.Queue \fBraw_frame\fP=None, \fBrequested_frame\fP=None, str|None \fBexport\fP=None)"
 .br
 .RI "Initialize CAN sniffer thread and open resources\&. "
+.ti -1c
+.RI "def \fBexport_raw_frame\fP (self, dict frame, can\&.Message|None msg=None)"
+.br
+.RI "Save a received CAN frame (raw view) to an export file\&. "
 .ti -1c
 .RI "def \fBhandle_received_message\fP (self, can\&.Message msg)"
 .br
@@ -29,10 +33,6 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .RI "def \fBrun\fP (self)"
 .br
 .RI "Main loop of the sniffer thread\&. "
-.ti -1c
-.RI "def \fBsave_frame_to_csv\fP (self, str type, int cob, bool error, str raw)"
-.br
-.RI "Save a received CAN frame (raw view) to the CSV export file\&. "
 .ti -1c
 .RI "def \fBsend_raw_pdo\fP (self, int cob_id, bytes data)"
 .br
@@ -60,15 +60,15 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "\fBexport\fP"
 .br
-.RI "Flag indicating whether CSV export is enabled\&. "
+.RI "Flag indicating whether export is enabled\&. "
 .ti -1c
 .RI "\fBexport_file\fP"
 .br
-.RI "File object for CSV export (or None if not exporting)\&. "
+.RI "File object for export (or None if not exporting)\&. "
 .ti -1c
 .RI "\fBexport_filename\fP"
 .br
-.RI "CSV file name used when export is enabled\&. "
+.RI "File name used when export is enabled\&. "
 .ti -1c
 .RI "\fBexport_serial_number\fP"
 .br
@@ -76,7 +76,7 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "\fBexport_writer\fP"
 .br
-.RI "csv\&.writer instance used to write CSV rows (or None)\&. "
+.RI "Writer instance used to write exported data (or None)\&. "
 .ti -1c
 .RI "\fBinterface\fP"
 .br
@@ -89,6 +89,9 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .RI "\fBnetwork\fP"
 .br
 .RI "Optional CANopen\&.Network instance (connected if possible)\&. "
+.ti -1c
+.RI "\fBpcap_writer\fP"
+.br
 .ti -1c
 .RI "\fBraw_frame\fP"
 .br
@@ -113,10 +116,16 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .RI "def \fB_handle_requested_frame\fP (self)"
 .br
 .RI "Dispatch queued control commands from UI layers\&. "
+.ti -1c
+.RI "dict \fB_json_safe_raw_frame\fP (self, dict frame)"
+.br
 .in -1c
 .SS "Private Attributes"
 
 .in +1c
+.ti -1c
+.RI "\fB_json_first\fP"
+.br
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -124,10 +133,10 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, str interface, queue\&.Queue  raw_frame = \fCNone\fP,  requested_frame = \fCNone\fP, bool  export = \fCFalse\fP)"
+.SS "def __init__ ( self, str interface, queue\&.Queue  raw_frame = \fCNone\fP,  requested_frame = \fCNone\fP, str | None  export = \fCNone\fP)"
 
 .PP
-Initialize CAN sniffer thread and open resources\&. The constructor opens the socketcan Bus and attempts to connect a CANopen Network (non-fatal)\&. If CSV export is enabled, the CSV file and writer are created and a header row is persisted\&. 
+Initialize CAN sniffer thread and open resources\&. The constructor opens the socketcan Bus and attempts to connect a CANopen Network (non-fatal)\&. If export is enabled, the export file and writer are created and a header row is persisted\&. 
 .PP
 \fBParameters\fP
 .RS 4
@@ -135,7 +144,7 @@ Initialize CAN sniffer thread and open resources\&. The constructor opens the so
 .br
 \fIraw_frame\fP \fCqueue\&.Queue\fP instance to push received frames for processing\&. 
 .br
-\fIexport\fP If True, enable CSV export of raw frames to a file\&. 
+\fIexport\fP \fCcsv\fP, \fCjson\fP, \fCpcap\fP: enable export of raw frames to a file\&. 
 .RE
 .PP
 
@@ -153,6 +162,26 @@ Ensure CAN bus is available before transmitting\&.
 
 .PP
 Dispatch queued control commands from UI layers\&. 
+.SS " dict _json_safe_raw_frame ( self, dict frame)\fC [private]\fP"
+
+.SS "def export_raw_frame ( self, dict frame, can\&.Message | None  msg = \fCNone\fP)"
+
+.PP
+Save a received CAN frame (raw view) to an export file\&. Writes a single row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIframe\fP Frame to be exported\&. 
+.br
+\fImsg\fP CANopen message to be exported\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+None\&. 
+.RE
+.PP
+
 .SS "def handle_received_message ( self, can\&.Message msg)"
 
 .PP
@@ -162,7 +191,7 @@ Handle a received CAN message\&.
    @details
    Extracts arbitration id, raw payload and error flag, builds a small
    frame dictionary containing a timestamp and pushes it to `raw_frame`.
-   Also logs the raw frame and triggers CSV export if enabled.
+   Also logs the raw frame and triggers export if enabled.
    @param msg The `can.Message` instance received from the bus.
 
 .fi
@@ -177,26 +206,8 @@ Main loop of the sniffer thread\&.
    @details
    Continuously receives frames from the CAN bus using a short timeout,
    handles interrupt-like exceptions gracefully, and delegates message
-   processing to `handle_received_message`. On exit, CSV file and bus resources
+   processing to `handle_received_message`. On exit, export file and bus resources
    are closed/shutdown cleanly.
-
-.fi
-.PP
- 
-.SS "def save_frame_to_csv ( self, str type, int cob, bool error, str raw)"
-
-.PP
-Save a received CAN frame (raw view) to the CSV export file\&. 
-.PP
-.nf
-   @details
-   Writes a single CSV row with a serial number, timestamp, COB-ID,
-   error flag and raw payload. Periodically flushes and fsyncs the file
-   according to `defs.FSYNC_EVERY`.
-   @param cob COB-ID as integer of the CAN frame.
-   @param error Boolean indicating whether the frame is an error frame.
-   @param raw Hex string representation of the payload.
-   @return None.
 
 .fi
 .PP
@@ -254,6 +265,8 @@ Request the sniffer thread to stop and optionally shutdown the bus\&. Signals th
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_json_first\fC [private]\fP"
+
 .SS "_stop_event\fC [private]\fP"
 
 .PP
@@ -265,15 +278,15 @@ CAN bus instance with configuration loading\&.
 .SS "export"
 
 .PP
-Flag indicating whether CSV export is enabled\&. 
+Flag indicating whether export is enabled\&. 
 .SS "export_file"
 
 .PP
-File object for CSV export (or None if not exporting)\&. 
+File object for export (or None if not exporting)\&. 
 .SS "export_filename"
 
 .PP
-CSV file name used when export is enabled\&. 
+File name used when export is enabled\&. 
 .SS "export_serial_number"
 
 .PP
@@ -281,7 +294,7 @@ Export serial number (incremented for each exported row)\&.
 .SS "export_writer"
 
 .PP
-csv\&.writer instance used to write CSV rows (or None)\&. 
+Writer instance used to write exported data (or None)\&. 
 .SS "interface"
 
 .PP
@@ -294,6 +307,8 @@ Logger instance for this sniffer\&.
 
 .PP
 Optional CANopen\&.Network instance (connected if possible)\&. 
+.SS "pcap_writer"
+
 .SS "raw_frame"
 
 .PP

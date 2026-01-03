@@ -88,7 +88,7 @@ def main():
     p.add_argument("--bitrate", type=int, default=analyzer_defs.DEFAULT_CAN_BIT_RATE, help="CAN bitrate (default: {analyzer_defs.DEFAULT_CAN_BIT_RATE})")
     p.add_argument("--eds", help="EDS file path (optional)")
     p.add_argument("--fixed", action="store_true", help="update rows instead of scrolling")
-    p.add_argument("--export", action="store_true", help="export received frames to CSV")
+    p.add_argument("--export", default="csv", choices=["csv", "json", "pcap"], help="export received frames")
     p.add_argument("--log", action="store_true", help="enable logging")
     args = p.parse_args()
 
