@@ -1,0 +1,6 @@
+<map id="_json_safe_processed_frame" name="_json_safe_processed_frame">
+<area shape="rect" id="node1" title=" " alt="" coords="547,5,711,47"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,13,499,39"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="save_processed_frame" name="save_processed_frame">
+<area shape="rect" id="node1" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="5,42,177,69"/>
+<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="240,5,393,47"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="225,71,408,98"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title=" " alt="" coords="456,64,620,105"/>
+</map>

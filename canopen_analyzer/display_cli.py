@@ -328,15 +328,10 @@ class display_cli(threading.Thread):
 
         return "🟢" if key in self._repeat_tasks else "🔴"
 
-    def _remote_status_title(self) -> str:
+    def _get_remote_repeat_status(self, type: str) -> str:
         """! Build Remote Node Control status title."""
 
-        return (
-            "Remote Node Control Status - "
-            f"Send SDO {self._repeat_status_icon('sdo_send')} | "
-            f"Recv SDO {self._repeat_status_icon('sdo_recv')} | "
-            f"Send PDO {self._repeat_status_icon('pdo_send')}"
-        )
+        return self._repeat_status_icon(type)
 
     def _handle_remote_command(self, cmd: str):
         """! Parse and dispatch remote node control commands with defaults and status feedback."""
@@ -635,8 +630,9 @@ class display_cli(threading.Thread):
         t_remote.add_row(Text(f"> {self.remote_cmd_input}{cursor}", style="bold purple"))
 
         # Remote Node Status -----------------------------------------------------
-        t_status = Table(title=self._remote_status_title(), expand=True, box=box.SQUARE, style="purple")
+        t_status = Table(title="Remote Node Commands & Status", expand=True, box=box.SQUARE, style="purple")
         t_status.add_column("Commands", no_wrap=True)
+        t_status.add_column("Status", no_wrap=True)
 
         # Send SDO
         t_status.add_row(Text("> send sdo"\
@@ -646,6 +642,8 @@ class display_cli(threading.Thread):
                                 f" data[{analyzer_defs.DEFAULT_SDO_SEND_DATA}]"\
                                 f" size<1/2/4>"\
                                 f" <repeat(ms)>[{analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME}]",
+                                style="bold cyan"),
+                         Text(f"Repeat send sdo: {self._get_remote_repeat_status('sdo_send')}",
                                 style="bold cyan"))
         t_status.add_row(Text("\t\t > send sdo stop", style="cyan"))
 
@@ -655,6 +653,8 @@ class display_cli(threading.Thread):
                                 f" index[{analyzer_defs.DEFAULT_SDO_RECV_INDEX}]"\
                                 f" sub[{analyzer_defs.DEFAULT_SDO_RECV_SUB}]"\
                                 f" <repeat(ms)>[{analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME}]",
+                                style="bold magenta"),
+                         Text(f"Repeat recv sdo: {self._get_remote_repeat_status('sdo_recv')}",
                                 style="bold magenta"))
         t_status.add_row(Text("\t\t > recv sdo stop", style="magenta"))
 
@@ -663,6 +663,8 @@ class display_cli(threading.Thread):
                                 f" cob-id[{analyzer_defs.DEFAULT_PDO_SEND_COB_ID}]"\
                                 f" data[{analyzer_defs.DEFAULT_PDO_SEND_DATA}]"
                                 f" <repeat(ms)>[{analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME}]",
+                                style="bold green"),
+                         Text(f"Repeat send pdo: {self._get_remote_repeat_status('pdo_send')}",
                                 style="bold green"))
         t_status.add_row(Text("\t\t > send pdo stop", style="green"))
 
@@ -670,7 +672,7 @@ class display_cli(threading.Thread):
         layout = Table.grid(expand=True)
         layout.add_row(t_proto, None, t_bus)
         layout.add_row(t_pdo, None, t_sdo)
-        layout.add_row(t_remote, None, t_status)
+        layout.add_row(t_status, None, t_remote)
 
         return layout
 

@@ -2,11 +2,11 @@ var classdisplay__cli_1_1display__cli =
 [
     [ "__init__", "classdisplay__cli_1_1display__cli.html#a0fbfc8a62c9f2a050e8bdf045e0b4a7a", null ],
     [ "_build_bus_stats_table", "classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b", null ],
+    [ "_get_remote_repeat_status", "classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650", null ],
     [ "_handle_remote_command", "classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3", null ],
     [ "_input_loop", "classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32", null ],
     [ "_parse_hex", "classdisplay__cli_1_1display__cli.html#aa3061b7d2aaefa86fd296b3a5e478f02", null ],
     [ "_parse_hex_bytes", "classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d", null ],
-    [ "_remote_status_title", "classdisplay__cli_1_1display__cli.html#a96eac299cf440987d4131ed4ad4729a6", null ],
     [ "_render_tables", "classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e", null ],
     [ "_repeat_status_icon", "classdisplay__cli_1_1display__cli.html#ac948beb9ae0c2f6673d5f707feef7f93", null ],
     [ "_sparkline", "classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1", null ],

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sdo_5fstats_302',['sdo_stats',['../classbus__stats_1_1bus__stats_1_1sdo__stats.html',1,'bus_stats::bus_stats']]],
-  ['stats_5fdata_303',['stats_data',['../classbus__stats_1_1bus__stats_1_1stats__data.html',1,'bus_stats::bus_stats']]]
+  ['sdo_5fstats_306',['sdo_stats',['../classbus__stats_1_1bus__stats_1_1sdo__stats.html',1,'bus_stats::bus_stats']]],
+  ['stats_5fdata_307',['stats_data',['../classbus__stats_1_1bus__stats_1_1stats__data.html',1,'bus_stats::bus_stats']]]
 ];

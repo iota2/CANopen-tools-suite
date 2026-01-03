@@ -180,6 +180,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a50a5f1ef7d26ba290bf86d97cf6ef87b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b">_build_bus_stats_table</a> (self)</td></tr>
 <tr class="memdesc:a50a5f1ef7d26ba290bf86d97cf6ef87b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a Bus Stats table by querying latest stats snapshot (<a class="el" href="namespacebus__stats.html">bus_stats</a> owns all calculations).  <a href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b">More...</a><br /></td></tr>
 <tr class="separator:a50a5f1ef7d26ba290bf86d97cf6ef87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a434116f4be6b90e28c281592310ad650"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650">_get_remote_repeat_status</a> (self, str type)</td></tr>
+<tr class="memdesc:a434116f4be6b90e28c281592310ad650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build Remote Node Control status title.  <a href="classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650">More...</a><br /></td></tr>
+<tr class="separator:a434116f4be6b90e28c281592310ad650"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a579ffe0de1de8798e0181daf1e85faf3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3">_handle_remote_command</a> (self, str cmd)</td></tr>
 <tr class="memdesc:a579ffe0de1de8798e0181daf1e85faf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse and dispatch remote node control commands with defaults and status feedback.  <a href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3">More...</a><br /></td></tr>
 <tr class="separator:a579ffe0de1de8798e0181daf1e85faf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,9 +195,6 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a5f2f3535210b2b67e36cc9a77edf286d"><td class="memItemLeft" align="right" valign="top">bytes&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d">_parse_hex_bytes</a> (self, str data)</td></tr>
 <tr class="memdesc:a5f2f3535210b2b67e36cc9a77edf286d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse space-separated hex bytes.  <a href="classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d">More...</a><br /></td></tr>
 <tr class="separator:a5f2f3535210b2b67e36cc9a77edf286d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96eac299cf440987d4131ed4ad4729a6"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a96eac299cf440987d4131ed4ad4729a6">_remote_status_title</a> (self)</td></tr>
-<tr class="memdesc:a96eac299cf440987d4131ed4ad4729a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build Remote Node Control status title.  <a href="classdisplay__cli_1_1display__cli.html#a96eac299cf440987d4131ed4ad4729a6">More...</a><br /></td></tr>
-<tr class="separator:a96eac299cf440987d4131ed4ad4729a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5be7868f3f60b2c4a8cdb0eba6ce1a0e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e">_render_tables</a> (self)</td></tr>
 <tr class="memdesc:a5be7868f3f60b2c4a8cdb0eba6ce1a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render tables for displaying CLI data.  <a href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e">More...</a><br /></td></tr>
 <tr class="separator:a5be7868f3f60b2c4a8cdb0eba6ce1a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -323,6 +323,53 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="263,5,433,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a434116f4be6b90e28c281592310ad650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a434116f4be6b90e28c281592310ad650">&#9670;&nbsp;</a></span>_get_remote_repeat_status()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str _get_remote_repeat_status </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build Remote Node Control status title. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__cli_1_1display__cli_a434116f4be6b90e28c281592310ad650_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a434116f4be6b90e28c281592310ad650_cgraph" alt=""/></div>
+<map name="aclassdisplay__cli_1_1display__cli_a434116f4be6b90e28c281592310ad650_cgraph" id="aclassdisplay__cli_1_1display__cli_a434116f4be6b90e28c281592310ad650_cgraph">
+<area shape="rect" title="Build Remote Node Control status title." alt="" coords="5,5,159,47"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ac948beb9ae0c2f6673d5f707feef7f93" title="Return status icon for a repeat task." alt="" coords="207,13,359,39"/>
 </map>
 </div>
 
@@ -541,44 +588,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a96eac299cf440987d4131ed4ad4729a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96eac299cf440987d4131ed4ad4729a6">&#9670;&nbsp;</a></span>_remote_status_title()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"> str _remote_status_title </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Build Remote Node Control status title. </p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdisplay__cli_1_1display__cli_a96eac299cf440987d4131ed4ad4729a6_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a96eac299cf440987d4131ed4ad4729a6_icgraph" alt=""/></div>
-<map name="aclassdisplay__cli_1_1display__cli_a96eac299cf440987d4131ed4ad4729a6_icgraph" id="aclassdisplay__cli_1_1display__cli_a96eac299cf440987d4131ed4ad4729a6_icgraph">
-<area shape="rect" title="Build Remote Node Control status title." alt="" coords="263,5,419,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
-</map>
-</div>
-
-</div>
-</div>
 <a id="a5be7868f3f60b2c4a8cdb0eba6ce1a0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5be7868f3f60b2c4a8cdb0eba6ce1a0e">&#9670;&nbsp;</a></span>_render_tables()</h2>
 
@@ -609,9 +618,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph" id="aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph">
-<area shape="rect" title="Render tables for displaying CLI data." alt="" coords="5,31,124,57"/>
+<area shape="rect" title="Render tables for displaying CLI data." alt="" coords="5,5,124,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="172,5,343,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a96eac299cf440987d4131ed4ad4729a6" title="Build Remote Node Control status title." alt="" coords="179,56,335,83"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="391,5,480,32"/>
 </map>
 </div>
@@ -662,6 +670,15 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Return status icon for a repeat task. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__cli_1_1display__cli_ac948beb9ae0c2f6673d5f707feef7f93_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_ac948beb9ae0c2f6673d5f707feef7f93_icgraph" alt=""/></div>
+<map name="aclassdisplay__cli_1_1display__cli_ac948beb9ae0c2f6673d5f707feef7f93_icgraph" id="aclassdisplay__cli_1_1display__cli_ac948beb9ae0c2f6673d5f707feef7f93_icgraph">
+<area shape="rect" title="Return status icon for a repeat task." alt="" coords="207,13,359,39"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650" title="Build Remote Node Control status title." alt="" coords="5,5,159,47"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -862,10 +879,10 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Run CLI based CANopen display." alt="" coords="5,416,48,443"/>
+<area shape="rect" title="Run CLI based CANopen display." alt="" coords="5,351,48,377"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,233,229,260"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,416,239,443"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,467,264,493"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,351,239,377"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,401,264,428"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,81,535,108"/>
 <area shape="rect" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,132,527,159"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,183,461,209"/>
@@ -877,7 +894,6 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="622,107,730,133"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="793,132,900,159"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,416,521,443"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a96eac299cf440987d4131ed4ad4729a6" title="Build Remote Node Control status title." alt="" coords="357,467,513,493"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="631,416,721,443"/>
 </map>
 </div>

@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 - Create release notes script, and use it in Release Job.
+- Expanded export to CSV, JSON and PCAP.
 
 ## [v0.21.0] - 2026-01-02
 
