@@ -69,6 +69,7 @@ def clean_int(val: str) -> int:
     return int(val.split(";")[0].strip(), 0)
 
 
+# ---------------- EDS Services ----------------
 def parse_tpdos_from_eds(eds_path):
     """Parse TPDO COB-IDs and mapping entries from EDS (CiA-301 compliant)."""
     cfg = configparser.ConfigParser(strict=False, delimiters=("="))
@@ -182,8 +183,8 @@ def parse_rpdos_from_eds(eds_path):
 
 
 def parse_sdos_from_eds(eds_path):
-    """Parse OD entries with AccessType for SDO handling."""
-    cfg = configparser.ConfigParser(strict=False, delimiters=("="))
+    """Parse OD entries with AccessType and DataType for SDO handling."""
+    cfg = configparser.ConfigParser(strict=False, delimiters=("=",))
     cfg.optionxform = str
     cfg.read(eds_path)
 
@@ -204,36 +205,42 @@ def parse_sdos_from_eds(eds_path):
 
             access = cfg[sec].get("AccessType", "UNKNOWN").strip().lower()
             if access == "unknown":
-                continue  # HARD RULE: invisible to SDO
-
-            if "DefaultValue" not in cfg[sec]:
                 continue
 
-            value = clean_int(cfg[sec]["DefaultValue"])
+            dtype = int(cfg[sec].get("DataType", "0"), 0)
+
+            default_raw = cfg[sec].get("DefaultValue", "").strip()
+
+            # ---------- FIX START ----------
+            if default_raw == "":
+                value = None
+            elif dtype == 0x09:  # VISIBLE_STRING
+                value = default_raw
+            elif dtype in (0x0A, 0x0B):  # OCTET / UNICODE STRING
+                value = default_raw.encode("ascii", errors="replace")
+            elif dtype == 0x0F:  # DOMAIN
+                value = None  # DOMAIN content handled at runtime
+            else:
+                value = clean_int(default_raw)
+            # ---------- FIX END ----------
 
             sdo_db[(idx, subidx)] = {
                 "value": value,
-                "access": access,  # ro / wo / rw
+                "access": access,
+                "datatype": dtype,
             }
 
-        except Exception:
+        except Exception as e:
+            log.debug(f"Skipping OD entry {sec}: {e}")
             continue
 
     return sdo_db
 
 
-def send_frame(bus, arb_id, data_bytes, delay=0.05, error=False):
-    """Send one CAN frame (max 8 bytes).
-    If error=True, set is_error_frame so receivers can detect a bus error.
-    """
-    if len(data_bytes) > 8:
-        data_bytes = data_bytes[:8]
-    msg = can.Message(arbitration_id=arb_id,
-                      data=bytes(data_bytes),
-                      is_extended_id=False,
-                      is_error_frame=bool(error))
-    bus.send(msg)
-    time.sleep(delay)
+
+def is_segmented_type(dtype: int) -> bool:
+    """Check if datatype requires data to be sent in expedite or segmented mode."""
+    return dtype in (0x09, 0x0A, 0x0B, 0x0F)  # strings + DOMAIN
 
 
 def get_node_id_from_eds(eds_path, default=0x01):
@@ -331,6 +338,21 @@ def send_emcy(bus, node_id, error_code=0x1000, error_reg=0x01, manuf_bytes=None,
     send_frame(bus, 0x80 + node_id, data, error=error_frame)
 
 
+# ---------------- CAN Bus Operations ----------------
+def send_frame(bus, arb_id, data_bytes, delay=0.05, error=False):
+    """Send one CAN frame (max 8 bytes).
+    If error=True, set is_error_frame so receivers can detect a bus error.
+    """
+    if len(data_bytes) > 8:
+        data_bytes = data_bytes[:8]
+    msg = can.Message(arbitration_id=arb_id,
+                      data=bytes(data_bytes),
+                      is_extended_id=False,
+                      is_error_frame=bool(error))
+    bus.send(msg)
+    time.sleep(delay)
+
+
 def handle_sdo_request(bus, msg, node_id, sdo_db):
     if msg.arbitration_id != (0x600 + node_id):
         return
@@ -382,6 +404,7 @@ def handle_sdo_request(bus, msg, node_id, sdo_db):
 
         size = {0x2F: 1, 0x2B: 2, 0x23: 4}[cs]
         value = int.from_bytes(data[4:4+size], "little")
+        # Update local database
         entry["value"] = value
 
         resp = bytearray(8)
@@ -416,25 +439,71 @@ def send_sdo_abort(bus, node_id, index, sub, abort_code):
     )
 
 
-def handle_rpdo(msg, rpdos):
-    """Decode and log RPDO frames."""
+def send_segmented_sdo(bus, node_id, index, sub, payload: bytes):
+    """
+    Send a segmented SDO download (CiA-301 compliant).
+    """
+    cob_tx = 0x600 + node_id
 
+    size = len(payload)   # <-- FIX: define size before use
+
+    # ---- Initiate segmented download ----
+    init = bytearray(8)
+    init[0] = 0x21  # initiate segmented download, size indicated
+    init[1] = index & 0xFF
+    init[2] = (index >> 8) & 0xFF
+    init[3] = sub
+    init[4:8] = size.to_bytes(4, "little")
+
+    bus.send(can.Message(
+        arbitration_id=cob_tx,
+        data=bytes(init),
+        is_extended_id=False
+    ))
+
+    # ---- Segments ----
+    toggle = 0
+    offset = 0
+
+    while offset < size:
+        chunk = payload[offset:offset + 7]
+        offset += len(chunk)
+
+        last = offset >= size
+        pad = 7 - len(chunk)
+
+        cs = (toggle << 4) | (pad << 1) | int(last)
+        seg = bytes([cs]) + chunk + b"\x00" * pad
+
+        bus.send(can.Message(
+            arbitration_id=cob_tx,
+            data=seg,
+            is_extended_id=False
+        ))
+
+        toggle ^= 1
+
+
+def handle_rpdo(msg, rpdos, sdo_db):
     for cob_id, mappings in rpdos:
         if msg.arbitration_id != cob_id:
             continue
 
         data = msg.data
         offset = 0
-        decoded = []
 
         for (idx, sub, size_bits) in mappings:
             size_bytes = size_bits // 8
             raw = data[offset:offset + size_bytes]
             val = int.from_bytes(raw, "little")
-            decoded.append(f"0x{idx:04X}:{sub}={val}")
+
+            key = (idx, sub)
+            if key in sdo_db:
+                sdo_db[key]["value"] = val
+
             offset += size_bytes
 
-        log.info(f"RPDO RX COB=0x{cob_id:X} → " + ", ".join(decoded))
+        log.info(f"RPDO RX COB=0x{cob_id:X} → " + ", ".join(val))
 
 
 # ---------------- Main ----------------
@@ -455,6 +524,11 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
         node_id = get_node_id_from_eds(eds_path, default=0x01) if eds_path else 0x01
     manuf_bytes = get_manufacturer_from_eds(eds_path) if eds_path else None
 
+    # Define once, not inside the loop
+    BASE_DOMAIN = bytes.fromhex(
+        "00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF"
+    )
+
     for i in tqdm(range(count), desc="Sending frames"):
 
         if only_tx == False:
@@ -463,7 +537,7 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
                 msg = bus.recv(timeout=0.0)
                 if msg:
                     handle_sdo_request(bus, msg, node_id, sdo_db)
-                    handle_rpdo(msg, rpdos)
+                    handle_rpdo(msg, rpdos, sdo_db)
             except Exception:
                 pass
 
@@ -509,28 +583,115 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
 
             # SDOs
             for (idx, sub), entry in sdo_db.items():
-                # Only simulate RW objects
-                if entry["access"] != "rw":
+
+                # Simulate ony R) and RW objects
+                if entry["access"] != "ro" and entry["access"] != "rw":
                     continue
 
                 # Exclude PDO communication & mapping objects
                 if 0x1400 <= idx <= 0x1BFF:
                     continue
 
-                # base value increments every 10th iteration
-                cycles = i // 10
-                base_val = entry["value"]
-                val = base_val + cycles
+                dtype = entry["datatype"]
 
-                # Decide expedited size
+                # ---------- BOOLEAN ----------
+                if dtype == 0x01:  # BOOLEAN
+                    # Initialize if missing
+                    if entry["value"] is None:
+                        entry["value"] = 0
+
+                    # Toggle every 10th iteration
+                    if i % 10 == 0 and i != 0:
+                        entry["value"] ^= 1  # toggle 0 <-> 1
+
+                    val = entry["value"] & 0x01
+
+                    sdo_req = bytes([
+                        0x2F,                 # expedited, 1 byte
+                        idx & 0xFF,
+                        (idx >> 8) & 0xFF,
+                        sub,
+                        val,
+                        0x00, 0x00, 0x00
+                    ])
+
+                    log.debug(
+                        f"[SDO BOOL] cob=0x{0x600 + node_id:03X} "
+                        f"idx=0x{idx:04X} sub={sub} val={val}"
+                    )
+                    send_frame(bus, 0x600 + node_id, sdo_req)
+                    continue
+
+                # ---------- DOMAIN ----------
+                if dtype == 0x0F:
+                    domain_len = len(BASE_DOMAIN)
+
+                    # Rotate by 1 byte every 10th iteration (pure rotation)
+                    shift = (i // 10) % domain_len
+                    payload = BASE_DOMAIN[shift:] + BASE_DOMAIN[:shift]
+
+                    log.debug(
+                        f"[SDO DOMAIN] idx=0x{idx:04X} sub={sub} "
+                        f"shift={shift} data={payload.hex(' ')}"
+                    )
+                    send_segmented_sdo(bus, node_id, idx, sub, payload)
+                    continue
+
+                # ---------- VISIBLE_STRING ----------
+                if dtype == 0x09:
+                    # Default from EDS or fallback
+                    value = entry["value"] or "Iteration: 1"
+
+                    # Increment number every 10th iteration
+                    if i % 10 == 0 and i != 0:
+                        m = re.search(r"(\d+)$", value)
+                        if m:
+                            num = int(m.group(1)) + 1
+                            value = re.sub(r"(\d+)$", str(num), value)
+                            entry["value"] = value
+
+                    payload = value.encode("ascii", errors="replace")
+
+                    log.debug(
+                        f"[SDO VISIBLE_STRING] idx=0x{idx:04X} sub={sub:02X} "
+                        f"val='{value}'"
+                    )
+                    send_segmented_sdo(bus, node_id, idx, sub, payload)
+                    continue
+
+                # ---------- OTHER SEGMENTED TYPES ----------
+                if is_segmented_type(dtype):
+                    payload = entry.get("payload")
+                    if payload is None:
+                        payload = b"\x00" * 16
+                        entry["payload"] = payload
+
+                    log.debug(
+                        f"[SDO SEG] idx=0x{idx:04X} sub={sub} len={len(payload)}"
+                    )
+                    send_segmented_sdo(bus, node_id, idx, sub, payload)
+                    continue
+
+                # ---------- SCALAR TYPES ----------
+                if entry["value"] is None:
+                    entry["value"] = 1
+
+                # Increment scalar every 10th iteration
+                if i % 10 == 0 and i != 0:
+                    entry["value"] += 1
+
+                val = entry["value"]
+
                 if val <= 0xFF:
-                    cs = 0x2F   # expedited write, 1 byte
-                    data = int(val).to_bytes(1, "little")
+                    cs = 0x2F
+                    data = val.to_bytes(1, "little")
                     pad = b"\x00" * 3
-                else:
-                    cs = 0x23   # expedited write, 4 bytes
-                    data = int(val).to_bytes(4, "little")
+                elif val <= 0xFFFFFFFF:
+                    cs = 0x23
+                    data = val.to_bytes(4, "little")
                     pad = b""
+                else:
+                    continue
 
                 sdo_req = bytes([
                     cs,
@@ -539,7 +700,10 @@ def main(interface="vcan0", node_id=0x00, count=5, delay:int=0, eds_path=None, e
                     sub,
                 ]) + data + pad
 
-                log.debug(f"[SDO REQ] cob={0x600 + node_id} idx=0x{idx:04X} sub={sub} data={sdo_req.hex()}")
+                log.debug(
+                    f"[SDO REQ] cob=0x{0x600 + node_id:03X} "
+                    f"idx=0x{idx:04X} sub={sub} val={val}"
+                )
                 send_frame(bus, 0x600 + node_id, sdo_req)
 
         time.sleep(delay / 1000)

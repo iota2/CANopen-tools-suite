@@ -74,6 +74,8 @@ class GUIUpdateWorker(QObject):
 
         ## Processed frame received from CAN thread
         self.processed_frame = processed_frame
+
+        ## Identifier if GUI worker is running or not.
         self._running = True
 
     def run(self):
@@ -152,8 +154,9 @@ class MultiRateLineWidget(QWidget):
         font.setStyleHint(QFont.Monospace)
         font.setBold(True)
 
-        # Create one header label per rate series
+        ## Create left header label for rate series
         self.header_left = QWidget()
+        ## Create right header label for rate series
         self.header_right = QWidget()
 
         left_layout = QHBoxLayout(self.header_left)
@@ -707,11 +710,16 @@ class CANopenMainWindow(QMainWindow):
         # ==========================================================
         layout.addWidget(QLabel("<b>Send SDO (Write)</b>"))
 
+        ## SDO send node-id input box
         self.sdo_node_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_NODE_ID)
+        ## SDO send index input box
         self.sdo_index_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_INDEX)
+        ## SDO send sub-index input box
         self.sdo_sub_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_SUB)
+        ## SDO send data value input box
         self.sdo_value_edit = QLineEdit("1")
 
+        ## SDO send data size selection
         self.sdo_size_combo = QComboBox()
         self.sdo_size_combo.addItems(["1", "2", "4"])
 
@@ -728,7 +736,9 @@ class CANopenMainWindow(QMainWindow):
         grid.addWidget(self.sdo_size_combo, 4, 1)
         layout.addLayout(grid)
 
+        ## SDO send repeat check box
         self.sdo_write_repeat_chk = QCheckBox("Repeat")
+        ## SDO send repeat interval input box
         self.sdo_write_interval = QLineEdit(analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME)
         self.sdo_write_interval.setFixedWidth(70)
 
@@ -742,6 +752,7 @@ class CANopenMainWindow(QMainWindow):
             self._toggle_sdo_write_repeat
         )
 
+        ## SDO send button
         sdo_send_btn = QPushButton("Send SDO")
         layout.addWidget(sdo_send_btn)
 
@@ -751,10 +762,12 @@ class CANopenMainWindow(QMainWindow):
         layout.addSpacing(8)
         layout.addWidget(QLabel("<b>Receive SDO (Read)</b>"))
 
+        ## SDO receive node-id input box
         self.sdo_recv_node_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_NODE_ID)
+        ## SDO receive index input box
         self.sdo_recv_index_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_INDEX)
+        ## SDO receive sub-index input box
         self.sdo_recv_sub_edit = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_SUB)
-
 
         grid = QGridLayout()
         grid.addWidget(QLabel("Node ID"), 0, 0)
@@ -765,7 +778,9 @@ class CANopenMainWindow(QMainWindow):
         grid.addWidget(self.sdo_recv_sub_edit, 2, 1)
         layout.addLayout(grid)
 
+        ## SDO receive repeat check box
         self.sdo_read_repeat_chk = QCheckBox("Repeat")
+        ## SDO receive repeat input input box
         self.sdo_read_interval = QLineEdit(analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME)
         self.sdo_read_interval.setFixedWidth(70)
 
@@ -780,6 +795,7 @@ class CANopenMainWindow(QMainWindow):
             self._toggle_sdo_read_repeat
         )
 
+        ## SDO receive send button
         sdo_recv_btn = QPushButton("Receive SDO")
         layout.addWidget(sdo_recv_btn)
 
@@ -789,7 +805,9 @@ class CANopenMainWindow(QMainWindow):
         layout.addSpacing(8)
         layout.addWidget(QLabel("<b>Send PDO</b>"))
 
+        ## PDO send cob-id input box
         self.pdo_cob_edit = QLineEdit(analyzer_defs.DEFAULT_PDO_SEND_COB_ID)
+        ## PDO send data input box
         self.pdo_data_edit = QLineEdit(analyzer_defs.DEFAULT_PDO_SEND_DATA)
 
         grid = QGridLayout()
@@ -799,7 +817,9 @@ class CANopenMainWindow(QMainWindow):
         grid.addWidget(self.pdo_data_edit, 1, 1)
         layout.addLayout(grid)
 
+        ## PDO send repeat check box
         self.pdo_repeat_chk = QCheckBox("Repeat")
+        ## PDO send repeat input box
         self.pdo_interval = QLineEdit(f"{analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME}")
         self.pdo_interval.setFixedWidth(70)
 
@@ -814,6 +834,7 @@ class CANopenMainWindow(QMainWindow):
             self._toggle_pdo_repeat
         )
 
+        ## PDO send button
         pdo_send_btn = QPushButton("Send PDO")
         layout.addWidget(pdo_send_btn)
 

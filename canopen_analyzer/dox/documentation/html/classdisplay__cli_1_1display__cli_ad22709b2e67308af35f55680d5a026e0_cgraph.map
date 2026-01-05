@@ -1,8 +1,8 @@
 <map id="run" name="run">
-<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,351,48,377"/>
+<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,416,48,443"/>
 <area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,233,229,260"/>
-<area shape="rect" id="node13" href="$classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,351,239,377"/>
-<area shape="rect" id="node16" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,401,264,428"/>
+<area shape="rect" id="node13" href="$classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,416,239,443"/>
+<area shape="rect" id="node17" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,467,264,493"/>
 <area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,81,535,108"/>
 <area shape="rect" id="node8" href="$classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,132,527,159"/>
 <area shape="rect" id="node9" href="$classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,183,461,209"/>
@@ -14,5 +14,6 @@
 <area shape="rect" id="node6" href="$classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="622,107,730,133"/>
 <area shape="rect" id="node7" href="$classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="793,132,900,159"/>
 <area shape="rect" id="node14" href="$classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,416,521,443"/>
+<area shape="rect" id="node16" href="$classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,467,479,493"/>
 <area shape="rect" id="node15" href="$classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="631,416,721,443"/>
 </map>

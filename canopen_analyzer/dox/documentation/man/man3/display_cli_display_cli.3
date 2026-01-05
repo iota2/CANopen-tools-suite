@@ -1,4 +1,4 @@
-.TH "display_cli" 3 "Sat Jan 3 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_cli" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -144,6 +144,10 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .RI "def \fB_stop_repeat\fP (self, key)"
 .br
 .RI "Stop a repeating task\&. "
+.ti -1c
+.RI "str \fB_trim_cell\fP (self, str value, int max_width)"
+.br
+.RI "Trim cell text to max_width with ellipsis for CLI tables\&. "
 .in -1c
 .SS "Private Attributes"
 
@@ -159,6 +163,7 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
+.RI "Thread stop event\&. "
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
@@ -228,6 +233,10 @@ Start a repeating task\&.
 
 .PP
 Stop a repeating task\&. 
+.SS " str _trim_cell ( self, str value, int max_width)\fC [private]\fP"
+
+.PP
+Trim cell text to max_width with ellipsis for CLI tables\&. 
 .SS "def run ( self)"
 
 .PP
@@ -248,6 +257,8 @@ Input caret for user inputs in remote node control\&.
 Repeat timers for remote commands (key -> threading\&.Event) 
 .SS "_stop_event\fC [private]\fP"
 
+.PP
+Thread stop event\&. 
 .SS "console"
 
 .PP

@@ -1,0 +1,5 @@
+<map id="_compute_bus_utilization" name="_compute_bus_utilization">
+<area shape="rect" id="node1" title="Compute CAN bus utilization percentage (Classical CAN, Std ID)." alt="" coords="323,5,511,32"/>
+<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="168,5,275,32"/>
+<area shape="rect" id="node3" href="$classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d" title="Background thread: periodically call update_rates() so rates get sampled even when no frames arrive." alt="" coords="5,5,120,32"/>
+</map>

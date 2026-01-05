@@ -1,0 +1,4 @@
+<map id="decode_by_datatype" name="decode_by_datatype">
+<area shape="rect" id="node1" title="Decode raw frame to respective CANopen DataType." alt="" coords="96,5,253,32"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+</map>

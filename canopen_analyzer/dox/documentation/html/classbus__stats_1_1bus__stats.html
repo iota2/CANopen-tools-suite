@@ -184,6 +184,9 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:ac720806072c70d6558c3f663d3991cab"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ac720806072c70d6558c3f663d3991cab">_compute_bus_utilization</a> (self, dict rates_latest)</td></tr>
+<tr class="memdesc:ac720806072c70d6558c3f663d3991cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute CAN bus utilization percentage (Classical CAN, Std ID).  <a href="classbus__stats_1_1bus__stats.html#ac720806072c70d6558c3f663d3991cab">More...</a><br /></td></tr>
+<tr class="separator:ac720806072c70d6558c3f663d3991cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab00450d192ca43f10fe896bd1428f60d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d">_rate_sampler</a> (self)</td></tr>
 <tr class="memdesc:ab00450d192ca43f10fe896bd1428f60d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Background thread: periodically call <a class="el" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters.">update_rates()</a> so rates get sampled even when no frames arrive.  <a href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d">More...</a><br /></td></tr>
 <tr class="separator:ab00450d192ca43f10fe896bd1428f60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,10 +197,13 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:ad37f5e32ae1664782c9fb2eb221a8525"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread lock used to protect access to statistics data.  <a href="classbus__stats_1_1bus__stats.html#ad37f5e32ae1664782c9fb2eb221a8525">More...</a><br /></td></tr>
 <tr class="separator:ad37f5e32ae1664782c9fb2eb221a8525"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08b380fce0fe1b4ec1d76651b71f8fb3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a08b380fce0fe1b4ec1d76651b71f8fb3">_rate_interval</a></td></tr>
+<tr class="memdesc:a08b380fce0fe1b4ec1d76651b71f8fb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer for computing bus stats.  <a href="classbus__stats_1_1bus__stats.html#a08b380fce0fe1b4ec1d76651b71f8fb3">More...</a><br /></td></tr>
 <tr class="separator:a08b380fce0fe1b4ec1d76651b71f8fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a852d53227e1c00abda22d6aa2f598cde"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a852d53227e1c00abda22d6aa2f598cde">_rate_sampler_stop</a></td></tr>
+<tr class="memdesc:a852d53227e1c00abda22d6aa2f598cde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rate sampler stop event.  <a href="classbus__stats_1_1bus__stats.html#a852d53227e1c00abda22d6aa2f598cde">More...</a><br /></td></tr>
 <tr class="separator:a852d53227e1c00abda22d6aa2f598cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a407727c37132b0bb02453241a0c403b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#a407727c37132b0bb02453241a0c403b3">_rate_sampler_thread</a></td></tr>
+<tr class="memdesc:a407727c37132b0bb02453241a0c403b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rate sampler thread.  <a href="classbus__stats_1_1bus__stats.html#a407727c37132b0bb02453241a0c403b3">More...</a><br /></td></tr>
 <tr class="separator:a407727c37132b0bb02453241a0c403b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd718a60ddf264f547832a13a1687c5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbus__stats_1_1bus__stats.html#afd718a60ddf264f547832a13a1687c5d">_stats</a></td></tr>
 <tr class="memdesc:afd718a60ddf264f547832a13a1687c5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of the <a class="el" href="classbus__stats_1_1bus__stats_1_1stats__data.html">bus_stats.stats_data</a> structure holding all metrics.  <a href="classbus__stats_1_1bus__stats.html#afd718a60ddf264f547832a13a1687c5d">More...</a><br /></td></tr>
@@ -236,6 +242,55 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac720806072c70d6558c3f663d3991cab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac720806072c70d6558c3f663d3991cab">&#9670;&nbsp;</a></span>_compute_bus_utilization()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float _compute_bus_utilization </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rates_latest</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute CAN bus utilization percentage (Classical CAN, Std ID). </p>
+<p>Uses DLC-weighted frame sizes with a conservative stuffing factor. Relies only on frame-rate statistics already tracked in <a class="el" href="classbus__stats_1_1bus__stats.html" title="Container class for all CANopen bus statistics.">bus_stats</a>. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classbus__stats_1_1bus__stats_ac720806072c70d6558c3f663d3991cab_icgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ac720806072c70d6558c3f663d3991cab_icgraph" alt=""/></div>
+<map name="aclassbus__stats_1_1bus__stats_ac720806072c70d6558c3f663d3991cab_icgraph" id="aclassbus__stats_1_1bus__stats_ac720806072c70d6558c3f663d3991cab_icgraph">
+<area shape="rect" title="Compute CAN bus utilization percentage (Classical CAN, Std ID)." alt="" coords="323,5,511,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="168,5,275,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d" title="Background thread: periodically call update_rates() so rates get sampled even when no frames arrive." alt="" coords="5,5,120,32"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="ab00450d192ca43f10fe896bd1428f60d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab00450d192ca43f10fe896bd1428f60d">&#9670;&nbsp;</a></span>_rate_sampler()</h2>
 
@@ -268,6 +323,7 @@ Here is the call graph for this function:</div>
 <map name="aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph" id="aclassbus__stats_1_1bus__stats_ab00450d192ca43f10fe896bd1428f60d_cgraph">
 <area shape="rect" title="Background thread: periodically call update_rates() so rates get sampled even when no frames arrive." alt="" coords="5,5,120,32"/>
 <area shape="rect" href="classbus__stats_1_1bus__stats.html#ab95b4bce7eb462bdaf41d216afbcfced" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="168,5,275,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ac720806072c70d6558c3f663d3991cab" title="Compute CAN bus utilization percentage (Classical CAN, Std ID)." alt="" coords="323,5,511,32"/>
 </map>
 </div>
 
@@ -655,6 +711,15 @@ Here is the caller graph for this function:</div>
 <p>Compute frames/s rates by differencing cumulative counters. </p>
 <p>This method is time-gated (default ~1s) and appends values into the rolling rate_history stored inside the snapshot. It also updates snapshot.rates (latest numbers) and snapshot.bus_util_percent. Call this regularly or invoke after incrementing counters; it's safe to call frequently because it checks elapsed time internally. </p>
 <div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_cgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_cgraph" alt=""/></div>
+<map name="aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_cgraph" id="aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_cgraph">
+<area shape="rect" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="5,5,112,32"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#ac720806072c70d6558c3f663d3991cab" title="Compute CAN bus utilization percentage (Classical CAN, Std ID)." alt="" coords="160,5,348,32"/>
+</map>
+</div>
+<div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph.png" border="0" usemap="#aclassbus__stats_1_1bus__stats_ab95b4bce7eb462bdaf41d216afbcfced_icgraph" alt=""/></div>
@@ -797,6 +862,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Timer for computing bus stats. </p>
+
 </div>
 </div>
 <a id="a852d53227e1c00abda22d6aa2f598cde"></a>
@@ -819,6 +886,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
+<p>Rate sampler stop event. </p>
+
 </div>
 </div>
 <a id="a407727c37132b0bb02453241a0c403b3"></a>
@@ -840,6 +909,8 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Rate sampler thread. </p>
 
 </div>
 </div>

@@ -210,6 +210,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:aa85d3bcff786592e7fa971644d691567"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567">_stop_repeat</a> (self, key)</td></tr>
 <tr class="memdesc:aa85d3bcff786592e7fa971644d691567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop a repeating task.  <a href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567">More...</a><br /></td></tr>
 <tr class="separator:aa85d3bcff786592e7fa971644d691567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7deb0604c2f84cedc918f12ecef983fa"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa">_trim_cell</a> (self, str value, int max_width)</td></tr>
+<tr class="memdesc:a7deb0604c2f84cedc918f12ecef983fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim cell text to max_width with ellipsis for CLI tables.  <a href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa">More...</a><br /></td></tr>
+<tr class="separator:a7deb0604c2f84cedc918f12ecef983fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -220,6 +223,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a49303ca1ae5b6e50bc574e96d8a15344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Repeat timers for remote commands (key -&gt; threading.Event)  <a href="classdisplay__cli_1_1display__cli.html#a49303ca1ae5b6e50bc574e96d8a15344">More...</a><br /></td></tr>
 <tr class="separator:a49303ca1ae5b6e50bc574e96d8a15344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a2c9373a2aa1f4cdf3e6c936e81b17267">_stop_event</a></td></tr>
+<tr class="memdesc:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread stop event.  <a href="classdisplay__cli_1_1display__cli.html#a2c9373a2aa1f4cdf3e6c936e81b17267">More...</a><br /></td></tr>
 <tr class="separator:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -618,8 +622,9 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph" id="aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph">
-<area shape="rect" title="Render tables for displaying CLI data." alt="" coords="5,5,124,32"/>
+<area shape="rect" title="Render tables for displaying CLI data." alt="" coords="5,31,124,57"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="172,5,343,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="214,56,301,83"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="391,5,480,32"/>
 </map>
 </div>
@@ -857,6 +862,60 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a7deb0604c2f84cedc918f12ecef983fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7deb0604c2f84cedc918f12ecef983fa">&#9670;&nbsp;</a></span>_trim_cell()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str _trim_cell </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>max_width</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Trim cell text to max_width with ellipsis for CLI tables. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph" alt=""/></div>
+<map name="aclassdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph" id="aclassdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph">
+<area shape="rect" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="263,5,349,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="ad22709b2e67308af35f55680d5a026e0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad22709b2e67308af35f55680d5a026e0">&#9670;&nbsp;</a></span>run()</h2>
 
@@ -879,10 +938,10 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Run CLI based CANopen display." alt="" coords="5,351,48,377"/>
+<area shape="rect" title="Run CLI based CANopen display." alt="" coords="5,416,48,443"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,233,229,260"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,351,239,377"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,401,264,428"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,416,239,443"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,467,264,493"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,81,535,108"/>
 <area shape="rect" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,132,527,159"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,183,461,209"/>
@@ -894,6 +953,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="622,107,730,133"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="793,132,900,159"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,416,521,443"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,467,479,493"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="631,416,721,443"/>
 </map>
 </div>
@@ -998,6 +1058,8 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Thread stop event. </p>
 
 </div>
 </div>

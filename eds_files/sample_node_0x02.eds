@@ -8,8 +8,8 @@ Description=Sample Node ID 0x02
 CreationTime=1:41AM
 CreationDate=09-01-2025
 CreatedBy=
-ModificationTime=7:19PM
-ModificationDate=12-26-2025
+ModificationTime=6:35PM
+ModificationDate=01-05-2026
 ModifiedBy=Naval Prashar
 
 [DeviceInfo]
@@ -460,7 +460,7 @@ PDOMapping=0
 [1800]
 ParameterName=TPDO communication parameter
 ObjectType=0x9
-;StorageLocation=PERSIST_COMM
+;StorageLocation=RAM
 SubNumber=0x6
 
 [1800sub0]
@@ -520,7 +520,7 @@ PDOMapping=0
 [1A00]
 ParameterName=TPDO mapping parameter
 ObjectType=0x9
-;StorageLocation=PERSIST_COMM
+;StorageLocation=RAM
 SubNumber=0x5
 
 [1A00sub0]
@@ -569,7 +569,7 @@ DefaultValue=0x60090410
 PDOMapping=0
 
 [6000]
-ParameterName=ConnectionState
+ParameterName=ConnectionStatus
 ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0001
@@ -578,39 +578,39 @@ DefaultValue=1
 PDOMapping=1
 
 [6001]
-ParameterName=MonitorState
+ParameterName=NetworkStatus
 ObjectType=0x7
 ;StorageLocation=RAM
-DataType=0x0001
+DataType=0x0005
+AccessType=rw
+DefaultValue=2
+PDOMapping=1
+
+[6002]
+ParameterName=ValveStatus
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
 AccessType=rw
 DefaultValue=3
 PDOMapping=1
 
-[6002]
-ParameterName=NetworkState
-ObjectType=0x7
-;StorageLocation=RAM
-DataType=0x0001
-AccessType=rw
-DefaultValue=5
-PDOMapping=1
-
 [6003]
-ParameterName=ErrorCode
+ParameterName=ErrorStatus
 ObjectType=0x7
 ;StorageLocation=RAM
-DataType=0x0001
+DataType=0x0005
 AccessType=rw
-DefaultValue=0
+DefaultValue=4
 PDOMapping=1
 
 [6004]
 ParameterName=ActiveChannels
 ObjectType=0x7
 ;StorageLocation=RAM
-DataType=0x0001
+DataType=0x0005
 AccessType=rw
-DefaultValue=2
+DefaultValue=5
 PDOMapping=1
 
 [6005]
@@ -634,7 +634,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=1.1
 PDOMapping=1
 
 [6005sub2]
@@ -643,7 +643,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=1.2
 PDOMapping=1
 
 [6006]
@@ -667,7 +667,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=3.3
 PDOMapping=1
 
 [6006sub2]
@@ -676,7 +676,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=4.4
 PDOMapping=1
 
 [6007]
@@ -700,7 +700,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=5.5
 PDOMapping=1
 
 [6007sub2]
@@ -709,7 +709,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=6.6
 PDOMapping=1
 
 [6008]
@@ -733,7 +733,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=7.7
 PDOMapping=1
 
 [6008sub2]
@@ -742,7 +742,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=8.8
 PDOMapping=1
 
 [6009]
@@ -766,7 +766,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=11
 PDOMapping=1
 
 [6009sub2]
@@ -775,7 +775,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=22
 PDOMapping=1
 
 [6009sub3]
@@ -784,7 +784,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=33
 PDOMapping=1
 
 [6009sub4]
@@ -793,12 +793,14 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=44
 PDOMapping=1
 
 [ManufacturerObjects]
-SupportedObjects=1
+SupportedObjects=3
 1=0x2000
+2=0x2001
+3=0x2002
 
 [2000]
 ParameterName=MemoryData
@@ -807,5 +809,23 @@ ObjectType=0x7
 DataType=0x000F
 AccessType=rw
 DefaultValue=
+PDOMapping=0
+
+[2001]
+ParameterName=Diagnosis
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0001
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[2002]
+ParameterName=ActiveUsers
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0009
+AccessType=rw
+DefaultValue=Iteration: 1
 PDOMapping=0
 

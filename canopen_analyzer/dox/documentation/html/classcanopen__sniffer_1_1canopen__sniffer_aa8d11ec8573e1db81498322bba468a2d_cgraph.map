@@ -1,5 +1,5 @@
 <map id="send_sdo_download" name="send_sdo_download">
-<area shape="rect" id="node1" title="Send expedited SDO download (write)." alt="" coords="5,81,159,108"/>
+<area shape="rect" id="node1" title="SDO Download." alt="" coords="5,81,159,108"/>
 <area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="226,5,329,32"/>
 <area shape="rect" id="node3" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="619,99,773,141"/>
 <area shape="rect" id="node4" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="207,132,348,159"/>

@@ -1,4 +1,4 @@
-.TH "GUIUpdateWorker" 3 "Sat Jan 3 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "GUIUpdateWorker" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -52,6 +52,7 @@ Mirrors the producer/consumer pattern used by CLI, The worker runs in a dedicate
 .ti -1c
 .RI "\fB_running\fP"
 .br
+.RI "Identifier if GUI worker is running or not\&. "
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
@@ -80,6 +81,8 @@ Stop the worker\&.
 .PP 
 .SS "_running\fC [private]\fP"
 
+.PP
+Identifier if GUI worker is running or not\&. 
 .SS "frame_received = Signal(dict)\fC [static]\fP"
 
 .PP

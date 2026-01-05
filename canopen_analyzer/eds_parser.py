@@ -81,6 +81,12 @@ class eds_parser:
         ## Path to the EDS file supplied to this parser (or None).
         self.eds_path = eds_path
 
+        ## Mapping of (index, subindex) -> human-readable ParameterName.
+        self.name_map = {}
+
+        ## Mapping of (index, subindex) -> OD entry metadata
+        self.entry_map = {}
+
         ## Mapping of all PDO COB-ID -> list of (index, subindex, size) tuples.
         self.pdo_map = {}
 
@@ -90,15 +96,14 @@ class eds_parser:
         ## Mapping of RPDO COB-ID -> list of (index, subindex, size) tuples.
         self.rpdo_map = {}
 
-        ## Mapping of (index, subindex) -> human-readable ParameterName.
-        self.name_map = {}
-
         ## Mapping of COB-ID -> list of human-readable field names for that PDO.
         self.cob_name_overrides = {}
 
         if eds_path:
             try:
                 self.name_map = self.build_name_map()
+                self.entry_map = self.build_entry_map()
+
                 cfg = configparser.ConfigParser(strict=False)
                 cfg.optionxform = str
                 cfg.read(self.eds_path)
@@ -150,6 +155,92 @@ class eds_parser:
         for idx, parent in parents.items():
             name_map.setdefault((idx, 0), parent)
         return name_map
+
+    def build_entry_map(self):
+        """! Build Object Dictionary entry metadata map.
+        @details
+        (index, sub) -> {
+            name,
+            data_type,
+            bit_length,
+            access_type
+        }
+        """
+        entry_map = {}
+
+        cfg = configparser.ConfigParser(strict=False)
+        cfg.optionxform = str
+        cfg.read(self.eds_path)
+
+        # --- pass 1: scalar objects (ObjectType = 0x7) ---
+        for sec in cfg.sections():
+            # match pure index sections: [6000], [0x6000]
+            m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)$', sec)
+            if not m:
+                continue
+
+            index = int(m.group(1), 16)
+            s = cfg[sec]
+
+            obj_type = s.get("ObjectType")
+            if obj_type is None:
+                continue
+
+            # scalar variable
+            if int(obj_type, 0) != 0x7:
+                continue
+
+            name = s.get("ParameterName", f"0x{index:04X}")
+
+            raw_dt = s.get("DataType")
+            if not raw_dt:
+                continue
+            dt_key = raw_dt.strip().upper()
+            data_type = analyzer_defs.EDS_DATATYPE_MAP.get(dt_key, dt_key)
+
+            access_type = s.get("AccessType", "rw")
+
+            if not data_type:
+                continue
+
+            entry_map[(index, 0)] = {
+                "name": name.strip(),
+                "data_type": data_type,
+                "bit_length": analyzer_defs.BIT_LENGTH_BY_TYPE.get(data_type),
+                "access_type": access_type.lower(),
+            }
+
+        # --- pass 2: sub-objects (arrays / records) ---
+        for sec in cfg.sections():
+            m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)\s*sub0*(\d+)$', sec, re.IGNORECASE)
+            if not m:
+                continue
+
+            index = int(m.group(1), 16)
+            sub = int(m.group(2))
+            s = cfg[sec]
+
+            name = s.get("ParameterName", f"0x{index:04X}:{sub}")
+
+            raw_dt = s.get("DataType")
+            if not raw_dt:
+                continue
+            dt_key = raw_dt.strip().upper()
+            data_type = analyzer_defs.EDS_DATATYPE_MAP.get(dt_key, dt_key)
+
+            access_type = s.get("AccessType", "rw")
+
+            if not data_type:
+                continue
+
+            entry_map[(index, sub)] = {
+                "name": name.strip(),
+                "data_type": data_type,
+                "bit_length": analyzer_defs.BIT_LENGTH_BY_TYPE.get(data_type),
+                "access_type": access_type.lower(),
+            }
+
+        return entry_map
 
     def parse_pdo_map(self, map_prefix: str, comm_prefix: str, cfg):
         """! Parse PDO mapping entries from the EDS file.

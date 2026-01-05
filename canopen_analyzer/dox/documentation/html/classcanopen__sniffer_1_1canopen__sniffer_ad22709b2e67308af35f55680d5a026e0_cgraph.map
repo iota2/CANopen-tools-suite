@@ -3,9 +3,9 @@
 <area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,198,287,225"/>
 <area shape="rect" id="node12" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,148,529,174"/>
 <area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,198,502,225"/>
-<area shape="rect" id="node4" href="$classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send raw PDO frame." alt="" coords="615,198,730,225"/>
-<area shape="rect" id="node10" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="Send expedited SDO download (write)." alt="" coords="596,97,749,124"/>
-<area shape="rect" id="node11" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="Send SDO upload request (read)." alt="" coords="577,249,768,276"/>
+<area shape="rect" id="node4" href="$classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,198,730,225"/>
+<area shape="rect" id="node10" href="$classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="596,97,749,124"/>
+<area shape="rect" id="node11" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="577,249,768,276"/>
 <area shape="rect" id="node5" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="835,198,938,225"/>
 <area shape="rect" id="node6" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1229,292,1382,334"/>
 <area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,148,957,174"/>

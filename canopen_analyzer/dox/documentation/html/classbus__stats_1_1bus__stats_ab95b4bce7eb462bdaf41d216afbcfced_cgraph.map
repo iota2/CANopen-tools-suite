@@ -1,0 +1,4 @@
+<map id="update_rates" name="update_rates">
+<area shape="rect" id="node1" title="Compute frames/s rates by differencing cumulative counters." alt="" coords="5,5,112,32"/>
+<area shape="rect" id="node2" href="$classbus__stats_1_1bus__stats.html#ac720806072c70d6558c3f663d3991cab" title="Compute CAN bus utilization percentage (Classical CAN, Std ID)." alt="" coords="160,5,348,32"/>
+</map>

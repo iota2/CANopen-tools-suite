@@ -12,6 +12,7 @@ var classdisplay__cli_1_1display__cli =
     [ "_sparkline", "classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1", null ],
     [ "_start_repeat", "classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544", null ],
     [ "_stop_repeat", "classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567", null ],
+    [ "_trim_cell", "classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa", null ],
     [ "run", "classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0", null ],
     [ "stop", "classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
     [ "_input_caret", "classdisplay__cli_1_1display__cli.html#a7f6b6a8644fc2701a53dd4448886fca6", null ],

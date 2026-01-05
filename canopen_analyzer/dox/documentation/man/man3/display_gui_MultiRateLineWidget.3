@@ -1,4 +1,4 @@
-.TH "MultiRateLineWidget" 3 "Sat Jan 3 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "MultiRateLineWidget" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -77,9 +77,11 @@ Same \fBupdate()\fP, \fBclear()\fP, tooltip semantics
 .ti -1c
 .RI "\fBheader_left\fP"
 .br
+.RI "Create left header label for rate series\&. "
 .ti -1c
 .RI "\fBheader_right\fP"
 .br
+.RI "Create right header label for rate series\&. "
 .ti -1c
 .RI "\fBmax_points\fP"
 .br
@@ -272,8 +274,12 @@ Mapping: series name -> header QLabel\&.
 Layout used later to align header text with chart plot area\&. 
 .SS "header_left"
 
+.PP
+Create left header label for rate series\&. 
 .SS "header_right"
 
+.PP
+Create right header label for rate series\&. 
 .SS "max_points"
 
 .PP

@@ -1,5 +1,6 @@
 <map id="_render_tables" name="_render_tables">
-<area shape="rect" id="node1" title="Render tables for displaying CLI data." alt="" coords="5,5,124,32"/>
+<area shape="rect" id="node1" title="Render tables for displaying CLI data." alt="" coords="5,31,124,57"/>
 <area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="172,5,343,32"/>
+<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="214,56,301,83"/>
 <area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="391,5,480,32"/>
 </map>

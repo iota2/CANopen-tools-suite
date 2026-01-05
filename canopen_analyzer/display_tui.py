@@ -221,6 +221,7 @@ class display_tui:
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send node-id
                                 self.sdo_send_node = Input(analyzer_defs.DEFAULT_SDO_SEND_NODE_ID)
                                 self.sdo_send_node.styles.width = 20
                                 yield self.sdo_send_node
@@ -229,6 +230,7 @@ class display_tui:
                                 lbl = Input("Index", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO index
                                 self.sdo_send_index = Input(analyzer_defs.DEFAULT_SDO_SEND_INDEX)
                                 self.sdo_send_index.styles.width = 20
                                 yield self.sdo_send_index
@@ -236,6 +238,7 @@ class display_tui:
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send sub-index
                                 self.sdo_send_sub = Input(analyzer_defs.DEFAULT_SDO_SEND_SUB)
                                 self.sdo_send_sub.styles.width = 20
                                 yield self.sdo_send_sub
@@ -244,6 +247,7 @@ class display_tui:
                                 lbl = Input("Data", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send data.
                                 self.sdo_send_value = Input(analyzer_defs.DEFAULT_SDO_SEND_DATA)
                                 self.sdo_send_value.styles.width = 20
                                 yield self.sdo_send_value
@@ -252,6 +256,7 @@ class display_tui:
                                 lbl.styles.width = 20
                                 yield lbl
                                 # --- Size selector ---
+                                ## Radio button selection for SDO send data size.
                                 self.sdo_send_size = RadioSet(classes="radio remote")
                                 with self.sdo_send_size:
                                     yield RadioButton("1", value=True)
@@ -265,12 +270,15 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send repeat values.
                                 self.sdo_send_repeat_value = Input(analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME)
                                 self.sdo_send_repeat_value.styles.width = 20
                                 yield self.sdo_send_repeat_value
+                                ## SDO send repeat switch.
                                 self.sdo_send_repeat = Switch()
                                 yield self.sdo_send_repeat
 
+                                # Button for SDO send.
                                 self.sdo_send_btn = Button("Send", classes="button remote")
                                 self.sdo_send_btn.styles.width = 29
                                 yield self.sdo_send_btn
@@ -284,6 +292,7 @@ class display_tui:
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive node-id.
                                 self.sdo_recv_node = Input(analyzer_defs.DEFAULT_SDO_RECV_NODE_ID)
                                 self.sdo_recv_node.styles.width = 20
                                 yield self.sdo_recv_node
@@ -292,6 +301,7 @@ class display_tui:
                                 lbl = Input("Index", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive index
                                 self.sdo_recv_index = Input(analyzer_defs.DEFAULT_SDO_RECV_INDEX)
                                 self.sdo_recv_index.styles.width = 20
                                 yield self.sdo_recv_index
@@ -299,6 +309,7 @@ class display_tui:
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive sub-index
                                 self.sdo_recv_sub = Input(analyzer_defs.DEFAULT_SDO_RECV_SUB)
                                 self.sdo_recv_sub.styles.width = 20
                                 yield self.sdo_recv_sub
@@ -307,12 +318,15 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive repeat values.
                                 self.sdo_recv_repeat_value = Input(analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME)
                                 self.sdo_recv_repeat_value.styles.width = 20
+                                ## SDO receive repeat toggle switch.
                                 yield self.sdo_recv_repeat_value
                                 self.sdo_recv_repeat = Switch()
                                 yield self.sdo_recv_repeat
 
+                                ## Button for SDO receive
                                 self.sdo_recv_btn = Button("Send", classes="button remote")
                                 self.sdo_recv_btn.styles.width = 29
                                 yield self.sdo_recv_btn
@@ -326,6 +340,7 @@ class display_tui:
                                 lbl = Input("COB ID", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering PDO send cob-id.
                                 self.pdo_cob = Input(analyzer_defs.DEFAULT_PDO_SEND_COB_ID)
                                 self.pdo_cob.styles.width = 20
                                 yield self.pdo_cob
@@ -334,6 +349,7 @@ class display_tui:
                                 lbl = Input("Data", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering PDO send data.
                                 self.pdo_data = Input(analyzer_defs.DEFAULT_PDO_SEND_DATA)
                                 self.pdo_data.styles.width = 30
                                 yield self.pdo_data
@@ -342,12 +358,15 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering PDO send repeat value.
                                 self.pdo_send_repeat_value = Input(analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME)
                                 self.pdo_send_repeat_value.styles.width = 20
                                 yield self.pdo_send_repeat_value
+                                ## PDO send repeat toggle switch.
                                 self.pdo_repeat = Switch()
                                 yield self.pdo_repeat
 
+                                ## Button for PDO send.
                                 self.pdo_send_btn = Button("Send", classes="button remote")
                                 self.pdo_send_btn.styles.width = 29
                                 yield self.pdo_send_btn
@@ -368,36 +387,36 @@ class display_tui:
                 # build DataTable columns to match Rich version (Textual DataTable doesn't accept no_wrap/key args)
                 # Protocol table
                 self.proto_table.clear(columns=True)
-                self.proto_table.add_column("Time", width=12)
-                self.proto_table.add_column("COB-ID", width=6)
-                self.proto_table.add_column("Type", width=6)
-                self.proto_table.add_column("Raw Data", width=25)
-                self.proto_table.add_column("Decoded", width=60)
-                self.proto_table.add_column("Count", width=6)
+                self.proto_table.add_column("Time")
+                self.proto_table.add_column("COB-ID")
+                self.proto_table.add_column("Type")
+                self.proto_table.add_column("Raw Data")
+                self.proto_table.add_column("Decoded")
+                self.proto_table.add_column("Count")
 
                 # PDO table
                 self.pdo_table.clear(columns=True)
-                self.pdo_table.add_column("Time", width=12)
-                self.pdo_table.add_column("COB-ID", width=6)
-                self.pdo_table.add_column("Dir", width=4)
-                self.pdo_table.add_column("Name", width=40)
-                self.pdo_table.add_column("Index", width=6)
-                self.pdo_table.add_column("Sub", width=5)
-                self.pdo_table.add_column("Raw Data", width=25)
-                self.pdo_table.add_column("Decoded", width=10)
-                self.pdo_table.add_column("Count", width=6)
+                self.pdo_table.add_column("Time")
+                self.pdo_table.add_column("COB-ID")
+                self.pdo_table.add_column("Dir")
+                self.pdo_table.add_column("Name")
+                self.pdo_table.add_column("Index")
+                self.pdo_table.add_column("Sub")
+                self.pdo_table.add_column("Raw Data")
+                self.pdo_table.add_column("Decoded")
+                self.pdo_table.add_column("Count")
 
                 # SDO table
                 self.sdo_table.clear(columns=True)
-                self.sdo_table.add_column("Time", width=12)
-                self.sdo_table.add_column("COB-ID", width=6)
-                self.sdo_table.add_column("Dir", width=6)
-                self.sdo_table.add_column("Name", width=38)
-                self.sdo_table.add_column("Index", width=6)
-                self.sdo_table.add_column("Sub", width=5)
-                self.sdo_table.add_column("Raw Data", width=25)
-                self.sdo_table.add_column("Decoded", width=10)
-                self.sdo_table.add_column("Count", width=6)
+                self.sdo_table.add_column("Time")
+                self.sdo_table.add_column("COB-ID")
+                self.sdo_table.add_column("Dir")
+                self.sdo_table.add_column("Name")
+                self.sdo_table.add_column("Index")
+                self.sdo_table.add_column("Sub")
+                self.sdo_table.add_column("Raw Data",)
+                self.sdo_table.add_column("Decoded")
+                self.sdo_table.add_column("Count")
 
                 # Bus stats table columns: Metric, Value, Graph
                 self.bus_stats_table.clear(columns=True)
@@ -461,10 +480,13 @@ class display_tui:
                 btn = event.button
 
                 if btn is self.sdo_send_btn:
+                    self.notify("Send SDO request triggered", title="Send Action", severity="information")
                     self._send_sdo_request()
                 elif btn is self.sdo_recv_btn:
+                    self.notify("Receive SDO request triggered", title="Send Action", severity="information")
                     self._recv_sdo_request()
                 elif btn is self.pdo_send_btn:
+                    self.notify("Send PDO request triggered", title="Send Action", severity="information")
                     self._send_pdo()
 
             async def on_switch_changed(self, event: Switch.Changed) -> None:
@@ -485,6 +507,12 @@ class display_tui:
                 sw = event.switch
 
                 if sw is self.sdo_send_repeat:
+                    state = "Enabled" if sw.value else "Disabled"
+                    self.notify(
+                        f"Send SDO repeat is now {state}",
+                        title="Repeat Toggle",
+                        severity="information"
+                    )
                     self._toggle_repeat(
                         key="sdo_send",
                         enabled=sw.value,
@@ -493,6 +521,12 @@ class display_tui:
                     )
 
                 elif sw is self.sdo_recv_repeat:
+                    state = "Enabled" if sw.value else "Disabled"
+                    self.notify(
+                        f"Receive SDO repeat is now {state}",
+                        title="Repeat Toggle",
+                        severity="information"
+                    )
                     self._toggle_repeat(
                         key="sdo_recv",
                         enabled=sw.value,
@@ -501,6 +535,12 @@ class display_tui:
                     )
 
                 elif sw is self.pdo_repeat:
+                    state = "Enabled" if sw.value else "Disabled"
+                    self.notify(
+                        f"Send PDO repeat is now {state}",
+                        title="Repeat Toggle",
+                        severity="information"
+                    )
                     self._toggle_repeat(
                         key="pdo_send",
                         enabled=sw.value,
@@ -527,45 +567,45 @@ class display_tui:
                 # Copy/dump handlers mapped to single-letter keys
                 if k in ("n", "N"):
                     dump = "== Protocol ==\n" + self._dump_table_rows(self.proto_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_protocol.txt")
-                    self.notify(msg, title="Protocol Data")
+                    severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_protocol.txt")
+                    self.notify(msg, title="Protocol Data", severity=severity)
                     return
 
                 elif k in ("b", "B"):
                     # Bus Stats
                     dump = "== BUS STATS ==\n" + self._dump_table_rows(self.bus_stats_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_bus_stats.txt")
-                    self.notify(msg, title="Bus Stats")
+                    severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_bus_stats.txt")
+                    self.notify(msg, title="Bus Stats", severity=severity)
                     return
 
                 elif k in ("p", "P"):
                     # PDO Data
                     dump = "== PDO ==\n" + self._dump_table_rows(self.pdo_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_pdo.txt")
-                    self.notify(msg, title="PDO Data")
+                    severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_pdo.txt")
+                    self.notify(msg, title="PDO Data", severity=severity)
 
                 elif k in ("s", "S"):
                     # SDO Data
                     dump = "== SDO ==\n" + self._dump_table_rows(self.sdo_table)
-                    ok, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
-                    self.notify(msg, title="SDO Data")
+                    severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
+                    self.notify(msg, title="SDO Data", severity=severity)
 
             def _copy_to_clipboard_or_file(self, text: str, filename: str = f"/tmp/{analyzer_defs.APP_NAME}.log"):
                 """! Try to copy to clipboard using pyperclip; if unavailable, write to filename."""
 
                 try:
                     pyperclip.copy(text)
-                    return True, "Copied to clipboard"
+                    return "information", "Copied to clipboard"
                 except Exception:
                     self.logger.exception(f"Failed in copying table to clipboard, using temp file <{filename}> for fallback")
                     # fallback: write to tmp file
                     try:
                         with open(filename, "w", encoding="utf-8") as f:
                             f.write(text)
-                        return False, f"Wrote to {filename}"
+                        return "error", f"Wrote to {filename}"
                     except Exception as e:
                         self.logger.exception(f"Failed to copy/write: {e}")
-                        return False, f"Failed to copy/write: {e}"
+                        return "error", f"Failed to copy/write: {e}"
 
             def _dump_table_rows(self, table) -> str:
                 """! Return textual dump of a DataTable's rows.
@@ -1196,7 +1236,7 @@ class display_tui:
                     }
                     cls.requested_frame.put(req)
                 except Exception as e:
-                    self.notify(str(e), severity="error")
+                    self.notify(str(e), title="Send Action", severity="error")
 
             def _recv_sdo_request(self):
                 """! Send an SDO upload (read) request.
@@ -1219,7 +1259,7 @@ class display_tui:
                     }
                     cls.requested_frame.put(req)
                 except Exception as e:
-                    self.notify(str(e), severity="error")
+                    self.notify(str(e), title="Send Action", severity="error")
 
             def _send_pdo(self):
                 """! Send a PDO frame.
@@ -1242,7 +1282,7 @@ class display_tui:
                     }
                     cls.requested_frame.put(req)
                 except Exception as e:
-                    self.notify(str(e), severity="error")
+                    self.notify(str(e), title="Send Action", severity="error")
 
             def _get_selected_sdo_size(self) -> int:
                 """! Get the selected SDO data size.

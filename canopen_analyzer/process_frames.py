@@ -109,8 +109,11 @@ class process_frames(threading.Thread):
         self.stats = stats
         self.stats.set_start_time()
 
-        ## Flag indicating whether processed export is enabled.
-        self.export = export  # None | csv | json
+        ## State for segmented SDO support: (node, index, sub) -> bytearray
+        self._sdo_segments = {}
+
+        ## Flag indicating whether processed export is enabled :  None | csv | json.
+        self.export = export
 
         ## Output filename for processed export file or None.
         self.export_filename = None
@@ -148,6 +151,7 @@ class process_frames(threading.Thread):
                 self.export_file = open(self.export_filename, "w")
 
                 self.export_file.write("[\n")
+                ## Identifier for first element of JSON file.
                 self._json_first = True
 
                 self.log.info(f"JSON export enabled → {self.export_filename}")
@@ -156,6 +160,8 @@ class process_frames(threading.Thread):
                 self.export = False
 
     def _json_safe_processed_frame(self, frame: dict) -> dict:
+        """! Create a processed frame for saving to JSON."""
+
         return {
             "time": frame["time"],
             "cob": frame["cob"],
@@ -266,6 +272,95 @@ class process_frames(threading.Thread):
         # Export to CSV
         self.export_processed_frame(frame)
 
+    def decode_by_datatype(self, raw: bytes, entry: dict | None):
+        """!
+        Decode raw frame to respective CANopen DataType.
+        """
+
+        if not entry:
+            return raw.hex()
+
+        dt = entry["data_type"]
+
+        # ---------- BOOLEAN ----------
+        if dt == "BOOLEAN":
+            return bool(int.from_bytes(raw[:1], "little"))
+
+        # ---------- UNSIGNED ----------
+        if dt == "UNSIGNED8":
+            val = int.from_bytes(raw[:1], "little")
+            return f"{val} [0x{val:02X}]"
+        if dt == "UNSIGNED16":
+            val = int.from_bytes(raw[:2], "little")
+            return f"{val} [0x{val:04X}]"
+        if dt == "UNSIGNED32":
+            val = int.from_bytes(raw[:4], "little")
+            return f"{val} [0x{val:08X}]"
+
+        # ---------- SIGNED ----------
+        if dt == "INTEGER8":
+            return struct.unpack("<b", raw[:1])[0]
+        if dt == "INTEGER16":
+            return struct.unpack("<h", raw[:2])[0]
+        if dt == "INTEGER32":
+            return struct.unpack("<i", raw[:4])[0]
+
+        # ---------- REAL ----------
+        if dt == "REAL32":
+            return round(struct.unpack("<f", raw[:4])[0], 2)
+        if dt == "REAL64":
+            return round(struct.unpack("<d", raw[:8])[0], 2)
+
+        # ---------- VISIBLE STRING ----------
+        if dt == "VISIBLE_STRING":
+            # Stop at first NUL (CiA-301)
+            s = raw.split(b"\x00", 1)[0]
+
+            # Decode ASCII safely
+            try:
+                return s.decode("ascii", errors="replace")
+            except Exception:
+                return s.decode("latin-1", errors="replace")
+
+        # ---------- UNICODE STRING ----------
+        if dt == "UNICODE_STRING":
+            # UTF-16LE per CiA-301
+            try:
+                return raw.decode("utf-16-le").rstrip("\x00")
+            except Exception:
+                return raw.hex(" ")
+
+        # ---------- OCTET STRING ----------
+        if dt == "OCTET_STRING":
+            # Binary but human-readable
+            return raw.hex(" ")
+
+        # ---------- DOMAIN ----------
+        if dt == "DOMAIN":
+            # Raw bytes, caller decides how to display/export
+            return raw
+
+        # ---------- FALLBACK ----------
+        return raw.hex(" ")
+
+    def _resolve_od_entry(self, index: int, sub: int):
+        """!Resolve Object Dictionary metadata for (index, sub)."""
+
+        try:
+            entry = self.eds_map.entry_map.get((index, sub))
+        except Exception:
+            entry = None
+
+        if not entry:
+            return None, f"0x{index:04X}:{sub}", None, None
+
+        return (
+            entry,
+            entry.get("name"),
+            entry.get("data_type"),
+            entry.get("access_type"),
+        )
+
     def run(self):
         """! Main processing loop.
         @details
@@ -348,7 +443,7 @@ class process_frames(threading.Thread):
                         pass
                     self.log.warning("Error frame detected: %s", raw)
 
-                # SDO request (client->server)
+                # ---------------- SDO REQUEST (CLIENT → SERVER) ----------------
                 if ftype == analyzer_defs.frame_type.SDO_REQ and raw and len(raw) >= 4:
                     try:
                         cs = raw[0]
@@ -357,113 +452,179 @@ class process_frames(threading.Thread):
 
                         self.stats.update_sdo_request_time(index, sub)
 
-                        name = self.eds_map.name_map.get(
-                            (index, sub), f"0x{index:04X}:{sub}"
-                        )
+                        entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
 
                         decoded = ""
                         payload_len = 0
+                        publish = True
 
                         # ---- UPLOAD REQUEST (READ) ----
                         if cs == 0x40:
                             decoded = "READ"
 
-                        # ---- DOWNLOAD REQUEST (WRITE) ----
+                        # ---- EXPEDITED DOWNLOAD (WRITE) ----
                         elif cs in (0x2F, 0x2B, 0x23):
                             unused = (cs >> 2) & 0x03
                             payload_len = 4 - unused
                             payload = raw[4:4 + payload_len]
-                            val = int.from_bytes(payload, "little")
-                            decoded = str(val)
 
-                        # ---- ABORT (rare in REQ) ----
+                            try:
+                                decoded = self.decode_by_datatype(payload, entry)
+                            except Exception:
+                                decoded = int.from_bytes(payload, "little", signed=False)
+
+                        # ---- SEGMENTED DOWNLOAD INIT (CLIENT → SERVER) ----
+                        elif (cs & 0xE0) == 0x20:
+                            # Store transfer context explicitly
+                            self._sdo_segments[(node_id, index, sub)] = {
+                                "data": bytearray(),
+                                "index": index,
+                                "sub": sub,
+                                "name": name,
+                                "data_type": data_type,
+                                "access_type": access_type,
+                                "entry": entry,
+                            }
+                            publish = False
+
+                        # ---- SEGMENTED DOWNLOAD SEGMENT ----
+                        elif (cs & 0xE0) == 0x00:
+                            publish = False
+
+                            # Find active segmented transfer for this node
+                            key = next(
+                                (k for k in self._sdo_segments if k[0] == node_id),
+                                None
+                            )
+                            if not key:
+                                return  # orphan segment → ignore
+
+                            ctx = self._sdo_segments[key]
+                            ctx["data"] += raw[1:8]
+
+                            last = cs & 0x01
+                            if last:
+                                ctx = self._sdo_segments.pop(key)
+
+                                full = bytes(ctx["data"])
+                                decoded = self.decode_by_datatype(full, ctx["entry"])
+
+                                index = ctx["index"]
+                                sub = ctx["sub"]
+                                name = ctx["name"]
+                                data_type = ctx["data_type"]
+                                access_type = ctx["access_type"]
+
+                                publish = True
+
+                        # ---- ABORT ----
                         elif cs == 0x80:
                             decoded = "ABORT"
 
-                        try:
-                            self.stats.increment_payload(
-                                analyzer_defs.frame_type.SDO_REQ, payload_len
-                            )
-                        except Exception:
-                            pass
+                        if payload_len > 0:
+                            try:
+                                self.stats.increment_payload(
+                                    analyzer_defs.frame_type.SDO_REQ, payload_len
+                                )
+                            except KeyError:
+                                self.log.error(f"SDO REQ Payload increment: {KeyError}")
+                                pass
 
-                        frame = {"time": analyzer_defs.now_str(),
-                                 "cob": cob,
-                                 "type": ftype,
-                                 "dir": "TX" if is_tx is True else "RX",
-                                 "index": index,
-                                 "sub": sub,
-                                 "name": name,
-                                 "raw": raw,
-                                 "decoded": decoded}
-                        self.save_processed_frame(frame)
+                        if publish:
+                            self.save_processed_frame({
+                                "time": analyzer_defs.now_str(),
+                                "cob": cob,
+                                "type": ftype,
+                                "dir": "TX" if is_tx else "RX",
+                                "index": index,
+                                "sub": sub,
+                                "name": name,
+                                "data_type": data_type,
+                                "access_type": access_type,
+                                "raw": raw,
+                                "decoded": decoded,
+                            })
 
-                    except Exception:
-                        self.log.warning("Malformed SDO request frame while recording req time")
+                    except Exception as e:
+                        self.log.warning(f"SDO_REQ processing failed: {e}")
 
-                # SDO response (server->client)
-                elif ftype == analyzer_defs.frame_type.SDO_RES:
-                    if raw and len(raw) >= 4:
+                # ---------------- SDO RESPONSE (SERVER → CLIENT) ----------------
+                elif ftype == analyzer_defs.frame_type.SDO_RES and raw and len(raw) >= 4:
+                    try:
+                        cs = raw[0]
                         index = raw[2] << 8 | raw[1]
                         sub = raw[3]
-                    else:
-                        index, sub = 0, 0
 
-                    cs = raw[0] if raw else 0x00
+                        entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
 
-                    # ---- ABORT ----
-                    if cs == 0x80 and raw and len(raw) >= 8:
-                        self.stats.increment_sdo_abort()
-                        abort_code = int.from_bytes(raw[4:8], "little")
-                        decoded = f"ABORT 0x{abort_code:08X}"
-                        payload_len = 0
-
-                    # ---- EXPEDITED UPLOAD RESPONSE ----
-                    elif cs in (0x43, 0x4B, 0x4F) and raw and len(raw) == 8:
-                        self.stats.increment_sdo_success()
-
-                        # Number of unused bytes encoded in CS
-                        n_unused = (cs >> 2) & 0x03
-                        data_len = 4 - n_unused
-
-                        payload = raw[4:4 + data_len]
-                        val = int.from_bytes(payload, "little")
-                        decoded = str(val)
-                        payload_len = data_len
-
-                    # ---- DOWNLOAD ACK (no data) ----
-                    elif cs == 0x60:
-                        self.stats.increment_sdo_success()
-                        decoded = "OK"
-                        payload_len = 0
-
-                    else:
                         decoded = ""
                         payload_len = 0
+                        publish = True
 
-                    try:
-                        self.stats.increment_payload(
-                            analyzer_defs.frame_type.SDO_RES, payload_len
-                        )
-                    except Exception:
-                        pass
+                        # ---- ABORT ----
+                        if cs == 0x80 and len(raw) >= 8:
+                            self.stats.increment_sdo_abort()
+                            abort_code = int.from_bytes(raw[4:8], "little")
+                            decoded = f"ABORT 0x{abort_code:08X}"
 
-                    self.stats.update_sdo_response_time(index, sub)
+                        # ---- SEGMENTED UPLOAD INIT ----
+                        elif (cs & 0xE0) == 0x40:
+                            self._sdo_segments[(node_id, index, sub)] = bytearray()
+                            decoded = "<SDO segmented upload start>"
+                            publish = False
 
-                    name = self.eds_map.name_map.get(
-                        (index, sub), f"0x{index:04X}:{sub}"
-                    )
+                        # ---- SEGMENTED UPLOAD SEGMENT ----
+                        elif (cs & 0xE0) == 0x00:
+                            key = (node_id, index, sub)
+                            publish = False
 
-                    frame = {"time": analyzer_defs.now_str(),
-                             "cob": cob,
-                             "type": ftype,
-                             "dir": "TX" if is_tx is True else "RX",
-                             "index": index,
-                             "sub": sub,
-                             "name": name,
-                             "raw": raw,
-                             "decoded": decoded}
-                    self.save_processed_frame(frame)
+                            if key in self._sdo_segments:
+                                self._sdo_segments[key] += raw[1:8]
+                                last = cs & 0x01
+                                payload_len = len(raw[1:8])
+
+                                if last:
+                                    full = bytes(self._sdo_segments.pop(key))
+                                    decoded = self.decode_by_datatype(full, entry)
+                                    self.stats.increment_sdo_success()
+                                    publish = True
+
+                        # ---- EXPEDITED UPLOAD ----
+                        elif cs in (0x43, 0x4B, 0x4F):
+                            self.stats.increment_sdo_success()
+                            n_unused = (cs >> 2) & 0x03
+                            data_len = 4 - n_unused
+                            payload = raw[4:4 + data_len]
+                            decoded = self.decode_by_datatype(payload, entry)
+                            payload_len = data_len
+
+                        # ---- DOWNLOAD ACK ----
+                        elif cs == 0x60:
+                            self.stats.increment_sdo_success()
+                            decoded = "OK"
+
+                        if payload_len:
+                            self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, payload_len)
+
+                        if publish:
+                            self.stats.update_sdo_response_time(index, sub)
+
+                            self.save_processed_frame({
+                                "time": analyzer_defs.now_str(),
+                                "cob": cob,
+                                "type": ftype,
+                                "dir": "TX" if is_tx else "RX",
+                                "index": index,
+                                "sub": sub,
+                                "name": name,
+                                "data_type": data_type,
+                                "access_type": access_type,
+                                "raw": raw,
+                                "decoded": decoded,
+                            })
+
+                    except Exception as e:
+                        self.log.warning(f"SDO_RES processing failed: {e}")
 
                 # PDO frame
                 elif ftype == analyzer_defs.frame_type.PDO:
@@ -490,11 +651,10 @@ class process_frames(threading.Thread):
                             offset += size_bytes
 
                             try:
-                                if size_bytes == 4:
-                                    decoded = struct.unpack("<f", chunk)[0]
-                                else:
-                                    decoded = int.from_bytes(chunk, "little", signed=False)
-                            except Exception:
+                                entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+                                decoded = self.decode_by_datatype(chunk, entry)
+                            except Exception as e:
+                                self.log.warning("PDO decoding failed: {e}")
                                 decoded = int.from_bytes(chunk, "little", signed=False) if chunk else 0
 
                             name = (
@@ -503,27 +663,35 @@ class process_frames(threading.Thread):
                                 or f"0x{index:04X}:{sub}"
                             )
 
-                            frame = {"time": analyzer_defs.now_str(),
-                                     "cob": cob,
-                                     "type": ftype,
-                                     "dir": "TX" if is_tx is True else "RX",
-                                     "index": index,
-                                     "sub": sub,
-                                     "name": name,
-                                     "raw": raw,
-                                     "decoded": decoded}
+                            frame = {
+                                "time": analyzer_defs.now_str(),
+                                "cob": cob,
+                                "type": ftype,
+                                "dir": "TX" if is_tx else "RX",
+                                "index": index,
+                                "sub": sub,
+                                "name": name,
+                                "data_type": data_type,
+                                "access_type": access_type,
+                                "raw": raw,
+                                "decoded": decoded,
+                            }
                             self.save_processed_frame(frame)
 
                     else:
-                        frame = {"time": analyzer_defs.now_str(),
-                                 "cob": cob,
-                                 "type": ftype,
-                                 "dir": "TX" if is_tx is True else "RX",
-                                 "index": 0xFFFF,
-                                 "sub": 0xFF,
-                                 "name": "??",
-                                 "raw": raw,
-                                 "decoded": "No reference in EDS"}
+                        frame = {
+                            "time": analyzer_defs.now_str(),
+                            "cob": cob,
+                            "type": ftype,
+                            "dir": "TX" if is_tx else "RX",
+                            "index": 0xFFFF,
+                            "sub": 0xFF,
+                            "name": "??",
+                            "data_type": "",
+                            "access_type": "",
+                            "raw": raw,
+                            "decoded": "No reference in EDS"
+                        }
                         self.save_processed_frame(frame)
 
                 # TIME frame
@@ -559,15 +727,19 @@ class process_frames(threading.Thread):
                         decoded = f"Decode error ({e})"
 
                     # Save processed frame
-                    frame = {"time": analyzer_defs.now_str(),
-                             "cob": cob,
-                             "type": ftype,
-                             "dir": "TX" if is_tx is True else "RX",
-                             "index": 0,
-                             "sub": 0,
-                             "name": "TIME",
-                             "raw": raw,
-                             "decoded": decoded}
+                    frame = {
+                        "time": analyzer_defs.now_str(),
+                        "cob": cob,
+                        "type": ftype,
+                        "dir": "TX" if is_tx else "RX",
+                        "index": 0,
+                        "sub": 0,
+                        "name": "TIME",
+                        "raw": raw,
+                        "data_type": "",
+                        "access_type": "",
+                        "decoded": decoded
+                    }
                     self.save_processed_frame(frame)
 
 
@@ -606,15 +778,19 @@ class process_frames(threading.Thread):
                     except Exception as e:
                         decoded = f"Decode error ({e})"
 
-                    frame = {"time": analyzer_defs.now_str(),
-                                "cob": cob,
-                                "type": ftype,
-                                "dir": "TX" if is_tx is True else "RX",
-                                "index": 0,
-                                "sub": 0,
-                                "name": "EMCY",
-                                "raw": raw,
-                                "decoded": decoded}
+                    frame = {
+                        "time": analyzer_defs.now_str(),
+                        "cob": cob,
+                        "type": ftype,
+                        "dir": "TX" if is_tx else "RX",
+                        "index": 0,
+                        "sub": 0,
+                        "name": "EMCY",
+                        "data_type": "",
+                        "access_type": "",
+                        "raw": raw,
+                        "decoded": decoded
+                        }
                     self.save_processed_frame(frame)
 
 
@@ -637,31 +813,38 @@ class process_frames(threading.Thread):
                     except Exception as e:
                         decoded = f"Decode error ({e})"
 
-                    frame = {"time": analyzer_defs.now_str(),
-                             "cob": cob,
-                             "type": ftype,
-                             "dir": "TX" if is_tx is True else "RX",
-                             "index": 0,
-                             "sub": 0,
-                             "name": "HB",
-                             "raw": raw,
-                             "decoded": decoded}
+                    frame = {
+                        "time": analyzer_defs.now_str(),
+                        "cob": cob,
+                        "type": ftype,
+                        "dir": "TX" if is_tx else "RX",
+                        "index": 0,
+                        "sub": 0,
+                        "name": "HB",
+                        "data_type": "",
+                        "access_type": "",
+                        "raw": raw,
+                        "decoded": decoded
+                    }
                     self.save_processed_frame(frame)
 
 
                 # Other frames type
                 else:
-                    frame = {"time": analyzer_defs.now_str(),
-                                "cob": cob,
-                                "type": ftype,
-                                "dir": "TX" if is_tx is True else "RX",
-                                "index": 0,
-                                "sub": 0,
-                                "name": "",
-                                "raw": raw,
-                                "decoded": ""}
+                    frame = {
+                        "time": analyzer_defs.now_str(),
+                        "cob": cob,
+                        "type": ftype,
+                        "dir": "TX" if is_tx else "RX",
+                        "index": 0,
+                        "sub": 0,
+                        "name": "",
+                        "data_type": "",
+                        "access_type": "",
+                        "raw": raw,
+                        "decoded": ""
+                    }
                     self.save_processed_frame(frame)
-
 
                 # optionally mark task done if using task tracking
                 try:

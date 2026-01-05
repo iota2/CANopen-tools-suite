@@ -1,4 +1,4 @@
-.TH "process_frames" 3 "Sat Jan 3 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "process_frames" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,6 +15,10 @@ Inherits Thread\&.
 .RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, queue\&.Queue \fBprocessed_frame\fP, \fBeds_parser\fP \fBeds_map\fP, str|None \fBexport\fP=None)"
 .br
 .RI "Initialize the processor thread\&. "
+.ti -1c
+.RI "def \fBdecode_by_datatype\fP (self, bytes raw, dict|None entry)"
+.br
+.RI "Decode raw frame to respective CANopen DataType\&. "
 .ti -1c
 .RI "def \fBexport_processed_frame\fP (self, dict frame)"
 .br
@@ -42,7 +46,7 @@ Inherits Thread\&.
 .ti -1c
 .RI "\fBexport\fP"
 .br
-.RI "Flag indicating whether processed export is enabled\&. "
+.RI "Flag indicating whether processed export is enabled : None | csv | json\&. "
 .ti -1c
 .RI "\fBexport_file\fP"
 .br
@@ -82,6 +86,11 @@ Inherits Thread\&.
 .ti -1c
 .RI "dict \fB_json_safe_processed_frame\fP (self, dict frame)"
 .br
+.RI "Create a processed frame for saving to JSON\&. "
+.ti -1c
+.RI "def \fB_resolve_od_entry\fP (self, int index, int sub)"
+.br
+.RI "Resolve Object Dictionary metadata for (index, sub)\&. "
 .ti -1c
 .RI "bool \fB_sdo_has_index\fP (self, int cs)"
 .br
@@ -93,6 +102,11 @@ Inherits Thread\&.
 .ti -1c
 .RI "\fB_json_first\fP"
 .br
+.RI "Identifier for first element of JSON file\&. "
+.ti -1c
+.RI "\fB_sdo_segments\fP"
+.br
+.RI "State for segmented SDO support: (node, index, sub) -> bytearray\&. "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -123,10 +137,20 @@ Initialize the processor thread\&. The constructor stores references to required
 .PP 
 .SS " dict _json_safe_processed_frame ( self, dict frame)\fC [private]\fP"
 
+.PP
+Create a processed frame for saving to JSON\&. 
+.SS "def _resolve_od_entry ( self, int index, int sub)\fC [private]\fP"
+
+.PP
+Resolve Object Dictionary metadata for (index, sub)\&. 
 .SS " bool _sdo_has_index ( self, int cs)\fC [private]\fP"
 
 .PP
 Return True if SDO command specifier carries index/subindex\&. 
+.SS "def decode_by_datatype ( self, bytes raw, dict | None entry)"
+
+.PP
+Decode raw frame to respective CANopen DataType\&. 
 .SS "def export_processed_frame ( self, dict frame)"
 
 .PP
@@ -161,6 +185,12 @@ Request the processor thread to stop\&. Signals the internal stop event so the p
 .PP 
 .SS "_json_first\fC [private]\fP"
 
+.PP
+Identifier for first element of JSON file\&. 
+.SS "_sdo_segments\fC [private]\fP"
+
+.PP
+State for segmented SDO support: (node, index, sub) -> bytearray\&. 
 .SS "_stop_event\fC [private]\fP"
 
 .PP
@@ -172,7 +202,7 @@ EDS map/parser used to resolve (index, subindex) -> name strings\&.
 .SS "export"
 
 .PP
-Flag indicating whether processed export is enabled\&. 
+Flag indicating whether processed export is enabled : None | csv | json\&. 
 .SS "export_file"
 
 .PP

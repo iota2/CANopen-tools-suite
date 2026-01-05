@@ -1,4 +1,4 @@
-.TH "analyzer_defs" 3 "Sat Jan 3 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "analyzer_defs" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,6 +45,10 @@ analyzer_defs
 .RI "string \fBAPP_ORG\fP = 'iota2'"
 .br
 .RI "Application organization name\&. "
+.ti -1c
+.RI "dictionary \fBBIT_LENGTH_BY_TYPE\fP"
+.br
+.RI "Bit lengths defined for EDS DataType\&. "
 .ti -1c
 .RI "int \fBDATA_TABLE_HEIGHT\fP = 30"
 .br
@@ -105,6 +109,10 @@ analyzer_defs
 .RI "string \fBDEFAULT_SDO_SEND_SUB\fP = '0x00'"
 .br
 .RI "Default Sub-Index for Send SDO\&. "
+.ti -1c
+.RI "dictionary \fBEDS_DATATYPE_MAP\fP"
+.br
+.RI "DataTypes defined in EDS file\&. "
 .ti -1c
 .RI "int \fBFSYNC_EVERY\fP = 50"
 .br
@@ -209,6 +217,24 @@ Application name\&.
 
 .PP
 Application organization name\&. 
+.SS "dictionary BIT_LENGTH_BY_TYPE"
+\fBInitial value:\fP
+.PP
+.nf
+1 =  {
+2     "BOOLEAN": 1,
+3     "INTEGER8": 8,
+4     "UNSIGNED8": 8,
+5     "INTEGER16": 16,
+6     "UNSIGNED16": 16,
+7     "INTEGER32": 32,
+8     "UNSIGNED32": 32,
+9     "REAL32": 32,
+10     "REAL64": 64,
+11 }
+.fi
+.PP
+Bit lengths defined for EDS DataType\&. 
 .SS "int DATA_TABLE_HEIGHT = 30"
 
 .PP
@@ -269,6 +295,30 @@ Default Repeat-Time for Send SDO\&.
 
 .PP
 Default Sub-Index for Send SDO\&. 
+.SS "dictionary EDS_DATATYPE_MAP"
+\fBInitial value:\fP
+.PP
+.nf
+1 =  {
+2     "0X0001": "BOOLEAN",
+3     "0X0002": "INTEGER8",
+4     "0X0003": "INTEGER16",
+5     "0X0004": "INTEGER32",
+6     "0X0005": "UNSIGNED8",
+7     "0X0006": "UNSIGNED16",
+8     "0X0007": "UNSIGNED32",
+9     "0X0008": "REAL32",
+10     "0X0011": "REAL64",
+11 
+12     # String / blob types
+13     "0X0009": "VISIBLE_STRING",
+14     "0X000A": "OCTET_STRING",
+15     "0X000B": "UNICODE_STRING",
+16     "0X000F": "DOMAIN",
+17 }
+.fi
+.PP
+DataTypes defined in EDS file\&. 
 .SS "int FSYNC_EVERY = 50"
 
 .PP

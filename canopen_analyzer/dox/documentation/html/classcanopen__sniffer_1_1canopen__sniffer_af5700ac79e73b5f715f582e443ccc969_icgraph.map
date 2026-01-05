@@ -1,5 +1,5 @@
 <map id="send_raw_pdo" name="send_raw_pdo">
-<area shape="rect" id="node1" title="Send raw PDO frame." alt="" coords="523,5,637,32"/>
+<area shape="rect" id="node1" title="Send PDO." alt="" coords="523,5,637,32"/>
 <area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="335,5,475,32"/>
 <area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,5,287,32"/>
 <area shape="rect" id="node4" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,5,48,32"/>

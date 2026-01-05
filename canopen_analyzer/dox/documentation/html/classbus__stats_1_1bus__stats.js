@@ -7,6 +7,7 @@ var classbus__stats_1_1bus__stats =
     [ "sdo_stats", "classbus__stats_1_1bus__stats_1_1sdo__stats.html", null ],
     [ "stats_data", "classbus__stats_1_1bus__stats_1_1stats__data.html", null ],
     [ "__init__", "classbus__stats_1_1bus__stats.html#a22dbbf611ba724011c476f362b1efeca", null ],
+    [ "_compute_bus_utilization", "classbus__stats_1_1bus__stats.html#ac720806072c70d6558c3f663d3991cab", null ],
     [ "_rate_sampler", "classbus__stats_1_1bus__stats.html#ab00450d192ca43f10fe896bd1428f60d", null ],
     [ "add_node", "classbus__stats_1_1bus__stats.html#ac8f70966bf334462b64f0bcf6e1f7474", null ],
     [ "count_talker", "classbus__stats_1_1bus__stats.html#a1bdcbcf5c0482abf7e2de86096f8e6c0", null ],
