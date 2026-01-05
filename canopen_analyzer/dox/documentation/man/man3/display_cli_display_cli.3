@@ -1,4 +1,4 @@
-.TH "display_cli" 3 "Mon Jan 5 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_cli" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -144,6 +144,9 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .RI "def \fB_stop_repeat\fP (self, key)"
 .br
 .RI "Stop a repeating task\&. "
+.ti -1c
+.RI "str \fB_trim_cell\fP (self, str value, int max_width)"
+.br
 .in -1c
 .SS "Private Attributes"
 
@@ -228,6 +231,14 @@ Start a repeating task\&.
 
 .PP
 Stop a repeating task\&. 
+.SS " str _trim_cell ( self, str value, int max_width)\fC [private]\fP"
+
+.PP
+.nf
+Trim cell text to max_width with ellipsis for CLI tables.
+.fi
+.PP
+ 
 .SS "def run ( self)"
 
 .PP

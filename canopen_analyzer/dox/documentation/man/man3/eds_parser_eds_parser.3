@@ -1,4 +1,4 @@
-.TH "eds_parser" 3 "Mon Jan 5 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "eds_parser" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -27,6 +27,9 @@ Provides utilities to extract ParameterName mappings and PDO mappings from an ED
 .br
 .RI "Initialize EDS parser and optionally parse the given EDS file\&. "
 .ti -1c
+.RI "def \fBbuild_entry_map\fP (self)"
+.br
+.ti -1c
 .RI "def \fBbuild_name_map\fP (self)"
 .br
 .RI "Build a mapping from object dictionary entries to names\&. "
@@ -50,6 +53,10 @@ Provides utilities to extract ParameterName mappings and PDO mappings from an ED
 .RI "\fBeds_path\fP"
 .br
 .RI "Path to the EDS file supplied to this parser (or None)\&. "
+.ti -1c
+.RI "\fBentry_map\fP"
+.br
+.RI "Mapping of (index, subindex) -> OD entry metadata\&. "
 .ti -1c
 .RI "\fBlog\fP"
 .br
@@ -86,6 +93,22 @@ Initialize EDS parser and optionally parse the given EDS file\&. If eds_path is 
 
 .SH "Member Function Documentation"
 .PP 
+.SS "def build_entry_map ( self)"
+
+.PP
+.nf
+Build Object Dictionary entry metadata map.
+
+(index, sub) -> {
+    name,
+    data_type,
+    bit_length,
+    access_type
+}
+
+.fi
+.PP
+ 
 .SS "def build_name_map ( self)"
 
 .PP
@@ -139,6 +162,10 @@ Mapping of COB-ID -> list of human-readable field names for that PDO\&.
 
 .PP
 Path to the EDS file supplied to this parser (or None)\&. 
+.SS "entry_map"
+
+.PP
+Mapping of (index, subindex) -> OD entry metadata\&. 
 .SS "log"
 
 .PP

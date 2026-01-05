@@ -138,15 +138,49 @@ DEFAULT_PDO_SEND_DATA = "00 00 00 00 00 00 00 00"
 ## Default Repeat-Time for Send PDO.
 DEFAULT_PDO_SEND_REPEAT_TIME = "1000"
 
+## DataTypes defined in EDS file
+EDS_DATATYPE_MAP = {
+    "0X0001": "BOOLEAN",
+    "0X0002": "INTEGER8",
+    "0X0003": "INTEGER16",
+    "0X0004": "INTEGER32",
+    "0X0005": "UNSIGNED8",
+    "0X0006": "UNSIGNED16",
+    "0X0007": "UNSIGNED32",
+    "0X0008": "REAL32",
+    "0X0011": "REAL64",
+
+    # String / blob types
+    "0X0009": "VISIBLE_STRING",
+    "0X000A": "OCTET_STRING",
+    "0X000B": "UNICODE_STRING",
+    "0X000F": "DOMAIN",
+}
+
+## Bit lengths defined for EDS DataType
+BIT_LENGTH_BY_TYPE = {
+    "BOOLEAN": 1,
+    "INTEGER8": 8,
+    "UNSIGNED8": 8,
+    "INTEGER16": 16,
+    "UNSIGNED16": 16,
+    "INTEGER32": 32,
+    "UNSIGNED32": 32,
+    "REAL32": 32,
+    "REAL64": 64,
+}
+
+
 # --------------------------------------------------------------------------
 # ----- Enumerations -----
 # --------------------------------------------------------------------------
 class frame_type(Enum):
     """! Types of CANopen messages.
     @details
-        This enumeration defines the various message types that can appear
-        on a CANopen network.
+    This enumeration defines the various message types that can appear
+    on a CANopen network.
     """
+
     ## Emergency message.
     EMCY = 1
 
@@ -195,6 +229,7 @@ log.addHandler(logging.NullHandler())
 
 def enable_logging():
     """! Enable file-only logging, enabled through argument."""
+
     filename = f"{APP_NAME}.log"
 
     # Remove existing handlers (console) and configure file handler only.
@@ -217,6 +252,7 @@ def enable_logging():
 def now_str() -> str:
     """! Return current time string.
     @return Time string.
+
     """
     return datetime.now().strftime("%H:%M:%S.%f")[:-3]
 
@@ -224,6 +260,7 @@ def bytes_to_hex(data) -> str:
     """! Convert bytes or bytearray to a space-separated hex string safely.
     @param data Byte stream.
     @return Converted string.
+
     """
     if data is None:
         return ""
@@ -242,5 +279,6 @@ def clean_int_with_comment(val: str) -> int:
     @param val Input string.
     @return Splitted value as integer.
     """
+
     return int(val.split(";", 1)[0].strip(), 0)
 

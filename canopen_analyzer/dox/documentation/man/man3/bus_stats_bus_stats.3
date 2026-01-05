@@ -1,4 +1,4 @@
-.TH "bus_stats" 3 "Mon Jan 5 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "bus_stats" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -124,6 +124,10 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 
 .in +1c
 .ti -1c
+.RI "float \fB_compute_bus_utilization\fP (self, dict rates_latest)"
+.br
+.RI "Compute CAN bus utilization percentage (Classical CAN, Std ID)\&. "
+.ti -1c
 .RI "def \fB_rate_sampler\fP (self)"
 .br
 .RI "Background thread: periodically call \fBupdate_rates()\fP so rates get sampled even when no frames arrive\&. "
@@ -157,6 +161,10 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 Initialize the \fBbus_stats\fP object and its internal data structures\&. This constructor initializes synchronization primitives and prepares the root statistics container used to store CANopen bus statistics\&. A thread lock is used to protect concurrent access to the shared \fC_stats\fP data\&. A logger instance is also created for internal diagnostics and reporting\&. 
 .SH "Member Function Documentation"
 .PP 
+.SS " float _compute_bus_utilization ( self, dict rates_latest)\fC [private]\fP"
+
+.PP
+Compute CAN bus utilization percentage (Classical CAN, Std ID)\&. Uses DLC-weighted frame sizes with a conservative stuffing factor\&. Relies only on frame-rate statistics already tracked in \fBbus_stats\fP\&. 
 .SS "def _rate_sampler ( self)\fC [private]\fP"
 
 .PP

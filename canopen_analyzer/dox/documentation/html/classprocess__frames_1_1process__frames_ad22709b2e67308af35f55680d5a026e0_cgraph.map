@@ -1,8 +1,10 @@
 <map id="run" name="run">
-<area shape="rect" id="node1" title="Main processing loop." alt="" coords="5,31,48,57"/>
-<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="98,5,266,32"/>
-<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,56,268,83"/>
-<area shape="rect" id="node4" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="331,19,484,61"/>
-<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,85,499,112"/>
-<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title=" " alt="" coords="547,78,711,119"/>
+<area shape="rect" id="node1" title="Main processing loop." alt="" coords="5,81,48,108"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="111,5,253,32"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="103,56,261,83"/>
+<area shape="rect" id="node4" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="98,107,266,133"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,157,268,184"/>
+<area shape="rect" id="node6" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="331,121,484,162"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,187,499,213"/>
+<area shape="rect" id="node8" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title=" " alt="" coords="547,179,711,221"/>
 </map>

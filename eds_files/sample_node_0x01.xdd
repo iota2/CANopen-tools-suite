@@ -15,7 +15,7 @@
         <ProfileTechnology>CANopen</ProfileTechnology>
       </ISO15745Reference>
     </ProfileHeader>
-    <ProfileBody xmlns:q1="http://www.canopen.org/xml/1.1" xsi:type="q1:ProfileBody_Device_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sample_node_0x01.xdd" fileCreator="" fileCreationDate="2025-09-01" fileCreationTime="01:41:00.0000000+05:30" fileModifiedBy="Naval Prashar" fileModificationDate="2026-01-05" fileModificationTime="14:08:05.0145780+05:30" fileVersion="1" supportedLanguages="en" xmlns="">
+    <ProfileBody xmlns:q1="http://www.canopen.org/xml/1.1" xsi:type="q1:ProfileBody_Device_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sample_node_0x01.xdd" fileCreator="" fileCreationDate="2025-09-01" fileCreationTime="01:41:00.0000000+05:30" fileModifiedBy="Naval Prashar" fileModificationDate="2026-01-05" fileModificationTime="18:34:57.0741150+05:30" fileVersion="1" supportedLanguages="en" xmlns="">
       <q1:DeviceIdentity>
         <q1:vendorName>iota2</q1:vendorName>
         <q1:vendorID>0x00120ACE</q1:vendorID>
@@ -517,29 +517,39 @@
             <label lang="en">MemoryData</label>
             <BITSTRING />
           </q1:parameter>
+          <q1:parameter uniqueID="UID_OBJ_2001" access="readWrite">
+            <label lang="en">Diagnosis</label>
+            <BOOL />
+            <q1:defaultValue value="1" />
+          </q1:parameter>
+          <q1:parameter uniqueID="UID_OBJ_2002" access="readWrite">
+            <label lang="en">ActiveUsers</label>
+            <STRING />
+            <q1:defaultValue value="Iteration: 1" />
+          </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_6000" access="readWrite">
-            <label lang="en">ConnectionState</label>
+            <label lang="en">ConnectionStatus</label>
             <USINT />
             <q1:defaultValue value="1" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_6001" access="readWrite">
-            <label lang="en">MonitorState</label>
+            <label lang="en">NetworkStatus</label>
             <USINT />
             <q1:defaultValue value="2" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_6002" access="readWrite">
-            <label lang="en">NetworkState</label>
+            <label lang="en">ValveStatus</label>
             <USINT />
             <q1:defaultValue value="3" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_6003" access="readWrite">
-            <label lang="en">ErrorCode</label>
-            <BOOL />
+            <label lang="en">ErrorStatus</label>
+            <USINT />
             <q1:defaultValue value="4" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_6004" access="readWrite">
             <label lang="en">ActiveChannels</label>
-            <BOOL />
+            <USINT />
             <q1:defaultValue value="5" />
           </q1:parameter>
           <q1:parameter uniqueID="UID_OBJ_6005">
@@ -664,7 +674,7 @@
         <ProfileTechnology>CANopen</ProfileTechnology>
       </ISO15745Reference>
     </ProfileHeader>
-    <ProfileBody xmlns:q2="http://www.canopen.org/xml/1.1" xsi:type="q2:ProfileBody_CommunicationNetwork_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sample_node_0x01.xdd" fileCreator="" fileCreationDate="2025-09-01" fileCreationTime="01:41:00.0000000+05:30" fileModificationDate="2026-01-05" fileModificationTime="14:08:05.0145780+05:30" fileVersion="1" supportedLanguages="en" xmlns="">
+    <ProfileBody xmlns:q2="http://www.canopen.org/xml/1.1" xsi:type="q2:ProfileBody_CommunicationNetwork_CANopen" formatName="CANopen" formatVersion="1.0" fileName="sample_node_0x01.xdd" fileCreator="" fileCreationDate="2025-09-01" fileCreationTime="01:41:00.0000000+05:30" fileModificationDate="2026-01-05" fileModificationTime="18:34:57.0741150+05:30" fileVersion="1" supportedLanguages="en" xmlns="">
       <ApplicationLayers>
         <q2:CANopenObjectList>
           <CANopenObject index="1000" name="Device type" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_1000" />
@@ -739,10 +749,12 @@
             <CANopenSubObject subIndex="02" name="Application object 2" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_1A0302" />
           </CANopenObject>
           <CANopenObject index="2000" name="MemoryData" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_2000" />
-          <CANopenObject index="6000" name="ConnectionState" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6000" />
-          <CANopenObject index="6001" name="MonitorState" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6001" />
-          <CANopenObject index="6002" name="NetworkState" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6002" />
-          <CANopenObject index="6003" name="ErrorCode" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6003" />
+          <CANopenObject index="2001" name="Diagnosis" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_2001" />
+          <CANopenObject index="2002" name="ActiveUsers" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_2002" />
+          <CANopenObject index="6000" name="ConnectionStatus" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6000" />
+          <CANopenObject index="6001" name="NetworkStatus" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6001" />
+          <CANopenObject index="6002" name="ValveStatus" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6002" />
+          <CANopenObject index="6003" name="ErrorStatus" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6003" />
           <CANopenObject index="6004" name="ActiveChannels" objectType="7" PDOmapping="no" uniqueIDRef="UID_OBJ_6004" />
           <CANopenObject index="6005" name="MeasurementCurrent" objectType="8" uniqueIDRef="UID_OBJ_6005" subNumber="3">
             <CANopenSubObject subIndex="00" name="Highest sub-index supported" objectType="7" PDOmapping="no" uniqueIDRef="UID_SUB_600500" />

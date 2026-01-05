@@ -108,6 +108,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a50e50f7214b77463663d40b1d793543e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a50e50f7214b77463663d40b1d793543e">__init__</a> (self, str|None <a class="el" href="classeds__parser_1_1eds__parser.html#ac38b8f2a825269765b2858c7f2155aec">eds_path</a>=None)</td></tr>
 <tr class="memdesc:a50e50f7214b77463663d40b1d793543e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize EDS parser and optionally parse the given EDS file.  <a href="classeds__parser_1_1eds__parser.html#a50e50f7214b77463663d40b1d793543e">More...</a><br /></td></tr>
 <tr class="separator:a50e50f7214b77463663d40b1d793543e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e6c0bf72427b79f64f2a42af461f080"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a6e6c0bf72427b79f64f2a42af461f080">build_entry_map</a> (self)</td></tr>
+<tr class="separator:a6e6c0bf72427b79f64f2a42af461f080"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8013008a9a6ef94e9571b038c9eb1fec"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a8013008a9a6ef94e9571b038c9eb1fec">build_name_map</a> (self)</td></tr>
 <tr class="memdesc:a8013008a9a6ef94e9571b038c9eb1fec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a mapping from object dictionary entries to names.  <a href="classeds__parser_1_1eds__parser.html#a8013008a9a6ef94e9571b038c9eb1fec">More...</a><br /></td></tr>
 <tr class="separator:a8013008a9a6ef94e9571b038c9eb1fec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,6 +128,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ac38b8f2a825269765b2858c7f2155aec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#ac38b8f2a825269765b2858c7f2155aec">eds_path</a></td></tr>
 <tr class="memdesc:ac38b8f2a825269765b2858c7f2155aec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path to the EDS file supplied to this parser (or None).  <a href="classeds__parser_1_1eds__parser.html#ac38b8f2a825269765b2858c7f2155aec">More...</a><br /></td></tr>
 <tr class="separator:ac38b8f2a825269765b2858c7f2155aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2032165c96f39d9aa1502709f38acd3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#a2032165c96f39d9aa1502709f38acd3e">entry_map</a></td></tr>
+<tr class="memdesc:a2032165c96f39d9aa1502709f38acd3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mapping of (index, subindex) -&gt; OD entry metadata.  <a href="classeds__parser_1_1eds__parser.html#a2032165c96f39d9aa1502709f38acd3e">More...</a><br /></td></tr>
+<tr class="separator:a2032165c96f39d9aa1502709f38acd3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classeds__parser_1_1eds__parser.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a></td></tr>
 <tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance scoped to this parser.  <a href="classeds__parser_1_1eds__parser.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,6 +185,32 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6e6c0bf72427b79f64f2a42af461f080"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e6c0bf72427b79f64f2a42af461f080">&#9670;&nbsp;</a></span>build_entry_map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def build_entry_map </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Build Object Dictionary entry metadata map.
+
+(index, sub) -&gt; {
+    name,
+    data_type,
+    bit_length,
+    access_type
+}
+</pre> 
+</div>
+</div>
 <a id="a8013008a9a6ef94e9571b038c9eb1fec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8013008a9a6ef94e9571b038c9eb1fec">&#9670;&nbsp;</a></span>build_name_map()</h2>
 
@@ -310,6 +341,22 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Path to the EDS file supplied to this parser (or None). </p>
+
+</div>
+</div>
+<a id="a2032165c96f39d9aa1502709f38acd3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2032165c96f39d9aa1502709f38acd3e">&#9670;&nbsp;</a></span>entry_map</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">entry_map</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mapping of (index, subindex) -&gt; OD entry metadata. </p>
 
 </div>
 </div>

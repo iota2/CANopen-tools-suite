@@ -87,7 +87,7 @@ class bus_stats:
         ## Dictionary holding total payload size per frame type.
         ## @details
         ## Initialized for PDO and SDO response messages.
-        sizes: dict = field(default_factory=lambda: {analyzer_defs.frame_type.PDO: 0, analyzer_defs.frame_type.SDO_RES: 0})
+        sizes: dict = field(default_factory=lambda: {analyzer_defs.frame_type.PDO: 0, analyzer_defs.frame_type.SDO_REQ: 0, analyzer_defs.frame_type.SDO_RES: 0})
 
 
     @dataclass
@@ -340,6 +340,62 @@ class bus_stats:
         with self._lock:
             return self._stats.frame_count.total
 
+    def _compute_bus_utilization(self, rates_latest: dict) -> float:
+        """! Compute CAN bus utilization percentage (Classical CAN, Std ID).
+        @details
+        Uses DLC-weighted frame sizes with a conservative stuffing factor.
+        Relies only on frame-rate statistics already tracked in bus_stats.
+        """
+
+        bitrate = self.bitrate
+        if bitrate <= 0:
+            return 0.0
+
+        # Classical CAN (11-bit ID) approximate bits per frame by DLC
+        # Includes SOF, arbitration, control, CRC, ACK, EOF, intermission
+        # Excludes bit-stuffing (handled separately)
+        BITS_PER_FRAME_BY_DLC = {
+            0: 55,
+            1: 63,
+            2: 71,
+            3: 79,
+            4: 87,
+            5: 95,
+            6: 103,
+            7: 111,
+            8: 119,
+        }
+
+        # Conservative average stuffing factor (CiA / Vector typical guidance)
+        STUFFING_FACTOR = 1.15
+
+        # If bus is idle, utilization is zero
+        if not self._stats.nodes:
+            return 0.0
+
+        bits_per_second = 0.0
+
+        # We do not track DLC histogram explicitly, so assume:
+        # - PDO ≈ 8 bytes
+        # - SDO segments ≈ 7 bytes
+        # - Other control frames ≈ 1 byte
+        rate_total = float(rates_latest.get("total", 0.0))
+        rate_pdo   = float(rates_latest.get("pdo", 0.0))
+        rate_sdo   = float(rates_latest.get("sdo_req", 0.0)) + float(rates_latest.get("sdo_res", 0.0))
+        rate_other = max(0.0, rate_total - rate_pdo - rate_sdo)
+
+        bits_per_second += rate_pdo   * BITS_PER_FRAME_BY_DLC[8]
+        bits_per_second += rate_sdo   * BITS_PER_FRAME_BY_DLC[7]
+        bits_per_second += rate_other * BITS_PER_FRAME_BY_DLC[1]
+
+        # Apply stuffing factor
+        bits_per_second *= STUFFING_FACTOR
+
+        util = (bits_per_second / bitrate) * 100.0
+
+        # Clamp for safety
+        return max(0.0, min(util, 100.0))
+
     def update_rates(self, now: float = None, interval: float = 1.0):
         """! Compute frames/s rates by differencing cumulative counters.
         This method is time-gated (default ~1s) and appends values into the
@@ -433,32 +489,9 @@ class bus_stats:
 
             # compute bus util using stored external bitrate or default
             try:
-                bitrate = self.bitrate
-
-                # total frames observed in this snapshot (avoid zero)
-                total_cnt = max(1, counts.get("total", 0))
-
-                # derive avg payload bytes using stored payload_size totals (best-effort)
-                pdo_payload = self._stats.payload_size.sizes.get(analyzer_defs.frame_type.PDO, 0)
-                sdo_payload = self._stats.payload_size.sizes.get(analyzer_defs.frame_type.SDO_RES, 0) + self._stats.payload_size.sizes.get(analyzer_defs.frame_type.SDO_REQ, 0)
-
-                # If payload_size stores cumulative bytes per type, compute average payload bytes per frame
-                avg_payload_bytes = (pdo_payload + sdo_payload) / total_cnt if total_cnt else 0.0
-
-                # rough estimate of bits on bus per frame: overhead + payload
-                avg_frame_bits = max(64, int(avg_payload_bytes * 8 + 64))
-
-                # use the most recent total frames/s rate
-                rate_total = float(self._stats.rates.latest.get("total", 0.0))
-
-                # Reset bus utilization for idle bus
-                if not self._stats.nodes:
-                    # No active nodes → bus is idle
-                    self._stats.rates.bus_util_percent = 0.0
-                else:
-                    util = (rate_total * avg_frame_bits) / max(1, bitrate) * 100.0
-                    self._stats.rates.bus_util_percent = util
-
+                self._stats.rates.bus_util_percent = self._compute_bus_utilization(
+                    self._stats.rates.latest
+                )
             except Exception:
                 self._stats.rates.bus_util_percent = 0.0
 

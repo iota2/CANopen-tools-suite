@@ -76,7 +76,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "analyzer__defs_8py.html",
-"classdisplay__tui_1_1display__tui.html#a668c3dabd5893be34deacee376ddbcd3"
+"classdisplay__tui_1_1display__tui.html#a482bafd8cb7434915480737dee874657"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

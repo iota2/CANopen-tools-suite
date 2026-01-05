@@ -555,8 +555,21 @@ class display_cli(threading.Thread):
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
+    def _trim_cell(self, value: str, max_width: int) -> str:
+        """Trim cell text to max_width with ellipsis for CLI tables."""
+        if not value:
+            return ""
+        s = str(value)
+        if len(s) <= max_width:
+            return s
+        # Leave room for ellipsis
+        return s[: max_width - 1] + "…"
+
     def _render_tables(self):
         """! Render tables for displaying CLI data."""
+
+        NAME_COL_WIDTH = 20
+        DECODED_COL_WIDTH = 15
 
         # Protocol Data -----------------------------------------------------
         t_proto = Table(title="Protocol Data", expand=True, box=box.SQUARE, style="cyan")
@@ -581,38 +594,54 @@ class display_cli(threading.Thread):
         t_pdo.add_column("Time", no_wrap=True)
         t_pdo.add_column("COB-ID", width=8)
         t_pdo.add_column("Dir", width=4)
-        t_pdo.add_column("Name")
+        t_pdo.add_column("Name", width=NAME_COL_WIDTH)
         t_pdo.add_column("Index")
         t_pdo.add_column("Sub")
         t_pdo.add_column("Raw Data", no_wrap=True)
-        t_pdo.add_column("Decoded")
+        t_pdo.add_column("Decoded", width=DECODED_COL_WIDTH)
         t_pdo.add_column("Count", width=6, justify="right")
 
         frames = list(self.fixed_pdo.values())[-analyzer_defs.DATA_TABLE_HEIGHT:] if self.fixed else list(self.pdo_frames)[-analyzer_defs.DATA_TABLE_HEIGHT:]
         while len(frames) < analyzer_defs.DATA_TABLE_HEIGHT:
             frames.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for f in frames:
-            decoded = Text(str(f.get("decoded", "")), style="bold green") if f.get("decoded") else ""
-            t_pdo.add_row(f["time"], f["cob"], f["dir"], f.get("name", ""), f.get("index", ""), f.get("sub", ""), f.get("raw", ""), decoded, str(f.get("count", "")))
+            name = self._trim_cell(f.get("name", ""), NAME_COL_WIDTH)
+            decoded_txt = self._trim_cell(str(f.get("decoded", "")), DECODED_COL_WIDTH)
+
+            decoded = Text(decoded_txt, style="bold green") if decoded_txt else ""
+
+            t_pdo.add_row(
+                f["time"], f["cob"], f["dir"],
+                name, f.get("index", ""), f.get("sub", ""),
+                f.get("raw", ""), decoded, str(f.get("count", ""))
+            )
 
         # SDO table -----------------------------------------------------
         t_sdo = Table(title="SDO Data", expand=True, box=box.SQUARE, style="magenta")
         t_sdo.add_column("Time", no_wrap=True)
         t_sdo.add_column("COB-ID", width=8)
         t_sdo.add_column("Dir", width=6)
-        t_sdo.add_column("Name")
+        t_sdo.add_column("Name", width=NAME_COL_WIDTH)
         t_sdo.add_column("Index")
         t_sdo.add_column("Sub")
         t_sdo.add_column("Raw Data", no_wrap=True)
-        t_sdo.add_column("Decoded")
+        t_sdo.add_column("Decoded", width=DECODED_COL_WIDTH)
         t_sdo.add_column("Count", width=6, justify="right")
 
         sdos = list(self.fixed_sdo.values())[-analyzer_defs.DATA_TABLE_HEIGHT:] if self.fixed else list(self.sdo_frames)[-analyzer_defs.DATA_TABLE_HEIGHT:]
         while len(sdos) < analyzer_defs.DATA_TABLE_HEIGHT:
             sdos.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for s in sdos:
-            decoded = Text(str(s.get("decoded", "")), style="bold magenta") if s.get("decoded") else ""
-            t_sdo.add_row(s["time"], s["cob"], s["dir"], s.get("name", ""), s.get("index", ""), s.get("sub", ""), s.get("raw", ""), decoded, str(s.get("count", "")))
+            name = self._trim_cell(s.get("name", ""), NAME_COL_WIDTH)
+            decoded_txt = self._trim_cell(str(s.get("decoded", "")), DECODED_COL_WIDTH)
+
+            decoded = Text(decoded_txt, style="bold magenta") if decoded_txt else ""
+
+            t_sdo.add_row(
+                s["time"], s["cob"], s["dir"],
+                name, s.get("index", ""), s.get("sub", ""),
+                s.get("raw", ""), decoded, str(s.get("count", ""))
+            )
 
         # Remote Node Control -----------------------------------------------------
         t_remote = Table(title="Remote Node Control", expand=True, box=box.SQUARE, style="purple")

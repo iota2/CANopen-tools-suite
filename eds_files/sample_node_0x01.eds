@@ -8,7 +8,7 @@ Description=Sample Node ID 0x01
 CreationTime=1:41AM
 CreationDate=09-01-2025
 CreatedBy=
-ModificationTime=2:08PM
+ModificationTime=6:34PM
 ModificationDate=01-05-2026
 ModifiedBy=Naval Prashar
 
@@ -591,7 +591,7 @@ DefaultValue=0x60080220
 PDOMapping=0
 
 [6000]
-ParameterName=ConnectionState
+ParameterName=ConnectionStatus
 ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
@@ -600,7 +600,7 @@ DefaultValue=1
 PDOMapping=0
 
 [6001]
-ParameterName=MonitorState
+ParameterName=NetworkStatus
 ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
@@ -609,7 +609,7 @@ DefaultValue=2
 PDOMapping=0
 
 [6002]
-ParameterName=NetworkState
+ParameterName=ValveStatus
 ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
@@ -618,10 +618,10 @@ DefaultValue=3
 PDOMapping=0
 
 [6003]
-ParameterName=ErrorCode
+ParameterName=ErrorStatus
 ObjectType=0x7
 ;StorageLocation=RAM
-DataType=0x0001
+DataType=0x0005
 AccessType=rw
 DefaultValue=4
 PDOMapping=0
@@ -630,7 +630,7 @@ PDOMapping=0
 ParameterName=ActiveChannels
 ObjectType=0x7
 ;StorageLocation=RAM
-DataType=0x0001
+DataType=0x0005
 AccessType=rw
 DefaultValue=5
 PDOMapping=0
@@ -819,8 +819,10 @@ DefaultValue=44
 PDOMapping=1
 
 [ManufacturerObjects]
-SupportedObjects=1
+SupportedObjects=3
 1=0x2000
+2=0x2001
+3=0x2002
 
 [2000]
 ParameterName=MemoryData
@@ -829,5 +831,23 @@ ObjectType=0x7
 DataType=0x000F
 AccessType=rw
 DefaultValue=
+PDOMapping=0
+
+[2001]
+ParameterName=Diagnosis
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0001
+AccessType=rw
+DefaultValue=1
+PDOMapping=0
+
+[2002]
+ParameterName=ActiveUsers
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0009
+AccessType=rw
+DefaultValue=Iteration: 1
 PDOMapping=0
 
