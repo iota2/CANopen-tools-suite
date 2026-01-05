@@ -8,8 +8,8 @@ Description=Sample Node ID 0x01
 CreationTime=1:41AM
 CreationDate=09-01-2025
 CreatedBy=
-ModificationTime=4:00PM
-ModificationDate=12-26-2025
+ModificationTime=2:08PM
+ModificationDate=01-05-2026
 ModifiedBy=Naval Prashar
 
 [DeviceInfo]
@@ -50,9 +50,10 @@ Dummy0007=0
 Lines=0
 
 [MandatoryObjects]
-SupportedObjects=2
+SupportedObjects=3
 1=0x1000
-2=0x1018
+2=0x1001
+3=0x1018
 
 [1000]
 ParameterName=Device type
@@ -61,6 +62,15 @@ ObjectType=0x7
 DataType=0x0007
 AccessType=ro
 DefaultValue=0x00120ACE
+PDOMapping=0
+
+[1001]
+ParameterName=Error register
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0005
+AccessType=UNKNOWN
+DefaultValue=0x00
 PDOMapping=0
 
 [1018]
@@ -75,7 +85,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=0x04
 PDOMapping=0
 
 [1018sub1]
@@ -115,30 +125,32 @@ DefaultValue=0x12250001
 PDOMapping=0
 
 [OptionalObjects]
-SupportedObjects=23
+SupportedObjects=25
 1=0x1008
 2=0x1009
 3=0x100A
-4=0x1400
-5=0x1600
-6=0x1800
-7=0x1801
-8=0x1802
-9=0x1803
-10=0x1A00
-11=0x1A01
-12=0x1A02
-13=0x1A03
-14=0x6000
-15=0x6001
-16=0x6002
-17=0x6003
-18=0x6004
-19=0x6005
-20=0x6006
-21=0x6007
-22=0x6008
-23=0x6009
+4=0x1012
+5=0x1017
+6=0x1400
+7=0x1600
+8=0x1800
+9=0x1801
+10=0x1802
+11=0x1803
+12=0x1A00
+13=0x1A01
+14=0x1A02
+15=0x1A03
+16=0x6000
+17=0x6001
+18=0x6002
+19=0x6003
+20=0x6004
+21=0x6005
+22=0x6006
+23=0x6007
+24=0x6008
+25=0x6009
 
 [1008]
 ParameterName=Manufacturer device name
@@ -165,6 +177,24 @@ ObjectType=0x7
 DataType=0x0009
 AccessType=ro
 DefaultValue=0.0.1
+PDOMapping=0
+
+[1012]
+ParameterName=COB-ID 0x100 time stamp object
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0007
+AccessType=UNKNOWN
+DefaultValue=0x100
+PDOMapping=0
+
+[1017]
+ParameterName=Producer Heartbeat Time
+ObjectType=0x7
+;StorageLocation=RAM
+DataType=0x0006
+AccessType=UNKNOWN
+DefaultValue=1000
 PDOMapping=0
 
 [1400]
@@ -575,7 +605,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=rw
-DefaultValue=3
+DefaultValue=2
 PDOMapping=0
 
 [6002]
@@ -584,7 +614,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=rw
-DefaultValue=5
+DefaultValue=3
 PDOMapping=0
 
 [6003]
@@ -593,7 +623,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0001
 AccessType=rw
-DefaultValue=0
+DefaultValue=4
 PDOMapping=0
 
 [6004]
@@ -602,7 +632,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0001
 AccessType=rw
-DefaultValue=2
+DefaultValue=5
 PDOMapping=0
 
 [6005]
@@ -617,7 +647,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=0x02
 PDOMapping=0
 
 [6005sub1]
@@ -626,8 +656,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=1.1
+PDOMapping=1
 
 [6005sub2]
 ParameterName=channel2
@@ -635,8 +665,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=2.2
+PDOMapping=1
 
 [6006]
 ParameterName=MeasurementPower
@@ -650,7 +680,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=0x02
 PDOMapping=0
 
 [6006sub1]
@@ -659,8 +689,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=3.3
+PDOMapping=1
 
 [6006sub2]
 ParameterName=channel2
@@ -668,8 +698,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=4.4
+PDOMapping=1
 
 [6007]
 ParameterName=MeasurementImpedance
@@ -683,7 +713,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=0x02
 PDOMapping=0
 
 [6007sub1]
@@ -692,8 +722,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=5.5
+PDOMapping=1
 
 [6007sub2]
 ParameterName=channel2
@@ -701,8 +731,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=6.6
+PDOMapping=1
 
 [6008]
 ParameterName=MeasurementTemperature
@@ -716,7 +746,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=0x02
 PDOMapping=0
 
 [6008sub1]
@@ -725,8 +755,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=7.7
+PDOMapping=1
 
 [6008sub2]
 ParameterName=channel2
@@ -734,8 +764,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0008
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=8.8
+PDOMapping=1
 
 [6009]
 ParameterName=Configurations
@@ -749,7 +779,7 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0005
 AccessType=UNKNOWN
-DefaultValue=
+DefaultValue=0x04
 PDOMapping=0
 
 [6009sub1]
@@ -758,8 +788,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=11
+PDOMapping=1
 
 [6009sub2]
 ParameterName=Network
@@ -767,8 +797,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=22
+PDOMapping=1
 
 [6009sub3]
 ParameterName=Calibration
@@ -776,8 +806,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=33
+PDOMapping=1
 
 [6009sub4]
 ParameterName=Communication
@@ -785,8 +815,8 @@ ObjectType=0x7
 ;StorageLocation=RAM
 DataType=0x0006
 AccessType=UNKNOWN
-DefaultValue=
-PDOMapping=0
+DefaultValue=44
+PDOMapping=1
 
 [ManufacturerObjects]
 SupportedObjects=1

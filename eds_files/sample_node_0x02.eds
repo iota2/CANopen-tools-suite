@@ -8,8 +8,8 @@ Description=Sample Node ID 0x02
 CreationTime=1:41AM
 CreationDate=09-01-2025
 CreatedBy=
-ModificationTime=7:19PM
-ModificationDate=12-26-2025
+ModificationTime=2:08PM
+ModificationDate=01-05-2026
 ModifiedBy=Naval Prashar
 
 [DeviceInfo]
@@ -460,7 +460,7 @@ PDOMapping=0
 [1800]
 ParameterName=TPDO communication parameter
 ObjectType=0x9
-;StorageLocation=PERSIST_COMM
+;StorageLocation=RAM
 SubNumber=0x6
 
 [1800sub0]
@@ -520,7 +520,7 @@ PDOMapping=0
 [1A00]
 ParameterName=TPDO mapping parameter
 ObjectType=0x9
-;StorageLocation=PERSIST_COMM
+;StorageLocation=RAM
 SubNumber=0x5
 
 [1A00sub0]
