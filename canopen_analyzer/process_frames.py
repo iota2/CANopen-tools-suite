@@ -109,7 +109,7 @@ class process_frames(threading.Thread):
         self.stats = stats
         self.stats.set_start_time()
 
-        # State for segmented SDO support: (node, index, sub) -> bytearray
+        ## State for segmented SDO support: (node, index, sub) -> bytearray
         self._sdo_segments = {}
 
         ## Flag indicating whether processed export is enabled :  None | csv | json.
@@ -151,6 +151,7 @@ class process_frames(threading.Thread):
                 self.export_file = open(self.export_filename, "w")
 
                 self.export_file.write("[\n")
+                ## Identifier for first element of JSON file.
                 self._json_first = True
 
                 self.log.info(f"JSON export enabled → {self.export_filename}")
@@ -159,6 +160,8 @@ class process_frames(threading.Thread):
                 self.export = False
 
     def _json_safe_processed_frame(self, frame: dict) -> dict:
+        """! Create a processed frame for saving to JSON."""
+
         return {
             "time": frame["time"],
             "cob": frame["cob"],

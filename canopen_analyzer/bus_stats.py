@@ -231,9 +231,11 @@ class bus_stats:
         ## Logger instance used for reporting and debugging.
         self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
-        # Timer for computing bus stats
+        ## Timer for computing bus stats
         self._rate_interval = 1.0                # seconds, sampling period
+        ## Rate sampler stop event
         self._rate_sampler_stop = threading.Event()
+        ## Rate sampler thread
         self._rate_sampler_thread = threading.Thread(target=self._rate_sampler, name="bus_stats-rate-sampler", daemon=True)
         self._rate_sampler_thread.start()
 

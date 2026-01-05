@@ -86,6 +86,7 @@ Inherits Thread\&.
 .ti -1c
 .RI "dict \fB_json_safe_processed_frame\fP (self, dict frame)"
 .br
+.RI "Create a processed frame for saving to JSON\&. "
 .ti -1c
 .RI "def \fB_resolve_od_entry\fP (self, int index, int sub)"
 .br
@@ -101,9 +102,11 @@ Inherits Thread\&.
 .ti -1c
 .RI "\fB_json_first\fP"
 .br
+.RI "Identifier for first element of JSON file\&. "
 .ti -1c
 .RI "\fB_sdo_segments\fP"
 .br
+.RI "State for segmented SDO support: (node, index, sub) -> bytearray\&. "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -134,6 +137,8 @@ Initialize the processor thread\&. The constructor stores references to required
 .PP 
 .SS " dict _json_safe_processed_frame ( self, dict frame)\fC [private]\fP"
 
+.PP
+Create a processed frame for saving to JSON\&. 
 .SS "def _resolve_od_entry ( self, int index, int sub)\fC [private]\fP"
 
 .PP
@@ -180,8 +185,12 @@ Request the processor thread to stop\&. Signals the internal stop event so the p
 .PP 
 .SS "_json_first\fC [private]\fP"
 
+.PP
+Identifier for first element of JSON file\&. 
 .SS "_sdo_segments\fC [private]\fP"
 
+.PP
+State for segmented SDO support: (node, index, sub) -> bytearray\&. 
 .SS "_stop_event\fC [private]\fP"
 
 .PP

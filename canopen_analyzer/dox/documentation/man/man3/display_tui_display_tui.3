@@ -49,9 +49,11 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .ti -1c
 .RI "\fBpdo_cob\fP"
 .br
+.RI "User input text box of entering PDO send cob-id\&. "
 .ti -1c
 .RI "\fBpdo_data\fP"
 .br
+.RI "User input text box of entering PDO send data\&. "
 .ti -1c
 .RI "\fBpdo_display\fP"
 .br
@@ -63,12 +65,15 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .ti -1c
 .RI "\fBpdo_repeat\fP"
 .br
+.RI "PDO send repeat toggle switch\&. "
 .ti -1c
 .RI "\fBpdo_send_btn\fP"
 .br
+.RI "Button for PDO send\&. "
 .ti -1c
 .RI "\fBpdo_send_repeat_value\fP"
 .br
+.RI "User input text box of entering PDO send repeat value\&. "
 .ti -1c
 .RI "\fBpdo_table\fP"
 .br
@@ -96,45 +101,58 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .ti -1c
 .RI "\fBsdo_recv_btn\fP"
 .br
+.RI "Button for SDO receive\&. "
 .ti -1c
 .RI "\fBsdo_recv_index\fP"
 .br
+.RI "User input text box of entering SDO receive index\&. "
 .ti -1c
 .RI "\fBsdo_recv_node\fP"
 .br
+.RI "User input text box of entering SDO receive node-id\&. "
 .ti -1c
 .RI "\fBsdo_recv_repeat\fP"
 .br
+.RI "SDO receive repeat toggle switch\&. "
 .ti -1c
 .RI "\fBsdo_recv_repeat_value\fP"
 .br
+.RI "User input text box of entering SDO receive repeat values\&. "
 .ti -1c
 .RI "\fBsdo_recv_sub\fP"
 .br
+.RI "User input text box of entering SDO receive sub-index\&. "
 .ti -1c
 .RI "\fBsdo_send_btn\fP"
 .br
 .ti -1c
 .RI "\fBsdo_send_index\fP"
 .br
+.RI "User input text box of entering SDO index\&. "
 .ti -1c
 .RI "\fBsdo_send_node\fP"
 .br
+.RI "User input text box of entering SDO send node-id\&. "
 .ti -1c
 .RI "\fBsdo_send_repeat\fP"
 .br
+.RI "SDO send repeat switch\&. "
 .ti -1c
 .RI "\fBsdo_send_repeat_value\fP"
 .br
+.RI "User input text box of entering SDO send repeat values\&. "
 .ti -1c
 .RI "\fBsdo_send_size\fP"
 .br
+.RI "Radio button selection for SDO send data size\&. "
 .ti -1c
 .RI "\fBsdo_send_sub\fP"
 .br
+.RI "User input text box of entering SDO send sub-index\&. "
 .ti -1c
 .RI "\fBsdo_send_value\fP"
 .br
+.RI "User input text box of entering SDO send data\&. "
 .ti -1c
 .RI "\fBsdo_table\fP"
 .br
@@ -258,8 +276,12 @@ SDO data dict keys -> rows mapping for fixed mode\&.
 Logger instance for TUI display\&. 
 .SS "pdo_cob"
 
+.PP
+User input text box of entering PDO send cob-id\&. 
 .SS "pdo_data"
 
+.PP
+User input text box of entering PDO send data\&. 
 .SS "pdo_display"
 
 .PP
@@ -270,10 +292,16 @@ PDO data display buffer\&.
 PDO data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
 .SS "pdo_repeat"
 
+.PP
+PDO send repeat toggle switch\&. 
 .SS "pdo_send_btn"
 
+.PP
+Button for PDO send\&. 
 .SS "pdo_send_repeat_value"
 
+.PP
+User input text box of entering PDO send repeat value\&. 
 .SS "pdo_table"
 
 .PP
@@ -312,32 +340,58 @@ SDO data display buffer\&.
 SDO data indices to indicate next fill position (top-down)\&. When full, we roll by popping index 0\&. 
 .SS "sdo_recv_btn"
 
+.PP
+Button for SDO receive\&. 
 .SS "sdo_recv_index"
 
+.PP
+User input text box of entering SDO receive index\&. 
 .SS "sdo_recv_node"
 
+.PP
+User input text box of entering SDO receive node-id\&. 
 .SS "sdo_recv_repeat"
 
+.PP
+SDO receive repeat toggle switch\&. 
 .SS "sdo_recv_repeat_value"
 
+.PP
+User input text box of entering SDO receive repeat values\&. 
 .SS "sdo_recv_sub"
 
+.PP
+User input text box of entering SDO receive sub-index\&. 
 .SS "sdo_send_btn"
 
 .SS "sdo_send_index"
 
+.PP
+User input text box of entering SDO index\&. 
 .SS "sdo_send_node"
 
+.PP
+User input text box of entering SDO send node-id\&. 
 .SS "sdo_send_repeat"
 
+.PP
+SDO send repeat switch\&. 
 .SS "sdo_send_repeat_value"
 
+.PP
+User input text box of entering SDO send repeat values\&. 
 .SS "sdo_send_size"
 
+.PP
+Radio button selection for SDO send data size\&. 
 .SS "sdo_send_sub"
 
+.PP
+User input text box of entering SDO send sub-index\&. 
 .SS "sdo_send_value"
 
+.PP
+User input text box of entering SDO send data\&. 
 .SS "sdo_table"
 
 .PP

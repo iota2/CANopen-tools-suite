@@ -36,15 +36,15 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "def \fBsend_raw_pdo\fP (self, int cob_id, bytes data)"
 .br
-.RI "Send raw PDO frame\&. "
+.RI "Send PDO\&. "
 .ti -1c
 .RI "def \fBsend_sdo_download\fP (self, int node_id, int index, int subindex, int value, int size)"
 .br
-.RI "Send expedited SDO download (write)\&. "
+.RI "SDO Download\&. "
 .ti -1c
 .RI "def \fBsend_sdo_upload_request\fP (self, int node_id, int index, int subindex)"
 .br
-.RI "Send SDO upload request (read)\&. "
+.RI "SDO Receive\&. "
 .ti -1c
 .RI "def \fBstop\fP (self, bool shutdown_bus=True)"
 .br
@@ -92,6 +92,7 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "\fBpcap_writer\fP"
 .br
+.RI "PCAP writer object for exporting file\&. "
 .ti -1c
 .RI "\fBraw_frame\fP"
 .br
@@ -126,6 +127,7 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .ti -1c
 .RI "\fB_json_first\fP"
 .br
+.RI "Identifier for first element of JSON file\&. "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -185,18 +187,14 @@ None\&.
 .SS "def handle_received_message ( self, can\&.Message msg)"
 
 .PP
-Handle a received CAN message\&. 
+Handle a received CAN message\&. Extracts arbitration id, raw payload and error flag, builds a small frame dictionary containing a timestamp and pushes it to \fCraw_frame\fP\&. Also logs the raw frame and triggers export if enabled\&. 
 .PP
-.nf
-   @details
-   Extracts arbitration id, raw payload and error flag, builds a small
-   frame dictionary containing a timestamp and pushes it to `raw_frame`.
-   Also logs the raw frame and triggers export if enabled.
-   @param msg The `can.Message` instance received from the bus.
+\fBParameters\fP
+.RS 4
+\fImsg\fP The \fCcan\&.Message\fP instance received from the bus\&. 
+.RE
+.PP
 
-.fi
-.PP
- 
 .SS "def run ( self)"
 
 .PP
@@ -215,43 +213,50 @@ Main loop of the sniffer thread\&.
 .SS "def send_raw_pdo ( self, int cob_id, bytes data)"
 
 .PP
-Send raw PDO frame\&. 
+Send PDO\&. Send raw PDO frame\&. 
 .PP
-.nf
-   @param cob_id PDO COB-ID
-   @param data Up to 8 bytes
+\fBParameters\fP
+.RS 4
+\fIcob_id\fP PDO COB-ID 
+.br
+\fIdata\fP Up to 8 bytes 
+.RE
+.PP
 
-.fi
-.PP
- 
 .SS "def send_sdo_download ( self, int node_id, int index, int subindex, int value, int size)"
 
 .PP
-Send expedited SDO download (write)\&. 
+SDO Download\&. Send expedited SDO download (write)\&. 
 .PP
-.nf
-   @param node_id Node ID (1-127)
-   @param index Object Dictionary index
-   @param subindex Subindex
-   @param value Integer value to write
-   @param size Data size in bytes (1,2,4)
+\fBParameters\fP
+.RS 4
+\fInode_id\fP Node ID (1-127) 
+.br
+\fIindex\fP Object Dictionary index 
+.br
+\fIsubindex\fP Subindex 
+.br
+\fIvalue\fP Integer value to write 
+.br
+\fIsize\fP Data size in bytes (1,2,4) 
+.RE
+.PP
 
-.fi
-.PP
- 
 .SS "def send_sdo_upload_request ( self, int node_id, int index, int subindex)"
 
 .PP
-Send SDO upload request (read)\&. 
+SDO Receive\&. Send SDO upload request (read)\&. 
 .PP
-.nf
-   @param node_id Node ID (1-127)
-   @param index Object Dictionary index
-   @param subindex Subindex
+\fBParameters\fP
+.RS 4
+\fInode_id\fP Node ID (1-127) 
+.br
+\fIindex\fP Object Dictionary index 
+.br
+\fIsubindex\fP Subindex 
+.RE
+.PP
 
-.fi
-.PP
- 
 .SS "def stop ( self, bool  shutdown_bus = \fCTrue\fP)"
 
 .PP
@@ -267,6 +272,8 @@ Request the sniffer thread to stop and optionally shutdown the bus\&. Signals th
 .PP 
 .SS "_json_first\fC [private]\fP"
 
+.PP
+Identifier for first element of JSON file\&. 
 .SS "_stop_event\fC [private]\fP"
 
 .PP
@@ -309,6 +316,8 @@ Logger instance for this sniffer\&.
 Optional CANopen\&.Network instance (connected if possible)\&. 
 .SS "pcap_writer"
 
+.PP
+PCAP writer object for exporting file\&. 
 .SS "raw_frame"
 
 .PP

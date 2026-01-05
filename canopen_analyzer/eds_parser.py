@@ -157,9 +157,8 @@ class eds_parser:
         return name_map
 
     def build_entry_map(self):
-        """
-        Build Object Dictionary entry metadata map.
-
+        """! Build Object Dictionary entry metadata map.
+        @details
         (index, sub) -> {
             name,
             data_type,

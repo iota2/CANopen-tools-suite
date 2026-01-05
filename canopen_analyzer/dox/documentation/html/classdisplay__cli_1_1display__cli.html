@@ -211,6 +211,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:aa85d3bcff786592e7fa971644d691567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop a repeating task.  <a href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567">More...</a><br /></td></tr>
 <tr class="separator:aa85d3bcff786592e7fa971644d691567"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7deb0604c2f84cedc918f12ecef983fa"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa">_trim_cell</a> (self, str value, int max_width)</td></tr>
+<tr class="memdesc:a7deb0604c2f84cedc918f12ecef983fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim cell text to max_width with ellipsis for CLI tables.  <a href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa">More...</a><br /></td></tr>
 <tr class="separator:a7deb0604c2f84cedc918f12ecef983fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -222,6 +223,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a49303ca1ae5b6e50bc574e96d8a15344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Repeat timers for remote commands (key -&gt; threading.Event)  <a href="classdisplay__cli_1_1display__cli.html#a49303ca1ae5b6e50bc574e96d8a15344">More...</a><br /></td></tr>
 <tr class="separator:a49303ca1ae5b6e50bc574e96d8a15344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a2c9373a2aa1f4cdf3e6c936e81b17267">_stop_event</a></td></tr>
+<tr class="memdesc:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread stop event.  <a href="classdisplay__cli_1_1display__cli.html#a2c9373a2aa1f4cdf3e6c936e81b17267">More...</a><br /></td></tr>
 <tr class="separator:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -622,7 +624,7 @@ Here is the call graph for this function:</div>
 <map name="aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph" id="aclassdisplay__cli_1_1display__cli_a5be7868f3f60b2c4a8cdb0eba6ce1a0e_cgraph">
 <area shape="rect" title="Render tables for displaying CLI data." alt="" coords="5,31,124,57"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="172,5,343,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title=" " alt="" coords="214,56,301,83"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="214,56,301,83"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="391,5,480,32"/>
 </map>
 </div>
@@ -899,12 +901,14 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">Trim cell text to max_width with ellipsis for CLI tables.</pre> <div class="dynheader">
+
+<p>Trim cell text to max_width with ellipsis for CLI tables. </p>
+<div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph" id="aclassdisplay__cli_1_1display__cli_a7deb0604c2f84cedc918f12ecef983fa_icgraph">
-<area shape="rect" title=" " alt="" coords="263,5,349,32"/>
+<area shape="rect" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="263,5,349,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
 </map>
@@ -949,7 +953,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="622,107,730,133"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="793,132,900,159"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,416,521,443"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title=" " alt="" coords="392,467,479,493"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,467,479,493"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="631,416,721,443"/>
 </map>
 </div>
@@ -1054,6 +1058,8 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Thread stop event. </p>
 
 </div>
 </div>

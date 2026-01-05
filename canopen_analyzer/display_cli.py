@@ -98,6 +98,7 @@ class display_cli(threading.Thread):
         ## Logger instance for CLI display.
         self.log = logging.getLogger(f"{analyzer_defs.APP_NAME}.{self.__class__.__name__}")
 
+        ## Thread stop event
         self._stop_event = threading.Event()
 
         ## Protocol data buffer used only for rendering rows (not for rate calc).
@@ -556,7 +557,8 @@ class display_cli(threading.Thread):
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
     def _trim_cell(self, value: str, max_width: int) -> str:
-        """Trim cell text to max_width with ellipsis for CLI tables."""
+        """! Trim cell text to max_width with ellipsis for CLI tables."""
+
         if not value:
             return ""
         s = str(value)

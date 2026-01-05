@@ -142,12 +142,15 @@ This class organizes statistical data related to CANopen bus activity\&. It incl
 .ti -1c
 .RI "\fB_rate_interval\fP"
 .br
+.RI "Timer for computing bus stats\&. "
 .ti -1c
 .RI "\fB_rate_sampler_stop\fP"
 .br
+.RI "Rate sampler stop event\&. "
 .ti -1c
 .RI "\fB_rate_sampler_thread\fP"
 .br
+.RI "Rate sampler thread\&. "
 .ti -1c
 .RI "\fB_stats\fP"
 .br
@@ -321,10 +324,16 @@ Update the SDO response message time from the deque\&.
 Thread lock used to protect access to statistics data\&. 
 .SS "_rate_interval\fC [private]\fP"
 
+.PP
+Timer for computing bus stats\&. 
 .SS "_rate_sampler_stop\fC [private]\fP"
 
+.PP
+Rate sampler stop event\&. 
 .SS "_rate_sampler_thread\fC [private]\fP"
 
+.PP
+Rate sampler thread\&. 
 .SS "_stats\fC [private]\fP"
 
 .PP

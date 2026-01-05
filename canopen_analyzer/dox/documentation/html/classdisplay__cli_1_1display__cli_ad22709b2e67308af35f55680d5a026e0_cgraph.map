@@ -14,6 +14,6 @@
 <area shape="rect" id="node6" href="$classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="622,107,730,133"/>
 <area shape="rect" id="node7" href="$classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="793,132,900,159"/>
 <area shape="rect" id="node14" href="$classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,416,521,443"/>
-<area shape="rect" id="node16" href="$classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title=" " alt="" coords="392,467,479,493"/>
+<area shape="rect" id="node16" href="$classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,467,479,493"/>
 <area shape="rect" id="node15" href="$classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="631,416,721,443"/>
 </map>

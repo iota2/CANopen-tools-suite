@@ -29,6 +29,7 @@ Provides utilities to extract ParameterName mappings and PDO mappings from an ED
 .ti -1c
 .RI "def \fBbuild_entry_map\fP (self)"
 .br
+.RI "Build Object Dictionary entry metadata map\&. "
 .ti -1c
 .RI "def \fBbuild_name_map\fP (self)"
 .br
@@ -96,19 +97,7 @@ Initialize EDS parser and optionally parse the given EDS file\&. If eds_path is 
 .SS "def build_entry_map ( self)"
 
 .PP
-.nf
-Build Object Dictionary entry metadata map.
-
-(index, sub) -> {
-    name,
-    data_type,
-    bit_length,
-    access_type
-}
-
-.fi
-.PP
- 
+Build Object Dictionary entry metadata map\&. (index, sub) -> { name, data_type, bit_length, access_type } 
 .SS "def build_name_map ( self)"
 
 .PP

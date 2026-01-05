@@ -137,6 +137,7 @@ class canopen_sniffer(threading.Thread):
 
                 # JSON array start
                 self.export_file.write("[\n")
+                ## Identifier for first element of JSON file.
                 self._json_first = True
 
                 self.log.info(f"JSON export enabled → {self.export_filename}")
@@ -147,6 +148,7 @@ class canopen_sniffer(threading.Thread):
         elif self.export == "pcap":
             try:
                 self.export_filename = f"{analyzer_defs.APP_NAME}_raw.pcap"
+                ## PCAP writer object for exporting file.
                 self.pcap_writer = PcapWriter(
                     self.export_filename,
                     append=False,
@@ -321,7 +323,6 @@ class canopen_sniffer(threading.Thread):
     # --- Message handling ---
     def handle_received_message(self, msg: can.Message):
         """! Handle a received CAN message.
-
         @details
         Extracts arbitration id, raw payload and error flag, builds a small
         frame dictionary containing a timestamp and pushes it to `raw_frame`.
@@ -343,8 +344,9 @@ class canopen_sniffer(threading.Thread):
 
     # --- SDO Download (Expedited Write) ---
     def send_sdo_download(self, node_id: int, index: int, subindex: int, value: int, size: int):
-        """! Send expedited SDO download (write).
-
+        """! SDO Download.
+        @details
+        Send expedited SDO download (write).
         @param node_id Node ID (1-127)
         @param index Object Dictionary index
         @param subindex Subindex
@@ -386,8 +388,9 @@ class canopen_sniffer(threading.Thread):
 
     # --- SDO Upload Request (Read) ---
     def send_sdo_upload_request(self, node_id: int, index: int, subindex: int):
-        """! Send SDO upload request (read).
-
+        """! SDO Receive.
+        @details
+        Send SDO upload request (read).
         @param node_id Node ID (1-127)
         @param index Object Dictionary index
         @param subindex Subindex
@@ -419,8 +422,9 @@ class canopen_sniffer(threading.Thread):
 
     # --- Raw PDO Send ---
     def send_raw_pdo(self, cob_id: int, data: bytes):
-        """! Send raw PDO frame.
-
+        """! Send PDO.
+        @details
+        Send raw PDO frame.
         @param cob_id PDO COB-ID
         @param data Up to 8 bytes
         """

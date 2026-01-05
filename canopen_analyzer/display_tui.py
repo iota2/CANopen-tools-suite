@@ -221,6 +221,7 @@ class display_tui:
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send node-id
                                 self.sdo_send_node = Input(analyzer_defs.DEFAULT_SDO_SEND_NODE_ID)
                                 self.sdo_send_node.styles.width = 20
                                 yield self.sdo_send_node
@@ -229,6 +230,7 @@ class display_tui:
                                 lbl = Input("Index", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO index
                                 self.sdo_send_index = Input(analyzer_defs.DEFAULT_SDO_SEND_INDEX)
                                 self.sdo_send_index.styles.width = 20
                                 yield self.sdo_send_index
@@ -236,6 +238,7 @@ class display_tui:
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send sub-index
                                 self.sdo_send_sub = Input(analyzer_defs.DEFAULT_SDO_SEND_SUB)
                                 self.sdo_send_sub.styles.width = 20
                                 yield self.sdo_send_sub
@@ -244,6 +247,7 @@ class display_tui:
                                 lbl = Input("Data", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send data.
                                 self.sdo_send_value = Input(analyzer_defs.DEFAULT_SDO_SEND_DATA)
                                 self.sdo_send_value.styles.width = 20
                                 yield self.sdo_send_value
@@ -252,6 +256,7 @@ class display_tui:
                                 lbl.styles.width = 20
                                 yield lbl
                                 # --- Size selector ---
+                                ## Radio button selection for SDO send data size.
                                 self.sdo_send_size = RadioSet(classes="radio remote")
                                 with self.sdo_send_size:
                                     yield RadioButton("1", value=True)
@@ -265,12 +270,15 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO send repeat values.
                                 self.sdo_send_repeat_value = Input(analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME)
                                 self.sdo_send_repeat_value.styles.width = 20
                                 yield self.sdo_send_repeat_value
+                                ## SDO send repeat switch.
                                 self.sdo_send_repeat = Switch()
                                 yield self.sdo_send_repeat
 
+                                # Button for SDO send.
                                 self.sdo_send_btn = Button("Send", classes="button remote")
                                 self.sdo_send_btn.styles.width = 29
                                 yield self.sdo_send_btn
@@ -284,6 +292,7 @@ class display_tui:
                                 lbl = Input("Node ID", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive node-id.
                                 self.sdo_recv_node = Input(analyzer_defs.DEFAULT_SDO_RECV_NODE_ID)
                                 self.sdo_recv_node.styles.width = 20
                                 yield self.sdo_recv_node
@@ -292,6 +301,7 @@ class display_tui:
                                 lbl = Input("Index", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive index
                                 self.sdo_recv_index = Input(analyzer_defs.DEFAULT_SDO_RECV_INDEX)
                                 self.sdo_recv_index.styles.width = 20
                                 yield self.sdo_recv_index
@@ -299,6 +309,7 @@ class display_tui:
                                 lbl = Input("Sub", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive sub-index
                                 self.sdo_recv_sub = Input(analyzer_defs.DEFAULT_SDO_RECV_SUB)
                                 self.sdo_recv_sub.styles.width = 20
                                 yield self.sdo_recv_sub
@@ -307,12 +318,15 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote sdo receive")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering SDO receive repeat values.
                                 self.sdo_recv_repeat_value = Input(analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME)
                                 self.sdo_recv_repeat_value.styles.width = 20
+                                ## SDO receive repeat toggle switch.
                                 yield self.sdo_recv_repeat_value
                                 self.sdo_recv_repeat = Switch()
                                 yield self.sdo_recv_repeat
 
+                                ## Button for SDO receive
                                 self.sdo_recv_btn = Button("Send", classes="button remote")
                                 self.sdo_recv_btn.styles.width = 29
                                 yield self.sdo_recv_btn
@@ -326,6 +340,7 @@ class display_tui:
                                 lbl = Input("COB ID", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering PDO send cob-id.
                                 self.pdo_cob = Input(analyzer_defs.DEFAULT_PDO_SEND_COB_ID)
                                 self.pdo_cob.styles.width = 20
                                 yield self.pdo_cob
@@ -334,6 +349,7 @@ class display_tui:
                                 lbl = Input("Data", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering PDO send data.
                                 self.pdo_data = Input(analyzer_defs.DEFAULT_PDO_SEND_DATA)
                                 self.pdo_data.styles.width = 30
                                 yield self.pdo_data
@@ -342,12 +358,15 @@ class display_tui:
                                 lbl = Input("Repeat (ms)", disabled=True, classes="content remote pdo send")
                                 lbl.styles.width = 20
                                 yield lbl
+                                ## User input text box of entering PDO send repeat value.
                                 self.pdo_send_repeat_value = Input(analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME)
                                 self.pdo_send_repeat_value.styles.width = 20
                                 yield self.pdo_send_repeat_value
+                                ## PDO send repeat toggle switch.
                                 self.pdo_repeat = Switch()
                                 yield self.pdo_repeat
 
+                                ## Button for PDO send.
                                 self.pdo_send_btn = Button("Send", classes="button remote")
                                 self.pdo_send_btn.styles.width = 29
                                 yield self.pdo_send_btn
