@@ -172,9 +172,19 @@ class eds_parser:
         cfg.optionxform = str
         cfg.read(self.eds_path)
 
-        # --- pass 1: scalar objects (ObjectType = 0x7) ---
+        # --- pass 0: collect parent names (same as build_name_map) ---
+        parents: dict[int, str] = {}
         for sec in cfg.sections():
-            # match pure index sections: [6000], [0x6000]
+            m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)$', sec)
+            if not m:
+                continue
+            idx = int(m.group(1), 16)
+            pname = cfg[sec].get("ParameterName", "").strip()
+            if pname:
+                parents[idx] = pname
+
+        # --- pass 1: scalar objects (index, sub = 0) ---
+        for sec in cfg.sections():
             m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)$', sec)
             if not m:
                 continue
@@ -183,14 +193,10 @@ class eds_parser:
             s = cfg[sec]
 
             obj_type = s.get("ObjectType")
-            if obj_type is None:
+            if not obj_type or int(obj_type, 0) != 0x7:
                 continue
 
-            # scalar variable
-            if int(obj_type, 0) != 0x7:
-                continue
-
-            name = s.get("ParameterName", f"0x{index:04X}")
+            parent = parents.get(index, f"0x{index:04X}")
 
             raw_dt = s.get("DataType")
             if not raw_dt:
@@ -198,29 +204,33 @@ class eds_parser:
             dt_key = raw_dt.strip().upper()
             data_type = analyzer_defs.EDS_DATATYPE_MAP.get(dt_key, dt_key)
 
-            access_type = s.get("AccessType", "rw")
-
-            if not data_type:
-                continue
+            access_type = s.get("AccessType", "rw").lower()
 
             entry_map[(index, 0)] = {
-                "name": name.strip(),
+                "name": parent,
                 "data_type": data_type,
                 "bit_length": analyzer_defs.BIT_LENGTH_BY_TYPE.get(data_type),
-                "access_type": access_type.lower(),
+                "access_type": access_type,
             }
 
         # --- pass 2: sub-objects (arrays / records) ---
         for sec in cfg.sections():
-            m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)\s*sub0*(\d+)$', sec, re.IGNORECASE)
+            m = re.match(r'^(?:0x)?([0-9A-Fa-f]+)\s*sub0*([0-9A-Fa-f]+)$', sec, re.IGNORECASE)
             if not m:
                 continue
 
             index = int(m.group(1), 16)
-            sub = int(m.group(2))
+            sub = int(m.group(2), 16)
             s = cfg[sec]
 
-            name = s.get("ParameterName", f"0x{index:04X}:{sub}")
+            parent = parents.get(index, f"0x{index:04X}")
+            pname = s.get("ParameterName", "").strip()
+
+            # Same rule as build_name_map
+            if pname and "highest" not in pname.lower():
+                name = f"{parent}.{pname}"
+            else:
+                name = parent
 
             raw_dt = s.get("DataType")
             if not raw_dt:
@@ -228,16 +238,13 @@ class eds_parser:
             dt_key = raw_dt.strip().upper()
             data_type = analyzer_defs.EDS_DATATYPE_MAP.get(dt_key, dt_key)
 
-            access_type = s.get("AccessType", "rw")
-
-            if not data_type:
-                continue
+            access_type = s.get("AccessType", "rw").lower()
 
             entry_map[(index, sub)] = {
-                "name": name.strip(),
+                "name": name,
                 "data_type": data_type,
                 "bit_length": analyzer_defs.BIT_LENGTH_BY_TYPE.get(data_type),
-                "access_type": access_type.lower(),
+                "access_type": access_type,
             }
 
         return entry_map

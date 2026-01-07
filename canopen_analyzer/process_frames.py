@@ -497,7 +497,8 @@ class process_frames(threading.Thread):
                                 None
                             )
                             if not key:
-                                return  # orphan segment → ignore
+                                self.log.debug("Ignoring orphan SDO segment from node %d", node_id)
+                                continue  # orphan segment → ignore safely
 
                             ctx = self._sdo_segments[key]
                             ctx["data"] += raw[1:8]
@@ -876,7 +877,7 @@ class process_frames(threading.Thread):
                         self.log.info("Processed JSON export file closed")
                 except Exception:
                     self.log.exception("Failed to close processed CSV file")
-            self.log.info("Processor thread exiting")
+            self.log.info("Exiting frame processing thread.")
 
     def stop(self):
         """! Request the processor thread to stop.
@@ -886,4 +887,4 @@ class process_frames(threading.Thread):
         call `join()` on the thread object if synchronous shutdown is required.
         """
         self._stop_event.set()
-        self.log.debug("Stop requested for processor thread")
+        self.log.debug("Stop requested for frame processing thread")
