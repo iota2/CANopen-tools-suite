@@ -154,6 +154,10 @@ analyzer_defs
 .br
 .RI "Maximum number of values to be shown in Bus stats window\&. "
 .ti -1c
+.RI "int \fBMIN_DATA_TABLE_HEIGHT\fP = 3"
+.br
+.RI "Minimum height of the data tables in the CLI interface (number of rows)\&. "
+.ti -1c
 .RI "int \fBMIN_STATS_SHOW\fP = 3"
 .br
 .RI "Minimum number of values to be shown in Bus stats window\&. "
@@ -375,6 +379,10 @@ Maximum number of CANopen frames to be cached\&.
 
 .PP
 Maximum number of values to be shown in Bus stats window\&. 
+.SS "int MIN_DATA_TABLE_HEIGHT = 3"
+
+.PP
+Minimum height of the data tables in the CLI interface (number of rows)\&. Used as a floor when the CLI dynamically shrinks the Protocol/PDO/SDO tables to fit the current terminal height, ensuring the send/receive options stay visible\&. 
 .SS "int MIN_STATS_SHOW = 3"
 
 .PP

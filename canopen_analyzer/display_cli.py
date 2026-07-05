@@ -573,17 +573,38 @@ class display_cli(threading.Thread):
         NAME_COL_WIDTH = 20
         DECODED_COL_WIDTH = 15
 
+        # Dynamic height budget ------------------------------------------------
+        # Size the scrolling tables (Protocol, PDO, SDO) to the current terminal
+        # height so the fixed Bus Stats table and the bottom send/receive options
+        # always remain visible. Bus Stats and the bottom row act as fixed anchors.
+        term_h = self.console.size.height
+        # Per-table chrome: title + top border + header + rule + bottom border.
+        CHROME = 5
+        # Bottom send/receive row: status/control tables show ~6 content lines.
+        bottom_h = 6 + CHROME
+        # Bus Stats anchors row 1 height (~15 metric rows).
+        bus_h = 15 + CHROME
+
+        # Protocol shares row 1 height with Bus Stats, so it is "free" up to the
+        # Bus Stats row count without adding to the total height.
+        proto_rows = min(analyzer_defs.PROTOCOL_TABLE_HEIGHT, bus_h - CHROME)
+
+        # Remaining vertical space is allocated to the PDO/SDO row.
+        mid_budget = term_h - max(bus_h, proto_rows + CHROME) - bottom_h
+        data_rows = max(analyzer_defs.MIN_DATA_TABLE_HEIGHT,
+                        min(analyzer_defs.DATA_TABLE_HEIGHT, mid_budget - CHROME))
+
         # Protocol Data -----------------------------------------------------
         t_proto = Table(title="Protocol Data", expand=True, box=box.SQUARE, style="cyan")
         t_proto.add_column("Time", no_wrap=True)
         t_proto.add_column("COB-ID", width=8)
         t_proto.add_column("Type", width=12)
         t_proto.add_column("Raw Data", no_wrap=True)
-        t_proto.add_column("Decoded")
+        t_proto.add_column("Decoded", no_wrap=True, overflow="ellipsis")
         t_proto.add_column("Count", width=6, justify="right")
 
-        protos = list(self.fixed_proto.values())[-analyzer_defs.PROTOCOL_TABLE_HEIGHT:] if self.fixed else list(self.proto_frames)[-analyzer_defs.PROTOCOL_TABLE_HEIGHT:]
-        while len(protos) < analyzer_defs.PROTOCOL_TABLE_HEIGHT:
+        protos = list(self.fixed_proto.values())[-proto_rows:] if self.fixed else list(self.proto_frames)[-proto_rows:]
+        while len(protos) < proto_rows:
             protos.append({"time": "", "cob": "", "type": "", "raw": "", "decoded": "", "count": ""})
         for p in protos:
             t_proto.add_row(p["time"], p["cob"], p["type"], p["raw"], p["decoded"], str(p.get("count", "")))
@@ -600,11 +621,11 @@ class display_cli(threading.Thread):
         t_pdo.add_column("Index")
         t_pdo.add_column("Sub")
         t_pdo.add_column("Raw Data", no_wrap=True)
-        t_pdo.add_column("Decoded", width=DECODED_COL_WIDTH)
+        t_pdo.add_column("Decoded", width=DECODED_COL_WIDTH, no_wrap=True, overflow="ellipsis")
         t_pdo.add_column("Count", width=6, justify="right")
 
-        frames = list(self.fixed_pdo.values())[-analyzer_defs.DATA_TABLE_HEIGHT:] if self.fixed else list(self.pdo_frames)[-analyzer_defs.DATA_TABLE_HEIGHT:]
-        while len(frames) < analyzer_defs.DATA_TABLE_HEIGHT:
+        frames = list(self.fixed_pdo.values())[-data_rows:] if self.fixed else list(self.pdo_frames)[-data_rows:]
+        while len(frames) < data_rows:
             frames.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for f in frames:
             name = self._trim_cell(f.get("name", ""), NAME_COL_WIDTH)
@@ -627,11 +648,11 @@ class display_cli(threading.Thread):
         t_sdo.add_column("Index")
         t_sdo.add_column("Sub")
         t_sdo.add_column("Raw Data", no_wrap=True)
-        t_sdo.add_column("Decoded", width=DECODED_COL_WIDTH)
+        t_sdo.add_column("Decoded", width=DECODED_COL_WIDTH, no_wrap=True, overflow="ellipsis")
         t_sdo.add_column("Count", width=6, justify="right")
 
-        sdos = list(self.fixed_sdo.values())[-analyzer_defs.DATA_TABLE_HEIGHT:] if self.fixed else list(self.sdo_frames)[-analyzer_defs.DATA_TABLE_HEIGHT:]
-        while len(sdos) < analyzer_defs.DATA_TABLE_HEIGHT:
+        sdos = list(self.fixed_sdo.values())[-data_rows:] if self.fixed else list(self.sdo_frames)[-data_rows:]
+        while len(sdos) < data_rows:
             sdos.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for s in sdos:
             name = self._trim_cell(s.get("name", ""), NAME_COL_WIDTH)

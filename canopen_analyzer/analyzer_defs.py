@@ -81,6 +81,12 @@ LOG_LEVEL = logging.DEBUG
 ## Height of the data table in the CLI interface (number of rows).
 DATA_TABLE_HEIGHT = 30
 
+## Minimum height of the data tables in the CLI interface (number of rows).
+## @details
+## Used as a floor when the CLI dynamically shrinks the Protocol/PDO/SDO tables to
+## fit the current terminal height, ensuring the send/receive options stay visible.
+MIN_DATA_TABLE_HEIGHT = 3
+
 ## Height of the protocol table in the CLI interface (number of rows).
 PROTOCOL_TABLE_HEIGHT = 15
 

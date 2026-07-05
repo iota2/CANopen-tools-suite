@@ -34,6 +34,7 @@ var namespaceanalyzer__defs =
     [ "MAX_CLI_CMD_HISTORY", "namespaceanalyzer__defs.html#adfdb2aa7ec3d939c91e68a67f786ca9f", null ],
     [ "MAX_FRAMES", "namespaceanalyzer__defs.html#a90270d61ef5cbcf52b1f4e63ee96cfbc", null ],
     [ "MAX_STATS_SHOW", "namespaceanalyzer__defs.html#aa6fda8207dcce3b56fd8ed0ff3ec827e", null ],
+    [ "MIN_DATA_TABLE_HEIGHT", "namespaceanalyzer__defs.html#ad0aa606c3f1685b25487b2137c4adb5f", null ],
     [ "MIN_STATS_SHOW", "namespaceanalyzer__defs.html#a80c4d7f9c3a827951418fea4187ad0df", null ],
     [ "NODE_INACTIVE_TIMEOUT", "namespaceanalyzer__defs.html#acce2a35315ca0ca1a6ebbe621df53a4e", null ],
     [ "PROTOCOL_TABLE_HEIGHT", "namespaceanalyzer__defs.html#ad34b850f413d130ec4a6f42787217af6", null ],
