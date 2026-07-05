@@ -1,0 +1,5 @@
+<map id="_process_sdo_res_legacy" name="_process_sdo_res_legacy">
+<area shape="rect" id="node1" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="328,31,515,57"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,5,280,32"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,31,48,57"/>
+</map>

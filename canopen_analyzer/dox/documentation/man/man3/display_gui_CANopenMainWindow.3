@@ -1,4 +1,4 @@
-.TH "CANopenMainWindow" 3 "Wed Jan 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "CANopenMainWindow" 3 "Mon Jul 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,11 +45,15 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Handle a newly decoded CAN frame\&. "
 .ti -1c
+.RI "def \fBshowEvent\fP (self, event)"
+.br
+.RI "Perform one-time layout work that requires a realized window\&. "
+.ti -1c
 .RI "def \fBupdate_bus_stats\fP (self)"
 .br
 .RI "Update Bus Statistics dashboard widgets and rate graphs\&. "
 .ti -1c
-.RI "def \fBupdate_table\fP (self, table, fixed_map, key, values)"
+.RI "def \fBupdate_table\fP (self, table, fixed_map, key, values, max_rows=\fBanalyzer_defs\&.DATA_TABLE_HEIGHT\fP)"
 .br
 .RI "Insert or update a row in a data table\&. "
 .in -1c
@@ -233,6 +237,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Apply a substring filter to a table\&. "
 .ti -1c
+.RI "def \fB_apply_initial_column_fill\fP (self)"
+.br
+.RI "Distribute leftover width across each table's fill columns once\&. "
+.ti -1c
 .RI "def \fB_autosize_columns\fP (self, table)"
 .br
 .RI "Auto-size table columns and rows to fit contents\&. "
@@ -257,13 +265,17 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Build the top control toolbar\&. "
 .ti -1c
-.RI "def \fB_configure_table_columns\fP (self, table, str stretch_column_name)"
+.RI "def \fB_configure_table_columns\fP (self, table, resizable_column_names)"
 .br
-.RI "Configure column resize behavior using column names instead of indices\&. "
+.RI "Auto-fit content columns and make the named columns user-resizable\&. "
 .ti -1c
 .RI "def \fB_copy_table_selection\fP (self, QTableWidget table)"
 .br
 .RI "Copy selected table cells to clipboard as TSV\&. "
+.ti -1c
+.RI "def \fB_distribute_fill_columns\fP (self, table)"
+.br
+.RI "Size the table's fill columns to share the remaining width\&. "
 .ti -1c
 .RI "def \fB_enable_table_copy\fP (self, QTableWidget table)"
 .br
@@ -337,6 +349,9 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
+.RI "\fB_initial_fill_done\fP"
+.br
+.ti -1c
 .RI "\fB_ui_timer\fP"
 .br
 .RI "Periodic GUI refresh timer (decoupled from CAN traffic) "
@@ -375,6 +390,10 @@ Apply a substring filter to a table\&. Performs a case-insensitive substring mat
 .RE
 .PP
 
+.SS "def _apply_initial_column_fill ( self)\fC [private]\fP"
+
+.PP
+Distribute leftover width across each table's fill columns once\&. Skips any table whose column widths were persisted in a previous session so that user-chosen widths are preserved across launches\&. 
 .SS "def _autosize_columns ( self,  table)\fC [private]\fP"
 
 .PP
@@ -453,16 +472,16 @@ This toolbar corresponds conceptually to interactive controls available in the C
 
 .PP
 
-.SS "def _configure_table_columns ( self,  table, str stretch_column_name)\fC [private]\fP"
+.SS "def _configure_table_columns ( self,  table,  resizable_column_names)\fC [private]\fP"
 
 .PP
-Configure column resize behavior using column names instead of indices\&. 
+Auto-fit content columns and make the named columns user-resizable\&. Every column that is \fInot\fP named in \fCresizable_column_names\fP is sized to fit the data it displays (ResizeToContents, updated automatically)\&. The named columns use the Interactive mode so the user can drag their borders to change their width; they are additionally sized once on first show to share the remaining table width (see \fB_distribute_fill_columns\fP)\&. 
 .PP
 \fBParameters\fP
 .RS 4
-\fItable\fP QTableWidget instance 
+\fItable\fP QTableWidget instance\&. 
 .br
-\fIstretch_column_name\fP Header text of column to stretch (e\&.g\&. 'Decoded') 
+\fIresizable_column_names\fP Header text (str) or iterable of header texts of the column(s) the user may resize and which fill the remaining width (e\&.g\&. 'Decoded' for Protocol, ['Name', 'Decoded'] for PDO/SDO)\&. 
 .RE
 .PP
 
@@ -470,6 +489,17 @@ Configure column resize behavior using column names instead of indices\&.
 
 .PP
 Copy selected table cells to clipboard as TSV\&. 
+.SS "def _distribute_fill_columns ( self,  table)\fC [private]\fP"
+
+.PP
+Size the table's fill columns to share the remaining width\&. Computes the width left over after the auto-fitted (content) columns and divides it equally among the table's user-resizable fill columns\&. Called once when the window is first shown; afterwards the columns stay under user control (they are in Interactive resize mode)\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget whose fill columns should be sized\&. 
+.RE
+.PP
+
 .SS "def _enable_table_copy ( self, QTableWidget table)\fC [private]\fP"
 
 .PP
@@ -633,6 +663,17 @@ Handle a newly decoded CAN frame\&. Called from the GUI worker thread via signal
 .RE
 .PP
 
+.SS "def showEvent ( self,  event)"
+
+.PP
+Perform one-time layout work that requires a realized window\&. The initial fill-column width distribution needs the final table widths, which are only known once the (maximized) window has been shown\&. This is done a single time; subsequent user resizing of columns is preserved\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIevent\fP Qt show event\&. 
+.RE
+.PP
+
 .SS "def update_bus_stats ( self)"
 
 .PP
@@ -654,7 +695,7 @@ The data semantics and grouping are kept consistent with the CLI implementation\
 
 .PP
 
-.SS "def update_table ( self,  table,  fixed_map,  key,  values)"
+.SS "def update_table ( self,  table,  fixed_map,  key,  values,  max_rows = \fC\fBanalyzer_defs\&.DATA_TABLE_HEIGHT\fP\fP)"
 
 .PP
 Insert or update a row in a data table\&. Updates the specified table based on the current display mode:
@@ -677,6 +718,8 @@ Row highlighting is applied to indicate recent activity\&.
 \fIkey\fP Unique key identifying a row in Fixed mode\&. 
 .br
 \fIvalues\fP List of column values to insert/update\&. 
+.br
+\fImax_rows\fP Maximum number of rows retained in Sequential mode before the oldest row is discarded\&. 
 .RE
 .PP
 
@@ -684,6 +727,8 @@ Row highlighting is applied to indicate recent activity\&.
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_initial_fill_done\fC [private]\fP"
+
 .SS "_ui_timer\fC [private]\fP"
 
 .PP

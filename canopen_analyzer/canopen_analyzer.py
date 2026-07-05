@@ -89,6 +89,7 @@ def main():
     p.add_argument("--eds", help="EDS file path (optional)")
     p.add_argument("--fixed", action="store_true", help="update rows instead of scrolling")
     p.add_argument("--export", default="csv", choices=["csv", "json", "pcap"], help="export received frames")
+    p.add_argument("--sniffer", action="store_true", help="enable professional (Wireshark-like) sniffer mode for CANopen decoding")
     p.add_argument("--log", action="store_true", help="enable logging")
     args = p.parse_args()
 
@@ -97,10 +98,16 @@ def main():
         analyzer_defs.enable_logging()
 
     ## Parse and load EDS mapping for object dictionary and PDOs.
+    ## @details
+    ## The EDS file is optional. When it is omitted, an empty parser is created
+    ## so the analyzer still starts; object names then fall back to an
+    ## "index.sub" representation during decoding.
+    eds_map = eds_parser(args.eds)
     if args.eds:
-        eds_map = eds_parser(args.eds)
         analyzer_defs.log.debug(f"Decoded PDO map: {eds_map.pdo_map}")
         analyzer_defs.log.debug(f"Decoded NAME map: {eds_map.name_map}")
+    else:
+        analyzer_defs.log.info("No EDS file provided — object names will be shown as index.sub")
 
     ## Check if user passed the desired bitrate else use default.
     if args.bitrate:
@@ -134,7 +141,10 @@ def main():
                                 raw_frame=raw_frame,
                                 processed_frame=processed_frame,
                                 eds_map=eds_map,
-                                export=args.export)
+                                export=args.export,
+                                sniffer=args.sniffer)
+
+    analyzer_defs.log.info(f"Sniffer mode : {'enabled' if args.sniffer else 'disabled'}")
 
     ## Start background threads.
     sniffer.start()

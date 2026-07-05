@@ -1,4 +1,4 @@
-.TH "analyzer_defs" 3 "Wed Jan 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "analyzer_defs" 3 "Mon Jul 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -117,6 +117,22 @@ analyzer_defs
 .RI "int \fBFSYNC_EVERY\fP = 50"
 .br
 .RI "Frequency of filesystem synchronization (every N rows)\&. "
+.ti -1c
+.RI "int \fBGUI_LEFT_DOCK_MAX_WIDTH\fP = 320"
+.br
+.RI "Maximum width (px) of the left 'Remote Node Control' dock\&. "
+.ti -1c
+.RI "int \fBGUI_LEFT_DOCK_MIN_WIDTH\fP = 280"
+.br
+.RI "Minimum width (px) of the left 'Remote Node Control' dock\&. "
+.ti -1c
+.RI "int \fBGUI_RIGHT_DOCK_MAX_WIDTH\fP = 600"
+.br
+.RI "Maximum width (px) of the right 'Bus Stats' dock\&. "
+.ti -1c
+.RI "int \fBGUI_RIGHT_DOCK_MIN_WIDTH\fP = 360"
+.br
+.RI "Minimum width (px) of the right 'Bus Stats' dock\&. "
 .ti -1c
 .RI "\fBlog\fP = logging\&.getLogger(f'{APP_NAME}')"
 .br
@@ -323,6 +339,22 @@ DataTypes defined in EDS file\&.
 
 .PP
 Frequency of filesystem synchronization (every N rows)\&. Setting this to 1 performs fsync after every row, which is safer but slower\&. 
+.SS "int GUI_LEFT_DOCK_MAX_WIDTH = 320"
+
+.PP
+Maximum width (px) of the left 'Remote Node Control' dock\&. 
+.SS "int GUI_LEFT_DOCK_MIN_WIDTH = 280"
+
+.PP
+Minimum width (px) of the left 'Remote Node Control' dock\&. 
+.SS "int GUI_RIGHT_DOCK_MAX_WIDTH = 600"
+
+.PP
+Maximum width (px) of the right 'Bus Stats' dock\&. 
+.SS "int GUI_RIGHT_DOCK_MIN_WIDTH = 360"
+
+.PP
+Minimum width (px) of the right 'Bus Stats' dock\&. 
 .SS "log = logging\&.getLogger(f'{APP_NAME}')"
 
 .PP

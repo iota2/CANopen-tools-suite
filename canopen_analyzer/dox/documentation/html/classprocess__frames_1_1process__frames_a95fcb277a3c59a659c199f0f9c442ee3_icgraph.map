@@ -1,0 +1,9 @@
+<map id="_publish_sdo" name="_publish_sdo">
+<area shape="rect" id="node1" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,59,676,86"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,30,521,56"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,30,281,56"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,81,503,122"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,146,503,188"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,84,281,111"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,59,48,86"/>
+</map>

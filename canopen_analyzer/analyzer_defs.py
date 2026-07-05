@@ -102,6 +102,25 @@ MAX_FRAMES = 500
 ## Seconds after which a node is considered inactive.
 NODE_INACTIVE_TIMEOUT = 5.0
 
+# --------------------------------------------------------------------------
+# ----- GUI dock sizing -----
+# --------------------------------------------------------------------------
+# Width bounds (in pixels) for the GUI side docks. The side docks keep a
+# bounded, roughly constant width so the central data tables receive the
+# remaining horizontal space.
+
+## Minimum width (px) of the left "Remote Node Control" dock.
+GUI_LEFT_DOCK_MIN_WIDTH = 280
+
+## Maximum width (px) of the left "Remote Node Control" dock.
+GUI_LEFT_DOCK_MAX_WIDTH = 320
+
+## Minimum width (px) of the right "Bus Stats" dock.
+GUI_RIGHT_DOCK_MIN_WIDTH = 360
+
+## Maximum width (px) of the right "Bus Stats" dock.
+GUI_RIGHT_DOCK_MAX_WIDTH = 600
+
 ## Default Node-ID for Send SDO.
 DEFAULT_SDO_SEND_NODE_ID = "0x01"
 

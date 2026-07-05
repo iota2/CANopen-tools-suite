@@ -1,0 +1,5 @@
+<map id="_handle_sdo_upload_segment_res" name="_handle_sdo_upload_segment_res">
+<area shape="rect" id="node1" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="328,5,483,47"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,13,280,39"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>

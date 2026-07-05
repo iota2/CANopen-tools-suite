@@ -1,5 +1,6 @@
 <map id="_settings_key_for_table" name="_settings_key_for_table">
-<area shape="rect" id="node1" title="Generate a QSettings key for storing table column widths." alt="" coords="233,31,409,57"/>
-<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211" title="Restore column widths for a table from persistent settings." alt="" coords="5,5,185,32"/>
-<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a89031e360e49efb6136631a6aa7c2557" title="Persist current column widths for a table." alt="" coords="13,56,178,83"/>
+<area shape="rect" id="node1" title="Generate a QSettings key for storing table column widths." alt="" coords="240,56,416,83"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a82fdbaa4a3d3c1b0a4b3bd358f2cdab8" title="Distribute leftover width across each table&#39;s fill columns once." alt="" coords="5,5,192,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#ae75b7102dbb441694a47853102954211" title="Restore column widths for a table from persistent settings." alt="" coords="9,56,189,83"/>
+<area shape="rect" id="node4" href="$classdisplay__gui_1_1CANopenMainWindow.html#a89031e360e49efb6136631a6aa7c2557" title="Persist current column widths for a table." alt="" coords="16,107,181,133"/>
 </map>
