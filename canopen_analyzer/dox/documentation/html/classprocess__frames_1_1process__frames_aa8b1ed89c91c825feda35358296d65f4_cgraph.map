@@ -1,4 +1,7 @@
 <map id="export_processed_frame" name="export_processed_frame">
-<area shape="rect" id="node1" title="Save a processed frame row to the processed CSV file." alt="" coords="5,13,188,39"/>
-<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="236,5,400,47"/>
+<area shape="rect" id="node1" title="Save a processed frame row to the processed export file." alt="" coords="5,31,188,57"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="236,23,427,65"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="477,5,641,32"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="475,56,644,83"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="692,49,856,90"/>
 </map>

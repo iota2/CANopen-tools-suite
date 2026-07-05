@@ -26,9 +26,17 @@ analyzer_defs
 .br
 .RI "Get value after splitting the string\&. "
 .ti -1c
+.RI "def \fBdisable_logging\fP ()"
+.br
+.RI "Disable file logging at runtime\&. "
+.ti -1c
 .RI "def \fBenable_logging\fP ()"
 .br
-.RI "Enable file-only logging, enabled through argument\&. "
+.RI "Enable file-only logging (via argument or at runtime)\&. "
+.ti -1c
+.RI "str \fBformat_error_frame\fP (raw)"
+.br
+.RI "Render an error / EMCY frame payload in a human-readable form\&. "
 .ti -1c
 .RI "str \fBnow_str\fP ()"
 .br
@@ -118,6 +126,10 @@ analyzer_defs
 .br
 .RI "Frequency of filesystem synchronization (every N rows)\&. "
 .ti -1c
+.RI "string \fBGUI_CLEAR_BTN_COLOR\fP = '#e74c3c'"
+.br
+.RI "Background color of the Clear button\&. "
+.ti -1c
 .RI "int \fBGUI_LEFT_DOCK_MAX_WIDTH\fP = 320"
 .br
 .RI "Maximum width (px) of the left 'Remote Node Control' dock\&. "
@@ -125,6 +137,14 @@ analyzer_defs
 .RI "int \fBGUI_LEFT_DOCK_MIN_WIDTH\fP = 280"
 .br
 .RI "Minimum width (px) of the left 'Remote Node Control' dock\&. "
+.ti -1c
+.RI "string \fBGUI_PAUSE_BTN_PAUSED_COLOR\fP = '#2ecc71'"
+.br
+.RI "Background color of the Pause button while the display is paused (button reads 'Resume')\&. "
+.ti -1c
+.RI "string \fBGUI_PAUSE_BTN_RUNNING_COLOR\fP = '#f1c40f'"
+.br
+.RI "Background color of the Pause button while the display is running (button reads 'Pause')\&. "
 .ti -1c
 .RI "int \fBGUI_RIGHT_DOCK_MAX_WIDTH\fP = 600"
 .br
@@ -141,6 +161,10 @@ analyzer_defs
 .RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
 .br
 .RI "Default Logging level\&. "
+.ti -1c
+.RI "bool \fBlogging_enabled\fP = False"
+.br
+.RI "Tracks whether debug/file logging is currently enabled\&. "
 .ti -1c
 .RI "int \fBMAX_CLI_CMD_HISTORY\fP = 5"
 .br
@@ -212,10 +236,30 @@ Splitted value as integer\&.
 .RE
 .PP
 
+.SS "def analyzer_defs\&.disable_logging ()"
+
+.PP
+Disable file logging at runtime\&. Flushes and removes all root logger handlers and restores a quiet NullHandler so no further records are written until logging is re-enabled via \fBenable_logging\fP\&. 
 .SS "def analyzer_defs\&.enable_logging ()"
 
 .PP
-Enable file-only logging, enabled through argument\&. 
+Enable file-only logging (via argument or at runtime)\&. 
+.SS " str analyzer_defs\&.format_error_frame ( raw)"
+
+.PP
+Render an error / EMCY frame payload in a human-readable form\&. When the payload is long enough to be a CANopen EMCY object (>= 3 bytes), returns a decoded summary: the 16-bit error code (little endian), the error register, and any printable manufacturer-specific bytes\&. Shorter payloads that cannot be decoded fall back to an uppercase, space-separated hex string\&. This replaces the raw `bytearray(b'\&.\&.\&.')` repr previously shown\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIraw\fP Payload as bytes/bytearray (or None)\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Human-readable string, or '-' when there is no payload\&. 
+.RE
+.PP
+
 .SS " str analyzer_defs\&.now_str ()"
 
 .PP
@@ -343,6 +387,10 @@ DataTypes defined in EDS file\&.
 
 .PP
 Frequency of filesystem synchronization (every N rows)\&. Setting this to 1 performs fsync after every row, which is safer but slower\&. 
+.SS "string GUI_CLEAR_BTN_COLOR = '#e74c3c'"
+
+.PP
+Background color of the Clear button\&. 
 .SS "int GUI_LEFT_DOCK_MAX_WIDTH = 320"
 
 .PP
@@ -351,6 +399,14 @@ Maximum width (px) of the left 'Remote Node Control' dock\&.
 
 .PP
 Minimum width (px) of the left 'Remote Node Control' dock\&. 
+.SS "string GUI_PAUSE_BTN_PAUSED_COLOR = '#2ecc71'"
+
+.PP
+Background color of the Pause button while the display is paused (button reads 'Resume')\&. 
+.SS "string GUI_PAUSE_BTN_RUNNING_COLOR = '#f1c40f'"
+
+.PP
+Background color of the Pause button while the display is running (button reads 'Pause')\&. 
 .SS "int GUI_RIGHT_DOCK_MAX_WIDTH = 600"
 
 .PP
@@ -367,6 +423,10 @@ Module-level convenience logger (will propagate to root_logger handler)\&. Creat
 
 .PP
 Default Logging level\&. Set default log level to INFO\&. 
+.SS "bool logging_enabled = False"
+
+.PP
+Tracks whether debug/file logging is currently enabled\&. Toggled by \fBenable_logging\fP / \fBdisable_logging\fP so display backends can reflect and switch the current logging state at runtime\&. 
 .SS "int MAX_CLI_CMD_HISTORY = 5"
 
 .PP

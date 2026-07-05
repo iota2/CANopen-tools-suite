@@ -1,0 +1,6 @@
+<map id="_toggle_debug_logs" name="_toggle_debug_logs">
+<area shape="rect" id="node1" title="Enable or disable runtime debug (file) logging." alt="" coords="588,20,739,47"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="387,5,540,61"/>
+<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="196,13,339,54"/>
+<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,13,148,54"/>
+</map>

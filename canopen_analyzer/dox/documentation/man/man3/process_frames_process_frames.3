@@ -12,17 +12,29 @@ Inherits Thread\&.
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, queue\&.Queue \fBprocessed_frame\fP, \fBeds_parser\fP \fBeds_map\fP, str|None \fBexport\fP=None)"
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, queue\&.Queue \fBprocessed_frame\fP, \fBeds_parser\fP \fBeds_map\fP, str|None export=None, bool sniffer=False)"
 .br
 .RI "Initialize the processor thread\&. "
+.ti -1c
+.RI "def \fBactive_exports\fP (self)"
+.br
+.RI "Return the set of currently active export formats (thread-safe)\&. "
 .ti -1c
 .RI "def \fBdecode_by_datatype\fP (self, bytes raw, dict|None entry)"
 .br
 .RI "Decode raw frame to respective CANopen DataType\&. "
 .ti -1c
+.RI "def \fBdisable_export\fP (self, str fmt=None)"
+.br
+.RI "Disable processed-frame export at runtime (thread-safe)\&. "
+.ti -1c
+.RI "def \fBenable_export\fP (self, str fmt)"
+.br
+.RI "Enable processed-frame export in the given format at runtime\&. "
+.ti -1c
 .RI "def \fBexport_processed_frame\fP (self, dict frame)"
 .br
-.RI "Save a processed frame row to the processed CSV file\&. "
+.RI "Save a processed frame row to the processed export file\&. "
 .ti -1c
 .RI "def \fBrun\fP (self)"
 .br
@@ -44,26 +56,6 @@ Inherits Thread\&.
 .br
 .RI "EDS map/parser used to resolve (index, subindex) -> name strings\&. "
 .ti -1c
-.RI "\fBexport\fP"
-.br
-.RI "Flag indicating whether processed export is enabled : None | csv | json\&. "
-.ti -1c
-.RI "\fBexport_file\fP"
-.br
-.RI "File object for processed export (or None)\&. "
-.ti -1c
-.RI "\fBexport_filename\fP"
-.br
-.RI "Output filename for processed export file or None\&. "
-.ti -1c
-.RI "\fBexport_serial_number\fP"
-.br
-.RI "Serial number for exported rows (increments each write)\&. "
-.ti -1c
-.RI "\fBexport_writer\fP"
-.br
-.RI "Writer instance for processed rows (or None)\&. "
-.ti -1c
 .RI "\fBlog\fP"
 .br
 .RI "Logger instance scoped to this processor\&. "
@@ -84,9 +76,25 @@ Inherits Thread\&.
 
 .in +1c
 .ti -1c
+.RI "def \fB_close_all_exports\fP (self)"
+.br
+.RI "Close every active processed-frame export\&. "
+.ti -1c
+.RI "def \fB_close_export\fP (self, str fmt)"
+.br
+.RI "Flush and close a single processed-frame export format\&. "
+.ti -1c
+.RI "def \fB_export_processed_frame_locked\fP (self, dict frame)"
+.br
+.RI "Write a processed frame to every active export format\&. "
+.ti -1c
 .RI "dict \fB_json_safe_processed_frame\fP (self, dict frame)"
 .br
 .RI "Create a processed frame for saving to JSON\&. "
+.ti -1c
+.RI "def \fB_open_export\fP (self, str fmt)"
+.br
+.RI "Open a processed-frame export for \fCfmt\fP and store its record\&. "
 .ti -1c
 .RI "def \fB_resolve_od_entry\fP (self, int index, int sub)"
 .br
@@ -95,14 +103,26 @@ Inherits Thread\&.
 .RI "bool \fB_sdo_has_index\fP (self, int cs)"
 .br
 .RI "Return True if SDO command specifier carries index/subindex\&. "
+.ti -1c
+.RI "def \fB_write_csv_processed\fP (self, dict rec, dict frame)"
+.br
+.RI "Append one processed-frame row to the CSV export record\&. "
+.ti -1c
+.RI "def \fB_write_json_processed\fP (self, dict rec, dict frame)"
+.br
+.RI "Append one processed-frame object to the JSON export record\&. "
 .in -1c
 .SS "Private Attributes"
 
 .in +1c
 .ti -1c
-.RI "\fB_json_first\fP"
+.RI "\fB_export_lock\fP"
 .br
-.RI "Identifier for first element of JSON file\&. "
+.RI "Serializes export open/close against the processing run loop so a runtime enable/disable never races an in-flight write\&. "
+.ti -1c
+.RI "\fB_exports\fP"
+.br
+.RI "Active processed-frame exports keyed by format ('csv' | 'json')\&. "
 .ti -1c
 .RI "\fB_sdo_segments\fP"
 .br
@@ -114,7 +134,7 @@ Inherits Thread\&.
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue raw_frame, queue\&.Queue processed_frame, \fBeds_parser\fP eds_map, str | None  export = \fCNone\fP)"
+.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue raw_frame, queue\&.Queue processed_frame, \fBeds_parser\fP eds_map, str | None  export = \fCNone\fP, bool  sniffer = \fCFalse\fP)"
 
 .PP
 Initialize the processor thread\&. The constructor stores references to required helpers, initializes a stop event and logging, sets up CSV export if requested, and ensures statistics collection start time is set\&. 
@@ -135,10 +155,40 @@ Initialize the processor thread\&. The constructor stores references to required
 
 .SH "Member Function Documentation"
 .PP 
+.SS "def _close_all_exports ( self)\fC [private]\fP"
+
+.PP
+Close every active processed-frame export\&. Callers must hold \fB_export_lock\fP\&. 
+.SS "def _close_export ( self, str fmt)\fC [private]\fP"
+
+.PP
+Flush and close a single processed-frame export format\&. Finalizes the format's file (JSON array terminator, flush, fsync, close) then removes it from \fB_exports\fP\&. Callers must hold \fB_export_lock\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format to close\&. 
+.RE
+.PP
+
+.SS "def _export_processed_frame_locked ( self, dict frame)\fC [private]\fP"
+
+.PP
+Write a processed frame to every active export format\&. Each active format (CSV, JSON) is written independently\&. Caller must hold \fB_export_lock\fP\&. 
 .SS " dict _json_safe_processed_frame ( self, dict frame)\fC [private]\fP"
 
 .PP
 Create a processed frame for saving to JSON\&. 
+.SS "def _open_export ( self, str fmt)\fC [private]\fP"
+
+.PP
+Open a processed-frame export for \fCfmt\fP and store its record\&. Opens the file/writer for \fCfmt\fP and writes any required header, registering a per-format record in \fB_exports\fP\&. \fCpcap\fP is accepted for symmetry with the sniffer but writes no processed file (only the raw sniffer stream is PCAP-capable); the record is still registered so both workers stay in sync\&. Formats are independent, so this never disturbs other active exports\&. Callers must hold \fB_export_lock\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
+.RE
+.PP
+
 .SS "def _resolve_od_entry ( self, int index, int sub)\fC [private]\fP"
 
 .PP
@@ -147,14 +197,58 @@ Resolve Object Dictionary metadata for (index, sub)\&.
 
 .PP
 Return True if SDO command specifier carries index/subindex\&. 
+.SS "def _write_csv_processed ( self, dict rec, dict frame)\fC [private]\fP"
+
+.PP
+Append one processed-frame row to the CSV export record\&. 
+.SS "def _write_json_processed ( self, dict rec, dict frame)\fC [private]\fP"
+
+.PP
+Append one processed-frame object to the JSON export record\&. 
+.SS "def active_exports ( self)"
+
+.PP
+Return the set of currently active export formats (thread-safe)\&. 
 .SS "def decode_by_datatype ( self, bytes raw, dict | None entry)"
 
 .PP
 Decode raw frame to respective CANopen DataType\&. 
+.SS "def disable_export ( self, str  fmt = \fCNone\fP)"
+
+.PP
+Disable processed-frame export at runtime (thread-safe)\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Format to disable, or None to disable all active formats\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The set of active export formats after the call\&. 
+.RE
+.PP
+
+.SS "def enable_export ( self, str fmt)"
+
+.PP
+Enable processed-frame export in the given format at runtime\&. Thread-safe and independent: enabling a format does not affect any other active formats, so CSV and JSON can run at once\&. Enabling an already-active format is a no-op\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The set of active export formats after the call\&. 
+.RE
+.PP
+
 .SS "def export_processed_frame ( self, dict frame)"
 
 .PP
-Save a processed frame row to the processed CSV file\&. Writes processed frame to export file\&. Periodically flushes and \fCfsyncs\fP the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
+Save a processed frame row to the processed export file\&. Writes processed frame to export file\&. Periodically flushes and \fCfsyncs\fP the file according to \fCdefs\&.FSYNC_EVERY\fP\&. Serialized against runtime enable/disable via \fB_export_lock\fP\&. 
 .PP
 \fBParameters\fP
 .RS 4
@@ -183,10 +277,14 @@ Save a fully processed CANopen frame in memory and export it to CSV\&. Converts 
 Request the processor thread to stop\&. Signals the internal stop event so the processing loop exits at the next opportunity\&. This method does not block waiting for thread exit; call \fCjoin()\fP on the thread object if synchronous shutdown is required\&. 
 .SH "Member Data Documentation"
 .PP 
-.SS "_json_first\fC [private]\fP"
+.SS "_export_lock\fC [private]\fP"
 
 .PP
-Identifier for first element of JSON file\&. 
+Serializes export open/close against the processing run loop so a runtime enable/disable never races an in-flight write\&. 
+.SS "_exports\fC [private]\fP"
+
+.PP
+Active processed-frame exports keyed by format ('csv' | 'json')\&. Each value is a per-format record dict holding that format's file / writer and bookkeeping\&. Formats are independent and may be active simultaneously\&. ('pcap' is accepted for symmetry with the sniffer but produces no processed file\&.) 
 .SS "_sdo_segments\fC [private]\fP"
 
 .PP
@@ -199,26 +297,6 @@ Internal event used to signal the run loop to stop\&.
 
 .PP
 EDS map/parser used to resolve (index, subindex) -> name strings\&. 
-.SS "export"
-
-.PP
-Flag indicating whether processed export is enabled : None | csv | json\&. 
-.SS "export_file"
-
-.PP
-File object for processed export (or None)\&. 
-.SS "export_filename"
-
-.PP
-Output filename for processed export file or None\&. 
-.SS "export_serial_number"
-
-.PP
-Serial number for exported rows (increments each write)\&. 
-.SS "export_writer"
-
-.PP
-Writer instance for processed rows (or None)\&. 
 .SS "log"
 
 .PP

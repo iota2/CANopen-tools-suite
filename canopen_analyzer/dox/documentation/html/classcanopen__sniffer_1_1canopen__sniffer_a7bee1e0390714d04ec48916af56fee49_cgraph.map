@@ -1,6 +1,10 @@
 <map id="export_raw_frame" name="export_raw_frame">
-<area shape="rect" id="node1" title="Save a received CAN frame (raw view) to an export file." alt="" coords="5,53,147,79"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="195,53,363,79"/>
-<area shape="rect" id="node3" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="418,5,571,47"/>
-<area shape="rect" id="node4" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="411,82,579,109"/>
+<area shape="rect" id="node1" title="Save a received CAN frame (raw view) to an export file." alt="" coords="5,67,147,94"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="195,67,392,94"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="641,17,764,43"/>
+<area shape="rect" id="node6" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="442,67,569,94"/>
+<area shape="rect" id="node8" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="440,118,571,145"/>
+<area shape="rect" id="node4" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="842,5,995,47"/>
+<area shape="rect" id="node5" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="835,71,1003,98"/>
+<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="619,67,787,94"/>
 </map>

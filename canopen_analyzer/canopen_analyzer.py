@@ -88,7 +88,7 @@ def main():
     p.add_argument("--bitrate", type=int, default=analyzer_defs.DEFAULT_CAN_BIT_RATE, help="CAN bitrate (default: {analyzer_defs.DEFAULT_CAN_BIT_RATE})")
     p.add_argument("--eds", help="EDS file path (optional)")
     p.add_argument("--fixed", action="store_true", help="update rows instead of scrolling")
-    p.add_argument("--export", default="csv", choices=["csv", "json", "pcap"], help="export received frames")
+    p.add_argument("--export", default=None, choices=["csv", "json", "pcap"], help="export received frames (off by default; can also be toggled at runtime)")
     p.add_argument("--sniffer", action="store_true", help="enable professional (Wireshark-like) sniffer mode for CANopen decoding")
     p.add_argument("--log", action="store_true", help="enable logging")
     args = p.parse_args()
@@ -153,17 +153,17 @@ def main():
     # create chosen display thread
     display = None
     if args.mode == "cli":
-        display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+        display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
     elif args.mode == "tui":
         try:
             analyzer_defs.log.info("Loading TUI interface")
-            display_tui.run_textual(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+            display_tui.run_textual(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
         except Exception as e:
             analyzer_defs.log.exception("Failed to start Textual TUI: %s", e)
             # fallback to legacy CLI thread if textual unavailable
-            display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+            display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
     elif args.mode == "gui":
-        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
 
     if display:
         display.start()

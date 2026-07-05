@@ -127,6 +127,23 @@ GUI_RIGHT_DOCK_MIN_WIDTH = 360
 ## Maximum width (px) of the right "Bus Stats" dock.
 GUI_RIGHT_DOCK_MAX_WIDTH = 600
 
+# --------------------------------------------------------------------------
+# ----- GUI toolbar button colors -----
+# --------------------------------------------------------------------------
+# Background colors for the toolbar control buttons. They convey the current
+# state of the display at a glance.
+
+## Background color of the Pause button while the display is running
+## (button reads "Pause").
+GUI_PAUSE_BTN_RUNNING_COLOR = "#f1c40f"
+
+## Background color of the Pause button while the display is paused
+## (button reads "Resume").
+GUI_PAUSE_BTN_PAUSED_COLOR = "#2ecc71"
+
+## Background color of the Clear button.
+GUI_CLEAR_BTN_COLOR = "#e74c3c"
+
 ## Default Node-ID for Send SDO.
 DEFAULT_SDO_SEND_NODE_ID = "0x01"
 
@@ -252,8 +269,14 @@ root_logger.setLevel(LOG_LEVEL)
 log = logging.getLogger(f"{APP_NAME}")
 log.addHandler(logging.NullHandler())
 
+## @brief Tracks whether debug/file logging is currently enabled.
+## @details
+## Toggled by @ref enable_logging / @ref disable_logging so display backends
+## can reflect and switch the current logging state at runtime.
+logging_enabled = False
+
 def enable_logging():
-    """! Enable file-only logging, enabled through argument."""
+    """! Enable file-only logging (via argument or at runtime)."""
 
     filename = f"{APP_NAME}.log"
 
@@ -267,10 +290,42 @@ def enable_logging():
     )
 
     # Do NOT add a StreamHandler here — we want file-only logging when enabled through argument.
-    global log
+    global log, logging_enabled
     log = logging.getLogger(f"{APP_NAME}")
     log.setLevel(LOG_LEVEL)
+    logging_enabled = True
     log.info(f"Logging enabled → {filename}")
+
+
+def disable_logging():
+    """! Disable file logging at runtime.
+    @details
+    Flushes and removes all root logger handlers and restores a quiet
+    NullHandler so no further records are written until logging is
+    re-enabled via @ref enable_logging.
+    """
+
+    global log, logging_enabled
+
+    if logging_enabled:
+        log.info("Logging disabled")
+
+    root = logging.getLogger()
+    for h in root.handlers[:]:
+        try:
+            h.flush()
+            h.close()
+        except Exception:
+            pass
+        root.removeHandler(h)
+
+    # Keep the app logger quiet until explicitly re-enabled.
+    log = logging.getLogger(f"{APP_NAME}")
+    for h in log.handlers[:]:
+        log.removeHandler(h)
+    log.addHandler(logging.NullHandler())
+
+    logging_enabled = False
 
 
 # ----- helpers -----
@@ -297,6 +352,48 @@ def bytes_to_hex(data) -> str:
         return " ".join(f"{b:02X}" for b in data)
     except Exception:
         return str(data)
+
+
+def format_error_frame(raw) -> str:
+    """! Render an error / EMCY frame payload in a human-readable form.
+    @details
+    When the payload is long enough to be a CANopen EMCY object (>= 3 bytes),
+    returns a decoded summary: the 16-bit error code (little endian), the
+    error register, and any printable manufacturer-specific bytes. Shorter
+    payloads that cannot be decoded fall back to an uppercase, space-separated
+    hex string. This replaces the raw `bytearray(b'...')` repr previously
+    shown.
+    @param raw Payload as bytes/bytearray (or None).
+    @return Human-readable string, or "-" when there is no payload.
+    """
+
+    if raw is None:
+        return "-"
+
+    try:
+        data = bytes(raw)
+    except Exception:
+        return str(raw)
+
+    if not data:
+        return "-"
+
+    # EMCY-style decode when the mandatory error code + register are present.
+    if len(data) >= 3:
+        error_code = int.from_bytes(data[0:2], "little")
+        error_reg = data[2]
+        manuf = data[3:8]
+        manuf_ascii = "".join(
+            chr(x) if 32 <= x <= 126 else "." for x in manuf
+        ).rstrip(".")
+
+        detail = f"code=0x{error_code:04X} reg=0x{error_reg:02X}"
+        if manuf_ascii:
+            detail += f" manuf={manuf_ascii}"
+        return detail
+
+    # Not enough bytes to decode — show the raw hex as a last resort.
+    return " ".join(f"{b:02X}" for b in data)
 
 
 def clean_int_with_comment(val: str) -> int:

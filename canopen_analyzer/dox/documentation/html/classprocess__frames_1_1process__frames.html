@@ -114,14 +114,23 @@ Collaboration diagram for process_frames:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5bc12514c98edca8798862652dd6bd4d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a5bc12514c98edca8798862652dd6bd4d">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a>, <a class="el" href="classeds__parser_1_1eds__parser.html">eds_parser</a> <a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, str|None <a class="el" href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=None)</td></tr>
-<tr class="memdesc:a5bc12514c98edca8798862652dd6bd4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classprocess__frames_1_1process__frames.html#a5bc12514c98edca8798862652dd6bd4d">More...</a><br /></td></tr>
-<tr class="separator:a5bc12514c98edca8798862652dd6bd4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42e53da926122a991812d8cd71622f39"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a42e53da926122a991812d8cd71622f39">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a>, <a class="el" href="classeds__parser_1_1eds__parser.html">eds_parser</a> <a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, str|None export=None, bool sniffer=False)</td></tr>
+<tr class="memdesc:a42e53da926122a991812d8cd71622f39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classprocess__frames_1_1process__frames.html#a42e53da926122a991812d8cd71622f39">More...</a><br /></td></tr>
+<tr class="separator:a42e53da926122a991812d8cd71622f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73ce500be40d2288b802474a3f084086"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a73ce500be40d2288b802474a3f084086">active_exports</a> (self)</td></tr>
+<tr class="memdesc:a73ce500be40d2288b802474a3f084086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the set of currently active export formats (thread-safe).  <a href="classprocess__frames_1_1process__frames.html#a73ce500be40d2288b802474a3f084086">More...</a><br /></td></tr>
+<tr class="separator:a73ce500be40d2288b802474a3f084086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a141fd9c4a0063a14296bf9bbf75fdc58"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58">decode_by_datatype</a> (self, bytes raw, dict|None entry)</td></tr>
 <tr class="memdesc:a141fd9c4a0063a14296bf9bbf75fdc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode raw frame to respective CANopen DataType.  <a href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58">More...</a><br /></td></tr>
 <tr class="separator:a141fd9c4a0063a14296bf9bbf75fdc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75a5cc6d8773648c9ac608e779c17430"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430">disable_export</a> (self, str fmt=None)</td></tr>
+<tr class="memdesc:a75a5cc6d8773648c9ac608e779c17430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable processed-frame export at runtime (thread-safe).  <a href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430">More...</a><br /></td></tr>
+<tr class="separator:a75a5cc6d8773648c9ac608e779c17430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af48869479f7a195cc0c3fff08cd8df96"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96">enable_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:af48869479f7a195cc0c3fff08cd8df96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable processed-frame export in the given format at runtime.  <a href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96">More...</a><br /></td></tr>
+<tr class="separator:af48869479f7a195cc0c3fff08cd8df96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8b1ed89c91c825feda35358296d65f4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4">export_processed_frame</a> (self, dict frame)</td></tr>
-<tr class="memdesc:aa8b1ed89c91c825feda35358296d65f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed CSV file.  <a href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4">More...</a><br /></td></tr>
+<tr class="memdesc:aa8b1ed89c91c825feda35358296d65f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed export file.  <a href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4">More...</a><br /></td></tr>
 <tr class="separator:aa8b1ed89c91c825feda35358296d65f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad22709b2e67308af35f55680d5a026e0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0">run</a> (self)</td></tr>
 <tr class="memdesc:ad22709b2e67308af35f55680d5a026e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main processing loop.  <a href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0">More...</a><br /></td></tr>
@@ -138,21 +147,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a087b69c6d3cd89b6872e63605be5e05c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a></td></tr>
 <tr class="memdesc:a087b69c6d3cd89b6872e63605be5e05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">EDS map/parser used to resolve (index, subindex) -&gt; name strings.  <a href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">More...</a><br /></td></tr>
 <tr class="separator:a087b69c6d3cd89b6872e63605be5e05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a></td></tr>
-<tr class="memdesc:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating whether processed export is enabled : None | csv | json.  <a href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">More...</a><br /></td></tr>
-<tr class="separator:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdcb13a7e8e9ec20376d877dbae55960"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#afdcb13a7e8e9ec20376d877dbae55960">export_file</a></td></tr>
-<tr class="memdesc:afdcb13a7e8e9ec20376d877dbae55960"><td class="mdescLeft">&#160;</td><td class="mdescRight">File object for processed export (or None).  <a href="classprocess__frames_1_1process__frames.html#afdcb13a7e8e9ec20376d877dbae55960">More...</a><br /></td></tr>
-<tr class="separator:afdcb13a7e8e9ec20376d877dbae55960"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a809f8a0a28e66d245892a14fef6c923b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a809f8a0a28e66d245892a14fef6c923b">export_filename</a></td></tr>
-<tr class="memdesc:a809f8a0a28e66d245892a14fef6c923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output filename for processed export file or None.  <a href="classprocess__frames_1_1process__frames.html#a809f8a0a28e66d245892a14fef6c923b">More...</a><br /></td></tr>
-<tr class="separator:a809f8a0a28e66d245892a14fef6c923b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7a93db5093bfacf3425a3456acfa568"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ab7a93db5093bfacf3425a3456acfa568">export_serial_number</a></td></tr>
-<tr class="memdesc:ab7a93db5093bfacf3425a3456acfa568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serial number for exported rows (increments each write).  <a href="classprocess__frames_1_1process__frames.html#ab7a93db5093bfacf3425a3456acfa568">More...</a><br /></td></tr>
-<tr class="separator:ab7a93db5093bfacf3425a3456acfa568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a696cdde4828759bce70e9bf8f7a4ba74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a696cdde4828759bce70e9bf8f7a4ba74">export_writer</a></td></tr>
-<tr class="memdesc:a696cdde4828759bce70e9bf8f7a4ba74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writer instance for processed rows (or None).  <a href="classprocess__frames_1_1process__frames.html#a696cdde4828759bce70e9bf8f7a4ba74">More...</a><br /></td></tr>
-<tr class="separator:a696cdde4828759bce70e9bf8f7a4ba74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a></td></tr>
 <tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance scoped to this processor.  <a href="classprocess__frames_1_1process__frames.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,21 +162,42 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:ac781972b285a457e944404235cf8a302"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302">_close_all_exports</a> (self)</td></tr>
+<tr class="memdesc:ac781972b285a457e944404235cf8a302"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close every active processed-frame export.  <a href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302">More...</a><br /></td></tr>
+<tr class="separator:ac781972b285a457e944404235cf8a302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53aa31047ff9efe40f523e94278cf9dd"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd">_close_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:a53aa31047ff9efe40f523e94278cf9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush and close a single processed-frame export format.  <a href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd">More...</a><br /></td></tr>
+<tr class="separator:a53aa31047ff9efe40f523e94278cf9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4c7c5c72980919f46b39367f338d684"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684">_export_processed_frame_locked</a> (self, dict frame)</td></tr>
+<tr class="memdesc:aa4c7c5c72980919f46b39367f338d684"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a processed frame to every active export format.  <a href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684">More...</a><br /></td></tr>
+<tr class="separator:aa4c7c5c72980919f46b39367f338d684"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7031035c06abd316cf1ae48aee76a7"><td class="memItemLeft" align="right" valign="top">dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7">_json_safe_processed_frame</a> (self, dict frame)</td></tr>
 <tr class="memdesc:a4c7031035c06abd316cf1ae48aee76a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a processed frame for saving to JSON.  <a href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7">More...</a><br /></td></tr>
 <tr class="separator:a4c7031035c06abd316cf1ae48aee76a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af266880872dcd06b97a0ec03841f6ac0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0">_open_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:af266880872dcd06b97a0ec03841f6ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a processed-frame export for <code>fmt</code> and store its record.  <a href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0">More...</a><br /></td></tr>
+<tr class="separator:af266880872dcd06b97a0ec03841f6ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af33692a2b313d5adc0e6eb3bc1ba129d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d">_resolve_od_entry</a> (self, int index, int sub)</td></tr>
 <tr class="memdesc:af33692a2b313d5adc0e6eb3bc1ba129d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve Object Dictionary metadata for (index, sub).  <a href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d">More...</a><br /></td></tr>
 <tr class="separator:af33692a2b313d5adc0e6eb3bc1ba129d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c327b400fe52a2eebc76e7c41123b2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a">_sdo_has_index</a> (self, int cs)</td></tr>
 <tr class="memdesc:a2c327b400fe52a2eebc76e7c41123b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return True if SDO command specifier carries index/subindex.  <a href="classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a">More...</a><br /></td></tr>
 <tr class="separator:a2c327b400fe52a2eebc76e7c41123b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d6ea6d2a4fa3055cdb084ceb31edb7d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d">_write_csv_processed</a> (self, dict rec, dict frame)</td></tr>
+<tr class="memdesc:a8d6ea6d2a4fa3055cdb084ceb31edb7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one processed-frame row to the CSV export record.  <a href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d">More...</a><br /></td></tr>
+<tr class="separator:a8d6ea6d2a4fa3055cdb084ceb31edb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3966d2b76109ebfdbf6750594dc1dbbb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb">_write_json_processed</a> (self, dict rec, dict frame)</td></tr>
+<tr class="memdesc:a3966d2b76109ebfdbf6750594dc1dbbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one processed-frame object to the JSON export record.  <a href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb">More...</a><br /></td></tr>
+<tr class="separator:a3966d2b76109ebfdbf6750594dc1dbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:af086836ec2a067957f99fe7b6edf8fc5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af086836ec2a067957f99fe7b6edf8fc5">_json_first</a></td></tr>
-<tr class="memdesc:af086836ec2a067957f99fe7b6edf8fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifier for first element of JSON file.  <a href="classprocess__frames_1_1process__frames.html#af086836ec2a067957f99fe7b6edf8fc5">More...</a><br /></td></tr>
-<tr class="separator:af086836ec2a067957f99fe7b6edf8fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51009bf435d587e7f3faf424321b5ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a></td></tr>
+<tr class="memdesc:ac51009bf435d587e7f3faf424321b5ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes export open/close against the processing run loop so a runtime enable/disable never races an in-flight write.  <a href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">More...</a><br /></td></tr>
+<tr class="separator:ac51009bf435d587e7f3faf424321b5ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3892ce1fc810777b8ce3f74a0218045c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a></td></tr>
+<tr class="memdesc:a3892ce1fc810777b8ce3f74a0218045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active processed-frame exports keyed by format ("csv" | "json").  <a href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">More...</a><br /></td></tr>
+<tr class="separator:a3892ce1fc810777b8ce3f74a0218045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a0be7b66a6f269f558b06a8dff2e57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ad3a0be7b66a6f269f558b06a8dff2e57">_sdo_segments</a></td></tr>
 <tr class="memdesc:ad3a0be7b66a6f269f558b06a8dff2e57"><td class="mdescLeft">&#160;</td><td class="mdescRight">State for segmented SDO support: (node, index, sub) -&gt; bytearray.  <a href="classprocess__frames_1_1process__frames.html#ad3a0be7b66a6f269f558b06a8dff2e57">More...</a><br /></td></tr>
 <tr class="separator:ad3a0be7b66a6f269f558b06a8dff2e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,8 +206,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5bc12514c98edca8798862652dd6bd4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bc12514c98edca8798862652dd6bd4d">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="a42e53da926122a991812d8cd71622f39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42e53da926122a991812d8cd71622f39">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,7 +246,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">str | None &#160;</td>
-          <td class="paramname"><em>export</em> = <code>None</code>&#160;</td>
+          <td class="paramname"><em>export</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>sniffer</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -256,6 +277,176 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac781972b285a457e944404235cf8a302"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac781972b285a457e944404235cf8a302">&#9670;&nbsp;</a></span>_close_all_exports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _close_all_exports </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Close every active processed-frame export. </p>
+<p>Callers must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph" id="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph">
+<area shape="rect" title="Close every active processed&#45;frame export." alt="" coords="5,42,148,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="196,5,379,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="231,71,343,98"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph" id="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph">
+<area shape="rect" title="Close every active processed&#45;frame export." alt="" coords="236,101,379,127"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,5,188,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="37,71,156,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,123,188,164"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="75,189,118,215"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a53aa31047ff9efe40f523e94278cf9dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53aa31047ff9efe40f523e94278cf9dd">&#9670;&nbsp;</a></span>_close_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _close_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flush and close a single processed-frame export format. </p>
+<p>Finalizes the format's file (JSON array terminator, flush, fsync, close) then removes it from <a class="el" href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a>. Callers must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format to close. </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph" id="aclassprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph">
+<area shape="rect" title="Flush and close a single processed&#45;frame export format." alt="" coords="477,67,589,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="236,89,429,131"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,5,188,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="37,71,156,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="261,155,404,182"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,123,188,164"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="75,189,118,215"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa4c7c5c72980919f46b39367f338d684"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4c7c5c72980919f46b39367f338d684">&#9670;&nbsp;</a></span>_export_processed_frame_locked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _export_processed_frame_locked </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write a processed frame to every active export format. </p>
+<p>Each active format (CSV, JSON) is written independently. Caller must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph" id="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph">
+<area shape="rect" title="Write a processed frame to every active export format." alt="" coords="5,23,196,65"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="247,5,411,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="244,56,413,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="461,49,625,90"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph" id="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph">
+<area shape="rect" title="Write a processed frame to every active export format." alt="" coords="547,5,737,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="316,13,499,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a4c7031035c06abd316cf1ae48aee76a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c7031035c06abd316cf1ae48aee76a7">&#9670;&nbsp;</a></span>_json_safe_processed_frame()</h2>
 
@@ -296,10 +487,66 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph" id="aclassprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph">
-<area shape="rect" title="Create a processed frame for saving to JSON." alt="" coords="547,5,711,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,13,499,39"/>
+<area shape="rect" title="Create a processed frame for saving to JSON." alt="" coords="1003,5,1167,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="785,13,955,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="547,5,737,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="316,13,499,39"/>
 <area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
 <area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af266880872dcd06b97a0ec03841f6ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af266880872dcd06b97a0ec03841f6ac0">&#9670;&nbsp;</a></span>_open_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _open_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Open a processed-frame export for <code>fmt</code> and store its record. </p>
+<p>Opens the file/writer for <code>fmt</code> and writes any required header, registering a per-format record in <a class="el" href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a>. <code>pcap</code> is accepted for symmetry with the sniffer but writes no processed file (only the raw sniffer stream is PCAP-capable); the record is still registered so both workers stay in sync. Formats are independent, so this never disturbs other active exports. Callers must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format: "csv", "json", or "pcap". </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph" id="aclassprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph">
+<area shape="rect" title="Open a processed&#45;frame export for fmt and store its record." alt="" coords="236,42,347,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af48869479f7a195cc0c3fff08cd8df96" title="Enable raw&#45;frame export in the given format at runtime." alt="" coords="5,5,188,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96" title="Enable processed&#45;frame export in the given format at runtime." alt="" coords="39,71,154,98"/>
 </map>
 </div>
 
@@ -396,6 +643,147 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a8d6ea6d2a4fa3055cdb084ceb31edb7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d6ea6d2a4fa3055cdb084ceb31edb7d">&#9670;&nbsp;</a></span>_write_csv_processed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_csv_processed </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one processed-frame row to the CSV export record. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph" id="aclassprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph">
+<area shape="rect" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="785,13,949,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="547,5,737,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="316,13,499,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a3966d2b76109ebfdbf6750594dc1dbbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3966d2b76109ebfdbf6750594dc1dbbb">&#9670;&nbsp;</a></span>_write_json_processed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_json_processed </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one processed-frame object to the JSON export record. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph" id="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph">
+<area shape="rect" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="5,13,175,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="223,5,387,47"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph" id="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph">
+<area shape="rect" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="785,13,955,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="547,5,737,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="316,13,499,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a73ce500be40d2288b802474a3f084086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ce500be40d2288b802474a3f084086">&#9670;&nbsp;</a></span>active_exports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def active_exports </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the set of currently active export formats (thread-safe). </p>
+
+</div>
+</div>
 <a id="a141fd9c4a0063a14296bf9bbf75fdc58"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a141fd9c4a0063a14296bf9bbf75fdc58">&#9670;&nbsp;</a></span>decode_by_datatype()</h2>
 
@@ -441,6 +829,102 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a75a5cc6d8773648c9ac608e779c17430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75a5cc6d8773648c9ac608e779c17430">&#9670;&nbsp;</a></span>disable_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def disable_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>fmt</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable processed-frame export at runtime (thread-safe). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Format to disable, or None to disable all active formats. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The set of active export formats after the call. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph" id="aclassprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph">
+<area shape="rect" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,67,124,93"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="172,30,365,71"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="413,30,596,71"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="449,96,561,123"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="197,96,340,123"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af48869479f7a195cc0c3fff08cd8df96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af48869479f7a195cc0c3fff08cd8df96">&#9670;&nbsp;</a></span>enable_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def enable_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable processed-frame export in the given format at runtime. </p>
+<p>Thread-safe and independent: enabling a format does not affect any other active formats, so CSV and JSON can run at once. Enabling an already-active format is a no-op. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format: "csv", "json", or "pcap". </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The set of active export formats after the call. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph" id="aclassprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph">
+<area shape="rect" title="Enable processed&#45;frame export in the given format at runtime." alt="" coords="5,42,120,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af266880872dcd06b97a0ec03841f6ac0" title="Open a raw&#45;frame export for fmt and store its record." alt="" coords="168,5,351,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0" title="Open a processed&#45;frame export for fmt and store its record." alt="" coords="204,71,315,98"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="aa8b1ed89c91c825feda35358296d65f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8b1ed89c91c825feda35358296d65f4">&#9670;&nbsp;</a></span>export_processed_frame()</h2>
 
@@ -467,8 +951,8 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Save a processed frame row to the processed CSV file. </p>
-<p>Writes processed frame to export file. Periodically flushes and <code>fsyncs</code> the file according to <code>defs.FSYNC_EVERY</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Save a processed frame row to the processed export file. </p>
+<p>Writes processed frame to export file. Periodically flushes and <code>fsyncs</code> the file according to <code>defs.FSYNC_EVERY</code>. Serialized against runtime enable/disable via <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">frame</td><td>Processed frame. </td></tr>
   </table>
@@ -479,8 +963,11 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph" id="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph">
-<area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="5,13,188,39"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="236,5,400,47"/>
+<area shape="rect" title="Save a processed frame row to the processed export file." alt="" coords="5,31,188,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="236,23,427,65"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="477,5,641,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="475,56,644,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="692,49,856,90"/>
 </map>
 </div>
 <div class="dynheader">
@@ -488,7 +975,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph" id="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph">
-<area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="316,5,499,32"/>
+<area shape="rect" title="Save a processed frame row to the processed export file." alt="" coords="316,5,499,32"/>
 <area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
 <area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
 </map>
@@ -519,14 +1006,21 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Main processing loop." alt="" coords="5,81,48,108"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="111,5,253,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="103,56,261,83"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="98,107,266,133"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,157,268,184"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="331,121,484,162"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,187,499,213"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="547,179,711,221"/>
+<area shape="rect" title="Main processing loop." alt="" coords="5,147,48,174"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="96,5,289,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="121,71,264,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="122,122,263,149"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="114,173,271,199"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="109,223,277,250"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="107,274,279,301"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="337,5,520,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="373,71,485,98"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="352,237,505,279"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="337,303,520,330"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="568,296,759,337"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="809,278,973,305"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="807,329,976,355"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1024,321,1188,363"/>
 </map>
 </div>
 
@@ -572,8 +1066,11 @@ Here is the call graph for this function:</div>
 <map name="aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_cgraph" id="aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_cgraph">
 <area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="5,42,177,69"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="240,5,393,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="225,71,408,98"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="456,64,620,105"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="225,71,408,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="456,64,647,105"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="697,46,861,73"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="695,97,864,123"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="912,89,1076,131"/>
 </map>
 </div>
 <div class="dynheader">
@@ -620,8 +1117,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af086836ec2a067957f99fe7b6edf8fc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af086836ec2a067957f99fe7b6edf8fc5">&#9670;&nbsp;</a></span>_json_first</h2>
+<a id="ac51009bf435d587e7f3faf424321b5ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac51009bf435d587e7f3faf424321b5ef">&#9670;&nbsp;</a></span>_export_lock</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -630,7 +1127,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">_json_first</td>
+          <td class="memname">_export_lock</td>
         </tr>
       </table>
   </td>
@@ -640,7 +1137,32 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Identifier for first element of JSON file. </p>
+<p>Serializes export open/close against the processing run loop so a runtime enable/disable never races an in-flight write. </p>
+
+</div>
+</div>
+<a id="a3892ce1fc810777b8ce3f74a0218045c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3892ce1fc810777b8ce3f74a0218045c">&#9670;&nbsp;</a></span>_exports</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_exports</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Active processed-frame exports keyed by format ("csv" | "json"). </p>
+<p>Each value is a per-format record dict holding that format's file / writer and bookkeeping. Formats are independent and may be active simultaneously. ("pcap" is accepted for symmetry with the sniffer but produces no processed file.) </p>
 
 </div>
 </div>
@@ -705,86 +1227,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>EDS map/parser used to resolve (index, subindex) -&gt; name strings. </p>
-
-</div>
-</div>
-<a id="af44e2d3afd4e0e4d03f637dbb2bce3cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44e2d3afd4e0e4d03f637dbb2bce3cd">&#9670;&nbsp;</a></span>export</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Flag indicating whether processed export is enabled : None | csv | json. </p>
-
-</div>
-</div>
-<a id="afdcb13a7e8e9ec20376d877dbae55960"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdcb13a7e8e9ec20376d877dbae55960">&#9670;&nbsp;</a></span>export_file</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_file</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>File object for processed export (or None). </p>
-
-</div>
-</div>
-<a id="a809f8a0a28e66d245892a14fef6c923b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a809f8a0a28e66d245892a14fef6c923b">&#9670;&nbsp;</a></span>export_filename</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_filename</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Output filename for processed export file or None. </p>
-
-</div>
-</div>
-<a id="ab7a93db5093bfacf3425a3456acfa568"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7a93db5093bfacf3425a3456acfa568">&#9670;&nbsp;</a></span>export_serial_number</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_serial_number</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Serial number for exported rows (increments each write). </p>
-
-</div>
-</div>
-<a id="a696cdde4828759bce70e9bf8f7a4ba74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a696cdde4828759bce70e9bf8f7a4ba74">&#9670;&nbsp;</a></span>export_writer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_writer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Writer instance for processed rows (or None). </p>
 
 </div>
 </div>

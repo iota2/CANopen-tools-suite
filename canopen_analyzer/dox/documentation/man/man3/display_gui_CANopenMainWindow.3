@@ -25,7 +25,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, queue\&.Queue() \fBrequested_frame\fP, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP)"
+.RI "def \fB__init__\fP (self, queue\&.Queue() \fBrequested_frame\fP, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP, \fBsniffer\fP=None, \fBprocessor\fP=None)"
 .br
 .RI "Construct the main CANopen Analyzer GUI window\&. "
 .ti -1c
@@ -49,6 +49,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Perform one-time layout work that requires a realized window\&. "
 .ti -1c
+.RI "def \fBtoggle_pause\fP (self)"
+.br
+.RI "Toggle pausing of the data-table display\&. "
+.ti -1c
 .RI "def \fBupdate_bus_stats\fP (self)"
 .br
 .RI "Update Bus Statistics dashboard widgets and rate graphs\&. "
@@ -64,6 +68,9 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBbus_labels\fP"
 .br
 .RI "Dictionary mapping metric names to their corresponding QLabel widgets\&. "
+.ti -1c
+.RI "\fBclear_btn\fP"
+.br
 .ti -1c
 .RI "\fBfixed\fP"
 .br
@@ -97,6 +104,13 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Mode selection combo box\&. "
 .ti -1c
+.RI "\fBpause_btn\fP"
+.br
+.ti -1c
+.RI "\fBpaused\fP"
+.br
+.RI "When True, incoming frames are not added to the data tables\&. "
+.ti -1c
 .RI "\fBpdo_cob_edit\fP"
 .br
 .RI "SDO receive send button\&. "
@@ -120,6 +134,9 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBpdo_timer\fP"
 .br
 .RI "PDO write repeat timer\&. "
+.ti -1c
+.RI "\fBprocessor\fP"
+.br
 .ti -1c
 .RI "\fBproto_filter\fP"
 .br
@@ -205,6 +222,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Persistent settings store used for window geometry, dock layout, and column width restoration\&. "
 .ti -1c
+.RI "\fBsniffer\fP"
+.br
+.RI "Backend worker references used for runtime export toggling\&. "
+.ti -1c
 .RI "\fBsplitter\fP"
 .br
 .RI "Create a vertical splitter to allow user-resizable sections\&. "
@@ -240,6 +261,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "def \fB_apply_initial_column_fill\fP (self)"
 .br
 .RI "Distribute leftover width across each table's fill columns once\&. "
+.ti -1c
+.RI "def \fB_apply_pause_btn_style\fP (self)"
+.br
+.RI "Color the Pause button according to the current state\&. "
 .ti -1c
 .RI "def \fB_autosize_columns\fP (self, table)"
 .br
@@ -333,6 +358,18 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Generate a QSettings key for storing table column widths\&. "
 .ti -1c
+.RI "def \fB_sync_export_action_checks\fP (self)"
+.br
+.RI "Update Export menu check marks to reflect current state\&. "
+.ti -1c
+.RI "def \fB_toggle_debug_logs\fP (self)"
+.br
+.RI "Enable or disable runtime debug (file) logging\&. "
+.ti -1c
+.RI "def \fB_toggle_export\fP (self, fmt)"
+.br
+.RI "Enable or disable runtime frame export in the given format\&. "
+.ti -1c
 .RI "def \fB_toggle_pdo_repeat\fP (self, bool checked)"
 .br
 .RI "Callback for PDO repeat toggle button\&. "
@@ -349,8 +386,20 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
+.RI "\fB_active_exports\fP"
+.br
+.RI "Set of currently active export formats (subset of csv/json/pcap)\&. "
+.ti -1c
+.RI "\fB_export_actions\fP"
+.br
+.RI "Checkable export/log actions keyed by identifier\&. "
+.ti -1c
 .RI "\fB_initial_fill_done\fP"
 .br
+.ti -1c
+.RI "\fB_logs_enabled\fP"
+.br
+.RI "Whether runtime debug logging is currently enabled\&. "
 .ti -1c
 .RI "\fB_ui_timer\fP"
 .br
@@ -358,7 +407,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, queue\&.Queue() requested_frame, \fBbus_stats\fP stats, bool fixed)"
+.SS "def __init__ ( self, queue\&.Queue() requested_frame, \fBbus_stats\fP stats, bool fixed,  sniffer = \fCNone\fP,  processor = \fCNone\fP)"
 
 .PP
 Construct the main CANopen Analyzer GUI window\&. Initializes the main window state, stores shared backend references, constructs all UI components, and restores any previously saved layout\&. The initial display mode (Fixed / Sequential) is derived from the caller and mirrors the behavior of the CLI implementation\&. 
@@ -394,6 +443,10 @@ Apply a substring filter to a table\&. Performs a case-insensitive substring mat
 
 .PP
 Distribute leftover width across each table's fill columns once\&. Skips any table whose column widths were persisted in a previous session so that user-chosen widths are preserved across launches\&. 
+.SS "def _apply_pause_btn_style ( self)\fC [private]\fP"
+
+.PP
+Color the Pause button according to the current state\&. Yellow while the display is running (button reads 'Pause') and green while it is paused (button reads 'Resume')\&. 
 .SS "def _autosize_columns ( self,  table)\fC [private]\fP"
 
 .PP
@@ -621,6 +674,25 @@ Fully-qualified QSettings key for column width storage\&.
 .RE
 .PP
 
+.SS "def _sync_export_action_checks ( self)\fC [private]\fP"
+
+.PP
+Update Export menu check marks to reflect current state\&. Each export format is checked independently based on whether it is currently active; the debug-logs action reflects \fB_logs_enabled\fP\&. 
+.SS "def _toggle_debug_logs ( self)\fC [private]\fP"
+
+.PP
+Enable or disable runtime debug (file) logging\&. 
+.SS "def _toggle_export ( self,  fmt)\fC [private]\fP"
+
+.PP
+Enable or disable runtime frame export in the given format\&. Toggles the export format on both backend workers (raw sniffer and processed-frame streams)\&. Formats are independent: CSV, JSON, and PCAP can all be active at once, and toggling one never affects the others\&. Triggering an active format turns just that one off\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
+.RE
+.PP
+
 .SS "def _toggle_pdo_repeat ( self, bool checked)\fC [private]\fP"
 
 .PP
@@ -674,6 +746,10 @@ Perform one-time layout work that requires a realized window\&. The initial fill
 .RE
 .PP
 
+.SS "def toggle_pause ( self)"
+
+.PP
+Toggle pausing of the data-table display\&. Flips the \fBpaused\fP flag and updates the button label\&. While paused, \fBon_frame\fP drops incoming frames so the Protocol, PDO, and SDO tables stay frozen; the Bus Stats dashboard and rate graphs continue updating from the backend statistics\&. 
 .SS "def update_bus_stats ( self)"
 
 .PP
@@ -727,8 +803,20 @@ Row highlighting is applied to indicate recent activity\&.
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_active_exports\fC [private]\fP"
+
+.PP
+Set of currently active export formats (subset of csv/json/pcap)\&. Formats are independent and may all be active simultaneously\&. 
+.SS "_export_actions\fC [private]\fP"
+
+.PP
+Checkable export/log actions keyed by identifier\&. 
 .SS "_initial_fill_done\fC [private]\fP"
 
+.SS "_logs_enabled\fC [private]\fP"
+
+.PP
+Whether runtime debug logging is currently enabled\&. 
 .SS "_ui_timer\fC [private]\fP"
 
 .PP
@@ -737,6 +825,8 @@ Periodic GUI refresh timer (decoupled from CAN traffic)
 
 .PP
 Dictionary mapping metric names to their corresponding QLabel widgets\&. 
+.SS "clear_btn"
+
 .SS "fixed"
 
 .PP
@@ -783,6 +873,12 @@ Status card widgets and value labels for 'BUS UTIL %'\&.
 
 .PP
 Mode selection combo box\&. 
+.SS "pause_btn"
+
+.SS "paused"
+
+.PP
+When True, incoming frames are not added to the data tables\&. The Bus Stats dashboard and rate graphs keep updating live\&. 
 .SS "pdo_cob_edit"
 
 .PP
@@ -807,6 +903,8 @@ PDO send repeat check box\&.
 
 .PP
 PDO write repeat timer\&. 
+.SS "processor"
+
 .SS "proto_filter"
 
 .PP
@@ -891,6 +989,10 @@ SDO write repeat timer\&.
 
 .PP
 Persistent settings store used for window geometry, dock layout, and column width restoration\&. 
+.SS "sniffer"
+
+.PP
+Backend worker references used for runtime export toggling\&. 
 .SS "splitter"
 
 .PP

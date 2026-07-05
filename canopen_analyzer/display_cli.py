@@ -65,7 +65,7 @@ class display_cli(threading.Thread):
     rate calculation or use bitrate directly.
     """
 
-    def __init__(self, stats: bus_stats, processed_frame: queue.Queue, requested_frame=None, fixed: bool = False):
+    def __init__(self, stats: bus_stats, processed_frame: queue.Queue, requested_frame=None, fixed: bool = False, sniffer=None, processor=None):
         """! Initialize CLI based CANopen display.
         @details
         This thread initializes and launches the CLI application that renders
@@ -91,6 +91,17 @@ class display_cli(threading.Thread):
 
         ## Private instance for pointing to incoming flag whether to keep display in fixed mode or not.
         self.fixed = fixed
+
+        ## Backend worker references used for runtime export toggling.
+        self.sniffer = sniffer
+        self.processor = processor
+
+        ## Set of currently active export formats (subset of csv/json/pcap).
+        ## Formats are independent and may all be active simultaneously.
+        self._active_exports = set()
+
+        ## Whether runtime debug logging is currently enabled.
+        self._logs_enabled = analyzer_defs.logging_enabled
 
         ## Rich console instance for display.
         self.console = Console()
@@ -273,7 +284,7 @@ class display_cli(threading.Thread):
         last_err = "-"
         try:
             if snapshot.error.last_time or snapshot.error.last_frame:
-                last_err = f"[{snapshot.error.last_time}] <{snapshot.error.last_frame}>"
+                last_err = f"[{snapshot.error.last_time}] {analyzer_defs.format_error_frame(snapshot.error.last_frame)}"
         except Exception:
             last_err = "-"
         t.add_row("Last Error Frame", last_err, "")
@@ -512,10 +523,69 @@ class display_cli(threading.Thread):
                 return
 
             # ============================================================
+            # EXPORT (csv / json / pcap)
+            # ============================================================
+            if tokens[:1] == ["export"] and len(tokens) == 2 and tokens[1] in ("csv", "json", "pcap"):
+                enabled = self._toggle_export(tokens[1])
+                if enabled:
+                    ok(f"{cmd} > enabled")
+                else:
+                    stopped(cmd)
+                return
+
+            # ============================================================
+            # ENABLE LOGS (debug/file logging)
+            # ============================================================
+            if tokens == ["enable", "logs"]:
+                enabled = self._toggle_debug_logs()
+                if enabled:
+                    ok(f"{cmd} > enabled → {analyzer_defs.APP_NAME}.log")
+                else:
+                    stopped(cmd)
+                return
+
+            # ============================================================
             raise ValueError("Unknown command.")
 
         except Exception as e:
             err(cmd, e)
+
+    def _toggle_export(self, fmt: str) -> bool:
+        """! Enable or disable runtime frame export in the given format.
+        @details
+        Toggles export on both backend workers (raw sniffer and processed
+        streams). Formats are independent: CSV, JSON, and PCAP can all be
+        active at once, and toggling one never affects the others.
+        @param fmt Export format: "csv", "json", or "pcap".
+        @return True if export is now enabled, False if it was toggled off.
+        """
+
+        if fmt in self._active_exports:
+            for worker in (self.sniffer, self.processor):
+                if worker is not None:
+                    worker.disable_export(fmt)
+            self._active_exports.discard(fmt)
+            return False
+
+        for worker in (self.sniffer, self.processor):
+            if worker is not None:
+                worker.enable_export(fmt)
+        self._active_exports.add(fmt)
+        return True
+
+    def _toggle_debug_logs(self) -> bool:
+        """! Enable or disable runtime debug (file) logging.
+        @return True if logging is now enabled, False otherwise.
+        """
+
+        if self._logs_enabled:
+            analyzer_defs.disable_logging()
+            self._logs_enabled = False
+            return False
+
+        analyzer_defs.enable_logging()
+        self._logs_enabled = True
+        return True
 
     def _input_loop(self):
         """! Capture user keystrokes and update remote command input."""
@@ -697,8 +767,6 @@ class display_cli(threading.Thread):
                                 style="bold cyan"),
                          Text(f"Repeat send sdo: {self._get_remote_repeat_status('sdo_send')}",
                                 style="bold cyan"))
-        t_status.add_row(Text("\t\t > send sdo stop", style="cyan"))
-
         # Receive SDO
         t_status.add_row(Text("> recv sdo"\
                                 f" node-id[{analyzer_defs.DEFAULT_SDO_RECV_NODE_ID}]"\
@@ -708,7 +776,6 @@ class display_cli(threading.Thread):
                                 style="bold magenta"),
                          Text(f"Repeat recv sdo: {self._get_remote_repeat_status('sdo_recv')}",
                                 style="bold magenta"))
-        t_status.add_row(Text("\t\t > recv sdo stop", style="magenta"))
 
         # Send PDO
         t_status.add_row(Text("> send pdo"\
@@ -718,7 +785,23 @@ class display_cli(threading.Thread):
                                 style="bold green"),
                          Text(f"Repeat send pdo: {self._get_remote_repeat_status('pdo_send')}",
                                 style="bold green"))
-        t_status.add_row(Text("\t\t > send pdo stop", style="green"))
+        t_status.add_row(Text("> send sdo stop | > recv sdo stop | > send pdo stop", style="red"))
+
+        # Export / logging toggles
+        export_style = "bold yellow"
+        export_state = (
+            ", ".join(sorted(f.upper() for f in self._active_exports))
+            if self._active_exports else "off"
+        )
+        logs_state = "🟢" if self._logs_enabled else "🔴"
+        t_status.add_row(
+            Text("> export <csv/json/pcap>", style=export_style),
+            Text(f"Export: {export_state}", style=export_style),
+        )
+        t_status.add_row(
+            Text("> enable logs", style=export_style),
+            Text(f"Debug logs: {logs_state}", style=export_style),
+        )
 
         # Grid layout (two columns)
         layout = Table.grid(expand=True)

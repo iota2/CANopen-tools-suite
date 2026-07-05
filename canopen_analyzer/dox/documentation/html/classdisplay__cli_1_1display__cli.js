@@ -1,6 +1,6 @@
 var classdisplay__cli_1_1display__cli =
 [
-    [ "__init__", "classdisplay__cli_1_1display__cli.html#a0fbfc8a62c9f2a050e8bdf045e0b4a7a", null ],
+    [ "__init__", "classdisplay__cli_1_1display__cli.html#ad16ba02181226ea1b63a61ebb7880c58", null ],
     [ "_build_bus_stats_table", "classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b", null ],
     [ "_get_remote_repeat_status", "classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650", null ],
     [ "_handle_remote_command", "classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3", null ],
@@ -12,10 +12,14 @@ var classdisplay__cli_1_1display__cli =
     [ "_sparkline", "classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1", null ],
     [ "_start_repeat", "classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544", null ],
     [ "_stop_repeat", "classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567", null ],
+    [ "_toggle_debug_logs", "classdisplay__cli_1_1display__cli.html#a1a3e80ab5c968836fdd97b81584a7cff", null ],
+    [ "_toggle_export", "classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16", null ],
     [ "_trim_cell", "classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa", null ],
     [ "run", "classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0", null ],
     [ "stop", "classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6", null ],
+    [ "_active_exports", "classdisplay__cli_1_1display__cli.html#a5cd66637ddb119dd57dad8600b07a8b0", null ],
     [ "_input_caret", "classdisplay__cli_1_1display__cli.html#a7f6b6a8644fc2701a53dd4448886fca6", null ],
+    [ "_logs_enabled", "classdisplay__cli_1_1display__cli.html#acd0dd82badbade9f2ce1b17e7260aad3", null ],
     [ "_repeat_tasks", "classdisplay__cli_1_1display__cli.html#a49303ca1ae5b6e50bc574e96d8a15344", null ],
     [ "_stop_event", "classdisplay__cli_1_1display__cli.html#a2c9373a2aa1f4cdf3e6c936e81b17267", null ],
     [ "console", "classdisplay__cli_1_1display__cli.html#a59b27486da7ae78f25305f338b4b2fce", null ],
@@ -26,10 +30,12 @@ var classdisplay__cli_1_1display__cli =
     [ "log", "classdisplay__cli_1_1display__cli.html#ab09a63eb35b270b5cdbead1983ebdccb", null ],
     [ "pdo_frames", "classdisplay__cli_1_1display__cli.html#a7ed4ec15f8cb804b650d74833fa664ef", null ],
     [ "processed_frame", "classdisplay__cli_1_1display__cli.html#a5e5acd6f2030a04dbe189a2b21363c3a", null ],
+    [ "processor", "classdisplay__cli_1_1display__cli.html#a484a8e0e9e7b305769fcf0dfeb7d79cc", null ],
     [ "proto_frames", "classdisplay__cli_1_1display__cli.html#a1c73b4eb8864858b39133f6912c7d142", null ],
     [ "remote_cmd_history", "classdisplay__cli_1_1display__cli.html#a5298e9ec450c80b468db16d95e78ca69", null ],
     [ "remote_cmd_input", "classdisplay__cli_1_1display__cli.html#a11023f2e581443e30d20bfc9dbe80bdf", null ],
     [ "requested_frame", "classdisplay__cli_1_1display__cli.html#ab4a622f1e1275087c3558661cb25300a", null ],
     [ "sdo_frames", "classdisplay__cli_1_1display__cli.html#a5b5c93be2f940dcfa114fa61f98c1d23", null ],
+    [ "sniffer", "classdisplay__cli_1_1display__cli.html#a3ec93ed409e2a0f6db9121e39eb302ba", null ],
     [ "stats", "classdisplay__cli_1_1display__cli.html#aa57ebe01934de43865125819a3c4af74", null ]
 ];

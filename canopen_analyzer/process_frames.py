@@ -75,7 +75,7 @@ class process_frames(threading.Thread):
     The thread is stoppable via `stop()` and will close CSV resources on exit.
     """
 
-    def __init__(self, stats: bus_stats, raw_frame: queue.Queue, processed_frame: queue.Queue, eds_map: eds_parser, export: str | None = None):
+    def __init__(self, stats: bus_stats, raw_frame: queue.Queue, processed_frame: queue.Queue, eds_map: eds_parser, export: str | None = None, sniffer: bool = False):
         """! Initialize the processor thread.
         @details
         The constructor stores references to required helpers, initializes a
@@ -112,52 +112,143 @@ class process_frames(threading.Thread):
         ## State for segmented SDO support: (node, index, sub) -> bytearray
         self._sdo_segments = {}
 
-        ## Flag indicating whether processed export is enabled :  None | csv | json.
-        self.export = export
+        ## Active processed-frame exports keyed by format ("csv" | "json").
+        ## Each value is a per-format record dict holding that format's file /
+        ## writer and bookkeeping. Formats are independent and may be active
+        ## simultaneously. ("pcap" is accepted for symmetry with the sniffer
+        ## but produces no processed file.)
+        self._exports = {}
 
-        ## Output filename for processed export file or None.
-        self.export_filename = None
+        ## Serializes export open/close against the processing run loop so a
+        ## runtime enable/disable never races an in-flight write.
+        self._export_lock = threading.Lock()
 
-        ## File object for processed export (or None).
-        self.export_file = None
+        # Open the requested export format (if any) at startup. The same
+        # machinery is reused at runtime via @ref enable_export.
+        if export:
+            self.enable_export(export)
 
-        ## Writer instance for processed rows (or None).
-        self.export_writer = None
+    # --- Runtime export management ---
+    def _open_export(self, fmt: str):
+        """! Open a processed-frame export for @p fmt and store its record.
+        @details
+        Opens the file/writer for @p fmt and writes any required header,
+        registering a per-format record in @ref _exports. `pcap` is accepted
+        for symmetry with the sniffer but writes no processed file (only the
+        raw sniffer stream is PCAP-capable); the record is still registered so
+        both workers stay in sync. Formats are independent, so this never
+        disturbs other active exports. Callers must hold @ref _export_lock.
+        @param fmt Export format: "csv", "json", or "pcap".
+        """
 
-        ## Serial number for exported rows (increments each write).
-        self.export_serial_number = 1
-
-        if self.export == "csv":
-            try:
-                self.export_filename = f"{analyzer_defs.APP_NAME}_processed.csv"
-                self.export_file = open(self.export_filename, "w", newline="")
-                self.export_writer = csv.writer(self.export_file)
-                self.export_writer.writerow(
+        try:
+            if fmt == "csv":
+                filename = f"{analyzer_defs.APP_NAME}_processed.csv"
+                f = open(filename, "w", newline="")
+                writer = csv.writer(f)
+                writer.writerow(
                     ["S.No.", "Time", "Type", "Direction", "COB-ID", "Index", "Sub", "Name", "Raw", "Decoded"]
                 )
                 try:
-                    self.export_file.flush()
-                    os.fsync(self.export_file.fileno())
+                    f.flush()
+                    os.fsync(f.fileno())
                 except Exception:
                     pass
-                self.log.info(f"CSV export enabled → {self.export_filename}")
-            except Exception as e:
-                self.log.exception("Failed to open CSV export file: %s", e)
-                self.export = False
+                self._exports["csv"] = {"file": f, "writer": writer, "filename": filename, "serial": 1}
+                self.log.info(f"CSV export enabled → {filename}")
 
-        elif self.export == "json":
-            try:
-                self.export_filename = f"{analyzer_defs.APP_NAME}_processed.json"
-                self.export_file = open(self.export_filename, "w")
+            elif fmt == "json":
+                filename = f"{analyzer_defs.APP_NAME}_processed.json"
+                f = open(filename, "w")
+                f.write("[\n")
+                self._exports["json"] = {"file": f, "filename": filename, "json_first": True}
+                self.log.info(f"JSON export enabled → {filename}")
 
-                self.export_file.write("[\n")
-                ## Identifier for first element of JSON file.
-                self._json_first = True
+            elif fmt == "pcap":
+                # Processed frames are not PCAP-capable; register a record with
+                # no file so both workers stay in sync.
+                self._exports["pcap"] = {}
 
-                self.log.info(f"JSON export enabled → {self.export_filename}")
-            except Exception as e:
-                self.log.exception("Failed to open JSON export file: %s", e)
-                self.export = False
+            else:
+                self.log.warning("Unknown export format requested: %s", fmt)
+
+        except Exception as e:
+            self.log.exception("Failed to open %s export file: %s", fmt, e)
+            self._exports.pop(fmt, None)
+
+    def _close_export(self, fmt: str):
+        """! Flush and close a single processed-frame export format.
+        @details
+        Finalizes the format's file (JSON array terminator, flush, fsync,
+        close) then removes it from @ref _exports. Callers must hold
+        @ref _export_lock.
+        @param fmt Export format to close.
+        """
+
+        rec = self._exports.pop(fmt, None)
+        if rec is None:
+            return
+
+        try:
+            f = rec.get("file")
+            if f:
+                if fmt == "json":
+                    try:
+                        f.write("\n]\n")
+                    except Exception:
+                        pass
+                try:
+                    f.flush()
+                    os.fsync(f.fileno())
+                except Exception:
+                    pass
+                try:
+                    f.close()
+                except Exception:
+                    pass
+                self.log.info("%s processed export closed", fmt.upper())
+        except Exception:
+            self.log.exception("Failed during %s processed export cleanup", fmt)
+
+    def _close_all_exports(self):
+        """! Close every active processed-frame export. Callers must hold @ref _export_lock."""
+
+        for fmt in list(self._exports.keys()):
+            self._close_export(fmt)
+
+    def enable_export(self, fmt: str):
+        """! Enable processed-frame export in the given format at runtime.
+        @details
+        Thread-safe and independent: enabling a format does not affect any
+        other active formats, so CSV and JSON can run at once. Enabling an
+        already-active format is a no-op.
+        @param fmt Export format: "csv", "json", or "pcap".
+        @return The set of active export formats after the call.
+        """
+
+        with self._export_lock:
+            if fmt not in self._exports:
+                self._open_export(fmt)
+            return set(self._exports.keys())
+
+    def disable_export(self, fmt: str = None):
+        """! Disable processed-frame export at runtime (thread-safe).
+        @param fmt Format to disable, or None to disable all active formats.
+        @return The set of active export formats after the call.
+        """
+
+        with self._export_lock:
+            if fmt is None:
+                self._close_all_exports()
+            else:
+                self._close_export(fmt)
+            return set(self._exports.keys())
+
+    def active_exports(self):
+        """! Return the set of currently active export formats (thread-safe)."""
+
+        with self._export_lock:
+            return set(self._exports.keys())
 
     def _json_safe_processed_frame(self, frame: dict) -> dict:
         """! Create a processed frame for saving to JSON."""
@@ -175,56 +266,75 @@ class process_frames(threading.Thread):
         }
 
     def export_processed_frame(self, frame: dict):
-        """! Save a processed frame row to the processed CSV file.
+        """! Save a processed frame row to the processed export file.
         @details
         Writes processed frame to export file. Periodically flushes
-        and `fsyncs` the file according to `defs.FSYNC_EVERY`.
+        and `fsyncs` the file according to `defs.FSYNC_EVERY`. Serialized
+        against runtime enable/disable via @ref _export_lock.
         @param frame Processed frame.
         """
-        if not self.export:
+        if not self._exports:
             return
 
-        if self.export == "csv":
+        with self._export_lock:
+            self._export_processed_frame_locked(frame)
+
+    def _export_processed_frame_locked(self, frame: dict):
+        """! Write a processed frame to every active export format.
+        @details
+        Each active format (CSV, JSON) is written independently. Caller must
+        hold @ref _export_lock.
+        """
+
+        if "csv" in self._exports:
+            self._write_csv_processed(self._exports["csv"], frame)
+        if "json" in self._exports:
+            self._write_json_processed(self._exports["json"], frame)
+
+    def _write_csv_processed(self, rec: dict, frame: dict):
+        """! Append one processed-frame row to the CSV export record."""
+
+        try:
+            rec["writer"].writerow([
+                rec["serial"],
+                frame["time"],
+                frame["type"].name,
+                frame["dir"],
+                f"0x{frame['cob']:03X}",
+                f"0x{frame['index']:04X}",
+                f"0x{frame['sub']:02X}",
+                frame["name"],
+                frame["raw"],
+                frame["decoded"],
+            ])
+            rec["serial"] += 1
             try:
-                self.export_writer.writerow([
-                    self.export_serial_number,
-                    frame["time"],
-                    frame["type"].name,
-                    frame["dir"],
-                    f"0x{frame['cob']:03X}",
-                    f"0x{frame['index']:04X}",
-                    f"0x{frame['sub']:02X}",
-                    frame["name"],
-                    frame["raw"],
-                    frame["decoded"],
-                ])
-                self.export_serial_number += 1
-                try:
-                    self.export_file.flush()
-                    if (self.export_serial_number % analyzer_defs.FSYNC_EVERY) == 0:
-                        os.fsync(self.export_file.fileno())
-                except Exception:
-                    pass
-            except Exception as e:
-                self.log.error("CSV export failed: %s", e)
+                rec["file"].flush()
+                if (rec["serial"] % analyzer_defs.FSYNC_EVERY) == 0:
+                    os.fsync(rec["file"].fileno())
+            except Exception:
+                pass
+        except Exception as e:
+            self.log.error("CSV export failed: %s", e)
 
-        elif self.export == "json":
+    def _write_json_processed(self, rec: dict, frame: dict):
+        """! Append one processed-frame object to the JSON export record."""
+
+        try:
+            obj = self._json_safe_processed_frame(frame)
+
+            if not rec["json_first"]:
+                rec["file"].write(",\n")
+            rec["json_first"] = False
+
+            json.dump(obj, rec["file"], indent=2, ensure_ascii=False)
+
             try:
-                obj = self._json_safe_processed_frame(frame)
-
-                if not self._json_first:
-                    self.export_file.write(",\n")
-                self._json_first = False
-
-                json.dump(obj, self.export_file, indent=2, ensure_ascii=False)
-
-                try:
-                    self.export_file.flush()
-                except Exception:
-                    pass
-
-            except Exception as e:
-                self.log.error("JSON export failed: %s", e)
+                rec["file"].flush()
+            except Exception:
+                pass
+        except Exception as e:
+            self.log.error("JSON export failed: %s", e)
 
     def save_processed_frame(self, frame: dict):
         """! Save a fully processed CANopen frame in memory and export it to CSV.
@@ -854,29 +964,8 @@ class process_frames(threading.Thread):
                     pass
 
         finally:
-            if self.export == "csv" and self.export_file:
-                try:
-                    try:
-                        self.export_file.flush()
-                        os.fsync(self.export_file.fileno())
-                    except Exception:
-                        pass
-                    self.export_file.close()
-                    self.log.info("Processed CSV export file closed")
-                except Exception:
-                    self.log.exception("Failed to close processed CSV file")
-            elif self.export == "json" and self.export_file:
-                try:
-                    try:
-                        self.export_file.write("\n]\n")
-                        self.export_file.flush()
-                        os.fsync(self.export_file.fileno())
-                    except Exception:
-                        pass
-                        self.export_file.close()
-                        self.log.info("Processed JSON export file closed")
-                except Exception:
-                    self.log.exception("Failed to close processed CSV file")
+            with self._export_lock:
+                self._close_all_exports()
             self.log.info("Exiting frame processing thread.")
 
     def stop(self):

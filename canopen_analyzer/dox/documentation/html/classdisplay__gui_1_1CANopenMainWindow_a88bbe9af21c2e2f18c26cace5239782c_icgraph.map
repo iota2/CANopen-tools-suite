@@ -1,0 +1,6 @@
+<map id="_apply_pause_btn_style" name="_apply_pause_btn_style">
+<area shape="rect" id="node1" title="Color the Pause button according to the current state." alt="" coords="361,31,540,57"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0" title="Clear all displayed data and reset statistics." alt="" coords="208,5,309,32"/>
+<area shape="rect" id="node4" href="$classdisplay__gui_1_1CANopenMainWindow.html#af99e1a8bf1e00309b1c284190ed7c9f5" title="Toggle pausing of the data&#45;table display." alt="" coords="204,56,313,83"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a244742ae4559e6115110f21439ff4f19" title="Handle display mode changes from the toolbar." alt="" coords="5,5,156,32"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="clear_tables" name="clear_tables">
+<area shape="rect" id="node1" title="Clear all displayed data and reset statistics." alt="" coords="5,5,107,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a88bbe9af21c2e2f18c26cace5239782c" title="Color the Pause button according to the current state." alt="" coords="155,5,333,32"/>
+</map>

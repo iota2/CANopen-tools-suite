@@ -520,7 +520,7 @@ class CANopenMainWindow(QMainWindow):
     ## remains visible before being cleared automatically.
     HEAT_CLEAR_MS = 600
 
-    def __init__(self, requested_frame:queue.Queue(), stats: bus_stats, fixed: bool):
+    def __init__(self, requested_frame:queue.Queue(), stats: bus_stats, fixed: bool, sniffer=None, processor=None):
         """! Construct the main CANopen Analyzer GUI window.
         @details
         Initializes the main window state, stores shared backend
@@ -547,6 +547,21 @@ class CANopenMainWindow(QMainWindow):
         ##  - True  -> Fixed (aggregated) display
         ##  - False -> Sequential (rolling) display
         self.fixed = fixed
+
+        ## When True, incoming frames are not added to the data tables.
+        ## The Bus Stats dashboard and rate graphs keep updating live.
+        self.paused = False
+
+        ## Backend worker references used for runtime export toggling.
+        self.sniffer = sniffer
+        self.processor = processor
+
+        ## Set of currently active export formats (subset of csv/json/pcap).
+        ## Formats are independent and may all be active simultaneously.
+        self._active_exports = set()
+
+        ## Whether runtime debug logging is currently enabled.
+        self._logs_enabled = analyzer_defs.logging_enabled
 
         ## Periodic GUI refresh timer (decoupled from CAN traffic)
         self._ui_timer = QTimer(self)
@@ -617,11 +632,90 @@ class CANopenMainWindow(QMainWindow):
         # Retrieve the QMainWindow menu bar instance
         menubar = self.menuBar()
 
-        # Placeholder menu for export-related actions
-        menubar.addMenu("Export")
+        # Export menu: runtime toggles mirroring the --export / --log launch
+        # options. Each action is checkable and reflects the current state.
+        export_menu = menubar.addMenu("Export")
+
+        ## Checkable export/log actions keyed by identifier.
+        self._export_actions = {}
+
+        for fmt, label in (
+            ("csv", "Export as CSV"),
+            ("json", "Export as JSON"),
+            ("pcap", "Export as PCAP"),
+        ):
+            act = QAction(label, self, checkable=True)
+            act.triggered.connect(lambda _checked, f=fmt: self._toggle_export(f))
+            export_menu.addAction(act)
+            self._export_actions[fmt] = act
+
+        export_menu.addSeparator()
+
+        log_act = QAction("Export debug logs", self, checkable=True)
+        log_act.setChecked(self._logs_enabled)
+        log_act.triggered.connect(lambda _checked: self._toggle_debug_logs())
+        export_menu.addAction(log_act)
+        self._export_actions["logs"] = log_act
 
         # Placeholder menu for view/layout-related actions
         menubar.addMenu("View")
+
+    def _toggle_export(self, fmt):
+        """! Enable or disable runtime frame export in the given format.
+        @details
+        Toggles the export format on both backend workers (raw sniffer and
+        processed-frame streams). Formats are independent: CSV, JSON, and
+        PCAP can all be active at once, and toggling one never affects the
+        others. Triggering an active format turns just that one off.
+        @param fmt Export format: "csv", "json", or "pcap".
+        """
+
+        if fmt in self._active_exports:
+            for worker in (self.sniffer, self.processor):
+                if worker is not None:
+                    worker.disable_export(fmt)
+            self._active_exports.discard(fmt)
+            self.statusBar().showMessage(f"{fmt.upper()} export disabled", 4000)
+        else:
+            for worker in (self.sniffer, self.processor):
+                if worker is not None:
+                    worker.enable_export(fmt)
+            self._active_exports.add(fmt)
+            self.statusBar().showMessage(f"{fmt.upper()} export enabled", 4000)
+
+        self._sync_export_action_checks()
+
+    def _toggle_debug_logs(self):
+        """! Enable or disable runtime debug (file) logging."""
+
+        if self._logs_enabled:
+            analyzer_defs.disable_logging()
+            self._logs_enabled = False
+            self.statusBar().showMessage("Debug logging disabled", 4000)
+        else:
+            analyzer_defs.enable_logging()
+            self._logs_enabled = True
+            self.statusBar().showMessage(
+                f"Debug logging enabled → {analyzer_defs.APP_NAME}.log", 4000
+            )
+
+        self._sync_export_action_checks()
+
+    def _sync_export_action_checks(self):
+        """! Update Export menu check marks to reflect current state.
+        @details
+        Each export format is checked independently based on whether it is
+        currently active; the debug-logs action reflects @ref _logs_enabled.
+        """
+
+        for fmt in ("csv", "json", "pcap"):
+            act = self._export_actions.get(fmt)
+            if act is not None:
+                act.setChecked(fmt in self._active_exports)
+
+        log_act = self._export_actions.get("logs")
+        if log_act is not None:
+            log_act.setChecked(self._logs_enabled)
 
 
     def _build_toolbar(self):
@@ -645,13 +739,20 @@ class CANopenMainWindow(QMainWindow):
         # Dock the toolbar at the top of the main window
         self.addToolBar(Qt.TopToolBarArea, tb)
 
-        # Pause action (currently a placeholder for future flow control)
-        tb.addAction(QAction("Pause", self))
+        # Pause/Resume button: freezes the data tables while keeping the
+        # Bus Stats dashboard and rate graphs updating live.
+        self.pause_btn = QPushButton("Pause")
+        self.pause_btn.clicked.connect(self.toggle_pause)
+        self._apply_pause_btn_style()
+        tb.addWidget(self.pause_btn)
 
-        # Clear action: resets tables, graphs, and backend statistics
-        clear_act = QAction("Clear", self)
-        clear_act.triggered.connect(self.clear_tables)
-        tb.addAction(clear_act)
+        # Clear button: resets tables, graphs, and backend statistics
+        self.clear_btn = QPushButton("Clear")
+        self.clear_btn.clicked.connect(self.clear_tables)
+        self.clear_btn.setStyleSheet(
+            f"background-color: {analyzer_defs.GUI_CLEAR_BTN_COLOR};"
+        )
+        tb.addWidget(self.clear_btn)
 
         # Visual separator between action buttons and mode selector
         tb.addSeparator()
@@ -687,6 +788,33 @@ class CANopenMainWindow(QMainWindow):
 
         # Clear all tables and graphs to restart display in new mode
         self.clear_tables()
+
+    def toggle_pause(self):
+        """! Toggle pausing of the data-table display.
+        @details
+        Flips the @ref paused flag and updates the button label. While
+        paused, @ref on_frame drops incoming frames so the Protocol, PDO,
+        and SDO tables stay frozen; the Bus Stats dashboard and rate
+        graphs continue updating from the backend statistics.
+        """
+
+        self.paused = not self.paused
+        self.pause_btn.setText("Resume" if self.paused else "Pause")
+        self._apply_pause_btn_style()
+
+    def _apply_pause_btn_style(self):
+        """! Color the Pause button according to the current state.
+        @details
+        Yellow while the display is running (button reads "Pause") and
+        green while it is paused (button reads "Resume").
+        """
+
+        color = (
+            analyzer_defs.GUI_PAUSE_BTN_PAUSED_COLOR
+            if self.paused
+            else analyzer_defs.GUI_PAUSE_BTN_RUNNING_COLOR
+        )
+        self.pause_btn.setStyleSheet(f"background-color: {color};")
 
     def _build_left_dock(self):
         """! Build Remote Node Control dock (SDO / PDO send & receive).
@@ -1865,7 +1993,7 @@ class CANopenMainWindow(QMainWindow):
         # Display timestamp and content of the last observed error frame.
         if snap.error.last_time or snap.error.last_frame:
             self.bus_labels["Last Error Frame"].setText(
-                f"[{snap.error.last_time}] {snap.error.last_frame}"
+                f"[{snap.error.last_time}] {analyzer_defs.format_error_frame(snap.error.last_frame)}"
             )
         else:
             self.bus_labels["Last Error Frame"].setText("-")
@@ -2088,6 +2216,12 @@ class CANopenMainWindow(QMainWindow):
         # Reset backend bus statistics counters
         self.stats.reset()
 
+        # Clearing also resumes the display.
+        self.paused = False
+        if hasattr(self, "pause_btn"):
+            self.pause_btn.setText("Pause")
+            self._apply_pause_btn_style()
+
     def on_frame(self, p):
         """! Handle a newly decoded CAN frame.
         @details
@@ -2097,6 +2231,10 @@ class CANopenMainWindow(QMainWindow):
         highlighting, and refreshes bus statistics.
         @param p Dictionary containing decoded CAN frame fields.
         """
+
+        # When paused, drop incoming frames so the data tables stay frozen.
+        if self.paused:
+            return
 
         try:
             # Extract common frame fields
@@ -2186,7 +2324,7 @@ class CANopenMainWindow(QMainWindow):
         super().closeEvent(event)
 
 
-def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False):
+def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False, sniffer=None, processor=None):
     """! Launch the CANopen Analyzer GUI application.
     @details
     Creates the Qt application instance, initializes the main
@@ -2208,7 +2346,7 @@ def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False):
     # Qt application and main window initialization
     # ------------------------------------------------------------------
     app = QApplication(sys.argv)
-    win = CANopenMainWindow(requested_frame, stats, fixed)
+    win = CANopenMainWindow(requested_frame, stats, fixed, sniffer=sniffer, processor=processor)
 
     # ------------------------------------------------------------------
     # Worker thread setup

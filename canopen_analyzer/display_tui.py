@@ -81,7 +81,7 @@ class display_tui:
     refresh_interval = 0.2
 
     @classmethod
-    def run_textual(cls, stats, processed_frame=None, requested_frame=None, fixed=False):
+    def run_textual(cls, stats, processed_frame=None, requested_frame=None, fixed=False, sniffer=None, processor=None):
         """! Start the Textual-based CANopen TUI.
         @details
         This method initializes and launches the Textual application that renders
@@ -92,6 +92,8 @@ class display_tui:
         @param processed_frame Queue delivering processed CANopen frames from the background sniffer thread.
         @param requested_frame Queue delivering CANopen frames to the background sniffer thread.
         @param fixed When True, tables operate in fixed-index mode; otherwise they show scrolling entries.
+        @param sniffer Backend sniffer worker, used for runtime export toggling.
+        @param processor Backend frame processor worker, used for runtime export toggling.
         @return None
         """
 
@@ -103,6 +105,8 @@ class display_tui:
         cls.processed_frame = processed_frame
         cls.requested_frame = requested_frame
         cls.fixed = fixed
+        cls.sniffer = sniffer
+        cls.processor = processor
 
         # Define the actual App class inside this method so that the module
         # can be imported even if textual is not available.
@@ -117,10 +121,14 @@ class display_tui:
                     description="Show help screen",
                     key_display="?",
                 ),
-                Binding(key="n", action="Copy Protocol data", description="Copy protocol table data"),
+                Binding(key="d", action="Copy Protocol data", description="Copy protocol table data"),
                 Binding(key="b", action="Copy Bus stats", description="Copy bus stats table"),
                 Binding(key="p", action="Copy PDO", description="Copy PDO table"),
                 Binding(key="s", action="Copy SDO", description="Copy SDO table"),
+                Binding(key="c", action="Export CSV", description="Toggle CSV export"),
+                Binding(key="j", action="Export JSON", description="Toggle JSON export"),
+                Binding(key="a", action="Export PCAP", description="Toggle PCAP export"),
+                Binding(key="l", action="Export debug logs", description="Toggle debug logs"),
             ]
 
             def __init__(self, *a, **kw):
@@ -130,6 +138,14 @@ class display_tui:
 
                 ## Logger instance for TUI display.
                 self.logger = logging.getLogger(self.__class__.__name__)
+
+                ## Set of currently active export formats (subset of
+                ## csv/json/pcap). Formats are independent and may all be
+                ## active simultaneously.
+                self._active_exports = set()
+
+                ## Whether runtime debug logging is currently enabled.
+                self._logs_enabled = analyzer_defs.logging_enabled
 
                 ## Timer for repeating remote node control
                 self._repeat_tasks = {}
@@ -565,7 +581,7 @@ class display_tui:
                         pass
 
                 # Copy/dump handlers mapped to single-letter keys
-                if k in ("n", "N"):
+                if k in ("d", "D"):
                     dump = "== Protocol ==\n" + self._dump_table_rows(self.proto_table)
                     severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_protocol.txt")
                     self.notify(msg, title="Protocol Data", severity=severity)
@@ -589,6 +605,55 @@ class display_tui:
                     dump = "== SDO ==\n" + self._dump_table_rows(self.sdo_table)
                     severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
                     self.notify(msg, title="SDO Data", severity=severity)
+
+                elif k in ("c", "C"):
+                    self._toggle_export("csv")
+
+                elif k in ("j", "J"):
+                    self._toggle_export("json")
+
+                elif k in ("a", "A"):
+                    self._toggle_export("pcap")
+
+                elif k in ("l", "L"):
+                    self._toggle_debug_logs()
+
+            def _toggle_export(self, fmt: str):
+                """! Enable/disable runtime frame export in the given format.
+                @details
+                Toggles export on both backend workers. Formats are
+                independent: CSV, JSON, and PCAP can all be active at once,
+                and toggling one never affects the others.
+                @param fmt Export format: "csv", "json", or "pcap".
+                """
+
+                if fmt in self._active_exports:
+                    for worker in (cls.sniffer, cls.processor):
+                        if worker is not None:
+                            worker.disable_export(fmt)
+                    self._active_exports.discard(fmt)
+                    self.notify(f"{fmt.upper()} export disabled", title="Export")
+                else:
+                    for worker in (cls.sniffer, cls.processor):
+                        if worker is not None:
+                            worker.enable_export(fmt)
+                    self._active_exports.add(fmt)
+                    self.notify(f"{fmt.upper()} export enabled", title="Export")
+
+            def _toggle_debug_logs(self):
+                """! Enable/disable runtime debug (file) logging."""
+
+                if self._logs_enabled:
+                    analyzer_defs.disable_logging()
+                    self._logs_enabled = False
+                    self.notify("Debug logging disabled", title="Logging")
+                else:
+                    analyzer_defs.enable_logging()
+                    self._logs_enabled = True
+                    self.notify(
+                        f"Debug logging enabled → {analyzer_defs.APP_NAME}.log",
+                        title="Logging",
+                    )
 
             def _copy_to_clipboard_or_file(self, text: str, filename: str = f"/tmp/{analyzer_defs.APP_NAME}.log"):
                 """! Try to copy to clipboard using pyperclip; if unavailable, write to filename."""
@@ -1174,7 +1239,7 @@ class display_tui:
                 last_err = "-"
                 try:
                     if snapshot.error.last_time or snapshot.error.last_frame:
-                        last_err = f"[{snapshot.error.last_time}] <{snapshot.error.last_frame}>"
+                        last_err = f"[{snapshot.error.last_time}] {analyzer_defs.format_error_frame(snapshot.error.last_frame)}"
                 except Exception:
                     last_err = "-"
                 add_metric("Last Error Frame", last_err)

@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['save_5fprocessed_5fframe_431',['save_processed_frame',['../classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2',1,'process_frames::process_frames']]],
-  ['send_5fraw_5fpdo_432',['send_raw_pdo',['../classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969',1,'canopen_sniffer::canopen_sniffer']]],
-  ['send_5fsdo_5fdownload_433',['send_sdo_download',['../classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d',1,'canopen_sniffer::canopen_sniffer']]],
-  ['send_5fsdo_5fupload_5frequest_434',['send_sdo_upload_request',['../classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5',1,'canopen_sniffer::canopen_sniffer']]],
-  ['set_5fstart_5ftime_435',['set_start_time',['../classbus__stats_1_1bus__stats.html#a09ae5bd534d8dbec99a913ed75fe9848',1,'bus_stats::bus_stats']]],
-  ['showevent_436',['showEvent',['../classdisplay__gui_1_1CANopenMainWindow.html#aa2e3b3cff86bf6b30b6bde092348811f',1,'display_gui::CANopenMainWindow']]],
-  ['stop_437',['stop',['../classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'bus_stats.bus_stats.stop()'],['../classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480',1,'canopen_sniffer.canopen_sniffer.stop()'],['../classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'display_cli.display_cli.stop()'],['../classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'display_gui.GUIUpdateWorker.stop()'],['../classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6',1,'process_frames.process_frames.stop()']]]
+  ['reset_473',['reset',['../classbus__stats_1_1bus__stats.html#a51829b63adb24ac48d350dee60181002',1,'bus_stats::bus_stats']]],
+  ['resizeevent_474',['resizeEvent',['../classdisplay__gui_1_1MultiRateLineWidget.html#a0815964d2d7e4debf9b3e7cff7840436',1,'display_gui::MultiRateLineWidget']]],
+  ['run_475',['run',['../classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0',1,'canopen_sniffer.canopen_sniffer.run()'],['../classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0',1,'display_cli.display_cli.run()'],['../classdisplay__gui_1_1GUIUpdateWorker.html#ad22709b2e67308af35f55680d5a026e0',1,'display_gui.GUIUpdateWorker.run()'],['../classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0',1,'process_frames.process_frames.run()']]],
+  ['run_5ftextual_476',['run_textual',['../classdisplay__tui_1_1display__tui.html#a45f532e59a301c0490b5c7045e71e112',1,'display_tui::display_tui']]]
 ];

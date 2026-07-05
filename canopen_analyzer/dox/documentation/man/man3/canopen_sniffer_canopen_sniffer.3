@@ -18,9 +18,21 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, str \fBinterface\fP, queue\&.Queue \fBraw_frame\fP=None, \fBrequested_frame\fP=None, str|None \fBexport\fP=None)"
+.RI "def \fB__init__\fP (self, str \fBinterface\fP, queue\&.Queue \fBraw_frame\fP=None, \fBrequested_frame\fP=None, str|None export=None)"
 .br
 .RI "Initialize CAN sniffer thread and open resources\&. "
+.ti -1c
+.RI "def \fBactive_exports\fP (self)"
+.br
+.RI "Return the set of currently active export formats (thread-safe)\&. "
+.ti -1c
+.RI "def \fBdisable_export\fP (self, str fmt=None)"
+.br
+.RI "Disable raw-frame export at runtime (thread-safe)\&. "
+.ti -1c
+.RI "def \fBenable_export\fP (self, str fmt)"
+.br
+.RI "Enable raw-frame export in the given format at runtime\&. "
 .ti -1c
 .RI "def \fBexport_raw_frame\fP (self, dict frame, can\&.Message|None msg=None)"
 .br
@@ -58,26 +70,6 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .br
 .RI "CAN bus instance with configuration loading\&. "
 .ti -1c
-.RI "\fBexport\fP"
-.br
-.RI "Flag indicating whether export is enabled\&. "
-.ti -1c
-.RI "\fBexport_file\fP"
-.br
-.RI "File object for export (or None if not exporting)\&. "
-.ti -1c
-.RI "\fBexport_filename\fP"
-.br
-.RI "File name used when export is enabled\&. "
-.ti -1c
-.RI "\fBexport_serial_number\fP"
-.br
-.RI "Export serial number (incremented for each exported row)\&. "
-.ti -1c
-.RI "\fBexport_writer\fP"
-.br
-.RI "Writer instance used to write exported data (or None)\&. "
-.ti -1c
 .RI "\fBinterface\fP"
 .br
 .RI "CAN interface name used by the sniffer\&. "
@@ -89,10 +81,6 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .RI "\fBnetwork\fP"
 .br
 .RI "Optional CANopen\&.Network instance (connected if possible)\&. "
-.ti -1c
-.RI "\fBpcap_writer\fP"
-.br
-.RI "PCAP writer object for exporting file\&. "
 .ti -1c
 .RI "\fBraw_frame\fP"
 .br
@@ -106,6 +94,14 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 
 .in +1c
 .ti -1c
+.RI "def \fB_close_all_exports\fP (self)"
+.br
+.RI "Close every active raw-frame export\&. "
+.ti -1c
+.RI "def \fB_close_export\fP (self, str fmt)"
+.br
+.RI "Flush and close a single raw-frame export format\&. "
+.ti -1c
 .RI "def \fB_dispatch_request\fP (self, dict req)"
 .br
 .RI "Send request frame on CAN bus\&. "
@@ -114,20 +110,44 @@ The sniffer opens a \fCsocketcan\fP interface, receives \fCcan\&.Message\fP fram
 .br
 .RI "Ensure CAN bus is available before transmitting\&. "
 .ti -1c
+.RI "def \fB_export_raw_frame_locked\fP (self, dict frame, can\&.Message|None msg=None)"
+.br
+.RI "Write a raw frame to every active export format\&. "
+.ti -1c
 .RI "def \fB_handle_requested_frame\fP (self)"
 .br
 .RI "Dispatch queued control commands from UI layers\&. "
 .ti -1c
 .RI "dict \fB_json_safe_raw_frame\fP (self, dict frame)"
 .br
+.ti -1c
+.RI "def \fB_open_export\fP (self, str fmt)"
+.br
+.RI "Open a raw-frame export for \fCfmt\fP and store its record\&. "
+.ti -1c
+.RI "def \fB_write_csv_raw\fP (self, dict rec, dict frame)"
+.br
+.RI "Append one raw-frame row to the CSV export record\&. "
+.ti -1c
+.RI "def \fB_write_json_raw\fP (self, dict rec, dict frame)"
+.br
+.RI "Append one raw-frame object to the JSON export record\&. "
+.ti -1c
+.RI "def \fB_write_pcap_raw\fP (self, dict rec, can\&.Message msg)"
+.br
+.RI "Append one raw frame to the PCAP export record\&. "
 .in -1c
 .SS "Private Attributes"
 
 .in +1c
 .ti -1c
-.RI "\fB_json_first\fP"
+.RI "\fB_export_lock\fP"
 .br
-.RI "Identifier for first element of JSON file\&. "
+.RI "Serializes export open/close against the writing run loop so a runtime enable/disable never races an in-flight write\&. "
+.ti -1c
+.RI "\fB_exports\fP"
+.br
+.RI "Active raw-frame exports keyed by format ('csv' | 'json' | 'pcap')\&. "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -152,6 +172,21 @@ Initialize CAN sniffer thread and open resources\&. The constructor opens the so
 
 .SH "Member Function Documentation"
 .PP 
+.SS "def _close_all_exports ( self)\fC [private]\fP"
+
+.PP
+Close every active raw-frame export\&. Callers must hold \fB_export_lock\fP\&. 
+.SS "def _close_export ( self, str fmt)\fC [private]\fP"
+
+.PP
+Flush and close a single raw-frame export format\&. Finalizes the format's file (JSON array terminator, flush, fsync, close) or PCAP writer, then removes it from \fB_exports\fP\&. Callers must hold \fB_export_lock\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format to close\&. 
+.RE
+.PP
+
 .SS "def _dispatch_request ( self, dict req)\fC [private]\fP"
 
 .PP
@@ -160,16 +195,79 @@ Send request frame on CAN bus\&.
 
 .PP
 Ensure CAN bus is available before transmitting\&. 
+.SS "def _export_raw_frame_locked ( self, dict frame, can\&.Message | None  msg = \fCNone\fP)\fC [private]\fP"
+
+.PP
+Write a raw frame to every active export format\&. Each active format (CSV, JSON, PCAP) is written independently\&. Caller must hold \fB_export_lock\fP\&. 
 .SS "def _handle_requested_frame ( self)\fC [private]\fP"
 
 .PP
 Dispatch queued control commands from UI layers\&. 
 .SS " dict _json_safe_raw_frame ( self, dict frame)\fC [private]\fP"
 
+.SS "def _open_export ( self, str fmt)\fC [private]\fP"
+
+.PP
+Open a raw-frame export for \fCfmt\fP and store its record\&. Opens the file/writer for \fCfmt\fP (\fCcsv\fP, \fCjson\fP, or \fCpcap\fP), writes any required header, and registers a per-format record in \fB_exports\fP\&. Formats are independent, so this never disturbs other active exports\&. Callers must hold \fB_export_lock\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
+.RE
+.PP
+
+.SS "def _write_csv_raw ( self, dict rec, dict frame)\fC [private]\fP"
+
+.PP
+Append one raw-frame row to the CSV export record\&. 
+.SS "def _write_json_raw ( self, dict rec, dict frame)\fC [private]\fP"
+
+.PP
+Append one raw-frame object to the JSON export record\&. 
+.SS "def _write_pcap_raw ( self, dict rec, can\&.Message msg)\fC [private]\fP"
+
+.PP
+Append one raw frame to the PCAP export record\&. 
+.SS "def active_exports ( self)"
+
+.PP
+Return the set of currently active export formats (thread-safe)\&. 
+.SS "def disable_export ( self, str  fmt = \fCNone\fP)"
+
+.PP
+Disable raw-frame export at runtime (thread-safe)\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Format to disable, or None to disable all active formats\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The set of active export formats after the call\&. 
+.RE
+.PP
+
+.SS "def enable_export ( self, str fmt)"
+
+.PP
+Enable raw-frame export in the given format at runtime\&. Thread-safe and independent: enabling a format does not affect any other active formats, so CSV, JSON, and PCAP can all run at once\&. Enabling an already-active format is a no-op\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+The set of active export formats after the call\&. 
+.RE
+.PP
+
 .SS "def export_raw_frame ( self, dict frame, can\&.Message | None  msg = \fCNone\fP)"
 
 .PP
-Save a received CAN frame (raw view) to an export file\&. Writes a single row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCdefs\&.FSYNC_EVERY\fP\&. 
+Save a received CAN frame (raw view) to an export file\&. Writes a single row with a serial number, timestamp, COB-ID, error flag and raw payload\&. Periodically flushes and fsyncs the file according to \fCdefs\&.FSYNC_EVERY\fP\&. Serialized against runtime enable/disable via \fB_export_lock\fP\&. 
 .PP
 \fBParameters\fP
 .RS 4
@@ -270,10 +368,14 @@ Request the sniffer thread to stop and optionally shutdown the bus\&. Signals th
 
 .SH "Member Data Documentation"
 .PP 
-.SS "_json_first\fC [private]\fP"
+.SS "_export_lock\fC [private]\fP"
 
 .PP
-Identifier for first element of JSON file\&. 
+Serializes export open/close against the writing run loop so a runtime enable/disable never races an in-flight write\&. 
+.SS "_exports\fC [private]\fP"
+
+.PP
+Active raw-frame exports keyed by format ('csv' | 'json' | 'pcap')\&. Each value is a per-format record dict holding that format's file / writer and bookkeeping\&. Formats are independent and may be active simultaneously\&. 
 .SS "_stop_event\fC [private]\fP"
 
 .PP
@@ -282,26 +384,6 @@ Thread stop event used to signal the run loop to exit\&.
 
 .PP
 CAN bus instance with configuration loading\&. 
-.SS "export"
-
-.PP
-Flag indicating whether export is enabled\&. 
-.SS "export_file"
-
-.PP
-File object for export (or None if not exporting)\&. 
-.SS "export_filename"
-
-.PP
-File name used when export is enabled\&. 
-.SS "export_serial_number"
-
-.PP
-Export serial number (incremented for each exported row)\&. 
-.SS "export_writer"
-
-.PP
-Writer instance used to write exported data (or None)\&. 
 .SS "interface"
 
 .PP
@@ -314,10 +396,6 @@ Logger instance for this sniffer\&.
 
 .PP
 Optional CANopen\&.Network instance (connected if possible)\&. 
-.SS "pcap_writer"
-
-.PP
-PCAP writer object for exporting file\&. 
 .SS "raw_frame"
 
 .PP

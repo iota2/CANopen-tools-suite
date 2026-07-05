@@ -1,4 +1,9 @@
 <map id="enable_logging" name="enable_logging">
-<area shape="rect" id="node1" title="Enable file&#45;only logging, enabled through argument." alt="" coords="229,5,351,32"/>
-<area shape="rect" id="node2" href="$namespacecanopen__analyzer.html#a7a3ce666bbb725ab354e35632dc5f34e" title="Main entry point for the CANopen bus analyzer application." alt="" coords="5,5,181,32"/>
+<area shape="rect" id="node1" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="883,78,1004,105"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a1a3e80ab5c968836fdd97b81584a7cff" title="Enable or disable runtime debug (file) logging." alt="" coords="623,5,800,47"/>
+<area shape="rect" id="node6" href="$classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="588,71,835,112"/>
+<area shape="rect" id="node7" href="$namespacecanopen__analyzer.html#a7a3ce666bbb725ab354e35632dc5f34e" title="Main entry point for the CANopen bus analyzer application." alt="" coords="623,137,799,163"/>
+<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="387,31,540,87"/>
+<area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="196,39,339,80"/>
+<area shape="rect" id="node5" href="$classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,39,148,80"/>
 </map>
