@@ -278,11 +278,19 @@ class eds_parser:
                     raw = analyzer_defs.clean_int_with_comment(
                         cfg[f"{sec}sub{subidx}"]["DefaultValue"]
                     )
+                    subidx += 1
+
+                    # Skip empty/dummy mapping placeholders (0x00000000). A PDO
+                    # mapping object may declare up to 8 sub-entries but leave
+                    # the unused slots zeroed; those carry no data and must not
+                    # be emitted as decode targets.
+                    if raw == 0:
+                        continue
+
                     index = (raw >> 16) & 0xFFFF
                     sub = (raw >> 8) & 0xFF
                     size = raw & 0xFF
                     entries.append((index, sub, size))
-                    subidx += 1
 
                 # Resolve communication object (COB-ID)
                 comm_sec = sec.replace(map_prefix, comm_prefix, 1)

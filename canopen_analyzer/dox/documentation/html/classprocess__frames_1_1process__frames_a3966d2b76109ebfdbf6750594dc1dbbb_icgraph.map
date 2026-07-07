@@ -1,7 +1,19 @@
 <map id="_write_json_processed" name="_write_json_processed">
-<area shape="rect" id="node1" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="785,13,955,39"/>
-<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="547,5,737,47"/>
-<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="316,13,499,39"/>
-<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
-<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+<area shape="rect" id="node1" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1413,150,1583,177"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1175,143,1365,184"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="944,150,1127,177"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" id="node8" href="$classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" id="node10" href="$classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" id="node9" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" id="node11" href="$classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" id="node12" href="$classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" id="node13" href="$classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" id="node14" href="$classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" id="node15" href="$classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" id="node16" href="$classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" id="node17" href="$classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
 </map>

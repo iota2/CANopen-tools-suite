@@ -1,4 +1,4 @@
-.TH "process_frames" 3 "Mon Jul 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "process_frames" 3 "Tue Jul 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -12,7 +12,7 @@ Inherits Thread\&.
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, queue\&.Queue \fBprocessed_frame\fP, \fBeds_parser\fP \fBeds_map\fP, str|None export=None, bool sniffer=False)"
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBraw_frame\fP, queue\&.Queue \fBprocessed_frame\fP, \fBeds_parser\fP \fBeds_map\fP, str|None export=None, bool \fBsniffer\fP=False)"
 .br
 .RI "Initialize the processor thread\&. "
 .ti -1c
@@ -68,6 +68,10 @@ Inherits Thread\&.
 .br
 .RI "Queue from which raw frame dictionaries are consumed\&. "
 .ti -1c
+.RI "\fBsniffer\fP"
+.br
+.RI "Flag enabling professional (Wireshark-like) sniffer decoding\&. "
+.ti -1c
 .RI "\fBstats\fP"
 .br
 .RI "Reference to the \fBbus_stats\fP instance used for recording metrics\&. "
@@ -84,9 +88,49 @@ Inherits Thread\&.
 .br
 .RI "Flush and close a single processed-frame export format\&. "
 .ti -1c
+.RI "def \fB_decode_block_data\fP (self, ctx)"
+.br
+.RI "Decode the reassembled buffer of a block transfer\&. "
+.ti -1c
 .RI "def \fB_export_processed_frame_locked\fP (self, dict frame)"
 .br
 .RI "Write a processed frame to every active export format\&. "
+.ti -1c
+.RI "def \fB_handle_block_download_end_req\fP (self, cob, raw, is_tx, ftype, key, ctx)"
+.br
+.RI "Handle an SDO end block download request and publish the value\&. "
+.ti -1c
+.RI "def \fB_handle_block_download_init_req\fP (self, cob, raw, is_tx, ftype, key)"
+.br
+.RI "Handle an SDO initiate block download request (client → server)\&. "
+.ti -1c
+.RI "def \fB_handle_block_download_segment\fP (self, raw, ctx)"
+.br
+.RI "Accumulate one block-download data segment (client → server)\&. "
+.ti -1c
+.RI "def \fB_handle_block_upload_client_req\fP (self, cob, raw, is_tx, ftype, key, ctx)"
+.br
+.RI "Handle client → server control frames of an SDO block upload\&. "
+.ti -1c
+.RI "def \fB_handle_block_upload_segment_res\fP (self, raw, ctx)"
+.br
+.RI "Accumulate one block-upload data segment (server → client)\&. "
+.ti -1c
+.RI "def \fB_handle_block_upload_server_res\fP (self, cob, raw, is_tx, ftype, key, ctx)"
+.br
+.RI "Handle server → client block-upload control frames (scs == 6)\&. "
+.ti -1c
+.RI "def \fB_handle_sdo_abort_sniffer\fP (self, cob, raw, is_tx, ftype)"
+.br
+.RI "Emit an SDO abort frame and drop the tracked transfer\&. "
+.ti -1c
+.RI "def \fB_handle_sdo_upload_init_res\fP (self, cob, raw, is_tx, ftype, key, index, sub)"
+.br
+.RI "Handle an SDO initiate upload response in sniffer mode\&. "
+.ti -1c
+.RI "def \fB_handle_sdo_upload_segment_res\fP (self, cob, raw, is_tx, ftype, key)"
+.br
+.RI "Handle an SDO upload segment response in sniffer mode\&. "
 .ti -1c
 .RI "dict \fB_json_safe_processed_frame\fP (self, dict frame)"
 .br
@@ -95,6 +139,26 @@ Inherits Thread\&.
 .RI "def \fB_open_export\fP (self, str fmt)"
 .br
 .RI "Open a processed-frame export for \fCfmt\fP and store its record\&. "
+.ti -1c
+.RI "def \fB_process_sdo_req_legacy\fP (self, cob, raw, is_tx, node_id, ftype)"
+.br
+.RI "Legacy SDO request handling (per-node, unchanged behavior)\&. "
+.ti -1c
+.RI "def \fB_process_sdo_req_sniffer\fP (self, cob, raw, is_tx, node_id, ftype)"
+.br
+.RI "Sniffer-mode SDO request handling (client → server)\&. "
+.ti -1c
+.RI "def \fB_process_sdo_res_legacy\fP (self, cob, raw, is_tx, node_id, ftype)"
+.br
+.RI "Legacy SDO response handling (per-node, unchanged behavior)\&. "
+.ti -1c
+.RI "def \fB_process_sdo_res_sniffer\fP (self, cob, raw, is_tx, node_id, ftype)"
+.br
+.RI "Sniffer-mode SDO response handling (server → client)\&. "
+.ti -1c
+.RI "def \fB_publish_sdo\fP (self, cob, raw, is_tx, ftype, index, sub, name, data_type, access_type, decoded)"
+.br
+.RI "Helper to emit a decoded SDO frame in sniffer mode\&. "
 .ti -1c
 .RI "def \fB_resolve_od_entry\fP (self, int index, int sub)"
 .br
@@ -112,6 +176,14 @@ Inherits Thread\&.
 .br
 .RI "Append one processed-frame object to the JSON export record\&. "
 .in -1c
+.SS "Static Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fB_sdo_pair_key\fP (int cob)"
+.br
+.RI "Derive the (client_id, server_id) pair identifying an SDO channel\&. "
+.in -1c
 .SS "Private Attributes"
 
 .in +1c
@@ -127,6 +199,10 @@ Inherits Thread\&.
 .RI "\fB_sdo_segments\fP"
 .br
 .RI "State for segmented SDO support: (node, index, sub) -> bytearray\&. "
+.ti -1c
+.RI "\fB_sdo_transfers\fP"
+.br
+.RI "Active SDO transfers for sniffer mode, keyed by (client_id, server_id)\&. "
 .ti -1c
 .RI "\fB_stop_event\fP"
 .br
@@ -150,6 +226,8 @@ Initialize the processor thread\&. The constructor stores references to required
 \fIeds_map\fP Instance of \fBeds_parser\fP from \fBeds_parser\&.py\fP used to resolve Object Dictionary names and PDO mappings\&. 
 .br
 \fIexport\fP \fCcsv\fP, \fCjson\fP: enable export of processed frames to a file\&. 
+.br
+\fIsniffer\fP When True, enable professional (Wireshark-like) SDO reassembly: SDO transfers are tracked per (client_id, server_id) pair, continuation frames are associated to the correct transfer, multiple concurrent transfers are supported, and decoding is delayed until the final segment or an abort\&. When False, the original per-node decoding behavior is preserved unchanged\&. 
 .RE
 .PP
 
@@ -170,10 +248,62 @@ Flush and close a single processed-frame export format\&. Finalizes the format's
 .RE
 .PP
 
+.SS "def _decode_block_data ( self,  ctx)\fC [private]\fP"
+
+.PP
+Decode the reassembled buffer of a block transfer\&. Applies the final-segment truncation (\fCn\fP unused bytes carried by the end request) and the indicated total size (if known), then decodes via the resolved OD entry, falling back to a hex dump when decoding fails\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIctx\fP The per-pair block transfer context\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Tuple \fC(data_bytes, decoded_value)\fP\&. 
+.RE
+.PP
+
 .SS "def _export_processed_frame_locked ( self, dict frame)\fC [private]\fP"
 
 .PP
 Write a processed frame to every active export format\&. Each active format (CSV, JSON) is written independently\&. Caller must hold \fB_export_lock\fP\&. 
+.SS "def _handle_block_download_end_req ( self,  cob,  raw,  is_tx,  ftype,  key,  ctx)\fC [private]\fP"
+
+.PP
+Handle an SDO end block download request and publish the value\&. 
+.SS "def _handle_block_download_init_req ( self,  cob,  raw,  is_tx,  ftype,  key)\fC [private]\fP"
+
+.PP
+Handle an SDO initiate block download request (client → server)\&. Opens a per-pair block transfer context in its data phase and publishes a start marker\&. The reassembled value is decoded and published later, when the matching end-block-download request arrives\&. 
+.SS "def _handle_block_download_segment ( self,  raw,  ctx)\fC [private]\fP"
+
+.PP
+Accumulate one block-download data segment (client → server)\&. Byte0 holds \fCc\fP (bit7, last segment) plus the sequence number; bytes 1\&.\&.7 carry up to seven payload bytes\&. Padding introduced by the final segment is removed later using the \fCn\fP field of the end request\&. 
+.SS "def _handle_block_upload_client_req ( self,  cob,  raw,  is_tx,  ftype,  key,  ctx)\fC [private]\fP"
+
+.PP
+Handle client → server control frames of an SDO block upload\&. Covers the initiate-upload request (opens the transfer context and publishes a start marker), the start-upload request (switches the transfer into its data phase), and the flow-control acknowledgements, which carry no object data and are consumed silently\&. 
+.SS "def _handle_block_upload_segment_res ( self,  raw,  ctx)\fC [private]\fP"
+
+.PP
+Accumulate one block-upload data segment (server → client)\&. Mirrors \fB_handle_block_download_segment\fP for the upload direction\&. On the final segment the phase advances to \fCawait_end\fP; the value is decoded once the server's end-block-upload request supplies the \fCn\fP (unused byte count)\&. 
+.SS "def _handle_block_upload_server_res ( self,  cob,  raw,  is_tx,  ftype,  key,  ctx)\fC [private]\fP"
+
+.PP
+Handle server → client block-upload control frames (scs == 6)\&. Two frames share this command specifier: the initiate-upload response (records the total size on the tracked transfer) and the end-block-upload request (supplies \fCn\fP and triggers decode/publish)\&. 
+.SS "def _handle_sdo_abort_sniffer ( self,  cob,  raw,  is_tx,  ftype)\fC [private]\fP"
+
+.PP
+Emit an SDO abort frame and drop the tracked transfer\&. Shared by the request and response paths\&. Prefers the index/sub/name recorded for the in-flight transfer (if any) over the values carried in the abort frame itself, then discards the transfer for this pair\&. 
+.SS "def _handle_sdo_upload_init_res ( self,  cob,  raw,  is_tx,  ftype,  key,  index,  sub)\fC [private]\fP"
+
+.PP
+Handle an SDO initiate upload response in sniffer mode\&. Expedited transfers are decoded and published immediately\&. Segmented transfers only record/refresh the per-pair transfer context; decoding is deferred until the final segment arrives\&. 
+.SS "def _handle_sdo_upload_segment_res ( self,  cob,  raw,  is_tx,  ftype,  key)\fC [private]\fP"
+
+.PP
+Handle an SDO upload segment response in sniffer mode\&. Appends the segment payload to the tracked transfer for this pair\&. When the final segment (c bit) is seen, the reassembled buffer is decoded and published; otherwise decoding stays deferred\&. 
 .SS " dict _json_safe_processed_frame ( self, dict frame)\fC [private]\fP"
 
 .PP
@@ -189,6 +319,26 @@ Open a processed-frame export for \fCfmt\fP and store its record\&. Opens the fi
 .RE
 .PP
 
+.SS "def _process_sdo_req_legacy ( self,  cob,  raw,  is_tx,  node_id,  ftype)\fC [private]\fP"
+
+.PP
+Legacy SDO request handling (per-node, unchanged behavior)\&. Preserves the original decoding behavior used when sniffer mode is disabled\&. Segmented transfers are tracked per node id\&. 
+.SS "def _process_sdo_req_sniffer ( self,  cob,  raw,  is_tx,  node_id,  ftype)\fC [private]\fP"
+
+.PP
+Sniffer-mode SDO request handling (client → server)\&. Tracks SDO uploads per (client_id, server_id) pair rather than per node\&. A client → server frame either opens a new upload transfer (initiate upload request) or advances the transfer toggle (upload segment request)\&. Continuation segment requests carry no payload and are not published; the decoded value is emitted only once the transfer completes (handled on the response path) or aborts\&. 
+.SS "def _process_sdo_res_legacy ( self,  cob,  raw,  is_tx,  node_id,  ftype)\fC [private]\fP"
+
+.PP
+Legacy SDO response handling (per-node, unchanged behavior)\&. Preserves the original decoding behavior used when sniffer mode is disabled\&. Segmented uploads are tracked per node id\&. 
+.SS "def _process_sdo_res_sniffer ( self,  cob,  raw,  is_tx,  node_id,  ftype)\fC [private]\fP"
+
+.PP
+Sniffer-mode SDO response handling (server → client)\&. Server → client frames carry the transfer payload\&. Expedited uploads are decoded immediately\&. Segmented uploads accumulate payload across continuation frames belonging to the same (client_id, server_id) pair, and the reassembled value is decoded only when the final segment (c bit) arrives, or when an abort is seen\&. 
+.SS "def _publish_sdo ( self,  cob,  raw,  is_tx,  ftype,  index,  sub,  name,  data_type,  access_type,  decoded)\fC [private]\fP"
+
+.PP
+Helper to emit a decoded SDO frame in sniffer mode\&. 
 .SS "def _resolve_od_entry ( self, int index, int sub)\fC [private]\fP"
 
 .PP
@@ -197,6 +347,22 @@ Resolve Object Dictionary metadata for (index, sub)\&.
 
 .PP
 Return True if SDO command specifier carries index/subindex\&. 
+.SS "def _sdo_pair_key (int cob)\fC [static]\fP, \fC [private]\fP"
+
+.PP
+Derive the (client_id, server_id) pair identifying an SDO channel\&. The SDO default channel encodes the served node in the low 7 bits of the COB-ID for both requests (0x600 + node) and responses (0x580 + node)\&. Computing both a client and server identifier from the COB-ID yields a stable key that maps a request and its matching response/continuation frames onto the same logical transfer, while keeping distinct client-server pairs isolated so multiple concurrent transfers can be reassembled independently\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcob\fP COB-ID of the SDO frame\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+Tuple \fC(client_id, server_id)\fP used as the transfer key\&. 
+.RE
+.PP
+
 .SS "def _write_csv_processed ( self, dict rec, dict frame)\fC [private]\fP"
 
 .PP
@@ -289,6 +455,10 @@ Active processed-frame exports keyed by format ('csv' | 'json')\&. Each value is
 
 .PP
 State for segmented SDO support: (node, index, sub) -> bytearray\&. 
+.SS "_sdo_transfers\fC [private]\fP"
+
+.PP
+Active SDO transfers for sniffer mode, keyed by (client_id, server_id)\&. Each value is a context dict describing one in-flight transfer so that multiple concurrent client-server transfers can be reassembled independently\&. Decoding is deferred until completion or abort\&. 
 .SS "_stop_event\fC [private]\fP"
 
 .PP
@@ -309,6 +479,10 @@ Queue from which raw frame dictionaries are consumed\&.
 
 .PP
 Queue from which raw frame dictionaries are consumed\&. 
+.SS "sniffer"
+
+.PP
+Flag enabling professional (Wireshark-like) sniffer decoding\&. 
 .SS "stats"
 
 .PP

@@ -202,12 +202,16 @@ class display_cli(threading.Thread):
         t.add_column("Graph", justify="left", width=graph_col_width)
 
         # Basic fields
-        total_frames = getattr(snapshot.frame_count, "total", 0)
         nodes = getattr(snapshot, "nodes", {}) or {}
         # Bus state (authoritative, from bus_stats)
         bus_state = getattr(snapshot.rates, "bus_state", "Idle")
         t.add_row("State", bus_state, "")
-        t.add_row("Active Nodes", str(len(nodes)), f"[dim]{sorted(nodes)}[/]" if nodes else "")
+        sorted_nodes = sorted(nodes)
+        if len(sorted_nodes) > 5:
+            nodes_display = f"[{', '.join(str(n) for n in sorted_nodes[:5])}, ...]"
+        else:
+            nodes_display = str(sorted_nodes)
+        t.add_row("Active Nodes", str(len(nodes)), f"[dim]{nodes_display}[/]" if nodes else "")
 
         # Read rates and histories from snapshot.rates (structure provided by bus_stats)
         rates_latest = getattr(snapshot.rates, "latest", {}) if hasattr(snapshot, "rates") else {}
@@ -640,8 +644,15 @@ class display_cli(threading.Thread):
     def _render_tables(self):
         """! Render tables for displaying CLI data."""
 
-        NAME_COL_WIDTH = 20
-        DECODED_COL_WIDTH = 15
+        # Fixed column widths so the scrolling tables keep a constant layout
+        # regardless of the content that arrives. The variable-length payload is
+        # absorbed by the flexible "Decoded" column (ratio fill), which never
+        # shifts the other columns.
+        NAME_COL_WIDTH = 37
+        TIME_COL_WIDTH = 12     # HH:MM:SS.mmm
+        INDEX_COL_WIDTH = 7     # 0xFFFF
+        SUB_COL_WIDTH = 5       # 0xFF
+        COUNT_COL_WIDTH = 6     # 10000
 
         # Dynamic height budget ------------------------------------------------
         # Size the scrolling tables (Protocol, PDO, SDO) to the current terminal
@@ -671,7 +682,7 @@ class display_cli(threading.Thread):
         t_proto.add_column("Type", width=12)
         t_proto.add_column("Raw Data", no_wrap=True)
         t_proto.add_column("Decoded", no_wrap=True, overflow="ellipsis")
-        t_proto.add_column("Count", width=6, justify="right")
+        t_proto.add_column("Count", width=COUNT_COL_WIDTH, justify="right")
 
         protos = list(self.fixed_proto.values())[-proto_rows:] if self.fixed else list(self.proto_frames)[-proto_rows:]
         while len(protos) < proto_rows:
@@ -684,56 +695,54 @@ class display_cli(threading.Thread):
 
         # PDO table -----------------------------------------------------
         t_pdo = Table(title="PDO Data", expand=True, box=box.SQUARE, style="green")
-        t_pdo.add_column("Time", no_wrap=True)
+        t_pdo.add_column("Time", width=TIME_COL_WIDTH, no_wrap=True)
         t_pdo.add_column("COB-ID", width=8)
         t_pdo.add_column("Dir", width=4)
         t_pdo.add_column("Name", width=NAME_COL_WIDTH)
-        t_pdo.add_column("Index")
-        t_pdo.add_column("Sub")
-        t_pdo.add_column("Raw Data", no_wrap=True)
-        t_pdo.add_column("Decoded", width=DECODED_COL_WIDTH, no_wrap=True, overflow="ellipsis")
-        t_pdo.add_column("Count", width=6, justify="right")
+        t_pdo.add_column("Index", width=INDEX_COL_WIDTH)
+        t_pdo.add_column("Sub", width=SUB_COL_WIDTH)
+        t_pdo.add_column("Decoded", ratio=1, no_wrap=True, overflow="ellipsis")
+        t_pdo.add_column("Count", width=COUNT_COL_WIDTH, justify="right")
 
         frames = list(self.fixed_pdo.values())[-data_rows:] if self.fixed else list(self.pdo_frames)[-data_rows:]
         while len(frames) < data_rows:
             frames.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for f in frames:
             name = self._trim_cell(f.get("name", ""), NAME_COL_WIDTH)
-            decoded_txt = self._trim_cell(str(f.get("decoded", "")), DECODED_COL_WIDTH)
+            decoded_txt = str(f.get("decoded", ""))
 
             decoded = Text(decoded_txt, style="bold green") if decoded_txt else ""
 
             t_pdo.add_row(
                 f["time"], f["cob"], f["dir"],
                 name, f.get("index", ""), f.get("sub", ""),
-                f.get("raw", ""), decoded, str(f.get("count", ""))
+                decoded, str(f.get("count", ""))
             )
 
         # SDO table -----------------------------------------------------
         t_sdo = Table(title="SDO Data", expand=True, box=box.SQUARE, style="magenta")
-        t_sdo.add_column("Time", no_wrap=True)
+        t_sdo.add_column("Time", width=TIME_COL_WIDTH, no_wrap=True)
         t_sdo.add_column("COB-ID", width=8)
         t_sdo.add_column("Dir", width=6)
         t_sdo.add_column("Name", width=NAME_COL_WIDTH)
-        t_sdo.add_column("Index")
-        t_sdo.add_column("Sub")
-        t_sdo.add_column("Raw Data", no_wrap=True)
-        t_sdo.add_column("Decoded", width=DECODED_COL_WIDTH, no_wrap=True, overflow="ellipsis")
-        t_sdo.add_column("Count", width=6, justify="right")
+        t_sdo.add_column("Index", width=INDEX_COL_WIDTH)
+        t_sdo.add_column("Sub", width=SUB_COL_WIDTH)
+        t_sdo.add_column("Decoded", ratio=1, no_wrap=True, overflow="ellipsis")
+        t_sdo.add_column("Count", width=COUNT_COL_WIDTH, justify="right")
 
         sdos = list(self.fixed_sdo.values())[-data_rows:] if self.fixed else list(self.sdo_frames)[-data_rows:]
         while len(sdos) < data_rows:
             sdos.append({"time": "", "cob": "", "dir": "", "name": "", "index": "", "sub": "", "raw": "", "decoded": "", "count": ""})
         for s in sdos:
             name = self._trim_cell(s.get("name", ""), NAME_COL_WIDTH)
-            decoded_txt = self._trim_cell(str(s.get("decoded", "")), DECODED_COL_WIDTH)
+            decoded_txt = str(s.get("decoded", ""))
 
             decoded = Text(decoded_txt, style="bold magenta") if decoded_txt else ""
 
             t_sdo.add_row(
                 s["time"], s["cob"], s["dir"],
                 name, s.get("index", ""), s.get("sub", ""),
-                s.get("raw", ""), decoded, str(s.get("count", ""))
+                decoded, str(s.get("count", ""))
             )
 
         # Remote Node Control -----------------------------------------------------

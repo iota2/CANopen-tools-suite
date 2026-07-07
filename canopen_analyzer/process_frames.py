@@ -87,6 +87,12 @@ class process_frames(threading.Thread):
         @param eds_map Instance of @ref eds_parser from eds_parser.py used to
                resolve Object Dictionary names and PDO mappings.
         @param export `csv`, `json`: enable export of processed frames to a file.
+        @param sniffer When True, enable professional (Wireshark-like) SDO
+               reassembly: SDO transfers are tracked per (client_id, server_id)
+               pair, continuation frames are associated to the correct transfer,
+               multiple concurrent transfers are supported, and decoding is
+               delayed until the final segment or an abort. When False, the
+               original per-node decoding behavior is preserved unchanged.
         """
         super().__init__(daemon=True)
 
@@ -111,6 +117,16 @@ class process_frames(threading.Thread):
 
         ## State for segmented SDO support: (node, index, sub) -> bytearray
         self._sdo_segments = {}
+
+        ## Flag enabling professional (Wireshark-like) sniffer decoding.
+        self.sniffer = bool(sniffer)
+
+        ## Active SDO transfers for sniffer mode, keyed by (client_id, server_id).
+        ## @details
+        ## Each value is a context dict describing one in-flight transfer so that
+        ## multiple concurrent client-server transfers can be reassembled
+        ## independently. Decoding is deferred until completion or abort.
+        self._sdo_transfers = {}
 
         ## Active processed-frame exports keyed by format ("csv" | "json").
         ## Each value is a per-format record dict holding that format's file /
@@ -471,6 +487,674 @@ class process_frames(threading.Thread):
             entry.get("access_type"),
         )
 
+    # ----------------------------------------------------------------------
+    # ----- Legacy (per-node) SDO handling -----
+    # ----------------------------------------------------------------------
+    def _process_sdo_req_legacy(self, cob, raw, is_tx, node_id, ftype):
+        """! Legacy SDO request handling (per-node, unchanged behavior).
+        @details
+        Preserves the original decoding behavior used when sniffer mode is
+        disabled. Segmented transfers are tracked per node id.
+        """
+        try:
+            cs = raw[0]
+            index = raw[2] << 8 | raw[1]
+            sub = raw[3]
+
+            self.stats.update_sdo_request_time(index, sub)
+
+            entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+            decoded = ""
+            payload_len = 0
+            publish = True
+
+            # ---- UPLOAD REQUEST (READ) ----
+            if cs == 0x40:
+                decoded = "READ"
+
+            # ---- EXPEDITED DOWNLOAD (WRITE) ----
+            elif cs in (0x2F, 0x2B, 0x23):
+                unused = (cs >> 2) & 0x03
+                payload_len = 4 - unused
+                payload = raw[4:4 + payload_len]
+
+                try:
+                    decoded = self.decode_by_datatype(payload, entry)
+                except Exception:
+                    decoded = int.from_bytes(payload, "little", signed=False)
+
+            # ---- SEGMENTED DOWNLOAD INIT (CLIENT → SERVER) ----
+            elif (cs & 0xE0) == 0x20:
+                # Store transfer context explicitly
+                self._sdo_segments[(node_id, index, sub)] = {
+                    "data": bytearray(),
+                    "index": index,
+                    "sub": sub,
+                    "name": name,
+                    "data_type": data_type,
+                    "access_type": access_type,
+                    "entry": entry,
+                }
+                publish = False
+
+            # ---- SEGMENTED DOWNLOAD SEGMENT ----
+            elif (cs & 0xE0) == 0x00:
+                publish = False
+
+                # Find active segmented transfer for this node
+                key = next(
+                    (k for k in self._sdo_segments if k[0] == node_id),
+                    None
+                )
+                if not key:
+                    self.log.debug("Ignoring orphan SDO segment from node %d", node_id)
+                    return  # orphan segment → ignore safely
+
+                ctx = self._sdo_segments[key]
+                ctx["data"] += raw[1:8]
+
+                last = cs & 0x01
+                if last:
+                    ctx = self._sdo_segments.pop(key)
+
+                    full = bytes(ctx["data"])
+                    decoded = self.decode_by_datatype(full, ctx["entry"])
+
+                    index = ctx["index"]
+                    sub = ctx["sub"]
+                    name = ctx["name"]
+                    data_type = ctx["data_type"]
+                    access_type = ctx["access_type"]
+
+                    publish = True
+
+            # ---- ABORT ----
+            elif cs == 0x80:
+                decoded = "ABORT"
+
+            if payload_len > 0:
+                try:
+                    self.stats.increment_payload(
+                        analyzer_defs.frame_type.SDO_REQ, payload_len
+                    )
+                except KeyError:
+                    self.log.error(f"SDO REQ Payload increment: {KeyError}")
+                    pass
+
+            if publish:
+                self.save_processed_frame({
+                    "time": analyzer_defs.now_str(),
+                    "cob": cob,
+                    "type": ftype,
+                    "dir": "TX" if is_tx else "RX",
+                    "index": index,
+                    "sub": sub,
+                    "name": name,
+                    "data_type": data_type,
+                    "access_type": access_type,
+                    "raw": raw,
+                    "decoded": decoded,
+                })
+
+        except Exception as e:
+            self.log.warning(f"SDO_REQ processing failed: {e}")
+
+    def _process_sdo_res_legacy(self, cob, raw, is_tx, node_id, ftype):
+        """! Legacy SDO response handling (per-node, unchanged behavior).
+        @details
+        Preserves the original decoding behavior used when sniffer mode is
+        disabled. Segmented uploads are tracked per node id.
+        """
+        try:
+            cs = raw[0]
+            index = raw[2] << 8 | raw[1]
+            sub = raw[3]
+
+            entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+            decoded = ""
+            payload_len = 0
+            publish = True
+
+            # ---- ABORT ----
+            if cs == 0x80 and len(raw) >= 8:
+                self.stats.increment_sdo_abort()
+                abort_code = int.from_bytes(raw[4:8], "little")
+                decoded = f"ABORT 0x{abort_code:08X}"
+
+            # ---- SEGMENTED UPLOAD INIT ----
+            elif (cs & 0xE0) == 0x40:
+                self._sdo_segments[(node_id, index, sub)] = bytearray()
+                decoded = "<SDO segmented upload start>"
+                publish = False
+
+            # ---- SEGMENTED UPLOAD SEGMENT ----
+            elif (cs & 0xE0) == 0x00:
+                key = (node_id, index, sub)
+                publish = False
+
+                if key in self._sdo_segments:
+                    self._sdo_segments[key] += raw[1:8]
+                    last = cs & 0x01
+                    payload_len = len(raw[1:8])
+
+                    if last:
+                        full = bytes(self._sdo_segments.pop(key))
+                        decoded = self.decode_by_datatype(full, entry)
+                        self.stats.increment_sdo_success()
+                        publish = True
+
+            # ---- EXPEDITED UPLOAD ----
+            elif cs in (0x43, 0x4B, 0x4F):
+                self.stats.increment_sdo_success()
+                n_unused = (cs >> 2) & 0x03
+                data_len = 4 - n_unused
+                payload = raw[4:4 + data_len]
+                decoded = self.decode_by_datatype(payload, entry)
+                payload_len = data_len
+
+            # ---- DOWNLOAD ACK ----
+            elif cs == 0x60:
+                self.stats.increment_sdo_success()
+                decoded = "OK"
+
+            if payload_len:
+                self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, payload_len)
+
+            if publish:
+                self.stats.update_sdo_response_time(index, sub)
+
+                self.save_processed_frame({
+                    "time": analyzer_defs.now_str(),
+                    "cob": cob,
+                    "type": ftype,
+                    "dir": "TX" if is_tx else "RX",
+                    "index": index,
+                    "sub": sub,
+                    "name": name,
+                    "data_type": data_type,
+                    "access_type": access_type,
+                    "raw": raw,
+                    "decoded": decoded,
+                })
+
+        except Exception as e:
+            self.log.warning(f"SDO_RES processing failed: {e}")
+
+    # ----------------------------------------------------------------------
+    # ----- Professional sniffer SDO handling (Wireshark-like) -----
+    # ----------------------------------------------------------------------
+    @staticmethod
+    def _sdo_pair_key(cob: int):
+        """! Derive the (client_id, server_id) pair identifying an SDO channel.
+        @details
+        The SDO default channel encodes the served node in the low 7 bits of
+        the COB-ID for both requests (0x600 + node) and responses
+        (0x580 + node). Computing both a client and server identifier from the
+        COB-ID yields a stable key that maps a request and its matching
+        response/continuation frames onto the same logical transfer, while
+        keeping distinct client-server pairs isolated so multiple concurrent
+        transfers can be reassembled independently.
+        @param cob COB-ID of the SDO frame.
+        @return Tuple `(client_id, server_id)` used as the transfer key.
+        """
+        client_id = cob & 0x7F
+        server_id = (cob - 0x580) & 0x7F
+        return (client_id, server_id)
+
+    def _publish_sdo(self, cob, raw, is_tx, ftype, index, sub, name, data_type, access_type, decoded):
+        """! Helper to emit a decoded SDO frame in sniffer mode."""
+        self.save_processed_frame({
+            "time": analyzer_defs.now_str(),
+            "cob": cob,
+            "type": ftype,
+            "dir": "TX" if is_tx else "RX",
+            "index": index,
+            "sub": sub,
+            "name": name,
+            "data_type": data_type,
+            "access_type": access_type,
+            "raw": raw,
+            "decoded": decoded,
+        })
+
+    def _handle_sdo_abort_sniffer(self, cob, raw, is_tx, ftype):
+        """! Emit an SDO abort frame and drop the tracked transfer.
+        @details
+        Shared by the request and response paths. Prefers the index/sub/name
+        recorded for the in-flight transfer (if any) over the values carried in
+        the abort frame itself, then discards the transfer for this pair.
+        """
+        key = self._sdo_pair_key(cob)
+        index = raw[2] << 8 | raw[1]
+        sub = raw[3]
+        abort_code = int.from_bytes(raw[4:8], "little")
+
+        ctx = self._sdo_transfers.pop(key, None)
+        if ctx is not None:
+            index = ctx["index"]
+            sub = ctx["sub"]
+            name = ctx["name"]
+            data_type = ctx["data_type"]
+            access_type = ctx["access_type"]
+        else:
+            _, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+        self.stats.increment_sdo_abort()
+        self._publish_sdo(cob, raw, is_tx, ftype, index, sub, name,
+                          data_type, access_type, f"ABORT 0x{abort_code:08X}")
+
+    def _process_sdo_req_sniffer(self, cob, raw, is_tx, node_id, ftype):
+        """! Sniffer-mode SDO request handling (client → server).
+        @details
+        Tracks SDO uploads per (client_id, server_id) pair rather than per node.
+        A client → server frame either opens a new upload transfer (initiate
+        upload request) or advances the transfer toggle (upload segment
+        request). Continuation segment requests carry no payload and are not
+        published; the decoded value is emitted only once the transfer
+        completes (handled on the response path) or aborts.
+        """
+        try:
+            cs = raw[0]
+            ccs = (cs >> 5) & 0x07
+            key = self._sdo_pair_key(cob)
+            ctx = self._sdo_transfers.get(key)
+
+            # ---- BLOCK DOWNLOAD DATA PHASE (client → server segments) ----
+            # While a block download is streaming, client frames carry a
+            # sequence number in byte0 (bit7 = last segment) rather than a
+            # command specifier, so they must be consumed as segments before
+            # any command-specifier based dispatch. A byte0 whose low 7 bits
+            # are zero is not a valid sequence number (seqno starts at 1) and
+            # is therefore left to normal dispatch (e.g. a 0x80 abort).
+            if ctx is not None and ctx.get("kind") == "block_download" \
+                    and ctx.get("phase") == "segments" and (cs & 0x7F) != 0:
+                self._handle_block_download_segment(raw, ctx)
+                return
+
+            # ---- INITIATE UPLOAD REQUEST (READ) ----
+            if ccs == 2:
+                index = raw[2] << 8 | raw[1]
+                sub = raw[3]
+
+                self.stats.update_sdo_request_time(index, sub)
+                entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+                # Open a transfer context; decoding is delayed until completion.
+                self._sdo_transfers[key] = {
+                    "index": index,
+                    "sub": sub,
+                    "name": name,
+                    "entry": entry,
+                    "data_type": data_type,
+                    "access_type": access_type,
+                    "data": bytearray(),
+                    "toggle": 0,
+                    "kind": "upload",
+                }
+
+                self._publish_sdo(cob, raw, is_tx, ftype, index, sub, name,
+                                  data_type, access_type, "UPLOAD REQUEST (READ)")
+                return
+
+            # ---- UPLOAD SEGMENT REQUEST (advance toggle) ----
+            if ccs == 3:
+                if ctx is not None:
+                    # Client → server frames advance the toggle bit.
+                    ctx["toggle"] ^= 1
+                else:
+                    self.log.debug("Orphan SDO upload segment request for pair %s", key)
+                # Continuation frame: no payload, decoding deferred.
+                return
+
+            # ---- ABORT (client → server) ----
+            if ccs == 4 and len(raw) >= 8:
+                self._handle_sdo_abort_sniffer(cob, raw, is_tx, ftype)
+                return
+
+            # ---- BLOCK DOWNLOAD (client → server) ----
+            if ccs == 6:
+                # cs bit0: 0 = initiate block download request, 1 = end request.
+                if (cs & 0x01) == 0:
+                    self._handle_block_download_init_req(cob, raw, is_tx, ftype, key)
+                else:
+                    self._handle_block_download_end_req(cob, raw, is_tx, ftype, key, ctx)
+                return
+
+            # ---- BLOCK UPLOAD (client → server control frames) ----
+            if ccs == 5:
+                self._handle_block_upload_client_req(cob, raw, is_tx, ftype, key, ctx)
+                return
+
+            # ---- Everything else (downloads / writes) → legacy behavior ----
+            self._process_sdo_req_legacy(cob, raw, is_tx, node_id, ftype)
+
+        except Exception as e:
+            self.log.warning(f"SDO_REQ (sniffer) processing failed: {e}")
+
+    def _process_sdo_res_sniffer(self, cob, raw, is_tx, node_id, ftype):
+        """! Sniffer-mode SDO response handling (server → client).
+        @details
+        Server → client frames carry the transfer payload. Expedited uploads are
+        decoded immediately. Segmented uploads accumulate payload across
+        continuation frames belonging to the same (client_id, server_id) pair,
+        and the reassembled value is decoded only when the final segment (c bit)
+        arrives, or when an abort is seen.
+        """
+        try:
+            cs = raw[0]
+            scs = (cs >> 5) & 0x07
+            key = self._sdo_pair_key(cob)
+            ctx = self._sdo_transfers.get(key)
+            index = raw[2] << 8 | raw[1]
+            sub = raw[3]
+
+            # ---- BLOCK UPLOAD DATA PHASE (server → client segments) ----
+            # As with block download, streaming segments carry a sequence
+            # number in byte0 rather than a command specifier and must be
+            # consumed before command-specifier dispatch.
+            if ctx is not None and ctx.get("kind") == "block_upload" \
+                    and ctx.get("phase") == "segments" and (cs & 0x7F) != 0:
+                self._handle_block_upload_segment_res(raw, ctx)
+                return
+
+            # ---- ABORT (server → client) ----
+            if scs == 4 and len(raw) >= 8:
+                self._handle_sdo_abort_sniffer(cob, raw, is_tx, ftype)
+                return
+
+            # ---- INITIATE UPLOAD RESPONSE ----
+            if scs == 2:
+                self._handle_sdo_upload_init_res(cob, raw, is_tx, ftype, key, index, sub)
+                return
+
+            # ---- UPLOAD SEGMENT RESPONSE (server → client adds payload) ----
+            if scs == 0:
+                self._handle_sdo_upload_segment_res(cob, raw, is_tx, ftype, key)
+                return
+
+            # ---- BLOCK DOWNLOAD SERVER RESPONSES (init / sub-block ack / end)
+            # These frames carry only flow-control (blksize, ackseq, crc ack)
+            # and no object data, so they are consumed silently.
+            if scs == 5:
+                return
+
+            # ---- BLOCK UPLOAD SERVER FRAMES (init upload response / end req) ----
+            if scs == 6:
+                self._handle_block_upload_server_res(cob, raw, is_tx, ftype, key, ctx)
+                return
+
+            # ---- Everything else (download ACK / segment ACK) → legacy ----
+            self._process_sdo_res_legacy(cob, raw, is_tx, node_id, ftype)
+
+        except Exception as e:
+            self.log.warning(f"SDO_RES (sniffer) processing failed: {e}")
+
+    def _handle_sdo_upload_init_res(self, cob, raw, is_tx, ftype, key, index, sub):
+        """! Handle an SDO initiate upload response in sniffer mode.
+        @details
+        Expedited transfers are decoded and published immediately. Segmented
+        transfers only record/refresh the per-pair transfer context; decoding is
+        deferred until the final segment arrives.
+        """
+        cs = raw[0]
+        expedited = (cs >> 1) & 0x01
+        size_indicated = cs & 0x01
+        entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+        if expedited:
+            # Whole value fits in this frame → decode now.
+            n_unused = (cs >> 2) & 0x03 if size_indicated else 0
+            data_len = 4 - n_unused
+            payload = raw[4:4 + data_len]
+            decoded = self.decode_by_datatype(payload, entry)
+
+            self.stats.increment_sdo_success()
+            self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, data_len)
+            self.stats.update_sdo_response_time(index, sub)
+            self._sdo_transfers.pop(key, None)
+
+            self._publish_sdo(cob, raw, is_tx, ftype, index, sub, name,
+                              data_type, access_type, decoded)
+            return
+
+        # Segmented upload → remember context, delay decoding until last segment.
+        self._sdo_transfers[key] = {
+            "index": index,
+            "sub": sub,
+            "name": name,
+            "entry": entry,
+            "data_type": data_type,
+            "access_type": access_type,
+            "data": bytearray(),
+            "toggle": 0,
+            "kind": "upload",
+        }
+
+    def _handle_sdo_upload_segment_res(self, cob, raw, is_tx, ftype, key):
+        """! Handle an SDO upload segment response in sniffer mode.
+        @details
+        Appends the segment payload to the tracked transfer for this pair. When
+        the final segment (c bit) is seen, the reassembled buffer is decoded and
+        published; otherwise decoding stays deferred.
+        """
+        ctx = self._sdo_transfers.get(key)
+        if ctx is None:
+            self.log.debug("Orphan SDO upload segment response for pair %s", key)
+            return
+
+        cs = raw[0]
+        n_unused = (cs >> 1) & 0x07
+        last = cs & 0x01
+        data_len = max(0, 7 - n_unused)
+        ctx["data"] += raw[1:1 + data_len]
+
+        if not last:
+            # Continuation frame: decoding deferred.
+            return
+
+        full = bytes(ctx["data"])
+        decoded = self.decode_by_datatype(full, ctx["entry"])
+
+        self.stats.increment_sdo_success()
+        self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, len(full))
+        self.stats.update_sdo_response_time(ctx["index"], ctx["sub"])
+        self._sdo_transfers.pop(key, None)
+
+        self._publish_sdo(cob, raw, is_tx, ftype,
+                          ctx["index"], ctx["sub"], ctx["name"],
+                          ctx["data_type"], ctx["access_type"], decoded)
+
+    # ----------------------------------------------------------------------
+    # ----- SDO block transfer handling (CiA 301 block up/download) -----
+    # ----------------------------------------------------------------------
+    def _decode_block_data(self, ctx):
+        """! Decode the reassembled buffer of a block transfer.
+        @details
+        Applies the final-segment truncation (`n` unused bytes carried by the
+        end request) and the indicated total size (if known), then decodes via
+        the resolved OD entry, falling back to a hex dump when decoding fails.
+        @param ctx The per-pair block transfer context.
+        @return Tuple `(data_bytes, decoded_value)`.
+        """
+        data = bytes(ctx["data"])
+
+        n = ctx.get("last_unused", 0)
+        if n:
+            data = data[:len(data) - n]
+
+        size = ctx.get("size")
+        if size is not None and 0 <= size <= len(data):
+            data = data[:size]
+
+        try:
+            decoded = self.decode_by_datatype(data, ctx["entry"])
+        except Exception:
+            decoded = data.hex()
+
+        return data, decoded
+
+    def _handle_block_download_init_req(self, cob, raw, is_tx, ftype, key):
+        """! Handle an SDO initiate block download request (client → server).
+        @details
+        Opens a per-pair block transfer context in its data phase and publishes
+        a start marker. The reassembled value is decoded and published later,
+        when the matching end-block-download request arrives.
+        """
+        cs = raw[0]
+        index = raw[2] << 8 | raw[1]
+        sub = raw[3]
+        size_indicated = (cs >> 1) & 0x01
+        size = int.from_bytes(raw[4:8], "little") if size_indicated else None
+
+        self.stats.update_sdo_request_time(index, sub)
+        entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+        self._sdo_transfers[key] = {
+            "kind": "block_download",
+            "phase": "segments",
+            "index": index,
+            "sub": sub,
+            "name": name,
+            "entry": entry,
+            "data_type": data_type,
+            "access_type": access_type,
+            "data": bytearray(),
+            "size": size,
+            "last_unused": 0,
+        }
+
+        detail = "BLOCK DOWNLOAD START"
+        if size is not None:
+            detail += f" (size={size})"
+        self._publish_sdo(cob, raw, is_tx, ftype, index, sub, name,
+                          data_type, access_type, detail)
+
+    def _handle_block_download_segment(self, raw, ctx):
+        """! Accumulate one block-download data segment (client → server).
+        @details
+        Byte0 holds `c` (bit7, last segment) plus the sequence number; bytes
+        1..7 carry up to seven payload bytes. Padding introduced by the final
+        segment is removed later using the `n` field of the end request.
+        """
+        last = raw[0] & 0x80
+        ctx["data"] += raw[1:8]
+        if last:
+            # Final data segment seen; the next client frame is the
+            # end-block-download request.
+            ctx["phase"] = "await_end"
+
+    def _handle_block_download_end_req(self, cob, raw, is_tx, ftype, key, ctx):
+        """! Handle an SDO end block download request and publish the value."""
+        if ctx is None or ctx.get("kind") != "block_download":
+            self.log.debug("Orphan SDO end block download for pair %s", key)
+            self._sdo_transfers.pop(key, None)
+            return
+
+        # n = number of bytes in the last segment that do NOT contain data.
+        ctx["last_unused"] = (raw[0] >> 2) & 0x07
+        data, decoded = self._decode_block_data(ctx)
+
+        self.stats.increment_sdo_success()
+        self.stats.increment_payload(analyzer_defs.frame_type.SDO_REQ, len(data))
+        self.stats.update_sdo_response_time(ctx["index"], ctx["sub"])
+        self._sdo_transfers.pop(key, None)
+
+        self._publish_sdo(cob, raw, is_tx, ftype, ctx["index"], ctx["sub"],
+                          ctx["name"], ctx["data_type"], ctx["access_type"], decoded)
+
+    def _handle_block_upload_client_req(self, cob, raw, is_tx, ftype, key, ctx):
+        """! Handle client → server control frames of an SDO block upload.
+        @details
+        Covers the initiate-upload request (opens the transfer context and
+        publishes a start marker), the start-upload request (switches the
+        transfer into its data phase), and the flow-control acknowledgements,
+        which carry no object data and are consumed silently.
+        """
+        cs = raw[0]
+        sub_cmd = cs & 0x03
+
+        # ---- INITIATE BLOCK UPLOAD REQUEST (READ) ----
+        if sub_cmd == 0:
+            index = raw[2] << 8 | raw[1]
+            sub = raw[3]
+
+            self.stats.update_sdo_request_time(index, sub)
+            entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
+
+            self._sdo_transfers[key] = {
+                "kind": "block_upload",
+                "phase": "init",
+                "index": index,
+                "sub": sub,
+                "name": name,
+                "entry": entry,
+                "data_type": data_type,
+                "access_type": access_type,
+                "data": bytearray(),
+                "size": None,
+                "last_unused": 0,
+            }
+            self._publish_sdo(cob, raw, is_tx, ftype, index, sub, name,
+                              data_type, access_type, "BLOCK UPLOAD REQUEST (READ)")
+
+        # ---- START UPLOAD REQUEST → begin data phase ----
+        elif sub_cmd == 3:
+            if ctx is not None and ctx.get("kind") == "block_upload":
+                ctx["phase"] = "segments"
+            else:
+                self.log.debug("Orphan SDO block upload start for pair %s", key)
+
+        # ---- Sub-block ack (sub_cmd 2) / end-upload response (sub_cmd 1):
+        #      flow-control only, nothing to publish. ----
+
+    def _handle_block_upload_segment_res(self, raw, ctx):
+        """! Accumulate one block-upload data segment (server → client).
+        @details
+        Mirrors @ref _handle_block_download_segment for the upload direction.
+        On the final segment the phase advances to `await_end`; the value is
+        decoded once the server's end-block-upload request supplies the `n`
+        (unused byte count).
+        """
+        last = raw[0] & 0x80
+        ctx["data"] += raw[1:8]
+        if last:
+            ctx["phase"] = "await_end"
+
+    def _handle_block_upload_server_res(self, cob, raw, is_tx, ftype, key, ctx):
+        """! Handle server → client block-upload control frames (scs == 6).
+        @details
+        Two frames share this command specifier: the initiate-upload response
+        (records the total size on the tracked transfer) and the
+        end-block-upload request (supplies `n` and triggers decode/publish).
+        """
+        cs = raw[0]
+
+        # ---- END BLOCK UPLOAD REQUEST → finalize and publish ----
+        if cs & 0x01:
+            if ctx is None or ctx.get("kind") != "block_upload":
+                self.log.debug("Orphan SDO end block upload for pair %s", key)
+                self._sdo_transfers.pop(key, None)
+                return
+
+            ctx["last_unused"] = (cs >> 2) & 0x07
+            data, decoded = self._decode_block_data(ctx)
+
+            self.stats.increment_sdo_success()
+            self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, len(data))
+            self.stats.update_sdo_response_time(ctx["index"], ctx["sub"])
+            self._sdo_transfers.pop(key, None)
+
+            self._publish_sdo(cob, raw, is_tx, ftype, ctx["index"], ctx["sub"],
+                              ctx["name"], ctx["data_type"], ctx["access_type"], decoded)
+            return
+
+        # ---- INITIATE BLOCK UPLOAD RESPONSE → record total size if present ----
+        size_indicated = (cs >> 1) & 0x01
+        if ctx is not None and ctx.get("kind") == "block_upload" and size_indicated:
+            ctx["size"] = int.from_bytes(raw[4:8], "little")
+
     def run(self):
         """! Main processing loop.
         @details
@@ -555,187 +1239,17 @@ class process_frames(threading.Thread):
 
                 # ---------------- SDO REQUEST (CLIENT → SERVER) ----------------
                 if ftype == analyzer_defs.frame_type.SDO_REQ and raw and len(raw) >= 4:
-                    try:
-                        cs = raw[0]
-                        index = raw[2] << 8 | raw[1]
-                        sub = raw[3]
-
-                        self.stats.update_sdo_request_time(index, sub)
-
-                        entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
-
-                        decoded = ""
-                        payload_len = 0
-                        publish = True
-
-                        # ---- UPLOAD REQUEST (READ) ----
-                        if cs == 0x40:
-                            decoded = "READ"
-
-                        # ---- EXPEDITED DOWNLOAD (WRITE) ----
-                        elif cs in (0x2F, 0x2B, 0x23):
-                            unused = (cs >> 2) & 0x03
-                            payload_len = 4 - unused
-                            payload = raw[4:4 + payload_len]
-
-                            try:
-                                decoded = self.decode_by_datatype(payload, entry)
-                            except Exception:
-                                decoded = int.from_bytes(payload, "little", signed=False)
-
-                        # ---- SEGMENTED DOWNLOAD INIT (CLIENT → SERVER) ----
-                        elif (cs & 0xE0) == 0x20:
-                            # Store transfer context explicitly
-                            self._sdo_segments[(node_id, index, sub)] = {
-                                "data": bytearray(),
-                                "index": index,
-                                "sub": sub,
-                                "name": name,
-                                "data_type": data_type,
-                                "access_type": access_type,
-                                "entry": entry,
-                            }
-                            publish = False
-
-                        # ---- SEGMENTED DOWNLOAD SEGMENT ----
-                        elif (cs & 0xE0) == 0x00:
-                            publish = False
-
-                            # Find active segmented transfer for this node
-                            key = next(
-                                (k for k in self._sdo_segments if k[0] == node_id),
-                                None
-                            )
-                            if not key:
-                                self.log.debug("Ignoring orphan SDO segment from node %d", node_id)
-                                continue  # orphan segment → ignore safely
-
-                            ctx = self._sdo_segments[key]
-                            ctx["data"] += raw[1:8]
-
-                            last = cs & 0x01
-                            if last:
-                                ctx = self._sdo_segments.pop(key)
-
-                                full = bytes(ctx["data"])
-                                decoded = self.decode_by_datatype(full, ctx["entry"])
-
-                                index = ctx["index"]
-                                sub = ctx["sub"]
-                                name = ctx["name"]
-                                data_type = ctx["data_type"]
-                                access_type = ctx["access_type"]
-
-                                publish = True
-
-                        # ---- ABORT ----
-                        elif cs == 0x80:
-                            decoded = "ABORT"
-
-                        if payload_len > 0:
-                            try:
-                                self.stats.increment_payload(
-                                    analyzer_defs.frame_type.SDO_REQ, payload_len
-                                )
-                            except KeyError:
-                                self.log.error(f"SDO REQ Payload increment: {KeyError}")
-                                pass
-
-                        if publish:
-                            self.save_processed_frame({
-                                "time": analyzer_defs.now_str(),
-                                "cob": cob,
-                                "type": ftype,
-                                "dir": "TX" if is_tx else "RX",
-                                "index": index,
-                                "sub": sub,
-                                "name": name,
-                                "data_type": data_type,
-                                "access_type": access_type,
-                                "raw": raw,
-                                "decoded": decoded,
-                            })
-
-                    except Exception as e:
-                        self.log.warning(f"SDO_REQ processing failed: {e}")
+                    if self.sniffer:
+                        self._process_sdo_req_sniffer(cob, raw, is_tx, node_id, ftype)
+                    else:
+                        self._process_sdo_req_legacy(cob, raw, is_tx, node_id, ftype)
 
                 # ---------------- SDO RESPONSE (SERVER → CLIENT) ----------------
                 elif ftype == analyzer_defs.frame_type.SDO_RES and raw and len(raw) >= 4:
-                    try:
-                        cs = raw[0]
-                        index = raw[2] << 8 | raw[1]
-                        sub = raw[3]
-
-                        entry, name, data_type, access_type = self._resolve_od_entry(index, sub)
-
-                        decoded = ""
-                        payload_len = 0
-                        publish = True
-
-                        # ---- ABORT ----
-                        if cs == 0x80 and len(raw) >= 8:
-                            self.stats.increment_sdo_abort()
-                            abort_code = int.from_bytes(raw[4:8], "little")
-                            decoded = f"ABORT 0x{abort_code:08X}"
-
-                        # ---- SEGMENTED UPLOAD INIT ----
-                        elif (cs & 0xE0) == 0x40:
-                            self._sdo_segments[(node_id, index, sub)] = bytearray()
-                            decoded = "<SDO segmented upload start>"
-                            publish = False
-
-                        # ---- SEGMENTED UPLOAD SEGMENT ----
-                        elif (cs & 0xE0) == 0x00:
-                            key = (node_id, index, sub)
-                            publish = False
-
-                            if key in self._sdo_segments:
-                                self._sdo_segments[key] += raw[1:8]
-                                last = cs & 0x01
-                                payload_len = len(raw[1:8])
-
-                                if last:
-                                    full = bytes(self._sdo_segments.pop(key))
-                                    decoded = self.decode_by_datatype(full, entry)
-                                    self.stats.increment_sdo_success()
-                                    publish = True
-
-                        # ---- EXPEDITED UPLOAD ----
-                        elif cs in (0x43, 0x4B, 0x4F):
-                            self.stats.increment_sdo_success()
-                            n_unused = (cs >> 2) & 0x03
-                            data_len = 4 - n_unused
-                            payload = raw[4:4 + data_len]
-                            decoded = self.decode_by_datatype(payload, entry)
-                            payload_len = data_len
-
-                        # ---- DOWNLOAD ACK ----
-                        elif cs == 0x60:
-                            self.stats.increment_sdo_success()
-                            decoded = "OK"
-
-                        if payload_len:
-                            self.stats.increment_payload(analyzer_defs.frame_type.SDO_RES, payload_len)
-
-                        if publish:
-                            self.stats.update_sdo_response_time(index, sub)
-
-                            self.save_processed_frame({
-                                "time": analyzer_defs.now_str(),
-                                "cob": cob,
-                                "type": ftype,
-                                "dir": "TX" if is_tx else "RX",
-                                "index": index,
-                                "sub": sub,
-                                "name": name,
-                                "data_type": data_type,
-                                "access_type": access_type,
-                                "raw": raw,
-                                "decoded": decoded,
-                            })
-
-                    except Exception as e:
-                        self.log.warning(f"SDO_RES processing failed: {e}")
+                    if self.sniffer:
+                        self._process_sdo_res_sniffer(cob, raw, is_tx, node_id, ftype)
+                    else:
+                        self._process_sdo_res_legacy(cob, raw, is_tx, node_id, ftype)
 
                 # PDO frame
                 elif ftype == analyzer_defs.frame_type.PDO:
@@ -757,6 +1271,11 @@ class process_frames(threading.Thread):
                         offset = 0
 
                         for (index, sub, size) in entries:
+                            # Skip empty/dummy mapping placeholders (index 0):
+                            # unused PDO mapping slots carry no data to decode.
+                            if index == 0:
+                                continue
+
                             size_bytes = max(1, size // 8)
                             chunk = raw[offset:offset + size_bytes]
                             offset += size_bytes
