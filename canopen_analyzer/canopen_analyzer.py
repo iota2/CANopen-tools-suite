@@ -87,9 +87,9 @@ def main():
     p.add_argument("--mode", default="cli", choices=["cli", "tui", "gui"], help="enable cli or gui mode (default: cli)")
     p.add_argument("--bitrate", type=int, default=analyzer_defs.DEFAULT_CAN_BIT_RATE, help="CAN bitrate (default: {analyzer_defs.DEFAULT_CAN_BIT_RATE})")
     p.add_argument("--eds", help="EDS file path (optional)")
-    p.add_argument("--fixed", action="store_true", help="update rows instead of scrolling")
+    p.add_argument("--fixed", action=argparse.BooleanOptionalAction, default=True, help="update rows in place instead of scrolling (default: on; use --no-fixed for sequential)")
     p.add_argument("--export", default=None, choices=["csv", "json", "pcap"], help="export received frames (off by default; can also be toggled at runtime)")
-    p.add_argument("--sniffer", action="store_true", help="enable professional (Wireshark-like) sniffer mode for CANopen decoding")
+    p.add_argument("--sniffer", action=argparse.BooleanOptionalAction, default=True, help="professional (Wireshark-like) sniffer mode for CANopen decoding (default: on; use --no-sniffer to disable)")
     p.add_argument("--log", action="store_true", help="enable logging")
     args = p.parse_args()
 

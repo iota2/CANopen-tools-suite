@@ -1,4 +1,4 @@
 <map id="clear_tables" name="clear_tables">
-<area shape="rect" id="node1" title="Clear all displayed data and reset statistics." alt="" coords="204,5,305,32"/>
-<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a244742ae4559e6115110f21439ff4f19" title="Handle display mode changes from the toolbar." alt="" coords="5,5,156,32"/>
+<area shape="rect" id="node1" title="Clear all displayed data and reset statistics." alt="" coords="184,5,285,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#ac57cd5fdb3d249b0839270e11ce09f79" title="Switch between Fixed and Sequential display mode at runtime." alt="" coords="5,5,136,32"/>
 </map>

@@ -46,7 +46,7 @@ from PySide6.QtCharts import (
     QChart, QChartView, QLineSeries, QValueAxis
 )
 from PySide6.QtGui import (
-    QAction, QPainter, QColor, QCursor,
+    QAction, QActionGroup, QPainter, QColor, QCursor,
     QFont, QPen, QIcon, QKeySequence
 )
 
@@ -657,8 +657,91 @@ class CANopenMainWindow(QMainWindow):
         export_menu.addAction(log_act)
         self._export_actions["logs"] = log_act
 
-        # Placeholder menu for view/layout-related actions
-        menubar.addMenu("View")
+        # View menu: runtime display/decoding modes.
+        view_menu = menubar.addMenu("View")
+        self._build_view_menu(view_menu)
+
+    def _build_view_menu(self, view_menu):
+        """! Populate the View menu with runtime mode controls.
+        @details
+        Adds a "Mode" submenu (Fixed / Sequential display) and a "Sniffer"
+        submenu (professional decoding On / Off). Both are exclusive, checkable
+        groups reflecting the current state, replacing the former toolbar
+        combo box so all runtime modes live in the menu bar.
+        """
+
+        # ---- Mode submenu: Fixed / Sequential (mutually exclusive) ----
+        mode_menu = view_menu.addMenu("Mode")
+        self._mode_group = QActionGroup(self)
+        self._mode_group.setExclusive(True)
+
+        self._mode_actions = {}
+        for fixed_flag, label in ((True, "Fixed"), (False, "Sequential")):
+            act = QAction(label, self, checkable=True)
+            act.setChecked(self.fixed == fixed_flag)
+            act.triggered.connect(lambda _checked, f=fixed_flag: self._set_fixed_mode(f))
+            self._mode_group.addAction(act)
+            mode_menu.addAction(act)
+            self._mode_actions[fixed_flag] = act
+
+        # ---- Sniffer submenu: On / Off (mutually exclusive) ----
+        sniffer_menu = view_menu.addMenu("Sniffer")
+        self._sniffer_group = QActionGroup(self)
+        self._sniffer_group.setExclusive(True)
+
+        sniffer_on = bool(getattr(self.processor, "sniffer", False))
+        self._sniffer_actions = {}
+        for on_flag, label in ((True, "On"), (False, "Off")):
+            act = QAction(label, self, checkable=True)
+            act.setChecked(sniffer_on == on_flag)
+            act.triggered.connect(lambda _checked, o=on_flag: self._set_sniffer_mode(o))
+            self._sniffer_group.addAction(act)
+            sniffer_menu.addAction(act)
+            self._sniffer_actions[on_flag] = act
+
+    def _set_fixed_mode(self, fixed: bool):
+        """! Switch between Fixed and Sequential display mode at runtime.
+        @details
+        Updates the mode flag, clears the tables/graphs to avoid mixing
+        incompatible row representations, and syncs the menu check state.
+        @param fixed True for Fixed (aggregated) mode, False for Sequential.
+        """
+
+        if self.fixed == fixed:
+            return
+        self.fixed = fixed
+        self.clear_tables()
+        self._sync_mode_action_checks()
+        self.statusBar().showMessage(
+            f"Display mode: {'Fixed' if fixed else 'Sequential'}", 4000
+        )
+
+    def _set_sniffer_mode(self, enabled: bool):
+        """! Enable or disable professional sniffer decoding at runtime.
+        @details
+        The sniffer mode flag lives on the backend frame processor; flipping it
+        changes how subsequent frames are decoded.
+        @param enabled True to enable sniffer decoding, False to disable.
+        """
+
+        if self.processor is None:
+            self.statusBar().showMessage("Sniffer processor unavailable", 4000)
+            return
+        self.processor.sniffer = bool(enabled)
+        self._sync_mode_action_checks()
+        self.statusBar().showMessage(
+            f"Sniffer mode: {'on' if enabled else 'off'}", 4000
+        )
+
+    def _sync_mode_action_checks(self):
+        """! Update View-menu check marks to reflect current mode state."""
+
+        for fixed_flag, act in getattr(self, "_mode_actions", {}).items():
+            act.setChecked(self.fixed == fixed_flag)
+
+        sniffer_on = bool(getattr(self.processor, "sniffer", False))
+        for on_flag, act in getattr(self, "_sniffer_actions", {}).items():
+            act.setChecked(sniffer_on == on_flag)
 
     def _toggle_export(self, fmt):
         """! Enable or disable runtime frame export in the given format.
@@ -723,9 +806,10 @@ class CANopenMainWindow(QMainWindow):
         @details
         Creates the primary control toolbar that provides quick-access
         actions affecting data flow and presentation, including:
-        - Pause (future extension)
+        - Pause (freeze data tables)
         - Clear (reset all tables, graphs, and statistics)
-        - Mode selection (Fixed / Sequential)
+        Display mode (Fixed / Sequential) and Sniffer decoding live in the
+        "View" menu.
         @note
         This toolbar corresponds conceptually to interactive controls
         available in the CLI.
@@ -753,41 +837,6 @@ class CANopenMainWindow(QMainWindow):
             f"background-color: {analyzer_defs.GUI_CLEAR_BTN_COLOR};"
         )
         tb.addWidget(self.clear_btn)
-
-        # Visual separator between action buttons and mode selector
-        tb.addSeparator()
-
-        # Mode selector label
-        tb.addWidget(QLabel("Mode:"))
-
-        ## Mode selection combo box
-        self.mode_combo = QComboBox()
-        self.mode_combo.addItems(["Fixed", "Sequential"])
-
-        # Initialize combo box state from constructor argument
-        self.mode_combo.setCurrentText(
-            "Fixed" if self.fixed else "Sequential"
-        )
-
-        # React to mode changes by rebuilding displayed data
-        self.mode_combo.currentTextChanged.connect(self._on_mode_changed)
-        tb.addWidget(self.mode_combo)
-
-    def _on_mode_changed(self, text):
-        """! Handle display mode changes from the toolbar.
-        @details
-        Switches between Fixed (aggregated-row) and Sequential
-        display modes. When the mode changes, all tables and
-        graphs are cleared to avoid mixing incompatible data
-        representations.
-        @param text Selected mode string from the combo box.
-        """
-
-        # Update internal mode flag based on selected text
-        self.fixed = (text == "Fixed")
-
-        # Clear all tables and graphs to restart display in new mode
-        self.clear_tables()
 
     def toggle_pause(self):
         """! Toggle pausing of the data-table display.

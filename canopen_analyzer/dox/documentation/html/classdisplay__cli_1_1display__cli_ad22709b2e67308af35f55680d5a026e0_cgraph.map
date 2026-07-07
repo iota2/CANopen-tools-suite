@@ -1,26 +1,28 @@
 <map id="run" name="run">
-<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,517,48,544"/>
-<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,335,229,361"/>
-<area shape="rect" id="node20" href="$classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,517,239,544"/>
-<area shape="rect" id="node24" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,568,264,595"/>
-<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,183,535,209"/>
-<area shape="rect" id="node15" href="$classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,233,527,260"/>
-<area shape="rect" id="node16" href="$classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,284,461,311"/>
-<area shape="rect" id="node17" href="$classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="312,335,559,361"/>
-<area shape="rect" id="node18" href="$classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="346,386,525,427"/>
-<area shape="rect" id="node19" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="344,451,527,493"/>
+<area shape="rect" id="node1" title="Run CLI based CANopen display." alt="" coords="5,568,48,595"/>
+<area shape="rect" id="node2" href="$classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,385,229,412"/>
+<area shape="rect" id="node22" href="$classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,568,239,595"/>
+<area shape="rect" id="node26" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,619,264,645"/>
+<area shape="rect" id="node3" href="$classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,233,535,260"/>
+<area shape="rect" id="node17" href="$classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,284,527,311"/>
+<area shape="rect" id="node18" href="$classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,335,461,361"/>
+<area shape="rect" id="node19" href="$classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="312,385,559,412"/>
+<area shape="rect" id="node20" href="$classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="346,437,525,478"/>
+<area shape="rect" id="node21" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="344,502,527,543"/>
 <area shape="rect" id="node4" href="$classdisplay__cli_1_1display__cli.html#aa3061b7d2aaefa86fd296b3a5e478f02" title="Parse hex or decimal value." alt="" coords="682,157,778,184"/>
 <area shape="rect" id="node5" href="$classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d" title="Parse space&#45;separated hex bytes." alt="" coords="661,208,799,235"/>
-<area shape="rect" id="node6" href="$classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="676,5,784,32"/>
-<area shape="rect" id="node7" href="$classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="971,31,1078,57"/>
-<area shape="rect" id="node8" href="$classdisplay__cli_1_1display__cli.html#a1a3e80ab5c968836fdd97b81584a7cff" title="Enable or disable runtime debug (file) logging." alt="" coords="655,259,805,285"/>
-<area shape="rect" id="node11" href="$classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="607,310,853,351"/>
-<area shape="rect" id="node13" href="$classdisplay__gui_1_1CANopenMainWindow.html#a922454acd6c7a2f2fadbe986a50dcfff" title="Enable or disable runtime frame export in the given format." alt="" coords="607,375,853,417"/>
-<area shape="rect" id="node14" href="$classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16" title="Enable or disable runtime frame export in the given format." alt="" coords="671,107,789,133"/>
-<area shape="rect" id="node9" href="$namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="943,310,1107,351"/>
-<area shape="rect" id="node10" href="$namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="944,245,1105,286"/>
-<area shape="rect" id="node12" href="$classdisplay__gui_1_1CANopenMainWindow.html#a0c5eccb0b6613a7186d99db0f0e8e223" title="Update Export menu check marks to reflect current state." alt="" coords="901,375,1148,417"/>
-<area shape="rect" id="node21" href="$classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,517,521,544"/>
-<area shape="rect" id="node23" href="$classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,568,479,595"/>
-<area shape="rect" id="node22" href="$classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="685,517,775,544"/>
+<area shape="rect" id="node6" href="$classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="676,259,784,285"/>
+<area shape="rect" id="node7" href="$classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="971,277,1078,304"/>
+<area shape="rect" id="node8" href="$classdisplay__cli_1_1display__cli.html#a1a3e80ab5c968836fdd97b81584a7cff" title="Enable or disable runtime debug (file) logging." alt="" coords="655,360,805,387"/>
+<area shape="rect" id="node11" href="$classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="607,411,853,453"/>
+<area shape="rect" id="node13" href="$classdisplay__gui_1_1CANopenMainWindow.html#a922454acd6c7a2f2fadbe986a50dcfff" title="Enable or disable runtime frame export in the given format." alt="" coords="607,477,853,518"/>
+<area shape="rect" id="node14" href="$classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16" title="Enable or disable runtime frame export in the given format." alt="" coords="671,5,789,32"/>
+<area shape="rect" id="node15" href="$classdisplay__cli_1_1display__cli.html#a4fa4dc6714a4b482721476b8ac0021b0" title="Toggle between Fixed (aggregated) and Sequential (scrolling) display." alt="" coords="654,56,806,83"/>
+<area shape="rect" id="node16" href="$classdisplay__cli_1_1display__cli.html#aef7c2fc4d71f2010d96bdb296c82b585" title="Toggle professional (Wireshark&#45;like) sniffer decoding at runtime." alt="" coords="649,107,811,133"/>
+<area shape="rect" id="node9" href="$namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="943,346,1107,387"/>
+<area shape="rect" id="node10" href="$namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="944,411,1105,453"/>
+<area shape="rect" id="node12" href="$classdisplay__gui_1_1CANopenMainWindow.html#a0c5eccb0b6613a7186d99db0f0e8e223" title="Update Export menu check marks to reflect current state." alt="" coords="901,477,1148,518"/>
+<area shape="rect" id="node23" href="$classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,568,521,595"/>
+<area shape="rect" id="node25" href="$classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,619,479,645"/>
+<area shape="rect" id="node24" href="$classdisplay__cli_1_1display__cli.html#a4863a57dbd623368b6ba5d6c8ba1fcbc" title="Build the Status column cells shown alongside the Bus Stats table." alt="" coords="657,568,803,595"/>
 </map>

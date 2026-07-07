@@ -142,30 +142,35 @@ class display_cli(threading.Thread):
         ## Repeat timers for remote commands (key -> threading.Event)
         self._repeat_tasks = {}
 
-    def _sparkline(self, history, style="white"):
-        """! Create a compact sparkline Text from a numeric history sequence."""
+    def _build_status_cells(self):
+        """! Build the Status column cells shown alongside the Bus Stats table.
+        @details
+        Consolidates the runtime status indicators into a single vertical list:
+        the repeat send/recv SDO and send PDO tasks, the set of active exports
+        (CSV/JSON/PCAP), debug logging, the display mode (Fixed/Sequential) and
+        professional sniffer decoding. This replaces the former per-metric
+        sparkline graphs.
+        @return List of Rich Text cells, one per status line.
+        """
 
-        if not history:
-            return ""
-        # ensure we operate on a plain list of floats
-        try:
-            seq = list(history)[-analyzer_defs.STATS_GRAPH_WIDTH:]
-            if not seq:
-                return ""
-            blocks = "▁▂▃▄▅▆▇█"
-            mn, mx = min(seq), max(seq)
-            span = mx - mn or 1.0
-            chars = []
-            for v in seq:
-                try:
-                    idx = int((float(v) - mn) / span * (len(blocks) - 1))
-                except Exception:
-                    idx = 0
-                idx = max(0, min(idx, len(blocks) - 1))
-                chars.append(blocks[idx])
-            return Text("".join(chars), style=style)
-        except Exception:
-            return ""
+        toggle_style = "bold yellow"
+        export_state = (
+            ", ".join(sorted(f.upper() for f in self._active_exports))
+            if self._active_exports else "off"
+        )
+        logs_state = "🟢 on" if self._logs_enabled else "🔴 off"
+        mode_str = "Fixed" if self.fixed else "Sequential"
+        sniffer_state = "🟢 on" if bool(getattr(self.processor, "sniffer", False)) else "🔴 off"
+
+        return [
+            Text(f"Repeat send sdo : {self._get_remote_repeat_status('sdo_send')}", style="bold cyan"),
+            Text(f"Repeat recv sdo : {self._get_remote_repeat_status('sdo_recv')}", style="bold magenta"),
+            Text(f"Repeat send pdo : {self._get_remote_repeat_status('pdo_send')}", style="bold green"),
+            Text(f"Export          : {export_state}", style=toggle_style),
+            Text(f"Debug logs      : {logs_state}", style=toggle_style),
+            Text(f"Mode            : {mode_str}", style=toggle_style),
+            Text(f"Sniffer         : {sniffer_state}", style=toggle_style),
+        ]
 
     def _parse_hex(self, value: str) -> int:
         """! Parse hex or decimal value."""
@@ -193,72 +198,61 @@ class display_cli(threading.Thread):
         ]
         # Max label length + padding
         metric_col_width = max(len(label) for label in metric_labels) + 2
-        graph_col_width = analyzer_defs.STATS_GRAPH_WIDTH
 
-        # Build table: Metric & Graph fixed width, Value expands
+        # Runtime status cells consume the third column (formerly the graphs).
+        # They are drawn top-to-bottom as an independent side panel, so we pull
+        # the next status line for each metric row and pad the rest with blanks.
+        status_cells = self._build_status_cells()
+        status_col_width = max(len(cell.plain) for cell in status_cells) + 2
+        status_iter = iter(status_cells)
+
+        def status():
+            return next(status_iter, "")
+
+        # Build table: Metric & Status fixed width, Value expands
         t = Table(title="Bus Stats", expand=True, box=box.SQUARE, style="yellow")
         t.add_column("Metric", no_wrap=True, width=metric_col_width)
         t.add_column("Value", justify="right", ratio=1)  # fill remaining width
-        t.add_column("Graph", justify="left", width=graph_col_width)
+        t.add_column("Status", justify="left", no_wrap=True, width=status_col_width)
 
         # Basic fields
         nodes = getattr(snapshot, "nodes", {}) or {}
         # Bus state (authoritative, from bus_stats)
         bus_state = getattr(snapshot.rates, "bus_state", "Idle")
-        t.add_row("State", bus_state, "")
+        t.add_row("State", bus_state, status())
         sorted_nodes = sorted(nodes)
         if len(sorted_nodes) > 5:
             nodes_display = f"[{', '.join(str(n) for n in sorted_nodes[:5])}, ...]"
         else:
             nodes_display = str(sorted_nodes)
-        t.add_row("Active Nodes", str(len(nodes)), f"[dim]{nodes_display}[/]" if nodes else "")
+        nodes_value = f"{len(nodes)}  {nodes_display}" if nodes else "0"
+        t.add_row("Active Nodes", nodes_value, status())
 
-        # Read rates and histories from snapshot.rates (structure provided by bus_stats)
+        # Read latest rates from snapshot.rates (structure provided by bus_stats)
         rates_latest = getattr(snapshot.rates, "latest", {}) if hasattr(snapshot, "rates") else {}
-        rates_hist = getattr(snapshot.rates, "history", {}) if hasattr(snapshot, "rates") else {}
+
+        def rate(key):
+            return float(rates_latest.get(key, 0.0)) if isinstance(rates_latest, dict) else 0.0
 
         # PDO
-        pdo_val = float(rates_latest.get("pdo", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("pdo", []) if isinstance(rates_hist, dict) else []
-        t.add_row("PDO Frames/s", f"{pdo_val:.1f}", self._sparkline(pdo_hist, "green") if pdo_hist else "")
+        t.add_row("PDO Frames/s", f"{rate('pdo'):.1f}", status())
 
         # SDO (request + response)
-        sdo_res = float(rates_latest.get("sdo_res", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        sdo_req = float(rates_latest.get("sdo_req", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        sdo_val = sdo_res + sdo_req
-        # build combined history (elementwise sum when lengths match)
-        sdo_hist_res = rates_hist.get("sdo_res", []) if isinstance(rates_hist, dict) else []
-        sdo_hist_req = rates_hist.get("sdo_req", []) if isinstance(rates_hist, dict) else []
-        sdo_hist = []
-        try:
-            if sdo_hist_res and sdo_hist_req and len(sdo_hist_res) == len(sdo_hist_req):
-                sdo_hist = [a + b for a, b in zip(sdo_hist_res, sdo_hist_req)]
-            elif sdo_hist_res:
-                sdo_hist = list(sdo_hist_res)
-            elif sdo_hist_req:
-                sdo_hist = list(sdo_hist_req)
-        except Exception:
-            sdo_hist = list(sdo_hist_res) if sdo_hist_res else list(sdo_hist_req) if sdo_hist_req else []
-        t.add_row("SDO Frames/s", f"{sdo_val:.1f}", self._sparkline(sdo_hist, "magenta") if sdo_hist else "")
+        sdo_val = rate("sdo_res") + rate("sdo_req")
+        t.add_row("SDO Frames/s", f"{sdo_val:.1f}", status())
 
         # Heart beat
-        pdo_val = float(rates_latest.get("hb", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("hb", []) if isinstance(rates_hist, dict) else []
-        t.add_row("HB Frames/s", f"{pdo_val:.1f}", self._sparkline(pdo_hist, "cyan") if pdo_hist else "")
+        t.add_row("HB Frames/s", f"{rate('hb'):.1f}", status())
 
         # Emergency Messages
-        pdo_val = float(rates_latest.get("emcy", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        pdo_hist = rates_hist.get("emcy", []) if isinstance(rates_hist, dict) else []
-        t.add_row("EMCY Frames/s", f"{pdo_val:.1f}", self._sparkline(pdo_hist, "cyan") if pdo_hist else "")
+        t.add_row("EMCY Frames/s", f"{rate('emcy'):.1f}", status())
 
         # Total frames/s
-        total_val = float(rates_latest.get("total", 0.0)) if isinstance(rates_latest, dict) else 0.0
-        total_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Total Frames/s", f"{total_val:.1f}", self._sparkline(total_hist, "yellow") if total_hist else "")
+        t.add_row("Total Frames/s", f"{rate('total'):.1f}", status())
 
         # Peak frames/s
         peak_val = float(getattr(snapshot.rates, "peak_fps", 0.0))
-        t.add_row("Peak Frames/s", f"{peak_val:.1f}", "")
+        t.add_row("Peak Frames/s", f"{peak_val:.1f}", status())
 
         # Bus utilization (computed by bus_stats)
         util = None
@@ -271,18 +265,17 @@ class display_cli(threading.Thread):
                 util = None
 
         idle = max(0.0, 100.0 - util) if util is not None else 0.0
-        util_hist = rates_hist.get("total", []) if isinstance(rates_hist, dict) else []
-        t.add_row("Bus Util %", f"{util:.2f}%" if util is not None else "-", self._sparkline(util_hist, "grey") if util_hist else "")
-        t.add_row("Bus Idle %", f"{idle:.2f}%" if util is not None else "-", "")
+        t.add_row("Bus Util %", f"{util:.2f}%" if util is not None else "-", status())
+        t.add_row("Bus Idle %", f"{idle:.2f}%" if util is not None else "-", status())
 
         # SDO stats & response time
         try:
-            t.add_row("SDO OK/Abort", f"{snapshot.sdo.success}/{snapshot.sdo.abort}", "")
+            t.add_row("SDO OK/Abort", f"{snapshot.sdo.success}/{snapshot.sdo.abort}", status())
             avg_sdo_rt = (sum(snapshot.sdo.response_time) / len(snapshot.sdo.response_time)) if snapshot.sdo.response_time else 0.0
-            t.add_row("SDO resp time", f"{avg_sdo_rt * 1000:.1f} ms", "")
+            t.add_row("SDO resp time", f"{avg_sdo_rt * 1000:.1f} ms", status())
         except Exception:
-            t.add_row("SDO OK/Abort", "-", "")
-            t.add_row("SDO resp time", "-", "")
+            t.add_row("SDO OK/Abort", "-", status())
+            t.add_row("SDO resp time", "-", status())
 
         # Last error frame
         last_err = "-"
@@ -291,15 +284,15 @@ class display_cli(threading.Thread):
                 last_err = f"[{snapshot.error.last_time}] {analyzer_defs.format_error_frame(snapshot.error.last_frame)}"
         except Exception:
             last_err = "-"
-        t.add_row("Last Error Frame", last_err, "")
+        t.add_row("Last Error Frame", last_err, status())
 
         # Top talkers
         try:
             top = snapshot.top_talkers.most_common(analyzer_defs.MAX_STATS_SHOW)
             top_str = ", ".join(f"0x{c:03X}:{cnt}" for c, cnt in top) if top else "-"
-            t.add_row("Top Talkers", top_str, "")
+            t.add_row("Top Talkers", top_str, status())
         except Exception:
-            t.add_row("Top Talkers", "-", "")
+            t.add_row("Top Talkers", "-", status())
 
         # Frame distribution — show top-N kinds sorted by count (descending)
         try:
@@ -313,7 +306,7 @@ class display_cli(threading.Thread):
                 dist_pairs = "-"
         except Exception:
             dist_pairs = "-"
-        t.add_row("Frame Dist.", dist_pairs, "")
+        t.add_row("Frame Dist.", dist_pairs, status())
 
         return t
 
@@ -549,6 +542,22 @@ class display_cli(threading.Thread):
                 return
 
             # ============================================================
+            # MODE TOGGLE (Fixed <-> Sequential)
+            # ============================================================
+            if tokens == ["mode", "toggle"]:
+                fixed = self._toggle_fixed_mode()
+                ok(f"{cmd} > {'Fixed' if fixed else 'Sequential'}")
+                return
+
+            # ============================================================
+            # SNIFFER TOGGLE (professional sniffer decoding on/off)
+            # ============================================================
+            if tokens == ["sniffer", "toggle"]:
+                enabled = self._toggle_sniffer_mode()
+                ok(f"{cmd} > {'on' if enabled else 'off'}")
+                return
+
+            # ============================================================
             raise ValueError("Unknown command.")
 
         except Exception as e:
@@ -590,6 +599,27 @@ class display_cli(threading.Thread):
         analyzer_defs.enable_logging()
         self._logs_enabled = True
         return True
+
+    def _toggle_fixed_mode(self) -> bool:
+        """! Toggle between Fixed (aggregated) and Sequential (scrolling) display.
+        @return True if Fixed mode is now active, False for Sequential.
+        """
+
+        self.fixed = not self.fixed
+        return self.fixed
+
+    def _toggle_sniffer_mode(self) -> bool:
+        """! Toggle professional (Wireshark-like) sniffer decoding at runtime.
+        @details
+        The sniffer mode flag lives on the backend frame processor, so the
+        toggle simply flips it; subsequent frames are decoded in the new mode.
+        @return True if sniffer mode is now enabled, False otherwise.
+        """
+
+        if self.processor is None:
+            return False
+        self.processor.sniffer = not bool(self.processor.sniffer)
+        return bool(self.processor.sniffer)
 
     def _input_loop(self):
         """! Capture user keystrokes and update remote command input."""
@@ -760,10 +790,12 @@ class display_cli(threading.Thread):
         cursor = self._input_caret
         t_remote.add_row(Text(f"> {self.remote_cmd_input}{cursor}", style="bold purple"))
 
-        # Remote Node Status -----------------------------------------------------
-        t_status = Table(title="Remote Node Commands & Status", expand=True, box=box.SQUARE, style="purple")
+        # Remote Node Commands -----------------------------------------------------
+        # Live status for these commands (repeat tasks, export, logs, mode,
+        # sniffer) is shown in the Bus Stats "Status" column; this table only
+        # documents the available commands and their default arguments.
+        t_status = Table(title="Remote Node Commands", expand=True, box=box.SQUARE, style="purple")
         t_status.add_column("Commands", no_wrap=True)
-        t_status.add_column("Status", no_wrap=True)
 
         # Send SDO
         t_status.add_row(Text("> send sdo"\
@@ -773,8 +805,6 @@ class display_cli(threading.Thread):
                                 f" data[{analyzer_defs.DEFAULT_SDO_SEND_DATA}]"\
                                 f" size<1/2/4>"\
                                 f" <repeat(ms)>[{analyzer_defs.DEFAULT_SDO_SEND_REPEAT_TIME}]",
-                                style="bold cyan"),
-                         Text(f"Repeat send sdo: {self._get_remote_repeat_status('sdo_send')}",
                                 style="bold cyan"))
         # Receive SDO
         t_status.add_row(Text("> recv sdo"\
@@ -782,35 +812,16 @@ class display_cli(threading.Thread):
                                 f" index[{analyzer_defs.DEFAULT_SDO_RECV_INDEX}]"\
                                 f" sub[{analyzer_defs.DEFAULT_SDO_RECV_SUB}]"\
                                 f" <repeat(ms)>[{analyzer_defs.DEFAULT_SDO_RECV_REPEAT_TIME}]",
-                                style="bold magenta"),
-                         Text(f"Repeat recv sdo: {self._get_remote_repeat_status('sdo_recv')}",
                                 style="bold magenta"))
-
         # Send PDO
         t_status.add_row(Text("> send pdo"\
                                 f" cob-id[{analyzer_defs.DEFAULT_PDO_SEND_COB_ID}]"\
                                 f" data[{analyzer_defs.DEFAULT_PDO_SEND_DATA}]"
                                 f" <repeat(ms)>[{analyzer_defs.DEFAULT_PDO_SEND_REPEAT_TIME}]",
-                                style="bold green"),
-                         Text(f"Repeat send pdo: {self._get_remote_repeat_status('pdo_send')}",
                                 style="bold green"))
         t_status.add_row(Text("> send sdo stop | > recv sdo stop | > send pdo stop", style="red"))
-
-        # Export / logging toggles
-        export_style = "bold yellow"
-        export_state = (
-            ", ".join(sorted(f.upper() for f in self._active_exports))
-            if self._active_exports else "off"
-        )
-        logs_state = "🟢" if self._logs_enabled else "🔴"
-        t_status.add_row(
-            Text("> export <csv/json/pcap>", style=export_style),
-            Text(f"Export: {export_state}", style=export_style),
-        )
-        t_status.add_row(
-            Text("> enable logs", style=export_style),
-            Text(f"Debug logs: {logs_state}", style=export_style),
-        )
+        t_status.add_row(Text("> export <csv/json/pcap> | > enable logs", style="bold yellow"))
+        t_status.add_row(Text("> mode toggle | > sniffer toggle", style="bold yellow"))
 
         # Grid layout (two columns)
         layout = Table.grid(expand=True)

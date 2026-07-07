@@ -185,6 +185,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a50a5f1ef7d26ba290bf86d97cf6ef87b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b">_build_bus_stats_table</a> (self)</td></tr>
 <tr class="memdesc:a50a5f1ef7d26ba290bf86d97cf6ef87b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a Bus Stats table by querying latest stats snapshot (<a class="el" href="namespacebus__stats.html">bus_stats</a> owns all calculations).  <a href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b">More...</a><br /></td></tr>
 <tr class="separator:a50a5f1ef7d26ba290bf86d97cf6ef87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4863a57dbd623368b6ba5d6c8ba1fcbc"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a4863a57dbd623368b6ba5d6c8ba1fcbc">_build_status_cells</a> (self)</td></tr>
+<tr class="memdesc:a4863a57dbd623368b6ba5d6c8ba1fcbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the Status column cells shown alongside the Bus Stats table.  <a href="classdisplay__cli_1_1display__cli.html#a4863a57dbd623368b6ba5d6c8ba1fcbc">More...</a><br /></td></tr>
+<tr class="separator:a4863a57dbd623368b6ba5d6c8ba1fcbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a434116f4be6b90e28c281592310ad650"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650">_get_remote_repeat_status</a> (self, str type)</td></tr>
 <tr class="memdesc:a434116f4be6b90e28c281592310ad650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build Remote Node Control status title.  <a href="classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650">More...</a><br /></td></tr>
 <tr class="separator:a434116f4be6b90e28c281592310ad650"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,9 +209,6 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ac948beb9ae0c2f6673d5f707feef7f93"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#ac948beb9ae0c2f6673d5f707feef7f93">_repeat_status_icon</a> (self, str key)</td></tr>
 <tr class="memdesc:ac948beb9ae0c2f6673d5f707feef7f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return status icon for a repeat task.  <a href="classdisplay__cli_1_1display__cli.html#ac948beb9ae0c2f6673d5f707feef7f93">More...</a><br /></td></tr>
 <tr class="separator:ac948beb9ae0c2f6673d5f707feef7f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d43c8ac1c6ce0ea838692417259ddf1"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1">_sparkline</a> (self, history, style=&quot;white&quot;)</td></tr>
-<tr class="memdesc:a4d43c8ac1c6ce0ea838692417259ddf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a compact sparkline Text from a numeric history sequence.  <a href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1">More...</a><br /></td></tr>
-<tr class="separator:a4d43c8ac1c6ce0ea838692417259ddf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8ec18a1db21a982a2af1f7374989544"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544">_start_repeat</a> (self, key, interval_ms, callback)</td></tr>
 <tr class="memdesc:ab8ec18a1db21a982a2af1f7374989544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a repeating task.  <a href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544">More...</a><br /></td></tr>
 <tr class="separator:ab8ec18a1db21a982a2af1f7374989544"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,6 +221,12 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:af5e9ef63f0217b2e403051ed387aee16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16">_toggle_export</a> (self, str fmt)</td></tr>
 <tr class="memdesc:af5e9ef63f0217b2e403051ed387aee16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable runtime frame export in the given format.  <a href="classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16">More...</a><br /></td></tr>
 <tr class="separator:af5e9ef63f0217b2e403051ed387aee16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fa4dc6714a4b482721476b8ac0021b0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a4fa4dc6714a4b482721476b8ac0021b0">_toggle_fixed_mode</a> (self)</td></tr>
+<tr class="memdesc:a4fa4dc6714a4b482721476b8ac0021b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle between Fixed (aggregated) and Sequential (scrolling) display.  <a href="classdisplay__cli_1_1display__cli.html#a4fa4dc6714a4b482721476b8ac0021b0">More...</a><br /></td></tr>
+<tr class="separator:a4fa4dc6714a4b482721476b8ac0021b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef7c2fc4d71f2010d96bdb296c82b585"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#aef7c2fc4d71f2010d96bdb296c82b585">_toggle_sniffer_mode</a> (self)</td></tr>
+<tr class="memdesc:aef7c2fc4d71f2010d96bdb296c82b585"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle professional (Wireshark-like) sniffer decoding at runtime.  <a href="classdisplay__cli_1_1display__cli.html#aef7c2fc4d71f2010d96bdb296c82b585">More...</a><br /></td></tr>
+<tr class="separator:aef7c2fc4d71f2010d96bdb296c82b585"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7deb0604c2f84cedc918f12ecef983fa"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa">_trim_cell</a> (self, str value, int max_width)</td></tr>
 <tr class="memdesc:a7deb0604c2f84cedc918f12ecef983fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trim cell text to max_width with ellipsis for CLI tables.  <a href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa">More...</a><br /></td></tr>
 <tr class="separator:a7deb0604c2f84cedc918f12ecef983fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -345,7 +351,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_cgraph" id="aclassdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_cgraph">
 <area shape="rect" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="5,5,176,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="224,5,313,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4863a57dbd623368b6ba5d6c8ba1fcbc" title="Build the Status column cells shown alongside the Bus Stats table." alt="" coords="224,5,369,32"/>
 </map>
 </div>
 <div class="dynheader">
@@ -354,6 +360,46 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_icgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_icgraph" id="aclassdisplay__cli_1_1display__cli_a50a5f1ef7d26ba290bf86d97cf6ef87b_icgraph">
 <area shape="rect" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="263,5,433,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a4863a57dbd623368b6ba5d6c8ba1fcbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4863a57dbd623368b6ba5d6c8ba1fcbc">&#9670;&nbsp;</a></span>_build_status_cells()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _build_status_cells </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build the Status column cells shown alongside the Bus Stats table. </p>
+<p>Consolidates the runtime status indicators into a single vertical list: the repeat send/recv SDO and send PDO tasks, the set of active exports (CSV/JSON/PCAP), debug logging, the display mode (Fixed/Sequential) and professional sniffer decoding. This replaces the former per-metric sparkline graphs. </p><dl class="section return"><dt>Returns</dt><dd>List of Rich Text cells, one per status line. </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__cli_1_1display__cli_a4863a57dbd623368b6ba5d6c8ba1fcbc_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a4863a57dbd623368b6ba5d6c8ba1fcbc_icgraph" alt=""/></div>
+<map name="aclassdisplay__cli_1_1display__cli_a4863a57dbd623368b6ba5d6c8ba1fcbc_icgraph" id="aclassdisplay__cli_1_1display__cli_a4863a57dbd623368b6ba5d6c8ba1fcbc_icgraph">
+<area shape="rect" title="Build the Status column cells shown alongside the Bus Stats table." alt="" coords="481,5,627,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="263,5,433,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
 </map>
@@ -448,7 +494,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a579ffe0de1de8798e0181daf1e85faf3_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a579ffe0de1de8798e0181daf1e85faf3_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a579ffe0de1de8798e0181daf1e85faf3_cgraph" id="aclassdisplay__cli_1_1display__cli_a579ffe0de1de8798e0181daf1e85faf3_cgraph">
-<area shape="rect" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="5,183,204,209"/>
+<area shape="rect" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="5,237,204,264"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa3061b7d2aaefa86fd296b3a5e478f02" title="Parse hex or decimal value." alt="" coords="327,5,423,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d" title="Parse space&#45;separated hex bytes." alt="" coords="306,56,445,83"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="321,157,429,184"/>
@@ -457,6 +503,8 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="252,259,499,301"/>
 <area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a922454acd6c7a2f2fadbe986a50dcfff" title="Enable or disable runtime frame export in the given format." alt="" coords="252,325,499,366"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16" title="Enable or disable runtime frame export in the given format." alt="" coords="316,391,435,417"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4fa4dc6714a4b482721476b8ac0021b0" title="Toggle between Fixed (aggregated) and Sequential (scrolling) display." alt="" coords="299,441,451,468"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#aef7c2fc4d71f2010d96bdb296c82b585" title="Toggle professional (Wireshark&#45;like) sniffer decoding at runtime." alt="" coords="294,492,457,519"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="588,194,752,235"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="589,259,751,301"/>
 <area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a0c5eccb0b6613a7186d99db0f0e8e223" title="Update Export menu check marks to reflect current state." alt="" coords="547,325,793,366"/>
@@ -505,13 +553,13 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_a845ad84924dce526cbe6be7a6c297f32_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a845ad84924dce526cbe6be7a6c297f32_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_a845ad84924dce526cbe6be7a6c297f32_cgraph" id="aclassdisplay__cli_1_1display__cli_a845ad84924dce526cbe6be7a6c297f32_cgraph">
-<area shape="rect" title="Capture user keystrokes and update remote command input." alt="" coords="5,309,103,336"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="175,183,373,209"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="183,233,365,260"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="249,284,299,311"/>
-<area shape="rect" href="classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="151,335,397,361"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="185,386,363,427"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="183,451,365,493"/>
+<area shape="rect" title="Capture user keystrokes and update remote command input." alt="" coords="5,364,103,391"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="175,237,373,264"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="183,288,365,315"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="249,339,299,365"/>
+<area shape="rect" href="classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="151,389,397,416"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="185,441,363,482"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="183,506,365,547"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa3061b7d2aaefa86fd296b3a5e478f02" title="Parse hex or decimal value." alt="" coords="521,5,617,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d" title="Parse space&#45;separated hex bytes." alt="" coords="499,56,638,83"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="515,157,623,184"/>
@@ -520,6 +568,8 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="445,259,692,301"/>
 <area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a922454acd6c7a2f2fadbe986a50dcfff" title="Enable or disable runtime frame export in the given format." alt="" coords="445,325,692,366"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16" title="Enable or disable runtime frame export in the given format." alt="" coords="509,391,628,417"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4fa4dc6714a4b482721476b8ac0021b0" title="Toggle between Fixed (aggregated) and Sequential (scrolling) display." alt="" coords="493,441,645,468"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#aef7c2fc4d71f2010d96bdb296c82b585" title="Toggle professional (Wireshark&#45;like) sniffer decoding at runtime." alt="" coords="487,492,650,519"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="781,194,945,235"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="783,259,944,301"/>
 <area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a0c5eccb0b6613a7186d99db0f0e8e223" title="Update Export menu check marks to reflect current state." alt="" coords="740,325,987,366"/>
@@ -668,7 +718,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" title="Render tables for displaying CLI data." alt="" coords="5,31,124,57"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="172,5,343,32"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="214,56,301,83"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="391,5,480,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4863a57dbd623368b6ba5d6c8ba1fcbc" title="Build the Status column cells shown alongside the Bus Stats table." alt="" coords="391,5,536,32"/>
 </map>
 </div>
 <div class="dynheader">
@@ -725,61 +775,6 @@ Here is the caller graph for this function:</div>
 <map name="aclassdisplay__cli_1_1display__cli_ac948beb9ae0c2f6673d5f707feef7f93_icgraph" id="aclassdisplay__cli_1_1display__cli_ac948beb9ae0c2f6673d5f707feef7f93_icgraph">
 <area shape="rect" title="Return status icon for a repeat task." alt="" coords="207,13,359,39"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a434116f4be6b90e28c281592310ad650" title="Build Remote Node Control status title." alt="" coords="5,5,159,47"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a4d43c8ac1c6ce0ea838692417259ddf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d43c8ac1c6ce0ea838692417259ddf1">&#9670;&nbsp;</a></span>_sparkline()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def _sparkline </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>history</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>style</em> = <code>&quot;white&quot;</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Create a compact sparkline Text from a numeric history sequence. </p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdisplay__cli_1_1display__cli_a4d43c8ac1c6ce0ea838692417259ddf1_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a4d43c8ac1c6ce0ea838692417259ddf1_icgraph" alt=""/></div>
-<map name="aclassdisplay__cli_1_1display__cli_a4d43c8ac1c6ce0ea838692417259ddf1_icgraph" id="aclassdisplay__cli_1_1display__cli_a4d43c8ac1c6ce0ea838692417259ddf1_icgraph">
-<area shape="rect" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="481,5,571,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="263,5,433,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="96,5,215,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
 </map>
 </div>
 
@@ -1011,6 +1006,86 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a4fa4dc6714a4b482721476b8ac0021b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fa4dc6714a4b482721476b8ac0021b0">&#9670;&nbsp;</a></span>_toggle_fixed_mode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool _toggle_fixed_mode </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Toggle between Fixed (aggregated) and Sequential (scrolling) display. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if Fixed mode is now active, False for Sequential. </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__cli_1_1display__cli_a4fa4dc6714a4b482721476b8ac0021b0_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_a4fa4dc6714a4b482721476b8ac0021b0_icgraph" alt=""/></div>
+<map name="aclassdisplay__cli_1_1display__cli_a4fa4dc6714a4b482721476b8ac0021b0_icgraph" id="aclassdisplay__cli_1_1display__cli_a4fa4dc6714a4b482721476b8ac0021b0_icgraph">
+<area shape="rect" title="Toggle between Fixed (aggregated) and Sequential (scrolling) display." alt="" coords="488,5,640,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="241,5,440,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="96,5,193,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aef7c2fc4d71f2010d96bdb296c82b585"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef7c2fc4d71f2010d96bdb296c82b585">&#9670;&nbsp;</a></span>_toggle_sniffer_mode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool _toggle_sniffer_mode </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Toggle professional (Wireshark-like) sniffer decoding at runtime. </p>
+<p>The sniffer mode flag lives on the backend frame processor, so the toggle simply flips it; subsequent frames are decoded in the new mode. </p><dl class="section return"><dt>Returns</dt><dd>True if sniffer mode is now enabled, False otherwise. </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classdisplay__cli_1_1display__cli_aef7c2fc4d71f2010d96bdb296c82b585_icgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_aef7c2fc4d71f2010d96bdb296c82b585_icgraph" alt=""/></div>
+<map name="aclassdisplay__cli_1_1display__cli_aef7c2fc4d71f2010d96bdb296c82b585_icgraph" id="aclassdisplay__cli_1_1display__cli_aef7c2fc4d71f2010d96bdb296c82b585_icgraph">
+<area shape="rect" title="Toggle professional (Wireshark&#45;like) sniffer decoding at runtime." alt="" coords="488,5,651,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="241,5,440,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="96,5,193,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ad22709b2e67308af35f55680d5a026e0" title="Run CLI based CANopen display." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a7deb0604c2f84cedc918f12ecef983fa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7deb0604c2f84cedc918f12ecef983fa">&#9670;&nbsp;</a></span>_trim_cell()</h2>
 
@@ -1087,30 +1162,32 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclassdisplay__cli_1_1display__cli_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Run CLI based CANopen display." alt="" coords="5,517,48,544"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,335,229,361"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,517,239,544"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,568,264,595"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,183,535,209"/>
-<area shape="rect" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,233,527,260"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,284,461,311"/>
-<area shape="rect" href="classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="312,335,559,361"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="346,386,525,427"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="344,451,527,493"/>
+<area shape="rect" title="Run CLI based CANopen display." alt="" coords="5,568,48,595"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a845ad84924dce526cbe6be7a6c297f32" title="Capture user keystrokes and update remote command input." alt="" coords="131,385,229,412"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5be7868f3f60b2c4a8cdb0eba6ce1a0e" title="Render tables for displaying CLI data." alt="" coords="121,568,239,595"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="96,619,264,645"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a579ffe0de1de8798e0181daf1e85faf3" title="Parse and dispatch remote node control commands with defaults and status feedback." alt="" coords="336,233,535,260"/>
+<area shape="rect" href="classbus__stats_1_1bus__stats.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop background threads cleanly (call on application exit)." alt="" coords="344,284,527,311"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop CLI display." alt="" coords="410,335,461,361"/>
+<area shape="rect" href="classdisplay__gui_1_1GUIUpdateWorker.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Stop the worker." alt="" coords="312,385,559,412"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26ca7c1c7fcdd35378e7be97727047a6" title="Request the processor thread to stop." alt="" coords="346,437,525,478"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2342b933b01f118be030e93341908480" title="Request the sniffer thread to stop and optionally shutdown the bus." alt="" coords="344,502,527,543"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa3061b7d2aaefa86fd296b3a5e478f02" title="Parse hex or decimal value." alt="" coords="682,157,778,184"/>
 <area shape="rect" href="classdisplay__cli_1_1display__cli.html#a5f2f3535210b2b67e36cc9a77edf286d" title="Parse space&#45;separated hex bytes." alt="" coords="661,208,799,235"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="676,5,784,32"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="971,31,1078,57"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a1a3e80ab5c968836fdd97b81584a7cff" title="Enable or disable runtime debug (file) logging." alt="" coords="655,259,805,285"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="607,310,853,351"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a922454acd6c7a2f2fadbe986a50dcfff" title="Enable or disable runtime frame export in the given format." alt="" coords="607,375,853,417"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16" title="Enable or disable runtime frame export in the given format." alt="" coords="671,107,789,133"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="943,310,1107,351"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="944,245,1105,286"/>
-<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a0c5eccb0b6613a7186d99db0f0e8e223" title="Update Export menu check marks to reflect current state." alt="" coords="901,375,1148,417"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,517,521,544"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,568,479,595"/>
-<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4d43c8ac1c6ce0ea838692417259ddf1" title="Create a compact sparkline Text from a numeric history sequence." alt="" coords="685,517,775,544"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#ab8ec18a1db21a982a2af1f7374989544" title="Start a repeating task." alt="" coords="676,259,784,285"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#aa85d3bcff786592e7fa971644d691567" title="Stop a repeating task." alt="" coords="971,277,1078,304"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a1a3e80ab5c968836fdd97b81584a7cff" title="Enable or disable runtime debug (file) logging." alt="" coords="655,360,805,387"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#abf27f105774e8a4d83a2f3caadafa461" title="Enable or disable runtime debug (file) logging." alt="" coords="607,411,853,453"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a922454acd6c7a2f2fadbe986a50dcfff" title="Enable or disable runtime frame export in the given format." alt="" coords="607,477,853,518"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#af5e9ef63f0217b2e403051ed387aee16" title="Enable or disable runtime frame export in the given format." alt="" coords="671,5,789,32"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4fa4dc6714a4b482721476b8ac0021b0" title="Toggle between Fixed (aggregated) and Sequential (scrolling) display." alt="" coords="654,56,806,83"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#aef7c2fc4d71f2010d96bdb296c82b585" title="Toggle professional (Wireshark&#45;like) sniffer decoding at runtime." alt="" coords="649,107,811,133"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="943,346,1107,387"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="944,411,1105,453"/>
+<area shape="rect" href="classdisplay__gui_1_1CANopenMainWindow.html#a0c5eccb0b6613a7186d99db0f0e8e223" title="Update Export menu check marks to reflect current state." alt="" coords="901,477,1148,518"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a50a5f1ef7d26ba290bf86d97cf6ef87b" title="Build a Bus Stats table by querying latest stats snapshot (bus_stats owns all calculations)." alt="" coords="350,568,521,595"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a7deb0604c2f84cedc918f12ecef983fa" title="Trim cell text to max_width with ellipsis for CLI tables." alt="" coords="392,619,479,645"/>
+<area shape="rect" href="classdisplay__cli_1_1display__cli.html#a4863a57dbd623368b6ba5d6c8ba1fcbc" title="Build the Status column cells shown alongside the Bus Stats table." alt="" coords="657,568,803,595"/>
 </map>
 </div>
 

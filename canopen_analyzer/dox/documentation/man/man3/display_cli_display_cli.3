@@ -112,6 +112,10 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. "
 .ti -1c
+.RI "def \fB_build_status_cells\fP (self)"
+.br
+.RI "Build the Status column cells shown alongside the Bus Stats table\&. "
+.ti -1c
 .RI "str \fB_get_remote_repeat_status\fP (self, str type)"
 .br
 .RI "Build Remote Node Control status title\&. "
@@ -140,10 +144,6 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Return status icon for a repeat task\&. "
 .ti -1c
-.RI "def \fB_sparkline\fP (self, history, style='white')"
-.br
-.RI "Create a compact sparkline Text from a numeric history sequence\&. "
-.ti -1c
 .RI "def \fB_start_repeat\fP (self, key, interval_ms, callback)"
 .br
 .RI "Start a repeating task\&. "
@@ -159,6 +159,14 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .RI "bool \fB_toggle_export\fP (self, str fmt)"
 .br
 .RI "Enable or disable runtime frame export in the given format\&. "
+.ti -1c
+.RI "bool \fB_toggle_fixed_mode\fP (self)"
+.br
+.RI "Toggle between Fixed (aggregated) and Sequential (scrolling) display\&. "
+.ti -1c
+.RI "bool \fB_toggle_sniffer_mode\fP (self)"
+.br
+.RI "Toggle professional (Wireshark-like) sniffer decoding at runtime\&. "
 .ti -1c
 .RI "str \fB_trim_cell\fP (self, str value, int max_width)"
 .br
@@ -216,6 +224,17 @@ None
 
 .PP
 Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. 
+.SS "def _build_status_cells ( self)\fC [private]\fP"
+
+.PP
+Build the Status column cells shown alongside the Bus Stats table\&. Consolidates the runtime status indicators into a single vertical list: the repeat send/recv SDO and send PDO tasks, the set of active exports (CSV/JSON/PCAP), debug logging, the display mode (Fixed/Sequential) and professional sniffer decoding\&. This replaces the former per-metric sparkline graphs\&. 
+.PP
+\fBReturns\fP
+.RS 4
+List of Rich Text cells, one per status line\&. 
+.RE
+.PP
+
 .SS " str _get_remote_repeat_status ( self, str type)\fC [private]\fP"
 
 .PP
@@ -244,10 +263,6 @@ Render tables for displaying CLI data\&.
 
 .PP
 Return status icon for a repeat task\&. 
-.SS "def _sparkline ( self,  history,  style = \fC'white'\fP)\fC [private]\fP"
-
-.PP
-Create a compact sparkline Text from a numeric history sequence\&. 
 .SS "def _start_repeat ( self,  key,  interval_ms,  callback)\fC [private]\fP"
 
 .PP
@@ -280,6 +295,28 @@ Enable or disable runtime frame export in the given format\&. Toggles export on 
 \fBReturns\fP
 .RS 4
 True if export is now enabled, False if it was toggled off\&. 
+.RE
+.PP
+
+.SS " bool _toggle_fixed_mode ( self)\fC [private]\fP"
+
+.PP
+Toggle between Fixed (aggregated) and Sequential (scrolling) display\&. 
+.PP
+\fBReturns\fP
+.RS 4
+True if Fixed mode is now active, False for Sequential\&. 
+.RE
+.PP
+
+.SS " bool _toggle_sniffer_mode ( self)\fC [private]\fP"
+
+.PP
+Toggle professional (Wireshark-like) sniffer decoding at runtime\&. The sniffer mode flag lives on the backend frame processor, so the toggle simply flips it; subsequent frames are decoded in the new mode\&. 
+.PP
+\fBReturns\fP
+.RS 4
+True if sniffer mode is now enabled, False otherwise\&. 
 .RE
 .PP
 

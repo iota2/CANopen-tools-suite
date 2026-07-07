@@ -1,0 +1,6 @@
+<map id="_set_fixed_mode" name="_set_fixed_mode">
+<area shape="rect" id="node1" title="Switch between Fixed and Sequential display mode at runtime." alt="" coords="5,31,136,57"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a44fd09448dc5a262fba0e974cdbc0ec6" title="Update View&#45;menu check marks to reflect current mode state." alt="" coords="184,5,387,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0" title="Clear all displayed data and reset statistics." alt="" coords="235,56,336,83"/>
+<area shape="rect" id="node4" href="$classdisplay__gui_1_1CANopenMainWindow.html#a88bbe9af21c2e2f18c26cace5239782c" title="Color the Pause button according to the current state." alt="" coords="435,56,613,83"/>
+</map>

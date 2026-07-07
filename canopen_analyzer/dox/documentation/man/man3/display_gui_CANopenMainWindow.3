@@ -100,10 +100,6 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Status card widgets and value labels for 'BUS UTIL %'\&. "
 .ti -1c
-.RI "\fBmode_combo\fP"
-.br
-.RI "Mode selection combo box\&. "
-.ti -1c
 .RI "\fBpause_btn\fP"
 .br
 .ti -1c
@@ -290,6 +286,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Build the top control toolbar\&. "
 .ti -1c
+.RI "def \fB_build_view_menu\fP (self, view_menu)"
+.br
+.RI "Populate the View menu with runtime mode controls\&. "
+.ti -1c
 .RI "def \fB_configure_table_columns\fP (self, table, resizable_column_names)"
 .br
 .RI "Auto-fit content columns and make the named columns user-resizable\&. "
@@ -326,10 +326,6 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Create a titled table container with an integrated filter bar\&. "
 .ti -1c
-.RI "def \fB_on_mode_changed\fP (self, text)"
-.br
-.RI "Handle display mode changes from the toolbar\&. "
-.ti -1c
 .RI "def \fB_on_recv_sdo\fP (self)"
 .br
 .RI "Callback on click Receive SDO button\&. "
@@ -354,6 +350,14 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Persist current column widths for a table\&. "
 .ti -1c
+.RI "def \fB_set_fixed_mode\fP (self, bool \fBfixed\fP)"
+.br
+.RI "Switch between Fixed and Sequential display mode at runtime\&. "
+.ti -1c
+.RI "def \fB_set_sniffer_mode\fP (self, bool enabled)"
+.br
+.RI "Enable or disable professional sniffer decoding at runtime\&. "
+.ti -1c
 .RI "str \fB_settings_key_for_table\fP (self, str table_name)"
 .br
 .RI "Generate a QSettings key for storing table column widths\&. "
@@ -361,6 +365,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "def \fB_sync_export_action_checks\fP (self)"
 .br
 .RI "Update Export menu check marks to reflect current state\&. "
+.ti -1c
+.RI "def \fB_sync_mode_action_checks\fP (self)"
+.br
+.RI "Update View-menu check marks to reflect current mode state\&. "
 .ti -1c
 .RI "def \fB_toggle_debug_logs\fP (self)"
 .br
@@ -400,6 +408,18 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fB_logs_enabled\fP"
 .br
 .RI "Whether runtime debug logging is currently enabled\&. "
+.ti -1c
+.RI "\fB_mode_actions\fP"
+.br
+.ti -1c
+.RI "\fB_mode_group\fP"
+.br
+.ti -1c
+.RI "\fB_sniffer_actions\fP"
+.br
+.ti -1c
+.RI "\fB_sniffer_group\fP"
+.br
 .ti -1c
 .RI "\fB_ui_timer\fP"
 .br
@@ -511,11 +531,9 @@ The dock is finally registered with the main window on the right dock area\&.
 .PP
 Build the top control toolbar\&. Creates the primary control toolbar that provides quick-access actions affecting data flow and presentation, including:
 .IP "\(bu" 2
-Pause (future extension)
+Pause (freeze data tables)
 .IP "\(bu" 2
-Clear (reset all tables, graphs, and statistics)
-.IP "\(bu" 2
-Mode selection (Fixed / Sequential) 
+Clear (reset all tables, graphs, and statistics) Display mode (Fixed / Sequential) and Sniffer decoding live in the 'View' menu\&. 
 .PP
 \fBNote\fP
 .RS 4
@@ -525,6 +543,10 @@ This toolbar corresponds conceptually to interactive controls available in the C
 
 .PP
 
+.SS "def _build_view_menu ( self,  view_menu)\fC [private]\fP"
+
+.PP
+Populate the View menu with runtime mode controls\&. Adds a 'Mode' submenu (Fixed / Sequential display) and a 'Sniffer' submenu (professional decoding On / Off)\&. Both are exclusive, checkable groups reflecting the current state, replacing the former toolbar combo box so all runtime modes live in the menu bar\&. 
 .SS "def _configure_table_columns ( self,  table,  resizable_column_names)\fC [private]\fP"
 
 .PP
@@ -600,17 +622,6 @@ Tuple of (container widget, table, filter line edit)\&.
 .RE
 .PP
 
-.SS "def _on_mode_changed ( self,  text)\fC [private]\fP"
-
-.PP
-Handle display mode changes from the toolbar\&. Switches between Fixed (aggregated-row) and Sequential display modes\&. When the mode changes, all tables and graphs are cleared to avoid mixing incompatible data representations\&. 
-.PP
-\fBParameters\fP
-.RS 4
-\fItext\fP Selected mode string from the combo box\&. 
-.RE
-.PP
-
 .SS "def _on_recv_sdo ( self)\fC [private]\fP"
 
 .PP
@@ -658,6 +669,28 @@ Persist current column widths for a table\&. Captures the current column widths 
 .RE
 .PP
 
+.SS "def _set_fixed_mode ( self, bool fixed)\fC [private]\fP"
+
+.PP
+Switch between Fixed and Sequential display mode at runtime\&. Updates the mode flag, clears the tables/graphs to avoid mixing incompatible row representations, and syncs the menu check state\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfixed\fP True for Fixed (aggregated) mode, False for Sequential\&. 
+.RE
+.PP
+
+.SS "def _set_sniffer_mode ( self, bool enabled)\fC [private]\fP"
+
+.PP
+Enable or disable professional sniffer decoding at runtime\&. The sniffer mode flag lives on the backend frame processor; flipping it changes how subsequent frames are decoded\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIenabled\fP True to enable sniffer decoding, False to disable\&. 
+.RE
+.PP
+
 .SS " str _settings_key_for_table ( self, str table_name)\fC [private]\fP"
 
 .PP
@@ -678,6 +711,10 @@ Fully-qualified QSettings key for column width storage\&.
 
 .PP
 Update Export menu check marks to reflect current state\&. Each export format is checked independently based on whether it is currently active; the debug-logs action reflects \fB_logs_enabled\fP\&. 
+.SS "def _sync_mode_action_checks ( self)\fC [private]\fP"
+
+.PP
+Update View-menu check marks to reflect current mode state\&. 
 .SS "def _toggle_debug_logs ( self)\fC [private]\fP"
 
 .PP
@@ -817,6 +854,14 @@ Checkable export/log actions keyed by identifier\&.
 
 .PP
 Whether runtime debug logging is currently enabled\&. 
+.SS "_mode_actions\fC [private]\fP"
+
+.SS "_mode_group\fC [private]\fP"
+
+.SS "_sniffer_actions\fC [private]\fP"
+
+.SS "_sniffer_group\fC [private]\fP"
+
 .SS "_ui_timer\fC [private]\fP"
 
 .PP
@@ -869,10 +914,6 @@ Status card widgets and value labels for 'STATE'\&.
 
 .PP
 Status card widgets and value labels for 'BUS UTIL %'\&. 
-.SS "mode_combo"
-
-.PP
-Mode selection combo box\&. 
 .SS "pause_btn"
 
 .SS "paused"
