@@ -1,7 +1,11 @@
 <map id="handle_received_message" name="handle_received_message">
-<area shape="rect" id="node1" title="Handle a received CAN message." alt="" coords="5,53,200,79"/>
-<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="248,53,389,79"/>
-<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="437,53,605,79"/>
-<area shape="rect" id="node4" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="661,5,814,47"/>
-<area shape="rect" id="node5" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="653,82,821,109"/>
+<area shape="rect" id="node1" title="Handle a received CAN message." alt="" coords="5,67,200,94"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="248,67,389,94"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="437,67,635,94"/>
+<area shape="rect" id="node4" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="884,17,1007,43"/>
+<area shape="rect" id="node7" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="685,67,811,94"/>
+<area shape="rect" id="node9" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="683,118,813,145"/>
+<area shape="rect" id="node5" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1085,5,1238,47"/>
+<area shape="rect" id="node6" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1077,71,1245,98"/>
+<area shape="rect" id="node8" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="861,67,1029,94"/>
 </map>

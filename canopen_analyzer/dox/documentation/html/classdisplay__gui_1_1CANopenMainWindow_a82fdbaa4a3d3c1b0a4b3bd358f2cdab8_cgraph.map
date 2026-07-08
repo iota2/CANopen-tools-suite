@@ -1,0 +1,5 @@
+<map id="_apply_initial_column_fill" name="_apply_initial_column_fill">
+<area shape="rect" id="node1" title="Distribute leftover width across each table&#39;s fill columns once." alt="" coords="5,31,192,57"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#afe194dc68281ecb04bc7a27a267104e1" title="Size the table&#39;s fill columns to share the remaining width." alt="" coords="240,5,416,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a82007ce2e6c8c0c61e180af46023a476" title="Generate a QSettings key for storing table column widths." alt="" coords="240,56,416,83"/>
+</map>

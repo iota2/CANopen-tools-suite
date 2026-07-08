@@ -1,7 +1,9 @@
 var classdisplay__tui_1_1display__tui =
 [
-    [ "run_textual", "classdisplay__tui_1_1display__tui.html#a0dd591b0c361f5bc4c0ef5f120b746b6", null ],
+    [ "run_textual", "classdisplay__tui_1_1display__tui.html#a45f532e59a301c0490b5c7045e71e112", null ],
+    [ "_active_exports", "classdisplay__tui_1_1display__tui.html#a5cd66637ddb119dd57dad8600b07a8b0", null ],
     [ "_last_bus_stats", "classdisplay__tui_1_1display__tui.html#a910bf18994fa84a67853bf6b3948360c", null ],
+    [ "_logs_enabled", "classdisplay__tui_1_1display__tui.html#acd0dd82badbade9f2ce1b17e7260aad3", null ],
     [ "_repeat_tasks", "classdisplay__tui_1_1display__tui.html#a49303ca1ae5b6e50bc574e96d8a15344", null ],
     [ "bus_stats_table", "classdisplay__tui_1_1display__tui.html#a13322e7aa50616f0af270c661d2ffb1c", null ],
     [ "fixed", "classdisplay__tui_1_1display__tui.html#a0ceb8ae554e8a185caf22e15c9487f4b", null ],
@@ -17,6 +19,7 @@ var classdisplay__tui_1_1display__tui =
     [ "pdo_send_btn", "classdisplay__tui_1_1display__tui.html#afc163f3a2b38e5f6e5deb6ca2b0a4433", null ],
     [ "pdo_send_repeat_value", "classdisplay__tui_1_1display__tui.html#a3c46bd05e25fcaed6c4c3009612e4df2", null ],
     [ "pdo_table", "classdisplay__tui_1_1display__tui.html#a555201bfe3de605f4aa5d6a343c0d7a8", null ],
+    [ "processor", "classdisplay__tui_1_1display__tui.html#a484a8e0e9e7b305769fcf0dfeb7d79cc", null ],
     [ "proto_display", "classdisplay__tui_1_1display__tui.html#ac7d0c4ba948604c1b98946ca7629cd41", null ],
     [ "proto_next_index", "classdisplay__tui_1_1display__tui.html#af759d11e0fc16156258e7b8c2b46d912", null ],
     [ "proto_table", "classdisplay__tui_1_1display__tui.html#a2b361d5dc97844ee0f7ae3867d32f247", null ],
@@ -37,6 +40,7 @@ var classdisplay__tui_1_1display__tui =
     [ "sdo_send_sub", "classdisplay__tui_1_1display__tui.html#affbc71862cb5f89145fd40dafec5359a", null ],
     [ "sdo_send_value", "classdisplay__tui_1_1display__tui.html#abf01630f775b9b75832ab2049eff92c8", null ],
     [ "sdo_table", "classdisplay__tui_1_1display__tui.html#a6f82f6e9d1c2c1beaa4902841472c690", null ],
+    [ "sniffer", "classdisplay__tui_1_1display__tui.html#a3ec93ed409e2a0f6db9121e39eb302ba", null ],
     [ "sub_title", "classdisplay__tui_1_1display__tui.html#a668c3dabd5893be34deacee376ddbcd3", null ],
     [ "title", "classdisplay__tui_1_1display__tui.html#a051e403214cb6872ad3fe4e50302a6ee", null ]
 ];

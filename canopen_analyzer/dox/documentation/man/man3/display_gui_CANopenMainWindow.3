@@ -1,4 +1,4 @@
-.TH "CANopenMainWindow" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "CANopenMainWindow" 3 "Tue Jul 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, queue\&.Queue() \fBrequested_frame\fP, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP)"
+.RI "def \fB__init__\fP (self, queue\&.Queue() \fBrequested_frame\fP, \fBbus_stats\fP \fBstats\fP, bool \fBfixed\fP, \fBsniffer\fP=None, \fBprocessor\fP=None)"
 .br
 .RI "Construct the main CANopen Analyzer GUI window\&. "
 .ti -1c
@@ -45,11 +45,19 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Handle a newly decoded CAN frame\&. "
 .ti -1c
+.RI "def \fBshowEvent\fP (self, event)"
+.br
+.RI "Perform one-time layout work that requires a realized window\&. "
+.ti -1c
+.RI "def \fBtoggle_pause\fP (self)"
+.br
+.RI "Toggle pausing of the data-table display\&. "
+.ti -1c
 .RI "def \fBupdate_bus_stats\fP (self)"
 .br
 .RI "Update Bus Statistics dashboard widgets and rate graphs\&. "
 .ti -1c
-.RI "def \fBupdate_table\fP (self, table, fixed_map, key, values)"
+.RI "def \fBupdate_table\fP (self, table, fixed_map, key, values, max_rows=\fBanalyzer_defs\&.DATA_TABLE_HEIGHT\fP)"
 .br
 .RI "Insert or update a row in a data table\&. "
 .in -1c
@@ -60,6 +68,9 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBbus_labels\fP"
 .br
 .RI "Dictionary mapping metric names to their corresponding QLabel widgets\&. "
+.ti -1c
+.RI "\fBclear_btn\fP"
+.br
 .ti -1c
 .RI "\fBfixed\fP"
 .br
@@ -89,9 +100,12 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Status card widgets and value labels for 'BUS UTIL %'\&. "
 .ti -1c
-.RI "\fBmode_combo\fP"
+.RI "\fBpause_btn\fP"
 .br
-.RI "Mode selection combo box\&. "
+.ti -1c
+.RI "\fBpaused\fP"
+.br
+.RI "When True, incoming frames are not added to the data tables\&. "
 .ti -1c
 .RI "\fBpdo_cob_edit\fP"
 .br
@@ -116,6 +130,9 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .RI "\fBpdo_timer\fP"
 .br
 .RI "PDO write repeat timer\&. "
+.ti -1c
+.RI "\fBprocessor\fP"
+.br
 .ti -1c
 .RI "\fBproto_filter\fP"
 .br
@@ -201,6 +218,10 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Persistent settings store used for window geometry, dock layout, and column width restoration\&. "
 .ti -1c
+.RI "\fBsniffer\fP"
+.br
+.RI "Backend worker references used for runtime export toggling\&. "
+.ti -1c
 .RI "\fBsplitter\fP"
 .br
 .RI "Create a vertical splitter to allow user-resizable sections\&. "
@@ -233,6 +254,14 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Apply a substring filter to a table\&. "
 .ti -1c
+.RI "def \fB_apply_initial_column_fill\fP (self)"
+.br
+.RI "Distribute leftover width across each table's fill columns once\&. "
+.ti -1c
+.RI "def \fB_apply_pause_btn_style\fP (self)"
+.br
+.RI "Color the Pause button according to the current state\&. "
+.ti -1c
 .RI "def \fB_autosize_columns\fP (self, table)"
 .br
 .RI "Auto-size table columns and rows to fit contents\&. "
@@ -257,13 +286,21 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Build the top control toolbar\&. "
 .ti -1c
-.RI "def \fB_configure_table_columns\fP (self, table, str stretch_column_name)"
+.RI "def \fB_build_view_menu\fP (self, view_menu)"
 .br
-.RI "Configure column resize behavior using column names instead of indices\&. "
+.RI "Populate the View menu with runtime mode controls\&. "
+.ti -1c
+.RI "def \fB_configure_table_columns\fP (self, table, resizable_column_names)"
+.br
+.RI "Auto-fit content columns and make the named columns user-resizable\&. "
 .ti -1c
 .RI "def \fB_copy_table_selection\fP (self, QTableWidget table)"
 .br
 .RI "Copy selected table cells to clipboard as TSV\&. "
+.ti -1c
+.RI "def \fB_distribute_fill_columns\fP (self, table)"
+.br
+.RI "Size the table's fill columns to share the remaining width\&. "
 .ti -1c
 .RI "def \fB_enable_table_copy\fP (self, QTableWidget table)"
 .br
@@ -289,10 +326,6 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Create a titled table container with an integrated filter bar\&. "
 .ti -1c
-.RI "def \fB_on_mode_changed\fP (self, text)"
-.br
-.RI "Handle display mode changes from the toolbar\&. "
-.ti -1c
 .RI "def \fB_on_recv_sdo\fP (self)"
 .br
 .RI "Callback on click Receive SDO button\&. "
@@ -317,9 +350,33 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 .br
 .RI "Persist current column widths for a table\&. "
 .ti -1c
+.RI "def \fB_set_fixed_mode\fP (self, bool \fBfixed\fP)"
+.br
+.RI "Switch between Fixed and Sequential display mode at runtime\&. "
+.ti -1c
+.RI "def \fB_set_sniffer_mode\fP (self, bool enabled)"
+.br
+.RI "Enable or disable professional sniffer decoding at runtime\&. "
+.ti -1c
 .RI "str \fB_settings_key_for_table\fP (self, str table_name)"
 .br
 .RI "Generate a QSettings key for storing table column widths\&. "
+.ti -1c
+.RI "def \fB_sync_export_action_checks\fP (self)"
+.br
+.RI "Update Export menu check marks to reflect current state\&. "
+.ti -1c
+.RI "def \fB_sync_mode_action_checks\fP (self)"
+.br
+.RI "Update View-menu check marks to reflect current mode state\&. "
+.ti -1c
+.RI "def \fB_toggle_debug_logs\fP (self)"
+.br
+.RI "Enable or disable runtime debug (file) logging\&. "
+.ti -1c
+.RI "def \fB_toggle_export\fP (self, fmt)"
+.br
+.RI "Enable or disable runtime frame export in the given format\&. "
 .ti -1c
 .RI "def \fB_toggle_pdo_repeat\fP (self, bool checked)"
 .br
@@ -337,13 +394,40 @@ Terminology, display modes (Fixed / Sequential), and update behavior intentional
 
 .in +1c
 .ti -1c
+.RI "\fB_active_exports\fP"
+.br
+.RI "Set of currently active export formats (subset of csv/json/pcap)\&. "
+.ti -1c
+.RI "\fB_export_actions\fP"
+.br
+.RI "Checkable export/log actions keyed by identifier\&. "
+.ti -1c
+.RI "\fB_initial_fill_done\fP"
+.br
+.ti -1c
+.RI "\fB_logs_enabled\fP"
+.br
+.RI "Whether runtime debug logging is currently enabled\&. "
+.ti -1c
+.RI "\fB_mode_actions\fP"
+.br
+.ti -1c
+.RI "\fB_mode_group\fP"
+.br
+.ti -1c
+.RI "\fB_sniffer_actions\fP"
+.br
+.ti -1c
+.RI "\fB_sniffer_group\fP"
+.br
+.ti -1c
 .RI "\fB_ui_timer\fP"
 .br
 .RI "Periodic GUI refresh timer (decoupled from CAN traffic) "
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, queue\&.Queue() requested_frame, \fBbus_stats\fP stats, bool fixed)"
+.SS "def __init__ ( self, queue\&.Queue() requested_frame, \fBbus_stats\fP stats, bool fixed,  sniffer = \fCNone\fP,  processor = \fCNone\fP)"
 
 .PP
 Construct the main CANopen Analyzer GUI window\&. Initializes the main window state, stores shared backend references, constructs all UI components, and restores any previously saved layout\&. The initial display mode (Fixed / Sequential) is derived from the caller and mirrors the behavior of the CLI implementation\&. 
@@ -375,6 +459,14 @@ Apply a substring filter to a table\&. Performs a case-insensitive substring mat
 .RE
 .PP
 
+.SS "def _apply_initial_column_fill ( self)\fC [private]\fP"
+
+.PP
+Distribute leftover width across each table's fill columns once\&. Skips any table whose column widths were persisted in a previous session so that user-chosen widths are preserved across launches\&. 
+.SS "def _apply_pause_btn_style ( self)\fC [private]\fP"
+
+.PP
+Color the Pause button according to the current state\&. Yellow while the display is running (button reads 'Pause') and green while it is paused (button reads 'Resume')\&. 
 .SS "def _autosize_columns ( self,  table)\fC [private]\fP"
 
 .PP
@@ -439,11 +531,9 @@ The dock is finally registered with the main window on the right dock area\&.
 .PP
 Build the top control toolbar\&. Creates the primary control toolbar that provides quick-access actions affecting data flow and presentation, including:
 .IP "\(bu" 2
-Pause (future extension)
+Pause (freeze data tables)
 .IP "\(bu" 2
-Clear (reset all tables, graphs, and statistics)
-.IP "\(bu" 2
-Mode selection (Fixed / Sequential) 
+Clear (reset all tables, graphs, and statistics) Display mode (Fixed / Sequential) and Sniffer decoding live in the 'View' menu\&. 
 .PP
 \fBNote\fP
 .RS 4
@@ -453,16 +543,20 @@ This toolbar corresponds conceptually to interactive controls available in the C
 
 .PP
 
-.SS "def _configure_table_columns ( self,  table, str stretch_column_name)\fC [private]\fP"
+.SS "def _build_view_menu ( self,  view_menu)\fC [private]\fP"
 
 .PP
-Configure column resize behavior using column names instead of indices\&. 
+Populate the View menu with runtime mode controls\&. Adds a 'Mode' submenu (Fixed / Sequential display) and a 'Sniffer' submenu (professional decoding On / Off)\&. Both are exclusive, checkable groups reflecting the current state, replacing the former toolbar combo box so all runtime modes live in the menu bar\&. 
+.SS "def _configure_table_columns ( self,  table,  resizable_column_names)\fC [private]\fP"
+
+.PP
+Auto-fit content columns and make the named columns user-resizable\&. Every column that is \fInot\fP named in \fCresizable_column_names\fP is sized to fit the data it displays (ResizeToContents, updated automatically)\&. The named columns use the Interactive mode so the user can drag their borders to change their width; they are additionally sized once on first show to share the remaining table width (see \fB_distribute_fill_columns\fP)\&. 
 .PP
 \fBParameters\fP
 .RS 4
-\fItable\fP QTableWidget instance 
+\fItable\fP QTableWidget instance\&. 
 .br
-\fIstretch_column_name\fP Header text of column to stretch (e\&.g\&. 'Decoded') 
+\fIresizable_column_names\fP Header text (str) or iterable of header texts of the column(s) the user may resize and which fill the remaining width (e\&.g\&. 'Decoded' for Protocol, ['Name', 'Decoded'] for PDO/SDO)\&. 
 .RE
 .PP
 
@@ -470,6 +564,17 @@ Configure column resize behavior using column names instead of indices\&.
 
 .PP
 Copy selected table cells to clipboard as TSV\&. 
+.SS "def _distribute_fill_columns ( self,  table)\fC [private]\fP"
+
+.PP
+Size the table's fill columns to share the remaining width\&. Computes the width left over after the auto-fitted (content) columns and divides it equally among the table's user-resizable fill columns\&. Called once when the window is first shown; afterwards the columns stay under user control (they are in Interactive resize mode)\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItable\fP QTableWidget whose fill columns should be sized\&. 
+.RE
+.PP
+
 .SS "def _enable_table_copy ( self, QTableWidget table)\fC [private]\fP"
 
 .PP
@@ -514,17 +619,6 @@ Create a titled table container with an integrated filter bar\&. Wraps a QTableW
 \fBReturns\fP
 .RS 4
 Tuple of (container widget, table, filter line edit)\&. 
-.RE
-.PP
-
-.SS "def _on_mode_changed ( self,  text)\fC [private]\fP"
-
-.PP
-Handle display mode changes from the toolbar\&. Switches between Fixed (aggregated-row) and Sequential display modes\&. When the mode changes, all tables and graphs are cleared to avoid mixing incompatible data representations\&. 
-.PP
-\fBParameters\fP
-.RS 4
-\fItext\fP Selected mode string from the combo box\&. 
 .RE
 .PP
 
@@ -575,6 +669,28 @@ Persist current column widths for a table\&. Captures the current column widths 
 .RE
 .PP
 
+.SS "def _set_fixed_mode ( self, bool fixed)\fC [private]\fP"
+
+.PP
+Switch between Fixed and Sequential display mode at runtime\&. Updates the mode flag, clears the tables/graphs to avoid mixing incompatible row representations, and syncs the menu check state\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfixed\fP True for Fixed (aggregated) mode, False for Sequential\&. 
+.RE
+.PP
+
+.SS "def _set_sniffer_mode ( self, bool enabled)\fC [private]\fP"
+
+.PP
+Enable or disable professional sniffer decoding at runtime\&. The sniffer mode flag lives on the backend frame processor; flipping it changes how subsequent frames are decoded\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIenabled\fP True to enable sniffer decoding, False to disable\&. 
+.RE
+.PP
+
 .SS " str _settings_key_for_table ( self, str table_name)\fC [private]\fP"
 
 .PP
@@ -588,6 +704,29 @@ Generate a QSettings key for storing table column widths\&. Constructs a stable 
 \fBReturns\fP
 .RS 4
 Fully-qualified QSettings key for column width storage\&. 
+.RE
+.PP
+
+.SS "def _sync_export_action_checks ( self)\fC [private]\fP"
+
+.PP
+Update Export menu check marks to reflect current state\&. Each export format is checked independently based on whether it is currently active; the debug-logs action reflects \fB_logs_enabled\fP\&. 
+.SS "def _sync_mode_action_checks ( self)\fC [private]\fP"
+
+.PP
+Update View-menu check marks to reflect current mode state\&. 
+.SS "def _toggle_debug_logs ( self)\fC [private]\fP"
+
+.PP
+Enable or disable runtime debug (file) logging\&. 
+.SS "def _toggle_export ( self,  fmt)\fC [private]\fP"
+
+.PP
+Enable or disable runtime frame export in the given format\&. Toggles the export format on both backend workers (raw sniffer and processed-frame streams)\&. Formats are independent: CSV, JSON, and PCAP can all be active at once, and toggling one never affects the others\&. Triggering an active format turns just that one off\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
 .RE
 .PP
 
@@ -633,6 +772,21 @@ Handle a newly decoded CAN frame\&. Called from the GUI worker thread via signal
 .RE
 .PP
 
+.SS "def showEvent ( self,  event)"
+
+.PP
+Perform one-time layout work that requires a realized window\&. The initial fill-column width distribution needs the final table widths, which are only known once the (maximized) window has been shown\&. This is done a single time; subsequent user resizing of columns is preserved\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIevent\fP Qt show event\&. 
+.RE
+.PP
+
+.SS "def toggle_pause ( self)"
+
+.PP
+Toggle pausing of the data-table display\&. Flips the \fBpaused\fP flag and updates the button label\&. While paused, \fBon_frame\fP drops incoming frames so the Protocol, PDO, and SDO tables stay frozen; the Bus Stats dashboard and rate graphs continue updating from the backend statistics\&. 
 .SS "def update_bus_stats ( self)"
 
 .PP
@@ -654,7 +808,7 @@ The data semantics and grouping are kept consistent with the CLI implementation\
 
 .PP
 
-.SS "def update_table ( self,  table,  fixed_map,  key,  values)"
+.SS "def update_table ( self,  table,  fixed_map,  key,  values,  max_rows = \fC\fBanalyzer_defs\&.DATA_TABLE_HEIGHT\fP\fP)"
 
 .PP
 Insert or update a row in a data table\&. Updates the specified table based on the current display mode:
@@ -677,6 +831,8 @@ Row highlighting is applied to indicate recent activity\&.
 \fIkey\fP Unique key identifying a row in Fixed mode\&. 
 .br
 \fIvalues\fP List of column values to insert/update\&. 
+.br
+\fImax_rows\fP Maximum number of rows retained in Sequential mode before the oldest row is discarded\&. 
 .RE
 .PP
 
@@ -684,6 +840,28 @@ Row highlighting is applied to indicate recent activity\&.
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_active_exports\fC [private]\fP"
+
+.PP
+Set of currently active export formats (subset of csv/json/pcap)\&. Formats are independent and may all be active simultaneously\&. 
+.SS "_export_actions\fC [private]\fP"
+
+.PP
+Checkable export/log actions keyed by identifier\&. 
+.SS "_initial_fill_done\fC [private]\fP"
+
+.SS "_logs_enabled\fC [private]\fP"
+
+.PP
+Whether runtime debug logging is currently enabled\&. 
+.SS "_mode_actions\fC [private]\fP"
+
+.SS "_mode_group\fC [private]\fP"
+
+.SS "_sniffer_actions\fC [private]\fP"
+
+.SS "_sniffer_group\fC [private]\fP"
+
 .SS "_ui_timer\fC [private]\fP"
 
 .PP
@@ -692,6 +870,8 @@ Periodic GUI refresh timer (decoupled from CAN traffic)
 
 .PP
 Dictionary mapping metric names to their corresponding QLabel widgets\&. 
+.SS "clear_btn"
+
 .SS "fixed"
 
 .PP
@@ -734,10 +914,12 @@ Status card widgets and value labels for 'STATE'\&.
 
 .PP
 Status card widgets and value labels for 'BUS UTIL %'\&. 
-.SS "mode_combo"
+.SS "pause_btn"
+
+.SS "paused"
 
 .PP
-Mode selection combo box\&. 
+When True, incoming frames are not added to the data tables\&. The Bus Stats dashboard and rate graphs keep updating live\&. 
 .SS "pdo_cob_edit"
 
 .PP
@@ -762,6 +944,8 @@ PDO send repeat check box\&.
 
 .PP
 PDO write repeat timer\&. 
+.SS "processor"
+
 .SS "proto_filter"
 
 .PP
@@ -846,6 +1030,10 @@ SDO write repeat timer\&.
 
 .PP
 Persistent settings store used for window geometry, dock layout, and column width restoration\&. 
+.SS "sniffer"
+
+.PP
+Backend worker references used for runtime export toggling\&. 
 .SS "splitter"
 
 .PP

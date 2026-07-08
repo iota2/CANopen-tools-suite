@@ -40,13 +40,13 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTableWidget, QTableWidgetItem, QDockWidget, QSplitter, QCheckBox,
     QPushButton, QLineEdit, QComboBox, QToolBar, QToolTip,
-    QLabel, QHeaderView, QFrame, QGridLayout, QProgressBar
+    QLabel, QHeaderView, QFrame, QGridLayout, QProgressBar, QScrollArea
 )
 from PySide6.QtCharts import (
     QChart, QChartView, QLineSeries, QValueAxis
 )
 from PySide6.QtGui import (
-    QAction, QPainter, QColor, QCursor,
+    QAction, QActionGroup, QPainter, QColor, QCursor,
     QFont, QPen, QIcon, QKeySequence
 )
 
@@ -520,7 +520,7 @@ class CANopenMainWindow(QMainWindow):
     ## remains visible before being cleared automatically.
     HEAT_CLEAR_MS = 600
 
-    def __init__(self, requested_frame:queue.Queue(), stats: bus_stats, fixed: bool):
+    def __init__(self, requested_frame:queue.Queue(), stats: bus_stats, fixed: bool, sniffer=None, processor=None):
         """! Construct the main CANopen Analyzer GUI window.
         @details
         Initializes the main window state, stores shared backend
@@ -547,6 +547,21 @@ class CANopenMainWindow(QMainWindow):
         ##  - True  -> Fixed (aggregated) display
         ##  - False -> Sequential (rolling) display
         self.fixed = fixed
+
+        ## When True, incoming frames are not added to the data tables.
+        ## The Bus Stats dashboard and rate graphs keep updating live.
+        self.paused = False
+
+        ## Backend worker references used for runtime export toggling.
+        self.sniffer = sniffer
+        self.processor = processor
+
+        ## Set of currently active export formats (subset of csv/json/pcap).
+        ## Formats are independent and may all be active simultaneously.
+        self._active_exports = set()
+
+        ## Whether runtime debug logging is currently enabled.
+        self._logs_enabled = analyzer_defs.logging_enabled
 
         ## Periodic GUI refresh timer (decoupled from CAN traffic)
         self._ui_timer = QTimer(self)
@@ -617,11 +632,173 @@ class CANopenMainWindow(QMainWindow):
         # Retrieve the QMainWindow menu bar instance
         menubar = self.menuBar()
 
-        # Placeholder menu for export-related actions
-        menubar.addMenu("Export")
+        # Export menu: runtime toggles mirroring the --export / --log launch
+        # options. Each action is checkable and reflects the current state.
+        export_menu = menubar.addMenu("Export")
 
-        # Placeholder menu for view/layout-related actions
-        menubar.addMenu("View")
+        ## Checkable export/log actions keyed by identifier.
+        self._export_actions = {}
+
+        for fmt, label in (
+            ("csv", "Export as CSV"),
+            ("json", "Export as JSON"),
+            ("pcap", "Export as PCAP"),
+        ):
+            act = QAction(label, self, checkable=True)
+            act.triggered.connect(lambda _checked, f=fmt: self._toggle_export(f))
+            export_menu.addAction(act)
+            self._export_actions[fmt] = act
+
+        export_menu.addSeparator()
+
+        log_act = QAction("Export debug logs", self, checkable=True)
+        log_act.setChecked(self._logs_enabled)
+        log_act.triggered.connect(lambda _checked: self._toggle_debug_logs())
+        export_menu.addAction(log_act)
+        self._export_actions["logs"] = log_act
+
+        # View menu: runtime display/decoding modes.
+        view_menu = menubar.addMenu("View")
+        self._build_view_menu(view_menu)
+
+    def _build_view_menu(self, view_menu):
+        """! Populate the View menu with runtime mode controls.
+        @details
+        Adds a "Mode" submenu (Fixed / Sequential display) and a "Sniffer"
+        submenu (professional decoding On / Off). Both are exclusive, checkable
+        groups reflecting the current state, replacing the former toolbar
+        combo box so all runtime modes live in the menu bar.
+        """
+
+        # ---- Mode submenu: Fixed / Sequential (mutually exclusive) ----
+        mode_menu = view_menu.addMenu("Mode")
+        self._mode_group = QActionGroup(self)
+        self._mode_group.setExclusive(True)
+
+        self._mode_actions = {}
+        for fixed_flag, label in ((True, "Fixed"), (False, "Sequential")):
+            act = QAction(label, self, checkable=True)
+            act.setChecked(self.fixed == fixed_flag)
+            act.triggered.connect(lambda _checked, f=fixed_flag: self._set_fixed_mode(f))
+            self._mode_group.addAction(act)
+            mode_menu.addAction(act)
+            self._mode_actions[fixed_flag] = act
+
+        # ---- Sniffer submenu: On / Off (mutually exclusive) ----
+        sniffer_menu = view_menu.addMenu("Sniffer")
+        self._sniffer_group = QActionGroup(self)
+        self._sniffer_group.setExclusive(True)
+
+        sniffer_on = bool(getattr(self.processor, "sniffer", False))
+        self._sniffer_actions = {}
+        for on_flag, label in ((True, "On"), (False, "Off")):
+            act = QAction(label, self, checkable=True)
+            act.setChecked(sniffer_on == on_flag)
+            act.triggered.connect(lambda _checked, o=on_flag: self._set_sniffer_mode(o))
+            self._sniffer_group.addAction(act)
+            sniffer_menu.addAction(act)
+            self._sniffer_actions[on_flag] = act
+
+    def _set_fixed_mode(self, fixed: bool):
+        """! Switch between Fixed and Sequential display mode at runtime.
+        @details
+        Updates the mode flag, clears the tables/graphs to avoid mixing
+        incompatible row representations, and syncs the menu check state.
+        @param fixed True for Fixed (aggregated) mode, False for Sequential.
+        """
+
+        if self.fixed == fixed:
+            return
+        self.fixed = fixed
+        self.clear_tables()
+        self._sync_mode_action_checks()
+        self.statusBar().showMessage(
+            f"Display mode: {'Fixed' if fixed else 'Sequential'}", 4000
+        )
+
+    def _set_sniffer_mode(self, enabled: bool):
+        """! Enable or disable professional sniffer decoding at runtime.
+        @details
+        The sniffer mode flag lives on the backend frame processor; flipping it
+        changes how subsequent frames are decoded.
+        @param enabled True to enable sniffer decoding, False to disable.
+        """
+
+        if self.processor is None:
+            self.statusBar().showMessage("Sniffer processor unavailable", 4000)
+            return
+        self.processor.sniffer = bool(enabled)
+        self._sync_mode_action_checks()
+        self.statusBar().showMessage(
+            f"Sniffer mode: {'on' if enabled else 'off'}", 4000
+        )
+
+    def _sync_mode_action_checks(self):
+        """! Update View-menu check marks to reflect current mode state."""
+
+        for fixed_flag, act in getattr(self, "_mode_actions", {}).items():
+            act.setChecked(self.fixed == fixed_flag)
+
+        sniffer_on = bool(getattr(self.processor, "sniffer", False))
+        for on_flag, act in getattr(self, "_sniffer_actions", {}).items():
+            act.setChecked(sniffer_on == on_flag)
+
+    def _toggle_export(self, fmt):
+        """! Enable or disable runtime frame export in the given format.
+        @details
+        Toggles the export format on both backend workers (raw sniffer and
+        processed-frame streams). Formats are independent: CSV, JSON, and
+        PCAP can all be active at once, and toggling one never affects the
+        others. Triggering an active format turns just that one off.
+        @param fmt Export format: "csv", "json", or "pcap".
+        """
+
+        if fmt in self._active_exports:
+            for worker in (self.sniffer, self.processor):
+                if worker is not None:
+                    worker.disable_export(fmt)
+            self._active_exports.discard(fmt)
+            self.statusBar().showMessage(f"{fmt.upper()} export disabled", 4000)
+        else:
+            for worker in (self.sniffer, self.processor):
+                if worker is not None:
+                    worker.enable_export(fmt)
+            self._active_exports.add(fmt)
+            self.statusBar().showMessage(f"{fmt.upper()} export enabled", 4000)
+
+        self._sync_export_action_checks()
+
+    def _toggle_debug_logs(self):
+        """! Enable or disable runtime debug (file) logging."""
+
+        if self._logs_enabled:
+            analyzer_defs.disable_logging()
+            self._logs_enabled = False
+            self.statusBar().showMessage("Debug logging disabled", 4000)
+        else:
+            analyzer_defs.enable_logging()
+            self._logs_enabled = True
+            self.statusBar().showMessage(
+                f"Debug logging enabled → {analyzer_defs.APP_NAME}.log", 4000
+            )
+
+        self._sync_export_action_checks()
+
+    def _sync_export_action_checks(self):
+        """! Update Export menu check marks to reflect current state.
+        @details
+        Each export format is checked independently based on whether it is
+        currently active; the debug-logs action reflects @ref _logs_enabled.
+        """
+
+        for fmt in ("csv", "json", "pcap"):
+            act = self._export_actions.get(fmt)
+            if act is not None:
+                act.setChecked(fmt in self._active_exports)
+
+        log_act = self._export_actions.get("logs")
+        if log_act is not None:
+            log_act.setChecked(self._logs_enabled)
 
 
     def _build_toolbar(self):
@@ -629,9 +806,10 @@ class CANopenMainWindow(QMainWindow):
         @details
         Creates the primary control toolbar that provides quick-access
         actions affecting data flow and presentation, including:
-        - Pause (future extension)
+        - Pause (freeze data tables)
         - Clear (reset all tables, graphs, and statistics)
-        - Mode selection (Fixed / Sequential)
+        Display mode (Fixed / Sequential) and Sniffer decoding live in the
+        "View" menu.
         @note
         This toolbar corresponds conceptually to interactive controls
         available in the CLI.
@@ -645,48 +823,47 @@ class CANopenMainWindow(QMainWindow):
         # Dock the toolbar at the top of the main window
         self.addToolBar(Qt.TopToolBarArea, tb)
 
-        # Pause action (currently a placeholder for future flow control)
-        tb.addAction(QAction("Pause", self))
+        # Pause/Resume button: freezes the data tables while keeping the
+        # Bus Stats dashboard and rate graphs updating live.
+        self.pause_btn = QPushButton("Pause")
+        self.pause_btn.clicked.connect(self.toggle_pause)
+        self._apply_pause_btn_style()
+        tb.addWidget(self.pause_btn)
 
-        # Clear action: resets tables, graphs, and backend statistics
-        clear_act = QAction("Clear", self)
-        clear_act.triggered.connect(self.clear_tables)
-        tb.addAction(clear_act)
-
-        # Visual separator between action buttons and mode selector
-        tb.addSeparator()
-
-        # Mode selector label
-        tb.addWidget(QLabel("Mode:"))
-
-        ## Mode selection combo box
-        self.mode_combo = QComboBox()
-        self.mode_combo.addItems(["Fixed", "Sequential"])
-
-        # Initialize combo box state from constructor argument
-        self.mode_combo.setCurrentText(
-            "Fixed" if self.fixed else "Sequential"
+        # Clear button: resets tables, graphs, and backend statistics
+        self.clear_btn = QPushButton("Clear")
+        self.clear_btn.clicked.connect(self.clear_tables)
+        self.clear_btn.setStyleSheet(
+            f"background-color: {analyzer_defs.GUI_CLEAR_BTN_COLOR};"
         )
+        tb.addWidget(self.clear_btn)
 
-        # React to mode changes by rebuilding displayed data
-        self.mode_combo.currentTextChanged.connect(self._on_mode_changed)
-        tb.addWidget(self.mode_combo)
-
-    def _on_mode_changed(self, text):
-        """! Handle display mode changes from the toolbar.
+    def toggle_pause(self):
+        """! Toggle pausing of the data-table display.
         @details
-        Switches between Fixed (aggregated-row) and Sequential
-        display modes. When the mode changes, all tables and
-        graphs are cleared to avoid mixing incompatible data
-        representations.
-        @param text Selected mode string from the combo box.
+        Flips the @ref paused flag and updates the button label. While
+        paused, @ref on_frame drops incoming frames so the Protocol, PDO,
+        and SDO tables stay frozen; the Bus Stats dashboard and rate
+        graphs continue updating from the backend statistics.
         """
 
-        # Update internal mode flag based on selected text
-        self.fixed = (text == "Fixed")
+        self.paused = not self.paused
+        self.pause_btn.setText("Resume" if self.paused else "Pause")
+        self._apply_pause_btn_style()
 
-        # Clear all tables and graphs to restart display in new mode
-        self.clear_tables()
+    def _apply_pause_btn_style(self):
+        """! Color the Pause button according to the current state.
+        @details
+        Yellow while the display is running (button reads "Pause") and
+        green while it is paused (button reads "Resume").
+        """
+
+        color = (
+            analyzer_defs.GUI_PAUSE_BTN_PAUSED_COLOR
+            if self.paused
+            else analyzer_defs.GUI_PAUSE_BTN_RUNNING_COLOR
+        )
+        self.pause_btn.setStyleSheet(f"background-color: {color};")
 
     def _build_left_dock(self):
         """! Build Remote Node Control dock (SDO / PDO send & receive).
@@ -698,8 +875,8 @@ class CANopenMainWindow(QMainWindow):
 
         dock = QDockWidget("Remote Node Control", self)
         dock.setObjectName("RemoteNodeControlDock")
-        dock.setMinimumWidth(280)
-        dock.setMaximumWidth(320)
+        dock.setMinimumWidth(analyzer_defs.GUI_LEFT_DOCK_MIN_WIDTH)
+        dock.setMaximumWidth(analyzer_defs.GUI_LEFT_DOCK_MAX_WIDTH)
 
         root = QWidget()
         layout = QVBoxLayout(root)
@@ -976,18 +1153,22 @@ class CANopenMainWindow(QMainWindow):
         # ------------------------------------------------------------------
         # Configure column sizing behavior for each table
         # ------------------------------------------------------------------
-        # One column per table is allowed to stretch to fill remaining space
+        # Content columns auto-fit their data; the named column(s) are
+        # user-resizable and fill the remaining width on first show.
+        # - Protocol: Time/COB-ID/Type/Raw/Count fit content, "Decoded" fills.
+        # - PDO/SDO : Time/COB-ID/Dir/Index/Sub/Raw/Count fit content,
+        #             "Name" and "Decoded" share the remaining width.
         self._configure_table_columns(
             self.proto_table,
-            stretch_column_name="Decoded"
+            resizable_column_names="Decoded"
         )
         self._configure_table_columns(
             self.pdo_table,
-            stretch_column_name="Name"
+            resizable_column_names=["Name", "Decoded"]
         )
         self._configure_table_columns(
             self.sdo_table,
-            stretch_column_name="Name"
+            resizable_column_names=["Name", "Decoded"]
         )
 
         # ------------------------------------------------------------------
@@ -1173,36 +1354,107 @@ class CANopenMainWindow(QMainWindow):
             # Hide rows that do not match filter criteria
             table.setRowHidden(row, not match)
 
-    def _configure_table_columns(self, table, stretch_column_name: str):
-        """! Configure column resize behavior using column names instead of indices.
-        @param table QTableWidget instance
-        @param stretch_column_name Header text of column to stretch (e.g. "Decoded")
+    def _configure_table_columns(self, table, resizable_column_names):
+        """! Auto-fit content columns and make the named columns user-resizable.
+        @details
+        Every column that is *not* named in @p resizable_column_names is sized to
+        fit the data it displays (ResizeToContents, updated automatically). The
+        named columns use the Interactive mode so the user can drag their borders
+        to change their width; they are additionally sized once on first show to
+        share the remaining table width (see @ref _distribute_fill_columns).
+        @param table QTableWidget instance.
+        @param resizable_column_names Header text (str) or iterable of header
+               texts of the column(s) the user may resize and which fill the
+               remaining width (e.g. "Decoded" for Protocol, ["Name", "Decoded"]
+               for PDO/SDO).
         """
 
+        # Normalize to a set of resizable/fill column names.
+        if isinstance(resizable_column_names, str):
+            resizable_names = {resizable_column_names}
+        else:
+            resizable_names = set(resizable_column_names)
+
         header = table.horizontalHeader()
-        col_count = table.columnCount()
+        header.setStretchLastSection(False)
 
-        # Build name → index map
-        name_to_col = {}
-        for col in range(col_count):
+        # Column indices the user may resize / that fill the remaining width.
+        fill_cols = []
+
+        for col in range(table.columnCount()):
             item = table.horizontalHeaderItem(col)
-            if item:
-                name_to_col[item.text()] = col
+            col_name = item.text() if item else None
 
-        # Default: content-sized columns
-        for col in range(col_count):
-            header.setSectionResizeMode(col, QHeaderView.ResizeToContents)
+            if col_name in resizable_names:
+                # User-resizable and initially sized to fill remaining width.
+                header.setSectionResizeMode(col, QHeaderView.Interactive)
+                fill_cols.append(col)
+            else:
+                # Auto-fit the column to the width of its displayed data.
+                header.setSectionResizeMode(col, QHeaderView.ResizeToContents)
 
-        # Stretch the requested column
-        stretch_col = name_to_col.get(stretch_column_name)
-        if stretch_col is not None:
-            header.setSectionResizeMode(stretch_col, QHeaderView.Stretch)
+        # Remember the fill columns for the one-time initial width distribution.
+        table.fill_columns = fill_cols
 
-        # Fix Count column (if present)
-        count_col = name_to_col.get("Count")
-        if count_col is not None:
-            header.setSectionResizeMode(count_col, QHeaderView.Fixed)
-            table.setColumnWidth(count_col, 70)
+    def _distribute_fill_columns(self, table):
+        """! Size the table's fill columns to share the remaining width.
+        @details
+        Computes the width left over after the auto-fitted (content) columns and
+        divides it equally among the table's user-resizable fill columns. Called
+        once when the window is first shown; afterwards the columns stay under
+        user control (they are in Interactive resize mode).
+        @param table QTableWidget whose fill columns should be sized.
+        """
+
+        fill_cols = getattr(table, "fill_columns", None)
+        if not fill_cols:
+            return
+
+        # Space occupied by the auto-fitted (non-fill) columns.
+        used = sum(
+            table.columnWidth(col)
+            for col in range(table.columnCount())
+            if col not in fill_cols
+        )
+
+        remaining = table.viewport().width() - used
+        share = remaining // len(fill_cols)
+        if share <= 0:
+            return
+
+        for col in fill_cols:
+            table.setColumnWidth(col, share)
+
+    def _apply_initial_column_fill(self):
+        """! Distribute leftover width across each table's fill columns once.
+        @details
+        Skips any table whose column widths were persisted in a previous session
+        so that user-chosen widths are preserved across launches.
+        """
+
+        for table, name in (
+            (self.proto_table, "protocol"),
+            (self.pdo_table, "pdo"),
+            (self.sdo_table, "sdo"),
+        ):
+            if self.settings.value(self._settings_key_for_table(name)):
+                continue
+            self._distribute_fill_columns(table)
+
+    def showEvent(self, event):
+        """! Perform one-time layout work that requires a realized window.
+        @details
+        The initial fill-column width distribution needs the final table widths,
+        which are only known once the (maximized) window has been shown. This is
+        done a single time; subsequent user resizing of columns is preserved.
+        @param event Qt show event.
+        """
+
+        super().showEvent(event)
+        if not getattr(self, "_initial_fill_done", False):
+            self._initial_fill_done = True
+            # Defer until geometry settles after the window is shown/maximized.
+            QTimer.singleShot(0, self._apply_initial_column_fill)
 
     def _settings_key_for_table(self, table_name: str) -> str:
         """! Generate a QSettings key for storing table column widths.
@@ -1280,8 +1532,8 @@ class CANopenMainWindow(QMainWindow):
         # Dock widget hosting all Bus Statistics UI elements.
         dock = QDockWidget("Bus Stats", self)
         dock.setObjectName("BusStatsDock")
-        dock.setMinimumWidth(360)
-        dock.setMaximumWidth(600)
+        dock.setMinimumWidth(analyzer_defs.GUI_RIGHT_DOCK_MIN_WIDTH)
+        dock.setMaximumWidth(analyzer_defs.GUI_RIGHT_DOCK_MAX_WIDTH)
 
         # Root container widget for the dock.
         root = QWidget()
@@ -1559,8 +1811,22 @@ class CANopenMainWindow(QMainWindow):
         # Spacer to push content to the top.
         root_layout.addStretch(1)
 
+        # ------------------------------------------------------------------
+        # Wrap the stats content in a scroll area.
+        # ------------------------------------------------------------------
+        # Without this, the tall stacked content (metric groups + three rate
+        # graphs) dictates the dock's minimum height and therefore the whole
+        # window's minimum height, which can exceed the screen and prevent the
+        # window from being maximized. A scroll area lets the dock shrink to the
+        # available window height and scroll its content instead.
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(root)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+
         # Finalize and attach dock to the main window.
-        dock.setWidget(root)
+        dock.setWidget(scroll)
         self.addDockWidget(Qt.RightDockWidgetArea, dock)
 
     def _restore_layout(self):
@@ -1583,8 +1849,9 @@ class CANopenMainWindow(QMainWindow):
         if self.settings.value("splitter"):
             self.splitter.restoreState(self.settings.value("splitter"))
 
-        # FORCE maximized state after layout restoration
-        self.showMaximized()
+        # Note: the window is shown maximized by display_gui() after the whole
+        # window (including the worker thread) is fully initialized. Calling
+        # showMaximized() here would be overridden by the later show() call.
 
     def _autosize_columns(self, table):
         """! Auto-size table columns and rows to fit contents.
@@ -1775,7 +2042,7 @@ class CANopenMainWindow(QMainWindow):
         # Display timestamp and content of the last observed error frame.
         if snap.error.last_time or snap.error.last_frame:
             self.bus_labels["Last Error Frame"].setText(
-                f"[{snap.error.last_time}] {snap.error.last_frame}"
+                f"[{snap.error.last_time}] {analyzer_defs.format_error_frame(snap.error.last_frame)}"
             )
         else:
             self.bus_labels["Last Error Frame"].setText("-")
@@ -1860,7 +2127,7 @@ class CANopenMainWindow(QMainWindow):
             }
         )
 
-    def update_table(self, table, fixed_map, key, values):
+    def update_table(self, table, fixed_map, key, values, max_rows=analyzer_defs.DATA_TABLE_HEIGHT):
         """! Insert or update a row in a data table.
         @details
         Updates the specified table based on the current display mode:
@@ -1872,6 +2139,8 @@ class CANopenMainWindow(QMainWindow):
         @param fixed_map Mapping of aggregation keys to table rows.
         @param key Unique key identifying a row in Fixed mode.
         @param values List of column values to insert/update.
+        @param max_rows Maximum number of rows retained in Sequential mode
+                        before the oldest row is discarded.
         """
 
         # Resolve Name column index dynamically
@@ -1947,7 +2216,7 @@ class CANopenMainWindow(QMainWindow):
             self._flash_row(table, row)
 
             # Enforce maximum table height by removing oldest rows
-            if row > analyzer_defs.DATA_TABLE_HEIGHT:
+            if row > max_rows:
                 table.removeRow(0)
 
     def clear_tables(self):
@@ -1996,6 +2265,12 @@ class CANopenMainWindow(QMainWindow):
         # Reset backend bus statistics counters
         self.stats.reset()
 
+        # Clearing also resumes the display.
+        self.paused = False
+        if hasattr(self, "pause_btn"):
+            self.pause_btn.setText("Pause")
+            self._apply_pause_btn_style()
+
     def on_frame(self, p):
         """! Handle a newly decoded CAN frame.
         @details
@@ -2005,6 +2280,10 @@ class CANopenMainWindow(QMainWindow):
         highlighting, and refreshes bus statistics.
         @param p Dictionary containing decoded CAN frame fields.
         """
+
+        # When paused, drop incoming frames so the data tables stay frozen.
+        if self.paused:
+            return
 
         try:
             # Extract common frame fields
@@ -2028,7 +2307,8 @@ class CANopenMainWindow(QMainWindow):
                         t, cob, dir, p.get("name"),
                         f"0x{p['index']:04X}", f"0x{p['sub']:02X}",
                         raw, dec, cnt
-                    ]
+                    ],
+                    max_rows=analyzer_defs.DATA_TABLE_HEIGHT
                 )
             elif ftype in (
                 analyzer_defs.frame_type.SDO_REQ,
@@ -2046,14 +2326,16 @@ class CANopenMainWindow(QMainWindow):
                         t, cob, dir, p.get("name"),
                         f"0x{p['index']:04X}", f"0x{p['sub']:02X}",
                         raw, dec, cnt
-                    ]
+                    ],
+                    max_rows=analyzer_defs.DATA_TABLE_HEIGHT
                 )
             else:
                 # Protocol or miscellaneous frame
                 key = (p["cob"], name)
                 self.update_table(
                     self.proto_table, self.fixed_proto, key,
-                    [t, cob, name, raw, dec, cnt]
+                    [t, cob, name, raw, dec, cnt],
+                    max_rows=analyzer_defs.PROTOCOL_TABLE_HEIGHT
                 )
         except Exception as e:
             # Ignore interruptions during shutdown
@@ -2091,7 +2373,7 @@ class CANopenMainWindow(QMainWindow):
         super().closeEvent(event)
 
 
-def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False):
+def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False, sniffer=None, processor=None):
     """! Launch the CANopen Analyzer GUI application.
     @details
     Creates the Qt application instance, initializes the main
@@ -2113,7 +2395,7 @@ def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False):
     # Qt application and main window initialization
     # ------------------------------------------------------------------
     app = QApplication(sys.argv)
-    win = CANopenMainWindow(requested_frame, stats, fixed)
+    win = CANopenMainWindow(requested_frame, stats, fixed, sniffer=sniffer, processor=processor)
 
     # ------------------------------------------------------------------
     # Worker thread setup
@@ -2147,6 +2429,6 @@ def display_gui(stats, processed_frame=None, requested_frame=None, fixed=False):
 
     signal.signal(signal.SIGINT, handle_sigint)
 
-    # Show the main window and enter the Qt event loop
-    win.show()
+    # Show the main window maximized and enter the Qt event loop
+    win.showMaximized()
     sys.exit(app.exec())

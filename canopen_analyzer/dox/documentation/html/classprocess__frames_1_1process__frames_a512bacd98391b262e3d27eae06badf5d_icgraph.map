@@ -1,0 +1,8 @@
+<map id="_decode_block_data" name="_decode_block_data">
+<area shape="rect" id="node1" title="Decode the reassembled buffer of a block transfer." alt="" coords="563,46,717,73"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="329,5,515,47"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="339,71,505,112"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,17,281,43"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,46,48,73"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,71,281,98"/>
+</map>

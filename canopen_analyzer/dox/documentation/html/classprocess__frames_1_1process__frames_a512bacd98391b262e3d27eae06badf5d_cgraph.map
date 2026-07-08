@@ -1,0 +1,4 @@
+<map id="_decode_block_data" name="_decode_block_data">
+<area shape="rect" id="node1" title="Decode the reassembled buffer of a block transfer." alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="208,5,365,32"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="_handle_block_download_end_req" name="_handle_block_download_end_req">
+<area shape="rect" id="node1" title="Handle an SDO end block download request and publish the value." alt="" coords="5,23,191,65"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="239,5,393,32"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="263,56,369,83"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="449,5,606,32"/>
+<area shape="rect" id="node5" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="443,56,611,83"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="441,107,613,133"/>
+<area shape="rect" id="node7" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="676,70,829,111"/>
+<area shape="rect" id="node8" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="661,136,844,163"/>
+<area shape="rect" id="node9" href="$classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="892,129,1083,170"/>
+<area shape="rect" id="node10" href="$classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1133,111,1297,137"/>
+<area shape="rect" id="node11" href="$classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1131,161,1300,188"/>
+<area shape="rect" id="node12" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1348,154,1512,195"/>
+</map>

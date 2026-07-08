@@ -1,4 +1,4 @@
-.TH "display_tui" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_tui" 3 "Tue Jul 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -16,7 +16,7 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 
 .in +1c
 .ti -1c
-.RI "def \fBrun_textual\fP (cls, \fBstats\fP, \fBprocessed_frame\fP=None, \fBrequested_frame\fP=None, \fBfixed\fP=False)"
+.RI "def \fBrun_textual\fP (cls, \fBstats\fP, \fBprocessed_frame\fP=None, \fBrequested_frame\fP=None, \fBfixed\fP=False, \fBsniffer\fP=None, \fBprocessor\fP=None)"
 .br
 .RI "Start the Textual-based CANopen TUI\&. "
 .in -1c
@@ -78,6 +78,9 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .RI "\fBpdo_table\fP"
 .br
 .RI "TUI Element for PDO data table\&. "
+.ti -1c
+.RI "\fBprocessor\fP"
+.br
 .ti -1c
 .RI "\fBproto_display\fP"
 .br
@@ -158,6 +161,9 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .br
 .RI "TUI Element for SDO data table\&. "
 .ti -1c
+.RI "\fBsniffer\fP"
+.br
+.ti -1c
 .RI "\fBsub_title\fP"
 .br
 .RI "Sub title to display on TUI console\&. "
@@ -194,9 +200,17 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 
 .in +1c
 .ti -1c
+.RI "\fB_active_exports\fP"
+.br
+.RI "Set of currently active export formats (subset of csv/json/pcap)\&. "
+.ti -1c
 .RI "\fB_last_bus_stats\fP"
 .br
 .RI "Content for the Graph column to render\&. "
+.ti -1c
+.RI "\fB_logs_enabled\fP"
+.br
+.RI "Whether runtime debug logging is currently enabled\&. "
 .ti -1c
 .RI "\fB_repeat_tasks\fP"
 .br
@@ -204,7 +218,7 @@ This class provides a blocking \fCrun_textual(stats, processed_frame, fixed)\fP 
 .in -1c
 .SH "Member Function Documentation"
 .PP 
-.SS "def run_textual ( cls,  stats,  processed_frame = \fCNone\fP,  requested_frame = \fCNone\fP,  fixed = \fCFalse\fP)"
+.SS "def run_textual ( cls,  stats,  processed_frame = \fCNone\fP,  requested_frame = \fCNone\fP,  fixed = \fCFalse\fP,  sniffer = \fCNone\fP,  processor = \fCNone\fP)"
 
 .PP
 Start the Textual-based CANopen TUI\&. This method initializes and launches the Textual application that renders all live CANopen monitoring tables (Protocol, PDO, SDO, Bus Stats)\&. It sets up shared state used by the UI update loop, including statistics, frame queues, and the fixed/scrolling display mode\&. 
@@ -218,6 +232,10 @@ Start the Textual-based CANopen TUI\&. This method initializes and launches the 
 \fIrequested_frame\fP Queue delivering CANopen frames to the background sniffer thread\&. 
 .br
 \fIfixed\fP When True, tables operate in fixed-index mode; otherwise they show scrolling entries\&. 
+.br
+\fIsniffer\fP Backend sniffer worker, used for runtime export toggling\&. 
+.br
+\fIprocessor\fP Backend frame processor worker, used for runtime export toggling\&. 
 .RE
 .PP
 \fBReturns\fP
@@ -228,6 +246,10 @@ None
 
 .SH "Member Data Documentation"
 .PP 
+.SS "_active_exports\fC [private]\fP"
+
+.PP
+Set of currently active export formats (subset of csv/json/pcap)\&. Formats are independent and may all be active simultaneously\&. 
 .SS "_last_bus_stats\fC [private]\fP"
 
 .PP
@@ -244,6 +266,10 @@ Primary path: add row using native renders\&.
 Fallback path: coerce all fields to strings to avoid DataTable rendering failures\&.
 .PP
 Suppress any remaining rendering errors to keep the TUI responsive\&. 
+.SS "_logs_enabled\fC [private]\fP"
+
+.PP
+Whether runtime debug logging is currently enabled\&. 
 .SS "_repeat_tasks\fC [private]\fP"
 
 .PP
@@ -310,6 +336,8 @@ TUI Element for PDO data table\&.
 
 .PP
 Private instance for pointing to incoming processed frames\&. 
+.SS "processor"
+
 .SS "proto_display"
 
 .PP
@@ -396,6 +424,8 @@ User input text box of entering SDO send data\&.
 
 .PP
 TUI Element for SDO data table\&. 
+.SS "sniffer"
+
 .SS "stats = None\fC [static]\fP"
 
 .PP

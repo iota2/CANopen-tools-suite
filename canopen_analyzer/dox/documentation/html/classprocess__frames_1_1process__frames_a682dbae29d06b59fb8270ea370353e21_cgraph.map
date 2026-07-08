@@ -1,0 +1,22 @@
+<map id="_process_sdo_req_sniffer" name="_process_sdo_req_sniffer">
+<area shape="rect" id="node1" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="5,251,191,278"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="242,492,427,533"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="503,317,609,343"/>
+<area shape="rect" id="node14" href="$classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="242,375,427,416"/>
+<area shape="rect" id="node15" href="$classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="485,193,627,219"/>
+<area shape="rect" id="node16" href="$classprocess__frames_1_1process__frames.html#aa091010e38f1ac52d87c494ad2536844" title="Accumulate one block&#45;download data segment (client → server)." alt="" coords="242,244,427,285"/>
+<area shape="rect" id="node17" href="$classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="251,309,418,351"/>
+<area shape="rect" id="node18" href="$classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="239,142,431,169"/>
+<area shape="rect" id="node19" href="$classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324" title="Derive the (client_id, server_id) pair identifying an SDO channel." alt="" coords="499,142,613,169"/>
+<area shape="rect" id="node20" href="$classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="241,41,428,67"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="479,433,633,459"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="689,295,846,322"/>
+<area shape="rect" id="node6" href="$namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="683,143,851,170"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="681,42,853,69"/>
+<area shape="rect" id="node8" href="$namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="916,5,1069,47"/>
+<area shape="rect" id="node9" href="$classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="901,71,1084,98"/>
+<area shape="rect" id="node10" href="$classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1132,64,1323,105"/>
+<area shape="rect" id="node11" href="$classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1373,46,1537,73"/>
+<area shape="rect" id="node12" href="$classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1371,97,1540,123"/>
+<area shape="rect" id="node13" href="$classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1588,89,1752,131"/>
+</map>

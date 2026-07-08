@@ -1,4 +1,12 @@
 <map id="_resolve_od_entry" name="_resolve_od_entry">
-<area shape="rect" id="node1" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="96,5,237,32"/>
-<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+<area shape="rect" id="node1" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="569,172,711,198"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,70,518,111"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,146,281,173"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,201,48,228"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,135,509,176"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,252,521,278"/>
+<area shape="rect" id="node8" href="$classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,303,503,344"/>
+<area shape="rect" id="node9" href="$classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,201,519,228"/>
+<area shape="rect" id="node10" href="$classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,369,519,396"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,268,281,294"/>
 </map>

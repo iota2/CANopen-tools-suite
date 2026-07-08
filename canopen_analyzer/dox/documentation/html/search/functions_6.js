@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['get_5fframe_5fcount_402',['get_frame_count',['../classbus__stats_1_1bus__stats.html#a9480e29b9457981a85869e59132b8e7c',1,'bus_stats::bus_stats']]],
-  ['get_5fsnapshot_403',['get_snapshot',['../classbus__stats_1_1bus__stats.html#aec57c1b7a69ec3efeb622f269d4484f0',1,'bus_stats::bus_stats']]],
-  ['get_5ftotal_5fframes_404',['get_total_frames',['../classbus__stats_1_1bus__stats.html#a4204bbed3351741f6e167302b564c36c',1,'bus_stats::bus_stats']]]
+  ['format_5ferror_5fframe_504',['format_error_frame',['../namespaceanalyzer__defs.html#a743c58d49ff92d884beb65fd561cdc41',1,'analyzer_defs']]]
 ];

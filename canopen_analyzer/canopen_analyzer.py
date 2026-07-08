@@ -87,8 +87,9 @@ def main():
     p.add_argument("--mode", default="cli", choices=["cli", "tui", "gui"], help="enable cli or gui mode (default: cli)")
     p.add_argument("--bitrate", type=int, default=analyzer_defs.DEFAULT_CAN_BIT_RATE, help="CAN bitrate (default: {analyzer_defs.DEFAULT_CAN_BIT_RATE})")
     p.add_argument("--eds", help="EDS file path (optional)")
-    p.add_argument("--fixed", action="store_true", help="update rows instead of scrolling")
-    p.add_argument("--export", default="csv", choices=["csv", "json", "pcap"], help="export received frames")
+    p.add_argument("--fixed", action=argparse.BooleanOptionalAction, default=True, help="update rows in place instead of scrolling (default: on; use --no-fixed for sequential)")
+    p.add_argument("--export", default=None, choices=["csv", "json", "pcap"], help="export received frames (off by default; can also be toggled at runtime)")
+    p.add_argument("--sniffer", action=argparse.BooleanOptionalAction, default=True, help="professional (Wireshark-like) sniffer mode for CANopen decoding (default: on; use --no-sniffer to disable)")
     p.add_argument("--log", action="store_true", help="enable logging")
     args = p.parse_args()
 
@@ -97,10 +98,16 @@ def main():
         analyzer_defs.enable_logging()
 
     ## Parse and load EDS mapping for object dictionary and PDOs.
+    ## @details
+    ## The EDS file is optional. When it is omitted, an empty parser is created
+    ## so the analyzer still starts; object names then fall back to an
+    ## "index.sub" representation during decoding.
+    eds_map = eds_parser(args.eds)
     if args.eds:
-        eds_map = eds_parser(args.eds)
         analyzer_defs.log.debug(f"Decoded PDO map: {eds_map.pdo_map}")
         analyzer_defs.log.debug(f"Decoded NAME map: {eds_map.name_map}")
+    else:
+        analyzer_defs.log.info("No EDS file provided — object names will be shown as index.sub")
 
     ## Check if user passed the desired bitrate else use default.
     if args.bitrate:
@@ -134,7 +141,10 @@ def main():
                                 raw_frame=raw_frame,
                                 processed_frame=processed_frame,
                                 eds_map=eds_map,
-                                export=args.export)
+                                export=args.export,
+                                sniffer=args.sniffer)
+
+    analyzer_defs.log.info(f"Sniffer mode : {'enabled' if args.sniffer else 'disabled'}")
 
     ## Start background threads.
     sniffer.start()
@@ -143,17 +153,17 @@ def main():
     # create chosen display thread
     display = None
     if args.mode == "cli":
-        display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+        display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
     elif args.mode == "tui":
         try:
             analyzer_defs.log.info("Loading TUI interface")
-            display_tui.run_textual(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+            display_tui.run_textual(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
         except Exception as e:
             analyzer_defs.log.exception("Failed to start Textual TUI: %s", e)
             # fallback to legacy CLI thread if textual unavailable
-            display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+            display = display_cli(stats=stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
     elif args.mode == "gui":
-        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed)
+        display_gui(stats, processed_frame=processed_frame, requested_frame=requested_frame, fixed=args.fixed, sniffer=sniffer, processor=processor)
 
     if display:
         display.start()

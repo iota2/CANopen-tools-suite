@@ -87,6 +87,7 @@ $(document).ready(function(){initNavTree('classprocess__frames_1_1process__frame
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classprocess__frames_1_1process__frames-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -114,14 +115,23 @@ Collaboration diagram for process_frames:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5bc12514c98edca8798862652dd6bd4d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a5bc12514c98edca8798862652dd6bd4d">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a>, <a class="el" href="classeds__parser_1_1eds__parser.html">eds_parser</a> <a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, str|None <a class="el" href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=None)</td></tr>
-<tr class="memdesc:a5bc12514c98edca8798862652dd6bd4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classprocess__frames_1_1process__frames.html#a5bc12514c98edca8798862652dd6bd4d">More...</a><br /></td></tr>
-<tr class="separator:a5bc12514c98edca8798862652dd6bd4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42e53da926122a991812d8cd71622f39"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a42e53da926122a991812d8cd71622f39">__init__</a> (self, <a class="el" href="classbus__stats_1_1bus__stats.html">bus_stats</a> <a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>, queue.Queue <a class="el" href="classprocess__frames_1_1process__frames.html#a5e5acd6f2030a04dbe189a2b21363c3a">processed_frame</a>, <a class="el" href="classeds__parser_1_1eds__parser.html">eds_parser</a> <a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a>, str|None export=None, bool <a class="el" href="classprocess__frames_1_1process__frames.html#a3ec93ed409e2a0f6db9121e39eb302ba">sniffer</a>=False)</td></tr>
+<tr class="memdesc:a42e53da926122a991812d8cd71622f39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the processor thread.  <a href="classprocess__frames_1_1process__frames.html#a42e53da926122a991812d8cd71622f39">More...</a><br /></td></tr>
+<tr class="separator:a42e53da926122a991812d8cd71622f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73ce500be40d2288b802474a3f084086"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a73ce500be40d2288b802474a3f084086">active_exports</a> (self)</td></tr>
+<tr class="memdesc:a73ce500be40d2288b802474a3f084086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the set of currently active export formats (thread-safe).  <a href="classprocess__frames_1_1process__frames.html#a73ce500be40d2288b802474a3f084086">More...</a><br /></td></tr>
+<tr class="separator:a73ce500be40d2288b802474a3f084086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a141fd9c4a0063a14296bf9bbf75fdc58"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58">decode_by_datatype</a> (self, bytes raw, dict|None entry)</td></tr>
 <tr class="memdesc:a141fd9c4a0063a14296bf9bbf75fdc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode raw frame to respective CANopen DataType.  <a href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58">More...</a><br /></td></tr>
 <tr class="separator:a141fd9c4a0063a14296bf9bbf75fdc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75a5cc6d8773648c9ac608e779c17430"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430">disable_export</a> (self, str fmt=None)</td></tr>
+<tr class="memdesc:a75a5cc6d8773648c9ac608e779c17430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable processed-frame export at runtime (thread-safe).  <a href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430">More...</a><br /></td></tr>
+<tr class="separator:a75a5cc6d8773648c9ac608e779c17430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af48869479f7a195cc0c3fff08cd8df96"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96">enable_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:af48869479f7a195cc0c3fff08cd8df96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable processed-frame export in the given format at runtime.  <a href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96">More...</a><br /></td></tr>
+<tr class="separator:af48869479f7a195cc0c3fff08cd8df96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8b1ed89c91c825feda35358296d65f4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4">export_processed_frame</a> (self, dict frame)</td></tr>
-<tr class="memdesc:aa8b1ed89c91c825feda35358296d65f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed CSV file.  <a href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4">More...</a><br /></td></tr>
+<tr class="memdesc:aa8b1ed89c91c825feda35358296d65f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a processed frame row to the processed export file.  <a href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4">More...</a><br /></td></tr>
 <tr class="separator:aa8b1ed89c91c825feda35358296d65f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad22709b2e67308af35f55680d5a026e0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0">run</a> (self)</td></tr>
 <tr class="memdesc:ad22709b2e67308af35f55680d5a026e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main processing loop.  <a href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0">More...</a><br /></td></tr>
@@ -138,21 +148,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a087b69c6d3cd89b6872e63605be5e05c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">eds_map</a></td></tr>
 <tr class="memdesc:a087b69c6d3cd89b6872e63605be5e05c"><td class="mdescLeft">&#160;</td><td class="mdescRight">EDS map/parser used to resolve (index, subindex) -&gt; name strings.  <a href="classprocess__frames_1_1process__frames.html#a087b69c6d3cd89b6872e63605be5e05c">More...</a><br /></td></tr>
 <tr class="separator:a087b69c6d3cd89b6872e63605be5e05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a></td></tr>
-<tr class="memdesc:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating whether processed export is enabled : None | csv | json.  <a href="classprocess__frames_1_1process__frames.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">More...</a><br /></td></tr>
-<tr class="separator:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdcb13a7e8e9ec20376d877dbae55960"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#afdcb13a7e8e9ec20376d877dbae55960">export_file</a></td></tr>
-<tr class="memdesc:afdcb13a7e8e9ec20376d877dbae55960"><td class="mdescLeft">&#160;</td><td class="mdescRight">File object for processed export (or None).  <a href="classprocess__frames_1_1process__frames.html#afdcb13a7e8e9ec20376d877dbae55960">More...</a><br /></td></tr>
-<tr class="separator:afdcb13a7e8e9ec20376d877dbae55960"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a809f8a0a28e66d245892a14fef6c923b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a809f8a0a28e66d245892a14fef6c923b">export_filename</a></td></tr>
-<tr class="memdesc:a809f8a0a28e66d245892a14fef6c923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output filename for processed export file or None.  <a href="classprocess__frames_1_1process__frames.html#a809f8a0a28e66d245892a14fef6c923b">More...</a><br /></td></tr>
-<tr class="separator:a809f8a0a28e66d245892a14fef6c923b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7a93db5093bfacf3425a3456acfa568"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ab7a93db5093bfacf3425a3456acfa568">export_serial_number</a></td></tr>
-<tr class="memdesc:ab7a93db5093bfacf3425a3456acfa568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serial number for exported rows (increments each write).  <a href="classprocess__frames_1_1process__frames.html#ab7a93db5093bfacf3425a3456acfa568">More...</a><br /></td></tr>
-<tr class="separator:ab7a93db5093bfacf3425a3456acfa568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a696cdde4828759bce70e9bf8f7a4ba74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a696cdde4828759bce70e9bf8f7a4ba74">export_writer</a></td></tr>
-<tr class="memdesc:a696cdde4828759bce70e9bf8f7a4ba74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writer instance for processed rows (or None).  <a href="classprocess__frames_1_1process__frames.html#a696cdde4828759bce70e9bf8f7a4ba74">More...</a><br /></td></tr>
-<tr class="separator:a696cdde4828759bce70e9bf8f7a4ba74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ab09a63eb35b270b5cdbead1983ebdccb">log</a></td></tr>
 <tr class="memdesc:ab09a63eb35b270b5cdbead1983ebdccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger instance scoped to this processor.  <a href="classprocess__frames_1_1process__frames.html#ab09a63eb35b270b5cdbead1983ebdccb">More...</a><br /></td></tr>
 <tr class="separator:ab09a63eb35b270b5cdbead1983ebdccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,37 +157,115 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a></td></tr>
 <tr class="memdesc:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue from which raw frame dictionaries are consumed.  <a href="classprocess__frames_1_1process__frames.html#a796de4da9ed5fad20bff2ba1ea3b7051">More...</a><br /></td></tr>
 <tr class="separator:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ec93ed409e2a0f6db9121e39eb302ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a3ec93ed409e2a0f6db9121e39eb302ba">sniffer</a></td></tr>
+<tr class="memdesc:a3ec93ed409e2a0f6db9121e39eb302ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag enabling professional (Wireshark-like) sniffer decoding.  <a href="classprocess__frames_1_1process__frames.html#a3ec93ed409e2a0f6db9121e39eb302ba">More...</a><br /></td></tr>
+<tr class="separator:a3ec93ed409e2a0f6db9121e39eb302ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa57ebe01934de43865125819a3c4af74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">stats</a></td></tr>
 <tr class="memdesc:aa57ebe01934de43865125819a3c4af74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to the <a class="el" href="namespacebus__stats.html">bus_stats</a> instance used for recording metrics.  <a href="classprocess__frames_1_1process__frames.html#aa57ebe01934de43865125819a3c4af74">More...</a><br /></td></tr>
 <tr class="separator:aa57ebe01934de43865125819a3c4af74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:ac781972b285a457e944404235cf8a302"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302">_close_all_exports</a> (self)</td></tr>
+<tr class="memdesc:ac781972b285a457e944404235cf8a302"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close every active processed-frame export.  <a href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302">More...</a><br /></td></tr>
+<tr class="separator:ac781972b285a457e944404235cf8a302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53aa31047ff9efe40f523e94278cf9dd"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd">_close_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:a53aa31047ff9efe40f523e94278cf9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush and close a single processed-frame export format.  <a href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd">More...</a><br /></td></tr>
+<tr class="separator:a53aa31047ff9efe40f523e94278cf9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a512bacd98391b262e3d27eae06badf5d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d">_decode_block_data</a> (self, ctx)</td></tr>
+<tr class="memdesc:a512bacd98391b262e3d27eae06badf5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode the reassembled buffer of a block transfer.  <a href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d">More...</a><br /></td></tr>
+<tr class="separator:a512bacd98391b262e3d27eae06badf5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4c7c5c72980919f46b39367f338d684"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684">_export_processed_frame_locked</a> (self, dict frame)</td></tr>
+<tr class="memdesc:aa4c7c5c72980919f46b39367f338d684"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a processed frame to every active export format.  <a href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684">More...</a><br /></td></tr>
+<tr class="separator:aa4c7c5c72980919f46b39367f338d684"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f7d8cabdec46a7d165b3b727d9c5d51"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51">_handle_block_download_end_req</a> (self, cob, raw, is_tx, ftype, key, ctx)</td></tr>
+<tr class="memdesc:a0f7d8cabdec46a7d165b3b727d9c5d51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an SDO end block download request and publish the value.  <a href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51">More...</a><br /></td></tr>
+<tr class="separator:a0f7d8cabdec46a7d165b3b727d9c5d51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b99c40897c06464cba24303ba5d6020"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020">_handle_block_download_init_req</a> (self, cob, raw, is_tx, ftype, key)</td></tr>
+<tr class="memdesc:a6b99c40897c06464cba24303ba5d6020"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an SDO initiate block download request (client → server).  <a href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020">More...</a><br /></td></tr>
+<tr class="separator:a6b99c40897c06464cba24303ba5d6020"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa091010e38f1ac52d87c494ad2536844"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#aa091010e38f1ac52d87c494ad2536844">_handle_block_download_segment</a> (self, raw, ctx)</td></tr>
+<tr class="memdesc:aa091010e38f1ac52d87c494ad2536844"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate one block-download data segment (client → server).  <a href="classprocess__frames_1_1process__frames.html#aa091010e38f1ac52d87c494ad2536844">More...</a><br /></td></tr>
+<tr class="separator:aa091010e38f1ac52d87c494ad2536844"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b78ea4930b3ab5171664b106c861e02"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02">_handle_block_upload_client_req</a> (self, cob, raw, is_tx, ftype, key, ctx)</td></tr>
+<tr class="memdesc:a1b78ea4930b3ab5171664b106c861e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle client → server control frames of an SDO block upload.  <a href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02">More...</a><br /></td></tr>
+<tr class="separator:a1b78ea4930b3ab5171664b106c861e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9d91cc775307211ce4ff3e6fe2f9231"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ac9d91cc775307211ce4ff3e6fe2f9231">_handle_block_upload_segment_res</a> (self, raw, ctx)</td></tr>
+<tr class="memdesc:ac9d91cc775307211ce4ff3e6fe2f9231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accumulate one block-upload data segment (server → client).  <a href="classprocess__frames_1_1process__frames.html#ac9d91cc775307211ce4ff3e6fe2f9231">More...</a><br /></td></tr>
+<tr class="separator:ac9d91cc775307211ce4ff3e6fe2f9231"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f3da67b87864858085828ec8350dbcb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb">_handle_block_upload_server_res</a> (self, cob, raw, is_tx, ftype, key, ctx)</td></tr>
+<tr class="memdesc:a7f3da67b87864858085828ec8350dbcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle server → client block-upload control frames (scs == 6).  <a href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb">More...</a><br /></td></tr>
+<tr class="separator:a7f3da67b87864858085828ec8350dbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71b3dd61b3b53d01ba2195e47a4b9bfe"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe">_handle_sdo_abort_sniffer</a> (self, cob, raw, is_tx, ftype)</td></tr>
+<tr class="memdesc:a71b3dd61b3b53d01ba2195e47a4b9bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emit an SDO abort frame and drop the tracked transfer.  <a href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe">More...</a><br /></td></tr>
+<tr class="separator:a71b3dd61b3b53d01ba2195e47a4b9bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a478780124bdb08e663b2580408327f22"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22">_handle_sdo_upload_init_res</a> (self, cob, raw, is_tx, ftype, key, index, sub)</td></tr>
+<tr class="memdesc:a478780124bdb08e663b2580408327f22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an SDO initiate upload response in sniffer mode.  <a href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22">More...</a><br /></td></tr>
+<tr class="separator:a478780124bdb08e663b2580408327f22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26dacf9418665316075770341ba3875e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e">_handle_sdo_upload_segment_res</a> (self, cob, raw, is_tx, ftype, key)</td></tr>
+<tr class="memdesc:a26dacf9418665316075770341ba3875e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an SDO upload segment response in sniffer mode.  <a href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e">More...</a><br /></td></tr>
+<tr class="separator:a26dacf9418665316075770341ba3875e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c7031035c06abd316cf1ae48aee76a7"><td class="memItemLeft" align="right" valign="top">dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7">_json_safe_processed_frame</a> (self, dict frame)</td></tr>
 <tr class="memdesc:a4c7031035c06abd316cf1ae48aee76a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a processed frame for saving to JSON.  <a href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7">More...</a><br /></td></tr>
 <tr class="separator:a4c7031035c06abd316cf1ae48aee76a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af266880872dcd06b97a0ec03841f6ac0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0">_open_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:af266880872dcd06b97a0ec03841f6ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a processed-frame export for <code>fmt</code> and store its record.  <a href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0">More...</a><br /></td></tr>
+<tr class="separator:af266880872dcd06b97a0ec03841f6ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add02f92aeee85772670f7e5d94f2cd3e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e">_process_sdo_req_legacy</a> (self, cob, raw, is_tx, node_id, ftype)</td></tr>
+<tr class="memdesc:add02f92aeee85772670f7e5d94f2cd3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Legacy SDO request handling (per-node, unchanged behavior).  <a href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e">More...</a><br /></td></tr>
+<tr class="separator:add02f92aeee85772670f7e5d94f2cd3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a682dbae29d06b59fb8270ea370353e21"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21">_process_sdo_req_sniffer</a> (self, cob, raw, is_tx, node_id, ftype)</td></tr>
+<tr class="memdesc:a682dbae29d06b59fb8270ea370353e21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sniffer-mode SDO request handling (client → server).  <a href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21">More...</a><br /></td></tr>
+<tr class="separator:a682dbae29d06b59fb8270ea370353e21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61723fdf6de8c2ff963efcb7ab2b4aac"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac">_process_sdo_res_legacy</a> (self, cob, raw, is_tx, node_id, ftype)</td></tr>
+<tr class="memdesc:a61723fdf6de8c2ff963efcb7ab2b4aac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Legacy SDO response handling (per-node, unchanged behavior).  <a href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac">More...</a><br /></td></tr>
+<tr class="separator:a61723fdf6de8c2ff963efcb7ab2b4aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06b48592c3799f076d5b8c98187145c9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9">_process_sdo_res_sniffer</a> (self, cob, raw, is_tx, node_id, ftype)</td></tr>
+<tr class="memdesc:a06b48592c3799f076d5b8c98187145c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sniffer-mode SDO response handling (server → client).  <a href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9">More...</a><br /></td></tr>
+<tr class="separator:a06b48592c3799f076d5b8c98187145c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95fcb277a3c59a659c199f0f9c442ee3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3">_publish_sdo</a> (self, cob, raw, is_tx, ftype, index, sub, name, data_type, access_type, decoded)</td></tr>
+<tr class="memdesc:a95fcb277a3c59a659c199f0f9c442ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper to emit a decoded SDO frame in sniffer mode.  <a href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3">More...</a><br /></td></tr>
+<tr class="separator:a95fcb277a3c59a659c199f0f9c442ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af33692a2b313d5adc0e6eb3bc1ba129d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d">_resolve_od_entry</a> (self, int index, int sub)</td></tr>
 <tr class="memdesc:af33692a2b313d5adc0e6eb3bc1ba129d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolve Object Dictionary metadata for (index, sub).  <a href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d">More...</a><br /></td></tr>
 <tr class="separator:af33692a2b313d5adc0e6eb3bc1ba129d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c327b400fe52a2eebc76e7c41123b2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a">_sdo_has_index</a> (self, int cs)</td></tr>
 <tr class="memdesc:a2c327b400fe52a2eebc76e7c41123b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return True if SDO command specifier carries index/subindex.  <a href="classprocess__frames_1_1process__frames.html#a2c327b400fe52a2eebc76e7c41123b2a">More...</a><br /></td></tr>
 <tr class="separator:a2c327b400fe52a2eebc76e7c41123b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d6ea6d2a4fa3055cdb084ceb31edb7d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d">_write_csv_processed</a> (self, dict rec, dict frame)</td></tr>
+<tr class="memdesc:a8d6ea6d2a4fa3055cdb084ceb31edb7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one processed-frame row to the CSV export record.  <a href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d">More...</a><br /></td></tr>
+<tr class="separator:a8d6ea6d2a4fa3055cdb084ceb31edb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3966d2b76109ebfdbf6750594dc1dbbb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb">_write_json_processed</a> (self, dict rec, dict frame)</td></tr>
+<tr class="memdesc:a3966d2b76109ebfdbf6750594dc1dbbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one processed-frame object to the JSON export record.  <a href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb">More...</a><br /></td></tr>
+<tr class="separator:a3966d2b76109ebfdbf6750594dc1dbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:a42db0cf76231a67cbb9faf7ffca6c324"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324">_sdo_pair_key</a> (int cob)</td></tr>
+<tr class="memdesc:a42db0cf76231a67cbb9faf7ffca6c324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Derive the (client_id, server_id) pair identifying an SDO channel.  <a href="classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324">More...</a><br /></td></tr>
+<tr class="separator:a42db0cf76231a67cbb9faf7ffca6c324"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:af086836ec2a067957f99fe7b6edf8fc5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#af086836ec2a067957f99fe7b6edf8fc5">_json_first</a></td></tr>
-<tr class="memdesc:af086836ec2a067957f99fe7b6edf8fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifier for first element of JSON file.  <a href="classprocess__frames_1_1process__frames.html#af086836ec2a067957f99fe7b6edf8fc5">More...</a><br /></td></tr>
-<tr class="separator:af086836ec2a067957f99fe7b6edf8fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51009bf435d587e7f3faf424321b5ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a></td></tr>
+<tr class="memdesc:ac51009bf435d587e7f3faf424321b5ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes export open/close against the processing run loop so a runtime enable/disable never races an in-flight write.  <a href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">More...</a><br /></td></tr>
+<tr class="separator:ac51009bf435d587e7f3faf424321b5ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3892ce1fc810777b8ce3f74a0218045c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a></td></tr>
+<tr class="memdesc:a3892ce1fc810777b8ce3f74a0218045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active processed-frame exports keyed by format ("csv" | "json").  <a href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">More...</a><br /></td></tr>
+<tr class="separator:a3892ce1fc810777b8ce3f74a0218045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a0be7b66a6f269f558b06a8dff2e57"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ad3a0be7b66a6f269f558b06a8dff2e57">_sdo_segments</a></td></tr>
 <tr class="memdesc:ad3a0be7b66a6f269f558b06a8dff2e57"><td class="mdescLeft">&#160;</td><td class="mdescRight">State for segmented SDO support: (node, index, sub) -&gt; bytearray.  <a href="classprocess__frames_1_1process__frames.html#ad3a0be7b66a6f269f558b06a8dff2e57">More...</a><br /></td></tr>
 <tr class="separator:ad3a0be7b66a6f269f558b06a8dff2e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0cd00328ebf1ed66d63c093629f9fb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#ac0cd00328ebf1ed66d63c093629f9fb1">_sdo_transfers</a></td></tr>
+<tr class="memdesc:ac0cd00328ebf1ed66d63c093629f9fb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active SDO transfers for sniffer mode, keyed by (client_id, server_id).  <a href="classprocess__frames_1_1process__frames.html#ac0cd00328ebf1ed66d63c093629f9fb1">More...</a><br /></td></tr>
+<tr class="separator:ac0cd00328ebf1ed66d63c093629f9fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classprocess__frames_1_1process__frames.html#a2c9373a2aa1f4cdf3e6c936e81b17267">_stop_event</a></td></tr>
 <tr class="memdesc:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal event used to signal the run loop to stop.  <a href="classprocess__frames_1_1process__frames.html#a2c9373a2aa1f4cdf3e6c936e81b17267">More...</a><br /></td></tr>
 <tr class="separator:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5bc12514c98edca8798862652dd6bd4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bc12514c98edca8798862652dd6bd4d">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="a42e53da926122a991812d8cd71622f39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42e53da926122a991812d8cd71622f39">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,7 +304,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">str | None &#160;</td>
-          <td class="paramname"><em>export</em> = <code>None</code>&#160;</td>
+          <td class="paramname"><em>export</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>sniffer</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -249,6 +328,7 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">processed_frame</td><td><code>queue.Queue</code> instance to push processed frames for display. </td></tr>
     <tr><td class="paramname">eds_map</td><td>Instance of <a class="el" href="namespaceeds__parser.html">eds_parser</a> from <a class="el" href="eds__parser_8py.html">eds_parser.py</a> used to resolve Object Dictionary names and PDO mappings. </td></tr>
     <tr><td class="paramname">export</td><td><code>csv</code>, <code>json</code>: enable export of processed frames to a file. </td></tr>
+    <tr><td class="paramname">sniffer</td><td>When True, enable professional (Wireshark-like) SDO reassembly: SDO transfers are tracked per (client_id, server_id) pair, continuation frames are associated to the correct transfer, multiple concurrent transfers are supported, and decoding is delayed until the final segment or an abort. When False, the original per-node decoding behavior is preserved unchanged. </td></tr>
   </table>
   </dd>
 </dl>
@@ -256,6 +336,1030 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac781972b285a457e944404235cf8a302"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac781972b285a457e944404235cf8a302">&#9670;&nbsp;</a></span>_close_all_exports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _close_all_exports </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Close every active processed-frame export. </p>
+<p>Callers must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph" id="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_cgraph">
+<area shape="rect" title="Close every active processed&#45;frame export." alt="" coords="5,42,148,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="196,5,379,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="231,71,343,98"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph" id="aclassprocess__frames_1_1process__frames_ac781972b285a457e944404235cf8a302_icgraph">
+<area shape="rect" title="Close every active processed&#45;frame export." alt="" coords="236,101,379,127"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,5,188,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="37,71,156,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,123,188,164"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="75,189,118,215"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a53aa31047ff9efe40f523e94278cf9dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53aa31047ff9efe40f523e94278cf9dd">&#9670;&nbsp;</a></span>_close_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _close_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flush and close a single processed-frame export format. </p>
+<p>Finalizes the format's file (JSON array terminator, flush, fsync, close) then removes it from <a class="el" href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a>. Callers must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format to close. </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph" id="aclassprocess__frames_1_1process__frames_a53aa31047ff9efe40f523e94278cf9dd_icgraph">
+<area shape="rect" title="Flush and close a single processed&#45;frame export format." alt="" coords="477,67,589,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="236,89,429,131"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,5,188,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="37,71,156,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="261,155,404,182"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,123,188,164"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="75,189,118,215"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a512bacd98391b262e3d27eae06badf5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a512bacd98391b262e3d27eae06badf5d">&#9670;&nbsp;</a></span>_decode_block_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _decode_block_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Decode the reassembled buffer of a block transfer. </p>
+<p>Applies the final-segment truncation (<code>n</code> unused bytes carried by the end request) and the indicated total size (if known), then decodes via the resolved OD entry, falling back to a hex dump when decoding fails. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The per-pair block transfer context. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Tuple <code>(data_bytes, decoded_value)</code>. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_cgraph" id="aclassprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_cgraph">
+<area shape="rect" title="Decode the reassembled buffer of a block transfer." alt="" coords="5,5,160,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="208,5,365,32"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_icgraph" id="aclassprocess__frames_1_1process__frames_a512bacd98391b262e3d27eae06badf5d_icgraph">
+<area shape="rect" title="Decode the reassembled buffer of a block transfer." alt="" coords="563,46,717,73"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="329,5,515,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="339,71,505,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,17,281,43"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,46,48,73"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,71,281,98"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa4c7c5c72980919f46b39367f338d684"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4c7c5c72980919f46b39367f338d684">&#9670;&nbsp;</a></span>_export_processed_frame_locked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _export_processed_frame_locked </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write a processed frame to every active export format. </p>
+<p>Each active format (CSV, JSON) is written independently. Caller must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph" id="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_cgraph">
+<area shape="rect" title="Write a processed frame to every active export format." alt="" coords="5,23,196,65"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="247,5,411,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="244,56,413,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="461,49,625,90"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph" id="aclassprocess__frames_1_1process__frames_aa4c7c5c72980919f46b39367f338d684_icgraph">
+<area shape="rect" title="Write a processed frame to every active export format." alt="" coords="1175,143,1365,184"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="944,150,1127,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a0f7d8cabdec46a7d165b3b727d9c5d51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f7d8cabdec46a7d165b3b727d9c5d51">&#9670;&nbsp;</a></span>_handle_block_download_end_req()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_block_download_end_req </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle an SDO end block download request and publish the value. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_cgraph" id="aclassprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_cgraph">
+<area shape="rect" title="Handle an SDO end block download request and publish the value." alt="" coords="5,23,191,65"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="239,5,393,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="263,56,369,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="449,5,606,32"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="443,56,611,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="441,107,613,133"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="676,70,829,111"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="661,136,844,163"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="892,129,1083,170"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1133,111,1297,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1131,161,1300,188"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1348,154,1512,195"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_icgraph" id="aclassprocess__frames_1_1process__frames_a0f7d8cabdec46a7d165b3b727d9c5d51_icgraph">
+<area shape="rect" title="Handle an SDO end block download request and publish the value." alt="" coords="329,5,515,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,13,281,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a6b99c40897c06464cba24303ba5d6020"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b99c40897c06464cba24303ba5d6020">&#9670;&nbsp;</a></span>_handle_block_download_init_req()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_block_download_init_req </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle an SDO initiate block download request (client → server). </p>
+<p>Opens a per-pair block transfer context in its data phase and publishes a start marker. The reassembled value is decoded and published later, when the matching end-block-download request arrives. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_cgraph" id="aclassprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_cgraph">
+<area shape="rect" title="Handle an SDO initiate block download request (client → server)." alt="" coords="5,49,191,90"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="256,31,363,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="239,81,380,108"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="430,5,598,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="428,56,600,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="663,19,816,61"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="648,85,831,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="879,78,1069,119"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1120,60,1284,87"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1117,111,1287,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1335,103,1499,145"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_icgraph" id="aclassprocess__frames_1_1process__frames_a6b99c40897c06464cba24303ba5d6020_icgraph">
+<area shape="rect" title="Handle an SDO initiate block download request (client → server)." alt="" coords="329,5,515,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,13,281,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="aa091010e38f1ac52d87c494ad2536844"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa091010e38f1ac52d87c494ad2536844">&#9670;&nbsp;</a></span>_handle_block_download_segment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_block_download_segment </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Accumulate one block-download data segment (client → server). </p>
+<p>Byte0 holds <code>c</code> (bit7, last segment) plus the sequence number; bytes 1..7 carry up to seven payload bytes. Padding introduced by the final segment is removed later using the <code>n</code> field of the end request. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_aa091010e38f1ac52d87c494ad2536844_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa091010e38f1ac52d87c494ad2536844_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_aa091010e38f1ac52d87c494ad2536844_icgraph" id="aclassprocess__frames_1_1process__frames_aa091010e38f1ac52d87c494ad2536844_icgraph">
+<area shape="rect" title="Accumulate one block&#45;download data segment (client → server)." alt="" coords="329,5,515,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,13,281,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1b78ea4930b3ab5171664b106c861e02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b78ea4930b3ab5171664b106c861e02">&#9670;&nbsp;</a></span>_handle_block_upload_client_req()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_block_upload_client_req </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle client → server control frames of an SDO block upload. </p>
+<p>Covers the initiate-upload request (opens the transfer context and publishes a start marker), the start-upload request (switches the transfer into its data phase), and the flow-control acknowledgements, which carry no object data and are consumed silently. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_cgraph" id="aclassprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_cgraph">
+<area shape="rect" title="Handle client → server control frames of an SDO block upload." alt="" coords="5,49,172,90"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="237,31,344,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="220,81,361,108"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="411,5,579,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="409,56,581,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="644,19,797,61"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="629,85,812,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="860,78,1051,119"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1101,60,1265,87"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1099,111,1268,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1316,103,1480,145"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_icgraph" id="aclassprocess__frames_1_1process__frames_a1b78ea4930b3ab5171664b106c861e02_icgraph">
+<area shape="rect" title="Handle client → server control frames of an SDO block upload." alt="" coords="329,5,496,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,13,281,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ac9d91cc775307211ce4ff3e6fe2f9231"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9d91cc775307211ce4ff3e6fe2f9231">&#9670;&nbsp;</a></span>_handle_block_upload_segment_res()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_block_upload_segment_res </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Accumulate one block-upload data segment (server → client). </p>
+<p>Mirrors <a class="el" href="classprocess__frames_1_1process__frames.html#aa091010e38f1ac52d87c494ad2536844">_handle_block_download_segment</a> for the upload direction. On the final segment the phase advances to <code>await_end</code>; the value is decoded once the server's end-block-upload request supplies the <code>n</code> (unused byte count). </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_ac9d91cc775307211ce4ff3e6fe2f9231_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ac9d91cc775307211ce4ff3e6fe2f9231_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_ac9d91cc775307211ce4ff3e6fe2f9231_icgraph" id="aclassprocess__frames_1_1process__frames_ac9d91cc775307211ce4ff3e6fe2f9231_icgraph">
+<area shape="rect" title="Accumulate one block&#45;upload data segment (server → client)." alt="" coords="328,5,495,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,13,280,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a7f3da67b87864858085828ec8350dbcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f3da67b87864858085828ec8350dbcb">&#9670;&nbsp;</a></span>_handle_block_upload_server_res()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_block_upload_server_res </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle server → client block-upload control frames (scs == 6). </p>
+<p>Two frames share this command specifier: the initiate-upload response (records the total size on the tracked transfer) and the end-block-upload request (supplies <code>n</code> and triggers decode/publish). </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_cgraph" id="aclassprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_cgraph">
+<area shape="rect" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="5,23,172,65"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="220,5,375,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="244,56,351,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="430,5,587,32"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="425,56,593,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="423,107,595,133"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="657,70,811,111"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="643,136,825,163"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="873,129,1064,170"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1115,111,1279,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1112,161,1281,188"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1329,154,1493,195"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_icgraph" id="aclassprocess__frames_1_1process__frames_a7f3da67b87864858085828ec8350dbcb_icgraph">
+<area shape="rect" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="328,5,495,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,13,280,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a71b3dd61b3b53d01ba2195e47a4b9bfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71b3dd61b3b53d01ba2195e47a4b9bfe">&#9670;&nbsp;</a></span>_handle_sdo_abort_sniffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_sdo_abort_sniffer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emit an SDO abort frame and drop the tracked transfer. </p>
+<p>Shared by the request and response paths. Prefers the index/sub/name recorded for the in-flight transfer (if any) over the values carried in the abort frame itself, then discards the transfer for this pair. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_cgraph" id="aclassprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_cgraph">
+<area shape="rect" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="5,81,197,108"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="263,31,369,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="245,81,387,108"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324" title="Derive the (client_id, server_id) pair identifying an SDO channel." alt="" coords="259,132,373,159"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="437,5,605,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="435,56,607,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="669,19,823,61"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="655,85,837,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="885,78,1076,119"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1127,60,1291,87"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1124,111,1293,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1341,103,1505,145"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_icgraph" id="aclassprocess__frames_1_1process__frames_a71b3dd61b3b53d01ba2195e47a4b9bfe_icgraph">
+<area shape="rect" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,31,521,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,5,281,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,56,281,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,31,48,57"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a478780124bdb08e663b2580408327f22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a478780124bdb08e663b2580408327f22">&#9670;&nbsp;</a></span>_handle_sdo_upload_init_res()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_sdo_upload_init_res </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sub</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle an SDO initiate upload response in sniffer mode. </p>
+<p>Expedited transfers are decoded and published immediately. Segmented transfers only record/refresh the per-pair transfer context; decoding is deferred until the final segment arrives. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_cgraph" id="aclassprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_cgraph">
+<area shape="rect" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="5,74,160,115"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="233,31,340,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="216,81,357,108"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="208,132,365,159"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="415,5,583,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="413,56,585,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="648,19,801,61"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="633,85,816,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="864,78,1055,119"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1105,60,1269,87"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1103,111,1272,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1320,103,1484,145"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_icgraph" id="aclassprocess__frames_1_1process__frames_a478780124bdb08e663b2580408327f22_icgraph">
+<area shape="rect" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="328,5,483,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,13,280,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a26dacf9418665316075770341ba3875e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26dacf9418665316075770341ba3875e">&#9670;&nbsp;</a></span>_handle_sdo_upload_segment_res()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _handle_sdo_upload_segment_res </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle an SDO upload segment response in sniffer mode. </p>
+<p>Appends the segment payload to the tracked transfer for this pair. When the final segment (c bit) is seen, the reassembled buffer is decoded and published; otherwise decoding stays deferred. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_cgraph" id="aclassprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_cgraph">
+<area shape="rect" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="5,49,160,90"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="233,31,340,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="208,81,365,108"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="415,5,583,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="413,56,585,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="648,19,801,61"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="633,85,816,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="864,78,1055,119"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1105,60,1269,87"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1103,111,1272,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1320,103,1484,145"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_icgraph" id="aclassprocess__frames_1_1process__frames_a26dacf9418665316075770341ba3875e_icgraph">
+<area shape="rect" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="328,5,483,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,13,280,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a4c7031035c06abd316cf1ae48aee76a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4c7031035c06abd316cf1ae48aee76a7">&#9670;&nbsp;</a></span>_json_safe_processed_frame()</h2>
 
@@ -296,10 +1400,584 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph" id="aclassprocess__frames_1_1process__frames_a4c7031035c06abd316cf1ae48aee76a7_icgraph">
-<area shape="rect" title="Create a processed frame for saving to JSON." alt="" coords="547,5,711,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,13,499,39"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,13,268,39"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,13,48,39"/>
+<area shape="rect" title="Create a processed frame for saving to JSON." alt="" coords="1631,143,1795,184"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1413,150,1583,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1175,143,1365,184"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="944,150,1127,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af266880872dcd06b97a0ec03841f6ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af266880872dcd06b97a0ec03841f6ac0">&#9670;&nbsp;</a></span>_open_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _open_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Open a processed-frame export for <code>fmt</code> and store its record. </p>
+<p>Opens the file/writer for <code>fmt</code> and writes any required header, registering a per-format record in <a class="el" href="classprocess__frames_1_1process__frames.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a>. <code>pcap</code> is accepted for symmetry with the sniffer but writes no processed file (only the raw sniffer stream is PCAP-capable); the record is still registered so both workers stay in sync. Formats are independent, so this never disturbs other active exports. Callers must hold <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format: "csv", "json", or "pcap". </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph" id="aclassprocess__frames_1_1process__frames_af266880872dcd06b97a0ec03841f6ac0_icgraph">
+<area shape="rect" title="Open a processed&#45;frame export for fmt and store its record." alt="" coords="236,42,347,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af48869479f7a195cc0c3fff08cd8df96" title="Enable raw&#45;frame export in the given format at runtime." alt="" coords="5,5,188,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96" title="Enable processed&#45;frame export in the given format at runtime." alt="" coords="39,71,154,98"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="add02f92aeee85772670f7e5d94f2cd3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add02f92aeee85772670f7e5d94f2cd3e">&#9670;&nbsp;</a></span>_process_sdo_req_legacy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _process_sdo_req_legacy </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>node_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Legacy SDO request handling (per-node, unchanged behavior). </p>
+<p>Preserves the original decoding behavior used when sniffer mode is disabled. Segmented transfers are tracked per node id. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_cgraph" id="aclassprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_cgraph">
+<area shape="rect" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="5,81,192,108"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="255,5,397,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="247,56,405,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="242,107,410,133"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="240,157,412,184"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="475,121,628,162"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="460,187,643,213"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="691,179,881,221"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="932,161,1096,188"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="929,212,1099,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1147,205,1311,246"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_icgraph" id="aclassprocess__frames_1_1process__frames_add02f92aeee85772670f7e5d94f2cd3e_icgraph">
+<area shape="rect" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="329,31,516,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,5,281,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,31,48,57"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a682dbae29d06b59fb8270ea370353e21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a682dbae29d06b59fb8270ea370353e21">&#9670;&nbsp;</a></span>_process_sdo_req_sniffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _process_sdo_req_sniffer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>node_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sniffer-mode SDO request handling (client → server). </p>
+<p>Tracks SDO uploads per (client_id, server_id) pair rather than per node. A client → server frame either opens a new upload transfer (initiate upload request) or advances the transfer toggle (upload segment request). Continuation segment requests carry no payload and are not published; the decoded value is emitted only once the transfer completes (handled on the response path) or aborts. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_cgraph" id="aclassprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_cgraph">
+<area shape="rect" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="5,251,191,278"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="242,492,427,533"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="503,317,609,343"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="242,375,427,416"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="485,193,627,219"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa091010e38f1ac52d87c494ad2536844" title="Accumulate one block&#45;download data segment (client → server)." alt="" coords="242,244,427,285"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="251,309,418,351"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="239,142,431,169"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324" title="Derive the (client_id, server_id) pair identifying an SDO channel." alt="" coords="499,142,613,169"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="241,41,428,67"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="479,433,633,459"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="689,295,846,322"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="683,143,851,170"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="681,42,853,69"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="916,5,1069,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="901,71,1084,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1132,64,1323,105"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1373,46,1537,73"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1371,97,1540,123"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1588,89,1752,131"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_icgraph" id="aclassprocess__frames_1_1process__frames_a682dbae29d06b59fb8270ea370353e21_icgraph">
+<area shape="rect" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,5,281,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a61723fdf6de8c2ff963efcb7ab2b4aac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61723fdf6de8c2ff963efcb7ab2b4aac">&#9670;&nbsp;</a></span>_process_sdo_res_legacy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _process_sdo_res_legacy </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>node_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Legacy SDO response handling (per-node, unchanged behavior). </p>
+<p>Preserves the original decoding behavior used when sniffer mode is disabled. Segmented uploads are tracked per node id. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_cgraph" id="aclassprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_cgraph">
+<area shape="rect" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="5,81,192,108"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="255,5,397,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="247,56,405,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="242,107,410,133"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="240,157,412,184"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="475,121,628,162"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="460,187,643,213"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="691,179,881,221"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="932,161,1096,188"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="929,212,1099,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1147,205,1311,246"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_icgraph" id="aclassprocess__frames_1_1process__frames_a61723fdf6de8c2ff963efcb7ab2b4aac_icgraph">
+<area shape="rect" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="328,31,515,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,5,280,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,31,48,57"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a06b48592c3799f076d5b8c98187145c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06b48592c3799f076d5b8c98187145c9">&#9670;&nbsp;</a></span>_process_sdo_res_sniffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _process_sdo_res_sniffer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>node_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sniffer-mode SDO response handling (server → client). </p>
+<p>Server → client frames carry the transfer payload. Expedited uploads are decoded immediately. Segmented uploads accumulate payload across continuation frames belonging to the same (client_id, server_id) pair, and the reassembled value is decoded only when the final segment (c bit) arrives, or when an abort is seen. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_cgraph" id="aclassprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_cgraph">
+<area shape="rect" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="5,209,189,235"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac9d91cc775307211ce4ff3e6fe2f9231" title="Accumulate one block&#45;upload data segment (server → client)." alt="" coords="250,5,417,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="250,71,417,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="237,267,429,294"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324" title="Derive the (client_id, server_id) pair identifying an SDO channel." alt="" coords="497,318,612,345"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="256,201,411,243"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="256,136,411,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="240,369,427,395"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="477,65,632,91"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="501,217,608,243"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="687,141,845,167"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="682,419,850,446"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="680,318,852,345"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="915,281,1068,323"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="900,347,1083,374"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1131,340,1321,381"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1372,322,1536,349"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1369,373,1539,399"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1587,365,1751,407"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="484,267,625,294"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_icgraph" id="aclassprocess__frames_1_1process__frames_a06b48592c3799f076d5b8c98187145c9_icgraph">
+<area shape="rect" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="96,5,280,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a95fcb277a3c59a659c199f0f9c442ee3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95fcb277a3c59a659c199f0f9c442ee3">&#9670;&nbsp;</a></span>_publish_sdo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _publish_sdo </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>raw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>is_tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ftype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sub</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>data_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>access_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>decoded</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper to emit a decoded SDO frame in sniffer mode. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_cgraph" id="aclassprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_cgraph">
+<area shape="rect" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="5,31,112,57"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="162,5,330,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="160,56,332,83"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="395,19,548,61"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="380,85,563,112"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="611,78,801,119"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="852,60,1016,87"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="849,111,1019,137"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1067,103,1231,145"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_icgraph" id="aclassprocess__frames_1_1process__frames_a95fcb277a3c59a659c199f0f9c442ee3_icgraph">
+<area shape="rect" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,225,676,251"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,5,518,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,163,281,190"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,123,518,164"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,188,509,229"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,305,509,347"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,254,521,281"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,371,503,412"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,436,503,477"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,254,48,281"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,313,281,339"/>
 </map>
 </div>
 
@@ -351,8 +2029,16 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_af33692a2b313d5adc0e6eb3bc1ba129d_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af33692a2b313d5adc0e6eb3bc1ba129d_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_af33692a2b313d5adc0e6eb3bc1ba129d_icgraph" id="aclassprocess__frames_1_1process__frames_af33692a2b313d5adc0e6eb3bc1ba129d_icgraph">
-<area shape="rect" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="96,5,237,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+<area shape="rect" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="569,172,711,198"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,70,518,111"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,146,281,173"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,201,48,228"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,135,509,176"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,252,521,278"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,303,503,344"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,201,519,228"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,369,519,396"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,268,281,294"/>
 </map>
 </div>
 
@@ -396,6 +2082,218 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a42db0cf76231a67cbb9faf7ffca6c324"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42db0cf76231a67cbb9faf7ffca6c324">&#9670;&nbsp;</a></span>_sdo_pair_key()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _sdo_pair_key </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cob</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Derive the (client_id, server_id) pair identifying an SDO channel. </p>
+<p>The SDO default channel encodes the served node in the low 7 bits of the COB-ID for both requests (0x600 + node) and responses (0x580 + node). Computing both a client and server identifier from the COB-ID yields a stable key that maps a request and its matching response/continuation frames onto the same logical transfer, while keeping distinct client-server pairs isolated so multiple concurrent transfers can be reassembled independently. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cob</td><td>COB-ID of the SDO frame. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Tuple <code>(client_id, server_id)</code> used as the transfer key. </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a42db0cf76231a67cbb9faf7ffca6c324_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a42db0cf76231a67cbb9faf7ffca6c324_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a42db0cf76231a67cbb9faf7ffca6c324_icgraph" id="aclassprocess__frames_1_1process__frames_a42db0cf76231a67cbb9faf7ffca6c324_icgraph">
+<area shape="rect" title="Derive the (client_id, server_id) pair identifying an SDO channel." alt="" coords="569,31,684,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,31,521,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,5,281,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,56,281,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,31,48,57"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8d6ea6d2a4fa3055cdb084ceb31edb7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d6ea6d2a4fa3055cdb084ceb31edb7d">&#9670;&nbsp;</a></span>_write_csv_processed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_csv_processed </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one processed-frame row to the CSV export record. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph" id="aclassprocess__frames_1_1process__frames_a8d6ea6d2a4fa3055cdb084ceb31edb7d_icgraph">
+<area shape="rect" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1413,150,1577,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1175,143,1365,184"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="944,150,1127,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a3966d2b76109ebfdbf6750594dc1dbbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3966d2b76109ebfdbf6750594dc1dbbb">&#9670;&nbsp;</a></span>_write_json_processed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_json_processed </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one processed-frame object to the JSON export record. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph" id="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_cgraph">
+<area shape="rect" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="5,13,175,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="223,5,387,47"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph" id="aclassprocess__frames_1_1process__frames_a3966d2b76109ebfdbf6750594dc1dbbb_icgraph">
+<area shape="rect" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1413,150,1583,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1175,143,1365,184"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="944,150,1127,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a73ce500be40d2288b802474a3f084086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ce500be40d2288b802474a3f084086">&#9670;&nbsp;</a></span>active_exports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def active_exports </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the set of currently active export formats (thread-safe). </p>
+
+</div>
+</div>
 <a id="a141fd9c4a0063a14296bf9bbf75fdc58"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a141fd9c4a0063a14296bf9bbf75fdc58">&#9670;&nbsp;</a></span>decode_by_datatype()</h2>
 
@@ -434,8 +2332,113 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_a141fd9c4a0063a14296bf9bbf75fdc58_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a141fd9c4a0063a14296bf9bbf75fdc58_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_a141fd9c4a0063a14296bf9bbf75fdc58_icgraph" id="aclassprocess__frames_1_1process__frames_a141fd9c4a0063a14296bf9bbf75fdc58_icgraph">
-<area shape="rect" title="Decode raw frame to respective CANopen DataType." alt="" coords="96,5,253,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+<area shape="rect" title="Decode raw frame to respective CANopen DataType." alt="" coords="767,173,924,199"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="564,143,719,170"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,99,48,126"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="564,260,719,301"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="564,195,719,236"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="329,42,516,69"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="329,326,516,353"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="330,93,515,135"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="339,159,506,200"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,99,281,126"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,225,281,251"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a75a5cc6d8773648c9ac608e779c17430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75a5cc6d8773648c9ac608e779c17430">&#9670;&nbsp;</a></span>disable_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def disable_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>fmt</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable processed-frame export at runtime (thread-safe). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Format to disable, or None to disable all active formats. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The set of active export formats after the call. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph" id="aclassprocess__frames_1_1process__frames_a75a5cc6d8773648c9ac608e779c17430_cgraph">
+<area shape="rect" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,67,124,93"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="172,30,365,71"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="413,30,596,71"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="449,96,561,123"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="197,96,340,123"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af48869479f7a195cc0c3fff08cd8df96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af48869479f7a195cc0c3fff08cd8df96">&#9670;&nbsp;</a></span>enable_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def enable_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable processed-frame export in the given format at runtime. </p>
+<p>Thread-safe and independent: enabling a format does not affect any other active formats, so CSV and JSON can run at once. Enabling an already-active format is a no-op. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format: "csv", "json", or "pcap". </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The set of active export formats after the call. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph" alt=""/></div>
+<map name="aclassprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph" id="aclassprocess__frames_1_1process__frames_af48869479f7a195cc0c3fff08cd8df96_cgraph">
+<area shape="rect" title="Enable processed&#45;frame export in the given format at runtime." alt="" coords="5,42,120,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af266880872dcd06b97a0ec03841f6ac0" title="Open a raw&#45;frame export for fmt and store its record." alt="" coords="168,5,351,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0" title="Open a processed&#45;frame export for fmt and store its record." alt="" coords="204,71,315,98"/>
 </map>
 </div>
 
@@ -467,8 +2470,8 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Save a processed frame row to the processed CSV file. </p>
-<p>Writes processed frame to export file. Periodically flushes and <code>fsyncs</code> the file according to <code>defs.FSYNC_EVERY</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Save a processed frame row to the processed export file. </p>
+<p>Writes processed frame to export file. Periodically flushes and <code>fsyncs</code> the file according to <code>defs.FSYNC_EVERY</code>. Serialized against runtime enable/disable via <a class="el" href="classprocess__frames_1_1process__frames.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">frame</td><td>Processed frame. </td></tr>
   </table>
@@ -479,8 +2482,11 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph" id="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_cgraph">
-<area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="5,13,188,39"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="236,5,400,47"/>
+<area shape="rect" title="Save a processed frame row to the processed export file." alt="" coords="5,31,188,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="236,23,427,65"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="477,5,641,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="475,56,644,83"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="692,49,856,90"/>
 </map>
 </div>
 <div class="dynheader">
@@ -488,9 +2494,21 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph" id="aclassprocess__frames_1_1process__frames_aa8b1ed89c91c825feda35358296d65f4_icgraph">
-<area shape="rect" title="Save a processed frame row to the processed CSV file." alt="" coords="316,5,499,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+<area shape="rect" title="Save a processed frame row to the processed export file." alt="" coords="944,150,1127,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
 </map>
 </div>
 
@@ -519,14 +2537,37 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclassprocess__frames_1_1process__frames_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Main processing loop." alt="" coords="5,81,48,108"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="111,5,253,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="103,56,261,83"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="98,107,266,133"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,157,268,184"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="331,121,484,162"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="316,187,499,213"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="547,179,711,221"/>
+<area shape="rect" title="Main processing loop." alt="" coords="5,319,48,346"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="96,64,289,105"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="121,13,264,39"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="340,181,527,207"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af33692a2b313d5adc0e6eb3bc1ba129d" title="Resolve Object Dictionary metadata for (index, sub)." alt="" coords="584,463,725,490"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a141fd9c4a0063a14296bf9bbf75fdc58" title="Decode raw frame to respective CANopen DataType." alt="" coords="787,963,945,990"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="782,393,950,419"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#abab717783b0e365598b1f9c9205577d2" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="780,723,952,750"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="100,439,285,466"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="340,866,527,893"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="101,841,285,867"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="342,5,525,47"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="377,71,489,98"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1015,687,1168,728"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="1000,753,1183,779"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="1231,745,1421,787"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="1472,727,1636,754"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="1469,778,1639,805"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="1687,771,1851,812"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="341,749,526,791"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="601,587,708,614"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="341,399,526,440"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa091010e38f1ac52d87c494ad2536844" title="Accumulate one block&#45;download data segment (client → server)." alt="" coords="341,333,526,375"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="350,464,517,505"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="337,581,529,607"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a42db0cf76231a67cbb9faf7ffca6c324" title="Derive the (client_id, server_id) pair identifying an SDO channel." alt="" coords="597,698,712,725"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="577,913,732,939"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac9d91cc775307211ce4ff3e6fe2f9231" title="Accumulate one block&#45;upload data segment (server → client)." alt="" coords="350,983,517,1024"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="350,917,517,959"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="356,632,511,673"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="356,1048,511,1089"/>
 </map>
 </div>
 
@@ -572,8 +2613,11 @@ Here is the call graph for this function:</div>
 <map name="aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_cgraph" id="aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_cgraph">
 <area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="5,42,177,69"/>
 <area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="240,5,393,47"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed CSV file." alt="" coords="225,71,408,98"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="456,64,620,105"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa8b1ed89c91c825feda35358296d65f4" title="Save a processed frame row to the processed export file." alt="" coords="225,71,408,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#aa4c7c5c72980919f46b39367f338d684" title="Write a processed frame to every active export format." alt="" coords="456,64,647,105"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a8d6ea6d2a4fa3055cdb084ceb31edb7d" title="Append one processed&#45;frame row to the CSV export record." alt="" coords="697,46,861,73"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a3966d2b76109ebfdbf6750594dc1dbbb" title="Append one processed&#45;frame object to the JSON export record." alt="" coords="695,97,864,123"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a4c7031035c06abd316cf1ae48aee76a7" title="Create a processed frame for saving to JSON." alt="" coords="912,89,1076,131"/>
 </map>
 </div>
 <div class="dynheader">
@@ -581,8 +2625,20 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_icgraph.png" border="0" usemap="#aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_icgraph" alt=""/></div>
 <map name="aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_icgraph" id="aclassprocess__frames_1_1process__frames_abab717783b0e365598b1f9c9205577d2_icgraph">
-<area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="96,5,268,32"/>
-<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+<area shape="rect" title="Save a fully processed CANopen frame in memory and export it to CSV." alt="" coords="724,150,896,177"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="332,30,519,57"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,48,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="332,380,519,406"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a95fcb277a3c59a659c199f0f9c442ee3" title="Helper to emit a decoded SDO frame in sniffer mode." alt="" coords="569,270,676,297"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,174,281,201"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,409,281,436"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="333,132,518,174"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a6b99c40897c06464cba24303ba5d6020" title="Handle an SDO initiate block download request (client → server)." alt="" coords="333,198,518,239"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a1b78ea4930b3ab5171664b106c861e02" title="Handle client → server control frames of an SDO block upload." alt="" coords="342,263,509,304"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="342,431,509,472"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a71b3dd61b3b53d01ba2195e47a4b9bfe" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,329,521,356"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="348,496,503,538"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="348,562,503,603"/>
 </map>
 </div>
 
@@ -620,8 +2676,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af086836ec2a067957f99fe7b6edf8fc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af086836ec2a067957f99fe7b6edf8fc5">&#9670;&nbsp;</a></span>_json_first</h2>
+<a id="ac51009bf435d587e7f3faf424321b5ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac51009bf435d587e7f3faf424321b5ef">&#9670;&nbsp;</a></span>_export_lock</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -630,7 +2686,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">_json_first</td>
+          <td class="memname">_export_lock</td>
         </tr>
       </table>
   </td>
@@ -640,7 +2696,32 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Identifier for first element of JSON file. </p>
+<p>Serializes export open/close against the processing run loop so a runtime enable/disable never races an in-flight write. </p>
+
+</div>
+</div>
+<a id="a3892ce1fc810777b8ce3f74a0218045c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3892ce1fc810777b8ce3f74a0218045c">&#9670;&nbsp;</a></span>_exports</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_exports</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Active processed-frame exports keyed by format ("csv" | "json"). </p>
+<p>Each value is a per-format record dict holding that format's file / writer and bookkeeping. Formats are independent and may be active simultaneously. ("pcap" is accepted for symmetry with the sniffer but produces no processed file.) </p>
 
 </div>
 </div>
@@ -665,6 +2746,31 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>State for segmented SDO support: (node, index, sub) -&gt; bytearray. </p>
+
+</div>
+</div>
+<a id="ac0cd00328ebf1ed66d63c093629f9fb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0cd00328ebf1ed66d63c093629f9fb1">&#9670;&nbsp;</a></span>_sdo_transfers</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_sdo_transfers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Active SDO transfers for sniffer mode, keyed by (client_id, server_id). </p>
+<p>Each value is a context dict describing one in-flight transfer so that multiple concurrent client-server transfers can be reassembled independently. Decoding is deferred until completion or abort. </p>
 
 </div>
 </div>
@@ -705,86 +2811,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>EDS map/parser used to resolve (index, subindex) -&gt; name strings. </p>
-
-</div>
-</div>
-<a id="af44e2d3afd4e0e4d03f637dbb2bce3cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44e2d3afd4e0e4d03f637dbb2bce3cd">&#9670;&nbsp;</a></span>export</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Flag indicating whether processed export is enabled : None | csv | json. </p>
-
-</div>
-</div>
-<a id="afdcb13a7e8e9ec20376d877dbae55960"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdcb13a7e8e9ec20376d877dbae55960">&#9670;&nbsp;</a></span>export_file</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_file</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>File object for processed export (or None). </p>
-
-</div>
-</div>
-<a id="a809f8a0a28e66d245892a14fef6c923b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a809f8a0a28e66d245892a14fef6c923b">&#9670;&nbsp;</a></span>export_filename</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_filename</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Output filename for processed export file or None. </p>
-
-</div>
-</div>
-<a id="ab7a93db5093bfacf3425a3456acfa568"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7a93db5093bfacf3425a3456acfa568">&#9670;&nbsp;</a></span>export_serial_number</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_serial_number</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Serial number for exported rows (increments each write). </p>
-
-</div>
-</div>
-<a id="a696cdde4828759bce70e9bf8f7a4ba74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a696cdde4828759bce70e9bf8f7a4ba74">&#9670;&nbsp;</a></span>export_writer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_writer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Writer instance for processed rows (or None). </p>
 
 </div>
 </div>
@@ -833,6 +2859,22 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Queue from which raw frame dictionaries are consumed. </p>
+
+</div>
+</div>
+<a id="a3ec93ed409e2a0f6db9121e39eb302ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ec93ed409e2a0f6db9121e39eb302ba">&#9670;&nbsp;</a></span>sniffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sniffer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag enabling professional (Wireshark-like) sniffer decoding. </p>
 
 </div>
 </div>

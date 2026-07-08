@@ -1,4 +1,5 @@
 <map id="_on_mode_changed" name="_on_mode_changed">
 <area shape="rect" id="node1" title="Handle display mode changes from the toolbar." alt="" coords="5,5,156,32"/>
 <area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a761fada55085b7d8b7896aa06d7240d0" title="Clear all displayed data and reset statistics." alt="" coords="204,5,305,32"/>
+<area shape="rect" id="node3" href="$classdisplay__gui_1_1CANopenMainWindow.html#a88bbe9af21c2e2f18c26cace5239782c" title="Color the Pause button according to the current state." alt="" coords="353,5,532,32"/>
 </map>

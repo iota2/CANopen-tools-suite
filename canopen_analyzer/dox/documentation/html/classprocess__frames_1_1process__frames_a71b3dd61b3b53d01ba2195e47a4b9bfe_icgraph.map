@@ -1,0 +1,6 @@
+<map id="_handle_sdo_abort_sniffer" name="_handle_sdo_abort_sniffer">
+<area shape="rect" id="node1" title="Emit an SDO abort frame and drop the tracked transfer." alt="" coords="329,31,521,57"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,5,281,32"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,56,281,83"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,31,48,57"/>
+</map>

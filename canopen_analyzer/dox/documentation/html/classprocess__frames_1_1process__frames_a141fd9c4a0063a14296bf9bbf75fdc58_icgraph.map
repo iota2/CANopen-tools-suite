@@ -1,4 +1,13 @@
 <map id="decode_by_datatype" name="decode_by_datatype">
-<area shape="rect" id="node1" title="Decode raw frame to respective CANopen DataType." alt="" coords="96,5,253,32"/>
-<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+<area shape="rect" id="node1" title="Decode raw frame to respective CANopen DataType." alt="" coords="767,173,924,199"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#a512bacd98391b262e3d27eae06badf5d" title="Decode the reassembled buffer of a block transfer." alt="" coords="564,143,719,170"/>
+<area shape="rect" id="node5" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,99,48,126"/>
+<area shape="rect" id="node8" href="$classprocess__frames_1_1process__frames.html#a478780124bdb08e663b2580408327f22" title="Handle an SDO initiate upload response in sniffer mode." alt="" coords="564,260,719,301"/>
+<area shape="rect" id="node9" href="$classprocess__frames_1_1process__frames.html#a26dacf9418665316075770341ba3875e" title="Handle an SDO upload segment response in sniffer mode." alt="" coords="564,195,719,236"/>
+<area shape="rect" id="node10" href="$classprocess__frames_1_1process__frames.html#add02f92aeee85772670f7e5d94f2cd3e" title="Legacy SDO request handling (per&#45;node, unchanged behavior)." alt="" coords="329,42,516,69"/>
+<area shape="rect" id="node11" href="$classprocess__frames_1_1process__frames.html#a61723fdf6de8c2ff963efcb7ab2b4aac" title="Legacy SDO response handling (per&#45;node, unchanged behavior)." alt="" coords="329,326,516,353"/>
+<area shape="rect" id="node3" href="$classprocess__frames_1_1process__frames.html#a0f7d8cabdec46a7d165b3b727d9c5d51" title="Handle an SDO end block download request and publish the value." alt="" coords="330,93,515,135"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#a7f3da67b87864858085828ec8350dbcb" title="Handle server → client block&#45;upload control frames (scs == 6)." alt="" coords="339,159,506,200"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a682dbae29d06b59fb8270ea370353e21" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,99,281,126"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#a06b48592c3799f076d5b8c98187145c9" title="Sniffer&#45;mode SDO response handling (server → client)." alt="" coords="97,225,281,251"/>
 </map>

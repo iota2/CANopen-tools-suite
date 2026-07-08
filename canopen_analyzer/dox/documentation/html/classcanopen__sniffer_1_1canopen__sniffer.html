@@ -120,9 +120,18 @@ Collaboration diagram for canopen_sniffer:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0dedd9047111690fed6d3ffc28db4da6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a0dedd9047111690fed6d3ffc28db4da6">__init__</a> (self, str <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ae6deea6e7d03b5d4db98ea209159e57f">interface</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>=None, <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ab4a622f1e1275087c3558661cb25300a">requested_frame</a>=None, str|None <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a>=None)</td></tr>
+<tr class="memitem:a0dedd9047111690fed6d3ffc28db4da6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a0dedd9047111690fed6d3ffc28db4da6">__init__</a> (self, str <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ae6deea6e7d03b5d4db98ea209159e57f">interface</a>, queue.Queue <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a>=None, <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ab4a622f1e1275087c3558661cb25300a">requested_frame</a>=None, str|None export=None)</td></tr>
 <tr class="memdesc:a0dedd9047111690fed6d3ffc28db4da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize CAN sniffer thread and open resources.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a0dedd9047111690fed6d3ffc28db4da6">More...</a><br /></td></tr>
 <tr class="separator:a0dedd9047111690fed6d3ffc28db4da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73ce500be40d2288b802474a3f084086"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a73ce500be40d2288b802474a3f084086">active_exports</a> (self)</td></tr>
+<tr class="memdesc:a73ce500be40d2288b802474a3f084086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the set of currently active export formats (thread-safe).  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a73ce500be40d2288b802474a3f084086">More...</a><br /></td></tr>
+<tr class="separator:a73ce500be40d2288b802474a3f084086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75a5cc6d8773648c9ac608e779c17430"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430">disable_export</a> (self, str fmt=None)</td></tr>
+<tr class="memdesc:a75a5cc6d8773648c9ac608e779c17430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable raw-frame export at runtime (thread-safe).  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430">More...</a><br /></td></tr>
+<tr class="separator:a75a5cc6d8773648c9ac608e779c17430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af48869479f7a195cc0c3fff08cd8df96"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#af48869479f7a195cc0c3fff08cd8df96">enable_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:af48869479f7a195cc0c3fff08cd8df96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable raw-frame export in the given format at runtime.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#af48869479f7a195cc0c3fff08cd8df96">More...</a><br /></td></tr>
+<tr class="separator:af48869479f7a195cc0c3fff08cd8df96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bee1e0390714d04ec48916af56fee49"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49">export_raw_frame</a> (self, dict frame, can.Message|None msg=None)</td></tr>
 <tr class="memdesc:a7bee1e0390714d04ec48916af56fee49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a received CAN frame (raw view) to an export file.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49">More...</a><br /></td></tr>
 <tr class="separator:a7bee1e0390714d04ec48916af56fee49"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,21 +159,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a411bd59fecc82fdfda0e5c9d7da7447f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a411bd59fecc82fdfda0e5c9d7da7447f">bus</a></td></tr>
 <tr class="memdesc:a411bd59fecc82fdfda0e5c9d7da7447f"><td class="mdescLeft">&#160;</td><td class="mdescRight">CAN bus instance with configuration loading.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a411bd59fecc82fdfda0e5c9d7da7447f">More...</a><br /></td></tr>
 <tr class="separator:a411bd59fecc82fdfda0e5c9d7da7447f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">export</a></td></tr>
-<tr class="memdesc:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating whether export is enabled.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#af44e2d3afd4e0e4d03f637dbb2bce3cd">More...</a><br /></td></tr>
-<tr class="separator:af44e2d3afd4e0e4d03f637dbb2bce3cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdcb13a7e8e9ec20376d877dbae55960"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#afdcb13a7e8e9ec20376d877dbae55960">export_file</a></td></tr>
-<tr class="memdesc:afdcb13a7e8e9ec20376d877dbae55960"><td class="mdescLeft">&#160;</td><td class="mdescRight">File object for export (or None if not exporting).  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#afdcb13a7e8e9ec20376d877dbae55960">More...</a><br /></td></tr>
-<tr class="separator:afdcb13a7e8e9ec20376d877dbae55960"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a809f8a0a28e66d245892a14fef6c923b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a809f8a0a28e66d245892a14fef6c923b">export_filename</a></td></tr>
-<tr class="memdesc:a809f8a0a28e66d245892a14fef6c923b"><td class="mdescLeft">&#160;</td><td class="mdescRight">File name used when export is enabled.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a809f8a0a28e66d245892a14fef6c923b">More...</a><br /></td></tr>
-<tr class="separator:a809f8a0a28e66d245892a14fef6c923b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7a93db5093bfacf3425a3456acfa568"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ab7a93db5093bfacf3425a3456acfa568">export_serial_number</a></td></tr>
-<tr class="memdesc:ab7a93db5093bfacf3425a3456acfa568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export serial number (incremented for each exported row).  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#ab7a93db5093bfacf3425a3456acfa568">More...</a><br /></td></tr>
-<tr class="separator:ab7a93db5093bfacf3425a3456acfa568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a696cdde4828759bce70e9bf8f7a4ba74"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a696cdde4828759bce70e9bf8f7a4ba74">export_writer</a></td></tr>
-<tr class="memdesc:a696cdde4828759bce70e9bf8f7a4ba74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writer instance used to write exported data (or None).  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a696cdde4828759bce70e9bf8f7a4ba74">More...</a><br /></td></tr>
-<tr class="separator:a696cdde4828759bce70e9bf8f7a4ba74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6deea6e7d03b5d4db98ea209159e57f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ae6deea6e7d03b5d4db98ea209159e57f">interface</a></td></tr>
 <tr class="memdesc:ae6deea6e7d03b5d4db98ea209159e57f"><td class="mdescLeft">&#160;</td><td class="mdescRight">CAN interface name used by the sniffer.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#ae6deea6e7d03b5d4db98ea209159e57f">More...</a><br /></td></tr>
 <tr class="separator:ae6deea6e7d03b5d4db98ea209159e57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,9 +168,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a6b288a470bcb2fd5f321915ef4045b8b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6b288a470bcb2fd5f321915ef4045b8b">network</a></td></tr>
 <tr class="memdesc:a6b288a470bcb2fd5f321915ef4045b8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional CANopen.Network instance (connected if possible).  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a6b288a470bcb2fd5f321915ef4045b8b">More...</a><br /></td></tr>
 <tr class="separator:a6b288a470bcb2fd5f321915ef4045b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ffee8a5264219b0fb83d1d87b6bdbd6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6ffee8a5264219b0fb83d1d87b6bdbd6">pcap_writer</a></td></tr>
-<tr class="memdesc:a6ffee8a5264219b0fb83d1d87b6bdbd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">PCAP writer object for exporting file.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a6ffee8a5264219b0fb83d1d87b6bdbd6">More...</a><br /></td></tr>
-<tr class="separator:a6ffee8a5264219b0fb83d1d87b6bdbd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a796de4da9ed5fad20bff2ba1ea3b7051">raw_frame</a></td></tr>
 <tr class="memdesc:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue used to push raw frames for downstream processing.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a796de4da9ed5fad20bff2ba1ea3b7051">More...</a><br /></td></tr>
 <tr class="separator:a796de4da9ed5fad20bff2ba1ea3b7051"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,23 +177,47 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:ac781972b285a457e944404235cf8a302"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302">_close_all_exports</a> (self)</td></tr>
+<tr class="memdesc:ac781972b285a457e944404235cf8a302"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close every active raw-frame export.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302">More...</a><br /></td></tr>
+<tr class="separator:ac781972b285a457e944404235cf8a302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53aa31047ff9efe40f523e94278cf9dd"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd">_close_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:a53aa31047ff9efe40f523e94278cf9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush and close a single raw-frame export format.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd">More...</a><br /></td></tr>
+<tr class="separator:a53aa31047ff9efe40f523e94278cf9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a289e8d72a57bec3cc07a63a89991bd25"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25">_dispatch_request</a> (self, dict req)</td></tr>
 <tr class="memdesc:a289e8d72a57bec3cc07a63a89991bd25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send request frame on CAN bus.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25">More...</a><br /></td></tr>
 <tr class="separator:a289e8d72a57bec3cc07a63a89991bd25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a3ccdcf3682f03c4ed720908318733e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e">_ensure_bus</a> (self)</td></tr>
 <tr class="memdesc:a6a3ccdcf3682f03c4ed720908318733e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensure CAN bus is available before transmitting.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e">More...</a><br /></td></tr>
 <tr class="separator:a6a3ccdcf3682f03c4ed720908318733e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad50fe094546ca2a1daa9f8b58174e087"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087">_export_raw_frame_locked</a> (self, dict frame, can.Message|None msg=None)</td></tr>
+<tr class="memdesc:ad50fe094546ca2a1daa9f8b58174e087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a raw frame to every active export format.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087">More...</a><br /></td></tr>
+<tr class="separator:ad50fe094546ca2a1daa9f8b58174e087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56691f45b9cd4ae8a01630a8cf372c01"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01">_handle_requested_frame</a> (self)</td></tr>
 <tr class="memdesc:a56691f45b9cd4ae8a01630a8cf372c01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatch queued control commands from UI layers.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01">More...</a><br /></td></tr>
 <tr class="separator:a56691f45b9cd4ae8a01630a8cf372c01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1554dc53d58b5b1b482367d3ca6b87e5"><td class="memItemLeft" align="right" valign="top">dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5">_json_safe_raw_frame</a> (self, dict frame)</td></tr>
 <tr class="separator:a1554dc53d58b5b1b482367d3ca6b87e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af266880872dcd06b97a0ec03841f6ac0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#af266880872dcd06b97a0ec03841f6ac0">_open_export</a> (self, str fmt)</td></tr>
+<tr class="memdesc:af266880872dcd06b97a0ec03841f6ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a raw-frame export for <code>fmt</code> and store its record.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#af266880872dcd06b97a0ec03841f6ac0">More...</a><br /></td></tr>
+<tr class="separator:af266880872dcd06b97a0ec03841f6ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a685e006ee1f9365e737a37e55938ae3d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d">_write_csv_raw</a> (self, dict rec, dict frame)</td></tr>
+<tr class="memdesc:a685e006ee1f9365e737a37e55938ae3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one raw-frame row to the CSV export record.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d">More...</a><br /></td></tr>
+<tr class="separator:a685e006ee1f9365e737a37e55938ae3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2455cfb4155f900ea456b7dbc3da9045"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045">_write_json_raw</a> (self, dict rec, dict frame)</td></tr>
+<tr class="memdesc:a2455cfb4155f900ea456b7dbc3da9045"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one raw-frame object to the JSON export record.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045">More...</a><br /></td></tr>
+<tr class="separator:a2455cfb4155f900ea456b7dbc3da9045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cdaddf6600fda3d98a54f658e8a27b6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6">_write_pcap_raw</a> (self, dict rec, can.Message msg)</td></tr>
+<tr class="memdesc:a1cdaddf6600fda3d98a54f658e8a27b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append one raw frame to the PCAP export record.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6">More...</a><br /></td></tr>
+<tr class="separator:a1cdaddf6600fda3d98a54f658e8a27b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:af086836ec2a067957f99fe7b6edf8fc5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#af086836ec2a067957f99fe7b6edf8fc5">_json_first</a></td></tr>
-<tr class="memdesc:af086836ec2a067957f99fe7b6edf8fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifier for first element of JSON file.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#af086836ec2a067957f99fe7b6edf8fc5">More...</a><br /></td></tr>
-<tr class="separator:af086836ec2a067957f99fe7b6edf8fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51009bf435d587e7f3faf424321b5ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a></td></tr>
+<tr class="memdesc:ac51009bf435d587e7f3faf424321b5ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes export open/close against the writing run loop so a runtime enable/disable never races an in-flight write.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">More...</a><br /></td></tr>
+<tr class="separator:ac51009bf435d587e7f3faf424321b5ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3892ce1fc810777b8ce3f74a0218045c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a></td></tr>
+<tr class="memdesc:a3892ce1fc810777b8ce3f74a0218045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Active raw-frame exports keyed by format ("csv" | "json" | "pcap").  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a3892ce1fc810777b8ce3f74a0218045c">More...</a><br /></td></tr>
+<tr class="separator:a3892ce1fc810777b8ce3f74a0218045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2c9373a2aa1f4cdf3e6c936e81b17267">_stop_event</a></td></tr>
 <tr class="memdesc:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread stop event used to signal the run loop to exit.  <a href="classcanopen__sniffer_1_1canopen__sniffer.html#a2c9373a2aa1f4cdf3e6c936e81b17267">More...</a><br /></td></tr>
 <tr class="separator:a2c9373a2aa1f4cdf3e6c936e81b17267"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,6 +280,115 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac781972b285a457e944404235cf8a302"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac781972b285a457e944404235cf8a302">&#9670;&nbsp;</a></span>_close_all_exports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _close_all_exports </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Close every active raw-frame export. </p>
+<p>Callers must hold <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_cgraph">
+<area shape="rect" title="Close every active raw&#45;frame export." alt="" coords="5,35,148,61"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="229,5,341,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="196,57,375,98"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_ac781972b285a457e944404235cf8a302_icgraph">
+<area shape="rect" title="Close every active raw&#45;frame export." alt="" coords="232,93,375,120"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="35,5,154,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,57,184,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="73,123,116,149"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,184,215"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a53aa31047ff9efe40f523e94278cf9dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53aa31047ff9efe40f523e94278cf9dd">&#9670;&nbsp;</a></span>_close_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _close_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flush and close a single raw-frame export format. </p>
+<p>Finalizes the format's file (JSON array terminator, flush, fsync, close) or PCAP writer, then removes it from <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a>. Callers must hold <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format to close. </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a53aa31047ff9efe40f523e94278cf9dd_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a53aa31047ff9efe40f523e94278cf9dd_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a53aa31047ff9efe40f523e94278cf9dd_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a53aa31047ff9efe40f523e94278cf9dd_icgraph">
+<area shape="rect" title="Flush and close a single raw&#45;frame export format." alt="" coords="479,60,591,87"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="260,85,403,112"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="35,5,154,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,57,184,98"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="232,137,431,178"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="73,123,116,149"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,184,215"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a289e8d72a57bec3cc07a63a89991bd25"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a289e8d72a57bec3cc07a63a89991bd25">&#9670;&nbsp;</a></span>_dispatch_request()</h2>
 
@@ -305,15 +429,19 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a289e8d72a57bec3cc07a63a89991bd25_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a289e8d72a57bec3cc07a63a89991bd25_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_a289e8d72a57bec3cc07a63a89991bd25_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a289e8d72a57bec3cc07a63a89991bd25_cgraph">
-<area shape="rect" title="Send request frame on CAN bus." alt="" coords="5,226,145,253"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="231,277,346,304"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="212,176,365,202"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="193,226,384,253"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="451,201,554,228"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="845,92,998,134"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="432,252,573,278"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="837,252,1005,278"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="621,150,789,177"/>
+<area shape="rect" title="Send request frame on CAN bus." alt="" coords="5,220,145,247"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="231,220,346,247"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="212,170,365,196"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="193,271,384,298"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="451,246,554,272"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1269,86,1422,128"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="432,195,573,222"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1261,296,1429,323"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="621,195,819,222"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="1068,144,1191,171"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="869,246,995,272"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="867,195,997,222"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="1045,246,1213,272"/>
 </map>
 </div>
 <div class="dynheader">
@@ -371,6 +499,81 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ad50fe094546ca2a1daa9f8b58174e087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad50fe094546ca2a1daa9f8b58174e087">&#9670;&nbsp;</a></span>_export_raw_frame_locked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _export_raw_frame_locked </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">can.Message | None &#160;</td>
+          <td class="paramname"><em>msg</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write a raw frame to every active export format. </p>
+<p>Each active format (CSV, JSON, PCAP) is written independently. Caller must hold <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_cgraph">
+<area shape="rect" title="Write a raw frame to every active export format." alt="" coords="5,67,203,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="452,17,575,43"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="253,67,379,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="251,118,381,145"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="653,5,806,47"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="645,71,813,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="429,67,597,94"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_ad50fe094546ca2a1daa9f8b58174e087_icgraph">
+<area shape="rect" title="Write a raw frame to every active export format." alt="" coords="1005,77,1203,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,77,957,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,5,529,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,52,730,79"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="596,103,749,129"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="577,153,768,180"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,49,48,76"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,100,502,127"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,75,287,101"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a56691f45b9cd4ae8a01630a8cf372c01"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a56691f45b9cd4ae8a01630a8cf372c01">&#9670;&nbsp;</a></span>_handle_requested_frame()</h2>
 
@@ -401,16 +604,20 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a56691f45b9cd4ae8a01630a8cf372c01_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a56691f45b9cd4ae8a01630a8cf372c01_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_a56691f45b9cd4ae8a01630a8cf372c01_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a56691f45b9cd4ae8a01630a8cf372c01_cgraph">
-<area shape="rect" title="Dispatch queued control commands from UI layers." alt="" coords="5,226,196,253"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="244,226,384,253"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="470,277,585,304"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="451,176,604,202"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="432,226,623,253"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="690,201,793,228"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1083,92,1237,134"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="671,252,812,278"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1076,252,1244,278"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="860,150,1028,177"/>
+<area shape="rect" title="Dispatch queued control commands from UI layers." alt="" coords="5,220,196,247"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="244,220,384,247"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="470,220,585,247"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="451,170,604,196"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="432,271,623,298"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="690,246,793,272"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1507,86,1661,128"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="671,195,812,222"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1500,296,1668,323"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="860,195,1057,222"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="1307,144,1429,171"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="1107,246,1234,272"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="1105,195,1236,222"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="1284,246,1452,272"/>
 </map>
 </div>
 <div class="dynheader">
@@ -473,7 +680,9 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a1554dc53d58b5b1b482367d3ca6b87e5_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a1554dc53d58b5b1b482367d3ca6b87e5_icgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_a1554dc53d58b5b1b482367d3ca6b87e5_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a1554dc53d58b5b1b482367d3ca6b87e5_icgraph">
-<area shape="rect" title=" " alt="" coords="1005,77,1173,104"/>
+<area shape="rect" title=" " alt="" coords="1425,77,1593,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="1251,77,1377,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="1005,77,1203,104"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,77,957,104"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,5,529,32"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,52,730,79"/>
@@ -482,6 +691,380 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,49,48,76"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,100,502,127"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,75,287,101"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af266880872dcd06b97a0ec03841f6ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af266880872dcd06b97a0ec03841f6ac0">&#9670;&nbsp;</a></span>_open_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _open_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Open a raw-frame export for <code>fmt</code> and store its record. </p>
+<p>Opens the file/writer for <code>fmt</code> (<code>csv</code>, <code>json</code>, or <code>pcap</code>), writes any required header, and registers a per-format record in <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#a3892ce1fc810777b8ce3f74a0218045c">_exports</a>. Formats are independent, so this never disturbs other active exports. Callers must hold <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format: "csv", "json", or "pcap". </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_af266880872dcd06b97a0ec03841f6ac0_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_af266880872dcd06b97a0ec03841f6ac0_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_af266880872dcd06b97a0ec03841f6ac0_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_af266880872dcd06b97a0ec03841f6ac0_icgraph">
+<area shape="rect" title="Open a raw&#45;frame export for fmt and store its record." alt="" coords="232,35,343,61"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af48869479f7a195cc0c3fff08cd8df96" title="Enable raw&#45;frame export in the given format at runtime." alt="" coords="37,5,152,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af48869479f7a195cc0c3fff08cd8df96" title="Enable processed&#45;frame export in the given format at runtime." alt="" coords="5,57,184,98"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a685e006ee1f9365e737a37e55938ae3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a685e006ee1f9365e737a37e55938ae3d">&#9670;&nbsp;</a></span>_write_csv_raw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_csv_raw </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one raw-frame row to the CSV export record. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_cgraph">
+<area shape="rect" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="5,42,128,69"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="183,5,337,47"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="176,71,344,98"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a685e006ee1f9365e737a37e55938ae3d_icgraph">
+<area shape="rect" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="1251,77,1373,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="1005,77,1203,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,77,957,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,5,529,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,52,730,79"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="596,103,749,129"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="577,153,768,180"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,49,48,76"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,100,502,127"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,75,287,101"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a2455cfb4155f900ea456b7dbc3da9045"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2455cfb4155f900ea456b7dbc3da9045">&#9670;&nbsp;</a></span>_write_json_raw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_json_raw </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>frame</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one raw-frame object to the JSON export record. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_cgraph">
+<area shape="rect" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="5,42,132,69"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="180,42,348,69"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="403,5,557,47"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="396,71,564,98"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a2455cfb4155f900ea456b7dbc3da9045_icgraph">
+<area shape="rect" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="1251,77,1377,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="1005,77,1203,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,77,957,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,5,529,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,52,730,79"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="596,103,749,129"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="577,153,768,180"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,49,48,76"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,100,502,127"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,75,287,101"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1cdaddf6600fda3d98a54f658e8a27b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cdaddf6600fda3d98a54f658e8a27b6">&#9670;&nbsp;</a></span>_write_pcap_raw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def _write_pcap_raw </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">dict&#160;</td>
+          <td class="paramname"><em>rec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">can.Message&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Append one raw frame to the PCAP export record. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a1cdaddf6600fda3d98a54f658e8a27b6_icgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a1cdaddf6600fda3d98a54f658e8a27b6_icgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a1cdaddf6600fda3d98a54f658e8a27b6_icgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a1cdaddf6600fda3d98a54f658e8a27b6_icgraph">
+<area shape="rect" title="Append one raw frame to the PCAP export record." alt="" coords="1251,77,1381,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="1005,77,1203,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,77,957,104"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,5,529,32"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,52,730,79"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="596,103,749,129"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="577,153,768,180"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="5,49,48,76"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,100,502,127"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,75,287,101"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a73ce500be40d2288b802474a3f084086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ce500be40d2288b802474a3f084086">&#9670;&nbsp;</a></span>active_exports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def active_exports </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the set of currently active export formats (thread-safe). </p>
+
+</div>
+</div>
+<a id="a75a5cc6d8773648c9ac608e779c17430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75a5cc6d8773648c9ac608e779c17430">&#9670;&nbsp;</a></span>disable_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def disable_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>fmt</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable raw-frame export at runtime (thread-safe). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Format to disable, or None to disable all active formats. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The set of active export formats after the call. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a75a5cc6d8773648c9ac608e779c17430_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a75a5cc6d8773648c9ac608e779c17430_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_a75a5cc6d8773648c9ac608e779c17430_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a75a5cc6d8773648c9ac608e779c17430_cgraph">
+<area shape="rect" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,58,124,85"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="200,29,343,56"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="452,29,564,56"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="419,80,597,122"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="172,80,371,122"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af48869479f7a195cc0c3fff08cd8df96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af48869479f7a195cc0c3fff08cd8df96">&#9670;&nbsp;</a></span>enable_export()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def enable_export </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>fmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable raw-frame export in the given format at runtime. </p>
+<p>Thread-safe and independent: enabling a format does not affect any other active formats, so CSV, JSON, and PCAP can all run at once. Enabling an already-active format is a no-op. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fmt</td><td>Export format: "csv", "json", or "pcap". </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The set of active export formats after the call. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_af48869479f7a195cc0c3fff08cd8df96_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_af48869479f7a195cc0c3fff08cd8df96_cgraph" alt=""/></div>
+<map name="aclasscanopen__sniffer_1_1canopen__sniffer_af48869479f7a195cc0c3fff08cd8df96_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_af48869479f7a195cc0c3fff08cd8df96_cgraph">
+<area shape="rect" title="Enable raw&#45;frame export in the given format at runtime." alt="" coords="5,35,120,61"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af266880872dcd06b97a0ec03841f6ac0" title="Open a raw&#45;frame export for fmt and store its record." alt="" coords="202,5,313,32"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#af266880872dcd06b97a0ec03841f6ac0" title="Open a processed&#45;frame export for fmt and store its record." alt="" coords="168,57,347,98"/>
 </map>
 </div>
 
@@ -520,7 +1103,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Save a received CAN frame (raw view) to an export file. </p>
-<p>Writes a single row with a serial number, timestamp, COB-ID, error flag and raw payload. Periodically flushes and fsyncs the file according to <code>defs.FSYNC_EVERY</code>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Writes a single row with a serial number, timestamp, COB-ID, error flag and raw payload. Periodically flushes and fsyncs the file according to <code>defs.FSYNC_EVERY</code>. Serialized against runtime enable/disable via <a class="el" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac51009bf435d587e7f3faf424321b5ef">_export_lock</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">frame</td><td>Frame to be exported. </td></tr>
     <tr><td class="paramname">msg</td><td>CANopen message to be exported. </td></tr>
@@ -533,10 +1116,14 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a7bee1e0390714d04ec48916af56fee49_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a7bee1e0390714d04ec48916af56fee49_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_a7bee1e0390714d04ec48916af56fee49_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a7bee1e0390714d04ec48916af56fee49_cgraph">
-<area shape="rect" title="Save a received CAN frame (raw view) to an export file." alt="" coords="5,53,147,79"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="195,53,363,79"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="418,5,571,47"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="411,82,579,109"/>
+<area shape="rect" title="Save a received CAN frame (raw view) to an export file." alt="" coords="5,67,147,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="195,67,392,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="641,17,764,43"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="442,67,569,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="440,118,571,145"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="842,5,995,47"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="835,71,1003,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="619,67,787,94"/>
 </map>
 </div>
 <div class="dynheader">
@@ -595,11 +1182,15 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a71281faea956cdc27e9f39548355a5a9_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a71281faea956cdc27e9f39548355a5a9_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_a71281faea956cdc27e9f39548355a5a9_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a71281faea956cdc27e9f39548355a5a9_cgraph">
-<area shape="rect" title="Handle a received CAN message." alt="" coords="5,53,200,79"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="248,53,389,79"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="437,53,605,79"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="661,5,814,47"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="653,82,821,109"/>
+<area shape="rect" title="Handle a received CAN message." alt="" coords="5,67,200,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="248,67,389,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="437,67,635,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="884,17,1007,43"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="685,67,811,94"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="683,118,813,145"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1085,5,1238,47"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1077,71,1245,98"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="861,67,1029,94"/>
 </map>
 </div>
 <div class="dynheader">
@@ -641,18 +1232,26 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_ad22709b2e67308af35f55680d5a026e0_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_ad22709b2e67308af35f55680d5a026e0_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_ad22709b2e67308af35f55680d5a026e0_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_ad22709b2e67308af35f55680d5a026e0_cgraph">
-<area shape="rect" title="Main loop of the sniffer thread." alt="" coords="5,173,48,200"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="96,198,287,225"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="335,148,529,174"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="362,198,502,225"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="615,198,730,225"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="596,97,749,124"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="577,249,768,276"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="835,198,938,225"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1229,292,1382,334"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="816,148,957,174"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1221,148,1389,174"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="1005,249,1173,276"/>
+<area shape="rect" title="Main loop of the sniffer thread." alt="" coords="5,188,48,215"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="124,100,267,127"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="96,151,295,193"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a56691f45b9cd4ae8a01630a8cf372c01" title="Dispatch queued control commands from UI layers." alt="" coords="100,268,291,295"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a71281faea956cdc27e9f39548355a5a9" title="Handle a received CAN message." alt="" coords="343,217,537,244"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single raw&#45;frame export format." alt="" coords="384,100,496,127"/>
+<area shape="rect" href="classprocess__frames_1_1process__frames.html#a53aa31047ff9efe40f523e94278cf9dd" title="Flush and close a single processed&#45;frame export format." alt="" coords="351,151,529,193"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a289e8d72a57bec3cc07a63a89991bd25" title="Send request frame on CAN bus." alt="" coords="370,280,510,307"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#af5700ac79e73b5f715f582e443ccc969" title="Send PDO." alt="" coords="623,305,738,332"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#aa8d11ec8573e1db81498322bba468a2d" title="SDO Download." alt="" coords="604,255,757,281"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a097369338fe5940560a0d109f2416bc5" title="SDO Receive." alt="" coords="585,356,776,383"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="843,305,946,332"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1661,95,1814,137"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="824,204,965,231"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1653,305,1821,332"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="1013,204,1211,231"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="1460,255,1583,281"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="1261,153,1387,180"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="1259,204,1389,231"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="1437,153,1605,180"/>
 </map>
 </div>
 
@@ -703,12 +1302,16 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_af5700ac79e73b5f715f582e443ccc969_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_af5700ac79e73b5f715f582e443ccc969_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_af5700ac79e73b5f715f582e443ccc969_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_af5700ac79e73b5f715f582e443ccc969_cgraph">
-<area shape="rect" title="Send PDO." alt="" coords="5,81,120,108"/>
+<area shape="rect" title="Send PDO." alt="" coords="5,69,120,96"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="187,5,290,32"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="581,99,734,141"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="168,132,309,159"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="573,208,741,235"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="357,157,525,184"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1005,95,1158,137"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="168,120,309,147"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="997,161,1165,188"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="357,145,555,172"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="804,107,927,133"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="605,157,731,184"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="603,208,733,235"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="781,157,949,184"/>
 </map>
 </div>
 <div class="dynheader">
@@ -791,12 +1394,16 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_aa8d11ec8573e1db81498322bba468a2d_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_aa8d11ec8573e1db81498322bba468a2d_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_aa8d11ec8573e1db81498322bba468a2d_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_aa8d11ec8573e1db81498322bba468a2d_cgraph">
-<area shape="rect" title="SDO Download." alt="" coords="5,81,159,108"/>
+<area shape="rect" title="SDO Download." alt="" coords="5,69,159,96"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="226,5,329,32"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="619,99,773,141"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="207,132,348,159"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="612,208,780,235"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="396,157,564,184"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1043,95,1197,137"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="207,120,348,147"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1036,161,1204,188"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="396,145,593,172"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="843,107,965,133"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="643,157,770,184"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="641,208,772,235"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="820,157,988,184"/>
 </map>
 </div>
 <div class="dynheader">
@@ -865,12 +1472,16 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcanopen__sniffer_1_1canopen__sniffer_a097369338fe5940560a0d109f2416bc5_cgraph.png" border="0" usemap="#aclasscanopen__sniffer_1_1canopen__sniffer_a097369338fe5940560a0d109f2416bc5_cgraph" alt=""/></div>
 <map name="aclasscanopen__sniffer_1_1canopen__sniffer_a097369338fe5940560a0d109f2416bc5_cgraph" id="aclasscanopen__sniffer_1_1canopen__sniffer_a097369338fe5940560a0d109f2416bc5_cgraph">
-<area shape="rect" title="SDO Receive." alt="" coords="5,81,196,108"/>
+<area shape="rect" title="SDO Receive." alt="" coords="5,69,196,96"/>
 <area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a6a3ccdcf3682f03c4ed720908318733e" title="Ensure CAN bus is available before transmitting." alt="" coords="263,5,366,32"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="657,99,810,141"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="244,132,385,159"/>
-<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="649,208,817,235"/>
-<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="433,157,601,184"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#aa969db480a6f6ee9e64524d308684239" title="Convert bytes or bytearray to a space&#45;separated hex string safely." alt="" coords="1081,95,1234,137"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a7bee1e0390714d04ec48916af56fee49" title="Save a received CAN frame (raw view) to an export file." alt="" coords="244,120,385,147"/>
+<area shape="rect" href="namespaceanalyzer__defs.html#a24e8f61cb30ad4bd4166b416212fcc49" title="Return current time string." alt="" coords="1073,161,1241,188"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#ad50fe094546ca2a1daa9f8b58174e087" title="Write a raw frame to every active export format." alt="" coords="433,145,631,172"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a685e006ee1f9365e737a37e55938ae3d" title="Append one raw&#45;frame row to the CSV export record." alt="" coords="880,107,1003,133"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a2455cfb4155f900ea456b7dbc3da9045" title="Append one raw&#45;frame object to the JSON export record." alt="" coords="681,157,807,184"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1cdaddf6600fda3d98a54f658e8a27b6" title="Append one raw frame to the PCAP export record." alt="" coords="679,208,809,235"/>
+<area shape="rect" href="classcanopen__sniffer_1_1canopen__sniffer.html#a1554dc53d58b5b1b482367d3ca6b87e5" title=" " alt="" coords="857,157,1025,184"/>
 </map>
 </div>
 <div class="dynheader">
@@ -934,8 +1545,8 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af086836ec2a067957f99fe7b6edf8fc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af086836ec2a067957f99fe7b6edf8fc5">&#9670;&nbsp;</a></span>_json_first</h2>
+<a id="ac51009bf435d587e7f3faf424321b5ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac51009bf435d587e7f3faf424321b5ef">&#9670;&nbsp;</a></span>_export_lock</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -944,7 +1555,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">_json_first</td>
+          <td class="memname">_export_lock</td>
         </tr>
       </table>
   </td>
@@ -954,7 +1565,32 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Identifier for first element of JSON file. </p>
+<p>Serializes export open/close against the writing run loop so a runtime enable/disable never races an in-flight write. </p>
+
+</div>
+</div>
+<a id="a3892ce1fc810777b8ce3f74a0218045c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3892ce1fc810777b8ce3f74a0218045c">&#9670;&nbsp;</a></span>_exports</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">_exports</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Active raw-frame exports keyed by format ("csv" | "json" | "pcap"). </p>
+<p>Each value is a per-format record dict holding that format's file / writer and bookkeeping. Formats are independent and may be active simultaneously. </p>
 
 </div>
 </div>
@@ -995,86 +1631,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>CAN bus instance with configuration loading. </p>
-
-</div>
-</div>
-<a id="af44e2d3afd4e0e4d03f637dbb2bce3cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44e2d3afd4e0e4d03f637dbb2bce3cd">&#9670;&nbsp;</a></span>export</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Flag indicating whether export is enabled. </p>
-
-</div>
-</div>
-<a id="afdcb13a7e8e9ec20376d877dbae55960"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdcb13a7e8e9ec20376d877dbae55960">&#9670;&nbsp;</a></span>export_file</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_file</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>File object for export (or None if not exporting). </p>
-
-</div>
-</div>
-<a id="a809f8a0a28e66d245892a14fef6c923b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a809f8a0a28e66d245892a14fef6c923b">&#9670;&nbsp;</a></span>export_filename</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_filename</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>File name used when export is enabled. </p>
-
-</div>
-</div>
-<a id="ab7a93db5093bfacf3425a3456acfa568"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7a93db5093bfacf3425a3456acfa568">&#9670;&nbsp;</a></span>export_serial_number</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_serial_number</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Export serial number (incremented for each exported row). </p>
-
-</div>
-</div>
-<a id="a696cdde4828759bce70e9bf8f7a4ba74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a696cdde4828759bce70e9bf8f7a4ba74">&#9670;&nbsp;</a></span>export_writer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">export_writer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Writer instance used to write exported data (or None). </p>
 
 </div>
 </div>
@@ -1123,22 +1679,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Optional CANopen.Network instance (connected if possible). </p>
-
-</div>
-</div>
-<a id="a6ffee8a5264219b0fb83d1d87b6bdbd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ffee8a5264219b0fb83d1d87b6bdbd6">&#9670;&nbsp;</a></span>pcap_writer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">pcap_writer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>PCAP writer object for exporting file. </p>
 
 </div>
 </div>

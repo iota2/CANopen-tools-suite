@@ -1,4 +1,4 @@
-.TH "display_cli" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "display_cli" 3 "Tue Jul 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 
 .in +1c
 .ti -1c
-.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBprocessed_frame\fP, \fBrequested_frame\fP=None, bool \fBfixed\fP=False)"
+.RI "def \fB__init__\fP (self, \fBbus_stats\fP \fBstats\fP, queue\&.Queue \fBprocessed_frame\fP, \fBrequested_frame\fP=None, bool \fBfixed\fP=False, \fBsniffer\fP=None, \fBprocessor\fP=None)"
 .br
 .RI "Initialize CLI based CANopen display\&. "
 .ti -1c
@@ -73,6 +73,9 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Private instance for pointing to incoming processed frames\&. "
 .ti -1c
+.RI "\fBprocessor\fP"
+.br
+.ti -1c
 .RI "\fBproto_frames\fP"
 .br
 .RI "Protocol data buffer used only for rendering rows (not for rate calc)\&. "
@@ -93,6 +96,10 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "SDO data buffer used only for rendering rows (not for rate calc)\&. "
 .ti -1c
+.RI "\fBsniffer\fP"
+.br
+.RI "Backend worker references used for runtime export toggling\&. "
+.ti -1c
 .RI "\fBstats\fP"
 .br
 .RI "Private instance for pointing to incoming bus stats\&. "
@@ -104,6 +111,10 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .RI "def \fB_build_bus_stats_table\fP (self)"
 .br
 .RI "Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. "
+.ti -1c
+.RI "def \fB_build_status_cells\fP (self)"
+.br
+.RI "Build the Status column cells shown alongside the Bus Stats table\&. "
 .ti -1c
 .RI "str \fB_get_remote_repeat_status\fP (self, str type)"
 .br
@@ -133,10 +144,6 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .br
 .RI "Return status icon for a repeat task\&. "
 .ti -1c
-.RI "def \fB_sparkline\fP (self, history, style='white')"
-.br
-.RI "Create a compact sparkline Text from a numeric history sequence\&. "
-.ti -1c
 .RI "def \fB_start_repeat\fP (self, key, interval_ms, callback)"
 .br
 .RI "Start a repeating task\&. "
@@ -144,6 +151,22 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .RI "def \fB_stop_repeat\fP (self, key)"
 .br
 .RI "Stop a repeating task\&. "
+.ti -1c
+.RI "bool \fB_toggle_debug_logs\fP (self)"
+.br
+.RI "Enable or disable runtime debug (file) logging\&. "
+.ti -1c
+.RI "bool \fB_toggle_export\fP (self, str fmt)"
+.br
+.RI "Enable or disable runtime frame export in the given format\&. "
+.ti -1c
+.RI "bool \fB_toggle_fixed_mode\fP (self)"
+.br
+.RI "Toggle between Fixed (aggregated) and Sequential (scrolling) display\&. "
+.ti -1c
+.RI "bool \fB_toggle_sniffer_mode\fP (self)"
+.br
+.RI "Toggle professional (Wireshark-like) sniffer decoding at runtime\&. "
 .ti -1c
 .RI "str \fB_trim_cell\fP (self, str value, int max_width)"
 .br
@@ -153,9 +176,17 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 
 .in +1c
 .ti -1c
+.RI "\fB_active_exports\fP"
+.br
+.RI "Set of currently active export formats (subset of csv/json/pcap)\&. "
+.ti -1c
 .RI "\fB_input_caret\fP"
 .br
 .RI "Input caret for user inputs in remote node control\&. "
+.ti -1c
+.RI "\fB_logs_enabled\fP"
+.br
+.RI "Whether runtime debug logging is currently enabled\&. "
 .ti -1c
 .RI "\fB_repeat_tasks\fP"
 .br
@@ -167,7 +198,7 @@ This reads all rate/utility information from \fBbus_stats\fP snapshot\&. It does
 .in -1c
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue processed_frame,  requested_frame = \fCNone\fP, bool  fixed = \fCFalse\fP)"
+.SS "def __init__ ( self, \fBbus_stats\fP stats, queue\&.Queue processed_frame,  requested_frame = \fCNone\fP, bool  fixed = \fCFalse\fP,  sniffer = \fCNone\fP,  processor = \fCNone\fP)"
 
 .PP
 Initialize CLI based CANopen display\&. This thread initializes and launches the CLI application that renders all live CANopen monitoring tables (Protocol, PDO, SDO, Bus Stats)\&. It sets up shared state used by the UI update loop, including statistics, frame queues, and the fixed/scrolling display mode\&. 
@@ -193,6 +224,17 @@ None
 
 .PP
 Build a Bus Stats table by querying latest stats snapshot (\fBbus_stats\fP owns all calculations)\&. 
+.SS "def _build_status_cells ( self)\fC [private]\fP"
+
+.PP
+Build the Status column cells shown alongside the Bus Stats table\&. Consolidates the runtime status indicators into a single vertical list: the repeat send/recv SDO and send PDO tasks, the set of active exports (CSV/JSON/PCAP), debug logging, the display mode (Fixed/Sequential) and professional sniffer decoding\&. This replaces the former per-metric sparkline graphs\&. 
+.PP
+\fBReturns\fP
+.RS 4
+List of Rich Text cells, one per status line\&. 
+.RE
+.PP
+
 .SS " str _get_remote_repeat_status ( self, str type)\fC [private]\fP"
 
 .PP
@@ -221,10 +263,6 @@ Render tables for displaying CLI data\&.
 
 .PP
 Return status icon for a repeat task\&. 
-.SS "def _sparkline ( self,  history,  style = \fC'white'\fP)\fC [private]\fP"
-
-.PP
-Create a compact sparkline Text from a numeric history sequence\&. 
 .SS "def _start_repeat ( self,  key,  interval_ms,  callback)\fC [private]\fP"
 
 .PP
@@ -233,6 +271,55 @@ Start a repeating task\&.
 
 .PP
 Stop a repeating task\&. 
+.SS " bool _toggle_debug_logs ( self)\fC [private]\fP"
+
+.PP
+Enable or disable runtime debug (file) logging\&. 
+.PP
+\fBReturns\fP
+.RS 4
+True if logging is now enabled, False otherwise\&. 
+.RE
+.PP
+
+.SS " bool _toggle_export ( self, str fmt)\fC [private]\fP"
+
+.PP
+Enable or disable runtime frame export in the given format\&. Toggles export on both backend workers (raw sniffer and processed streams)\&. Formats are independent: CSV, JSON, and PCAP can all be active at once, and toggling one never affects the others\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfmt\fP Export format: 'csv', 'json', or 'pcap'\&. 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+True if export is now enabled, False if it was toggled off\&. 
+.RE
+.PP
+
+.SS " bool _toggle_fixed_mode ( self)\fC [private]\fP"
+
+.PP
+Toggle between Fixed (aggregated) and Sequential (scrolling) display\&. 
+.PP
+\fBReturns\fP
+.RS 4
+True if Fixed mode is now active, False for Sequential\&. 
+.RE
+.PP
+
+.SS " bool _toggle_sniffer_mode ( self)\fC [private]\fP"
+
+.PP
+Toggle professional (Wireshark-like) sniffer decoding at runtime\&. The sniffer mode flag lives on the backend frame processor, so the toggle simply flips it; subsequent frames are decoded in the new mode\&. 
+.PP
+\fBReturns\fP
+.RS 4
+True if sniffer mode is now enabled, False otherwise\&. 
+.RE
+.PP
+
 .SS " str _trim_cell ( self, str value, int max_width)\fC [private]\fP"
 
 .PP
@@ -247,10 +334,18 @@ Run CLI based CANopen display\&.
 Stop CLI display\&. 
 .SH "Member Data Documentation"
 .PP 
+.SS "_active_exports\fC [private]\fP"
+
+.PP
+Set of currently active export formats (subset of csv/json/pcap)\&. Formats are independent and may all be active simultaneously\&. 
 .SS "_input_caret\fC [private]\fP"
 
 .PP
 Input caret for user inputs in remote node control\&. 
+.SS "_logs_enabled\fC [private]\fP"
+
+.PP
+Whether runtime debug logging is currently enabled\&. 
 .SS "_repeat_tasks\fC [private]\fP"
 
 .PP
@@ -291,6 +386,8 @@ PDO data buffer used only for rendering rows (not for rate calc)\&.
 
 .PP
 Private instance for pointing to incoming processed frames\&. 
+.SS "processor"
+
 .SS "proto_frames"
 
 .PP
@@ -311,6 +408,10 @@ Outgoing requested frames\&.
 
 .PP
 SDO data buffer used only for rendering rows (not for rate calc)\&. 
+.SS "sniffer"
+
+.PP
+Backend worker references used for runtime export toggling\&. 
 .SS "stats"
 
 .PP

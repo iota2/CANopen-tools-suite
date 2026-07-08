@@ -1,0 +1,4 @@
+<map id="toggle_pause" name="toggle_pause">
+<area shape="rect" id="node1" title="Toggle pausing of the data&#45;table display." alt="" coords="5,5,115,32"/>
+<area shape="rect" id="node2" href="$classdisplay__gui_1_1CANopenMainWindow.html#a88bbe9af21c2e2f18c26cace5239782c" title="Color the Pause button according to the current state." alt="" coords="163,5,341,32"/>
+</map>

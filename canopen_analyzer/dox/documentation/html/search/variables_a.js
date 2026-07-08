@@ -1,9 +1,11 @@
 var searchData=
 [
-  ['max_5fcli_5fcmd_5fhistory_511',['MAX_CLI_CMD_HISTORY',['../namespaceanalyzer__defs.html#adfdb2aa7ec3d939c91e68a67f786ca9f',1,'analyzer_defs']]],
-  ['max_5fframes_512',['MAX_FRAMES',['../namespaceanalyzer__defs.html#a90270d61ef5cbcf52b1f4e63ee96cfbc',1,'analyzer_defs']]],
-  ['max_5fpoints_513',['max_points',['../classdisplay__gui_1_1MultiRateLineWidget.html#a043afb44cd3575db763c65fd445a5858',1,'display_gui::MultiRateLineWidget']]],
-  ['max_5fstats_5fshow_514',['MAX_STATS_SHOW',['../namespaceanalyzer__defs.html#aa6fda8207dcce3b56fd8ed0ff3ec827e',1,'analyzer_defs']]],
-  ['min_5fstats_5fshow_515',['MIN_STATS_SHOW',['../namespaceanalyzer__defs.html#a80c4d7f9c3a827951418fea4187ad0df',1,'analyzer_defs']]],
-  ['mode_5fcombo_516',['mode_combo',['../classdisplay__gui_1_1CANopenMainWindow.html#ae34ca3af9e134197585f22c51544b1ab',1,'display_gui::CANopenMainWindow']]]
+  ['lbl_5fnodes_622',['lbl_nodes',['../classdisplay__gui_1_1CANopenMainWindow.html#a68de121a557f4da5eaa392d3a3ae6293',1,'display_gui::CANopenMainWindow']]],
+  ['lbl_5fstate_623',['lbl_state',['../classdisplay__gui_1_1CANopenMainWindow.html#aee55b22ec746d51e04e031c524fc62dd',1,'display_gui::CANopenMainWindow']]],
+  ['lbl_5futil_624',['lbl_util',['../classdisplay__gui_1_1CANopenMainWindow.html#a6354fe1c90478378e770867f2e8176db',1,'display_gui::CANopenMainWindow']]],
+  ['list_625',['list',['../classbus__stats_1_1bus__stats_1_1rates__stats.html#a6bbb80367a84ef6bc36dcf82df1fea55',1,'bus_stats::bus_stats::rates_stats']]],
+  ['log_626',['log',['../classbus__stats_1_1bus__stats.html#ab09a63eb35b270b5cdbead1983ebdccb',1,'bus_stats.bus_stats.log()'],['../classcanopen__sniffer_1_1canopen__sniffer.html#ab09a63eb35b270b5cdbead1983ebdccb',1,'canopen_sniffer.canopen_sniffer.log()'],['../classdisplay__cli_1_1display__cli.html#ab09a63eb35b270b5cdbead1983ebdccb',1,'display_cli.display_cli.log()'],['../classeds__parser_1_1eds__parser.html#ab09a63eb35b270b5cdbead1983ebdccb',1,'eds_parser.eds_parser.log()'],['../classprocess__frames_1_1process__frames.html#ab09a63eb35b270b5cdbead1983ebdccb',1,'process_frames.process_frames.log()'],['../namespaceanalyzer__defs.html#ab09a63eb35b270b5cdbead1983ebdccb',1,'analyzer_defs.log()']]],
+  ['log_5flevel_627',['LOG_LEVEL',['../namespaceanalyzer__defs.html#aa5a9053636a30269210c54e734e0d583',1,'analyzer_defs']]],
+  ['logger_628',['logger',['../classdisplay__tui_1_1display__tui.html#a0b14e488ae28d98d262453f3e9cd6e4d',1,'display_tui::display_tui']]],
+  ['logging_5fenabled_629',['logging_enabled',['../namespaceanalyzer__defs.html#a65c11857e82fa665b0c74d25585c6144',1,'analyzer_defs']]]
 ];

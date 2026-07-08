@@ -1,0 +1,9 @@
+<map id="_close_export" name="_close_export">
+<area shape="rect" id="node1" title="Flush and close a single raw&#45;frame export format." alt="" coords="479,60,591,87"/>
+<area shape="rect" id="node2" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ac781972b285a457e944404235cf8a302" title="Close every active raw&#45;frame export." alt="" coords="260,85,403,112"/>
+<area shape="rect" id="node3" href="$classcanopen__sniffer_1_1canopen__sniffer.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable raw&#45;frame export at runtime (thread&#45;safe)." alt="" coords="35,5,154,32"/>
+<area shape="rect" id="node4" href="$classprocess__frames_1_1process__frames.html#a75a5cc6d8773648c9ac608e779c17430" title="Disable processed&#45;frame export at runtime (thread&#45;safe)." alt="" coords="5,57,184,98"/>
+<area shape="rect" id="node7" href="$classprocess__frames_1_1process__frames.html#ac781972b285a457e944404235cf8a302" title="Close every active processed&#45;frame export." alt="" coords="232,137,431,178"/>
+<area shape="rect" id="node5" href="$classcanopen__sniffer_1_1canopen__sniffer.html#ad22709b2e67308af35f55680d5a026e0" title="Main loop of the sniffer thread." alt="" coords="73,123,116,149"/>
+<area shape="rect" id="node6" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,174,184,215"/>
+</map>

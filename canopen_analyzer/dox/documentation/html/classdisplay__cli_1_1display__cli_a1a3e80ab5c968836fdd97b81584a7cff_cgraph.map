@@ -1,0 +1,5 @@
+<map id="_toggle_debug_logs" name="_toggle_debug_logs">
+<area shape="rect" id="node1" title="Enable or disable runtime debug (file) logging." alt="" coords="5,46,156,73"/>
+<area shape="rect" id="node2" href="$namespaceanalyzer__defs.html#a8485d00c89b0b6455b17adade212dbec" title="Disable file logging at runtime." alt="" coords="204,5,368,47"/>
+<area shape="rect" id="node3" href="$namespaceanalyzer__defs.html#a44f5f337822a2e2bd186102fbfd6970b" title="Enable file&#45;only logging (via argument or at runtime)." alt="" coords="205,71,367,112"/>
+</map>

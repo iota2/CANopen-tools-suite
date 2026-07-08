@@ -1,0 +1,4 @@
+<map id="_process_sdo_req_sniffer" name="_process_sdo_req_sniffer">
+<area shape="rect" id="node1" title="Sniffer&#45;mode SDO request handling (client → server)." alt="" coords="96,5,281,32"/>
+<area shape="rect" id="node2" href="$classprocess__frames_1_1process__frames.html#ad22709b2e67308af35f55680d5a026e0" title="Main processing loop." alt="" coords="5,5,48,32"/>
+</map>

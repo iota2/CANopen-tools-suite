@@ -81,7 +81,7 @@ class display_tui:
     refresh_interval = 0.2
 
     @classmethod
-    def run_textual(cls, stats, processed_frame=None, requested_frame=None, fixed=False):
+    def run_textual(cls, stats, processed_frame=None, requested_frame=None, fixed=False, sniffer=None, processor=None):
         """! Start the Textual-based CANopen TUI.
         @details
         This method initializes and launches the Textual application that renders
@@ -92,6 +92,8 @@ class display_tui:
         @param processed_frame Queue delivering processed CANopen frames from the background sniffer thread.
         @param requested_frame Queue delivering CANopen frames to the background sniffer thread.
         @param fixed When True, tables operate in fixed-index mode; otherwise they show scrolling entries.
+        @param sniffer Backend sniffer worker, used for runtime export toggling.
+        @param processor Backend frame processor worker, used for runtime export toggling.
         @return None
         """
 
@@ -103,6 +105,8 @@ class display_tui:
         cls.processed_frame = processed_frame
         cls.requested_frame = requested_frame
         cls.fixed = fixed
+        cls.sniffer = sniffer
+        cls.processor = processor
 
         # Define the actual App class inside this method so that the module
         # can be imported even if textual is not available.
@@ -111,16 +115,18 @@ class display_tui:
 
             BINDINGS = [
                 Binding(key="q", action="quit", description="Quit the app"),
-                Binding(
-                    key="question_mark",
-                    action="help",
-                    description="Show help screen",
-                    key_display="?",
-                ),
-                Binding(key="n", action="Copy Protocol data", description="Copy protocol table data"),
-                Binding(key="b", action="Copy Bus stats", description="Copy bus stats table"),
-                Binding(key="p", action="Copy PDO", description="Copy PDO table"),
-                Binding(key="s", action="Copy SDO", description="Copy SDO table"),
+                Binding(key="question_mark", action="Help", description="Help", key_display="?"),
+                Binding(key="d", action="Copy Protocol data", description="Copy Protocol Data"),
+                Binding(key="b", action="Copy Bus stats", description="Copy Bus Stats"),
+                Binding(key="p", action="Copy PDO", description="Copy PDO Table"),
+                Binding(key="s", action="Copy SDO", description="Copy SDO Table"),
+                Binding(key="c", action="Export CSV", description="Toggle CSV"),
+                Binding(key="j", action="Export JSON", description="Toggle JSON"),
+                Binding(key="a", action="Export PCAP", description="Toggle PCAP"),
+                Binding(key="l", action="Export debug logs", description="Toggle Debug Logs"),
+                Binding(key="f", action="Toggle mode", description="Toggle Mode"),
+                Binding(key="n", action="Toggle sniffer", description="Toggle Sniffer"),
+                Binding(key="i", action="Show status", description="Show status"),
             ]
 
             def __init__(self, *a, **kw):
@@ -130,6 +136,14 @@ class display_tui:
 
                 ## Logger instance for TUI display.
                 self.logger = logging.getLogger(self.__class__.__name__)
+
+                ## Set of currently active export formats (subset of
+                ## csv/json/pcap). Formats are independent and may all be
+                ## active simultaneously.
+                self._active_exports = set()
+
+                ## Whether runtime debug logging is currently enabled.
+                self._logs_enabled = analyzer_defs.logging_enabled
 
                 ## Timer for repeating remote node control
                 self._repeat_tasks = {}
@@ -565,7 +579,7 @@ class display_tui:
                         pass
 
                 # Copy/dump handlers mapped to single-letter keys
-                if k in ("n", "N"):
+                if k in ("d", "D"):
                     dump = "== Protocol ==\n" + self._dump_table_rows(self.proto_table)
                     severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_protocol.txt")
                     self.notify(msg, title="Protocol Data", severity=severity)
@@ -589,6 +603,127 @@ class display_tui:
                     dump = "== SDO ==\n" + self._dump_table_rows(self.sdo_table)
                     severity, msg = self._copy_to_clipboard_or_file(dump, "/tmp/canopen_sdo.txt")
                     self.notify(msg, title="SDO Data", severity=severity)
+
+                elif k in ("c", "C"):
+                    self._toggle_export("csv")
+
+                elif k in ("j", "J"):
+                    self._toggle_export("json")
+
+                elif k in ("a", "A"):
+                    self._toggle_export("pcap")
+
+                elif k in ("l", "L"):
+                    self._toggle_debug_logs()
+
+                elif k in ("f", "F"):
+                    self._toggle_fixed_mode()
+
+                elif k in ("n", "N"):
+                    self._toggle_sniffer_mode()
+
+                elif k in ("i", "I"):
+                    self._show_status()
+
+                elif k == "question_mark":
+                    self._show_key_bindings()
+
+            def _toggle_fixed_mode(self):
+                """! Toggle Fixed (aggregated) vs Sequential (scrolling) display."""
+
+                cls.fixed = not cls.fixed
+                mode = "Fixed" if cls.fixed else "Sequential"
+                self.notify(f"Display mode: {mode}", title="Mode")
+
+            def _toggle_sniffer_mode(self):
+                """! Toggle professional (Wireshark-like) sniffer decoding.
+                @details
+                The sniffer mode flag lives on the backend frame processor, so
+                the toggle flips it and subsequent frames decode in the new mode.
+                """
+
+                if cls.processor is None:
+                    self.notify("Sniffer processor unavailable", title="Sniffer",
+                                severity="error")
+                    return
+                cls.processor.sniffer = not bool(cls.processor.sniffer)
+                state = "on" if cls.processor.sniffer else "off"
+                self.notify(f"Sniffer mode: {state}", title="Sniffer")
+
+            def _show_status(self):
+                """! Show a toast summarizing current export and mode state.
+                @details
+                Reports the runtime-toggleable settings in one place: display
+                mode (Fixed/Sequential), sniffer decoding, the set of active
+                exports (CSV/JSON/PCAP) and whether debug logging is on.
+                """
+
+                mode = "Fixed" if cls.fixed else "Sequential"
+                sniffer = "on" if bool(getattr(cls.processor, "sniffer", False)) else "off"
+                if self._active_exports:
+                    exports = ", ".join(sorted(f.upper() for f in self._active_exports))
+                else:
+                    exports = "off"
+                logs = "on" if self._logs_enabled else "off"
+                msg = (
+                    f"Mode      : {mode}\n"
+                    f"Sniffer   : {sniffer}\n"
+                    f"Exports   : {exports}\n"
+                    f"Debug logs: {logs}"
+                )
+                self.notify(msg, title="Status", severity="information", timeout=8)
+
+            def _show_key_bindings(self):
+                """! Show a toast listing every key binding and its description."""
+
+                lines = []
+                for binding in self.BINDINGS:
+                    key = getattr(binding, "key_display", None) or getattr(binding, "key", "")
+                    desc = getattr(binding, "description", "")
+                    lines.append(f"{key:>2} : {desc}")
+                self.notify(
+                    "\n".join(lines),
+                    title="Key Bindings",
+                    severity="information",
+                    timeout=12,
+                )
+
+            def _toggle_export(self, fmt: str):
+                """! Enable/disable runtime frame export in the given format.
+                @details
+                Toggles export on both backend workers. Formats are
+                independent: CSV, JSON, and PCAP can all be active at once,
+                and toggling one never affects the others.
+                @param fmt Export format: "csv", "json", or "pcap".
+                """
+
+                if fmt in self._active_exports:
+                    for worker in (cls.sniffer, cls.processor):
+                        if worker is not None:
+                            worker.disable_export(fmt)
+                    self._active_exports.discard(fmt)
+                    self.notify(f"{fmt.upper()} export disabled", title="Export")
+                else:
+                    for worker in (cls.sniffer, cls.processor):
+                        if worker is not None:
+                            worker.enable_export(fmt)
+                    self._active_exports.add(fmt)
+                    self.notify(f"{fmt.upper()} export enabled", title="Export")
+
+            def _toggle_debug_logs(self):
+                """! Enable/disable runtime debug (file) logging."""
+
+                if self._logs_enabled:
+                    analyzer_defs.disable_logging()
+                    self._logs_enabled = False
+                    self.notify("Debug logging disabled", title="Logging")
+                else:
+                    analyzer_defs.enable_logging()
+                    self._logs_enabled = True
+                    self.notify(
+                        f"Debug logging enabled → {analyzer_defs.APP_NAME}.log",
+                        title="Logging",
+                    )
 
             def _copy_to_clipboard_or_file(self, text: str, filename: str = f"/tmp/{analyzer_defs.APP_NAME}.log"):
                 """! Try to copy to clipboard using pyperclip; if unavailable, write to filename."""
@@ -1174,7 +1309,7 @@ class display_tui:
                 last_err = "-"
                 try:
                     if snapshot.error.last_time or snapshot.error.last_frame:
-                        last_err = f"[{snapshot.error.last_time}] <{snapshot.error.last_frame}>"
+                        last_err = f"[{snapshot.error.last_time}] {analyzer_defs.format_error_frame(snapshot.error.last_frame)}"
                 except Exception:
                     last_err = "-"
                 add_metric("Last Error Frame", last_err)

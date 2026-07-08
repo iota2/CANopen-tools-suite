@@ -64,7 +64,7 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
-        [ "Variables", "functions_vars.html", null ]
+        [ "Variables", "functions_vars.html", "functions_vars" ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -76,7 +76,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "analyzer__defs_8py.html",
-"classdisplay__tui_1_1display__tui.html#a482bafd8cb7434915480737dee874657"
+"classdisplay__gui_1_1CANopenMainWindow.html#afa511f22ba03b7596c82eed14cbf28f7",
+"namespaceanalyzer__defs.html#af5bae2689cd20678b69a1d8018195341"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

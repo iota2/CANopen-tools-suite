@@ -96,69 +96,20 @@ class canopen_sniffer(threading.Thread):
         ## CAN interface name used by the sniffer.
         self.interface = interface
 
-        ## Flag indicating whether export is enabled.
-        self.export = export  # None | csv | json | pcap
+        ## Active raw-frame exports keyed by format ("csv" | "json" | "pcap").
+        ## Each value is a per-format record dict holding that format's file /
+        ## writer and bookkeeping. Formats are independent and may be active
+        ## simultaneously.
+        self._exports = {}
 
-        ## File name used when export is enabled.
-        self.export_filename = None
+        ## Serializes export open/close against the writing run loop so a
+        ## runtime enable/disable never races an in-flight write.
+        self._export_lock = threading.Lock()
 
-        ## File object for export (or None if not exporting).
-        self.export_file = None
-
-        ## Writer instance used to write exported data (or None).
-        self.export_writer = None
-
-        ## Export serial number (incremented for each exported row).
-        self.export_serial_number = 1
-
-        if self.export == "csv":
-            try:
-                self.export_filename = f"{analyzer_defs.APP_NAME}_raw.csv"
-                self.export_file = open(self.export_filename, "w", newline="")
-                self.export_writer = csv.writer(self.export_file)
-                self.export_writer.writerow(
-                    ["S.No.", "Time", "Type", "COB-ID", "Error", "Raw"]
-                )
-                # persist header
-                try:
-                    self.export_file.flush()
-                    os.fsync(self.export_file.fileno())
-                except Exception:
-                    pass
-                self.log.info(f"CSV export enabled → {self.export_filename}")
-            except Exception as e:
-                self.log.exception("Failed to open CSV export file: %s", e)
-                self.export = False
-
-        elif self.export == "json":
-            try:
-                self.export_filename = f"{analyzer_defs.APP_NAME}_raw.json"
-                self.export_file = open(self.export_filename, "w")
-
-                # JSON array start
-                self.export_file.write("[\n")
-                ## Identifier for first element of JSON file.
-                self._json_first = True
-
-                self.log.info(f"JSON export enabled → {self.export_filename}")
-            except Exception as e:
-                self.log.exception("Failed to open JSON export file: %s", e)
-                self.export = False
-
-        elif self.export == "pcap":
-            try:
-                self.export_filename = f"{analyzer_defs.APP_NAME}_raw.pcap"
-                ## PCAP writer object for exporting file.
-                self.pcap_writer = PcapWriter(
-                    self.export_filename,
-                    append=False,
-                    sync=True,
-                    linktype=DLT_CAN_SOCKETCAN
-                )
-                self.log.info("PCAP export enabled (Scapy, SocketCAN) → %s", self.export_filename)
-            except Exception as e:
-                self.log.exception("Failed to open PCAP export file: %s", e)
-                self.export = False
+        # Open the requested export format (if any) at startup. The same
+        # machinery is reused at runtime via @ref enable_export.
+        if export:
+            self.enable_export(export)
 
         # Open CAN socket
         try:
@@ -176,6 +127,135 @@ class canopen_sniffer(threading.Thread):
             self.log.info(f"Connected Network on {interface}")
         except Exception:
             self.log.warning("Network connection failed (not critical)")
+
+    # --- Runtime export management ---
+    def _open_export(self, fmt: str):
+        """! Open a raw-frame export for @p fmt and store its record.
+        @details
+        Opens the file/writer for @p fmt (`csv`, `json`, or `pcap`), writes
+        any required header, and registers a per-format record in
+        @ref _exports. Formats are independent, so this never disturbs other
+        active exports. Callers must hold @ref _export_lock.
+        @param fmt Export format: "csv", "json", or "pcap".
+        """
+
+        try:
+            if fmt == "csv":
+                filename = f"{analyzer_defs.APP_NAME}_raw.csv"
+                f = open(filename, "w", newline="")
+                writer = csv.writer(f)
+                writer.writerow(["S.No.", "Time", "Type", "COB-ID", "Error", "Raw"])
+                try:
+                    f.flush()
+                    os.fsync(f.fileno())
+                except Exception:
+                    pass
+                self._exports["csv"] = {"file": f, "writer": writer, "filename": filename, "serial": 1}
+                self.log.info(f"CSV export enabled → {filename}")
+
+            elif fmt == "json":
+                filename = f"{analyzer_defs.APP_NAME}_raw.json"
+                f = open(filename, "w")
+                f.write("[\n")
+                self._exports["json"] = {"file": f, "filename": filename, "json_first": True}
+                self.log.info(f"JSON export enabled → {filename}")
+
+            elif fmt == "pcap":
+                filename = f"{analyzer_defs.APP_NAME}_raw.pcap"
+                writer = PcapWriter(filename, append=False, sync=True, linktype=DLT_CAN_SOCKETCAN)
+                self._exports["pcap"] = {"pcap_writer": writer, "filename": filename}
+                self.log.info("PCAP export enabled (Scapy, SocketCAN) → %s", filename)
+
+            else:
+                self.log.warning("Unknown export format requested: %s", fmt)
+
+        except Exception as e:
+            self.log.exception("Failed to open %s export file: %s", fmt, e)
+            self._exports.pop(fmt, None)
+
+    def _close_export(self, fmt: str):
+        """! Flush and close a single raw-frame export format.
+        @details
+        Finalizes the format's file (JSON array terminator, flush, fsync,
+        close) or PCAP writer, then removes it from @ref _exports. Callers
+        must hold @ref _export_lock.
+        @param fmt Export format to close.
+        """
+
+        rec = self._exports.pop(fmt, None)
+        if not rec:
+            return
+
+        try:
+            f = rec.get("file")
+            if f:
+                if fmt == "json":
+                    try:
+                        f.write("\n]\n")
+                    except Exception:
+                        pass
+                try:
+                    f.flush()
+                    os.fsync(f.fileno())
+                except Exception:
+                    pass
+                try:
+                    f.close()
+                except Exception:
+                    pass
+
+            pcap_writer = rec.get("pcap_writer")
+            if pcap_writer:
+                try:
+                    pcap_writer.close()
+                    self.log.info("PCAP writer closed")
+                except Exception as e:
+                    self.log.warning("Failed to close PCAP writer: %s", e)
+
+            self.log.info("%s raw export closed", fmt.upper())
+
+        except Exception:
+            self.log.exception("Failed during %s raw export cleanup", fmt)
+
+    def _close_all_exports(self):
+        """! Close every active raw-frame export. Callers must hold @ref _export_lock."""
+
+        for fmt in list(self._exports.keys()):
+            self._close_export(fmt)
+
+    def enable_export(self, fmt: str):
+        """! Enable raw-frame export in the given format at runtime.
+        @details
+        Thread-safe and independent: enabling a format does not affect any
+        other active formats, so CSV, JSON, and PCAP can all run at once.
+        Enabling an already-active format is a no-op.
+        @param fmt Export format: "csv", "json", or "pcap".
+        @return The set of active export formats after the call.
+        """
+
+        with self._export_lock:
+            if fmt not in self._exports:
+                self._open_export(fmt)
+            return set(self._exports.keys())
+
+    def disable_export(self, fmt: str = None):
+        """! Disable raw-frame export at runtime (thread-safe).
+        @param fmt Format to disable, or None to disable all active formats.
+        @return The set of active export formats after the call.
+        """
+
+        with self._export_lock:
+            if fmt is None:
+                self._close_all_exports()
+            else:
+                self._close_export(fmt)
+            return set(self._exports.keys())
+
+    def active_exports(self):
+        """! Return the set of currently active export formats (thread-safe)."""
+
+        with self._export_lock:
+            return set(self._exports.keys())
 
     def _json_safe_raw_frame(self, frame: dict) -> dict:
         return {
@@ -239,86 +319,109 @@ class canopen_sniffer(threading.Thread):
         @details
         Writes a single row with a serial number, timestamp, COB-ID,
         error flag and raw payload. Periodically flushes and fsyncs the file
-        according to `defs.FSYNC_EVERY`.
+        according to `defs.FSYNC_EVERY`. Serialized against runtime
+        enable/disable via @ref _export_lock.
         @param frame Frame to be exported.
         @param msg CANopen message to be exported.
         @return None.
         """
 
-        if not self.export:
+        if not self._exports:
             return
 
-        if self.export == "csv":
+        with self._export_lock:
+            self._export_raw_frame_locked(frame, msg)
+
+    def _export_raw_frame_locked(self, frame: dict, msg: can.Message | None = None):
+        """! Write a raw frame to every active export format.
+        @details
+        Each active format (CSV, JSON, PCAP) is written independently.
+        Caller must hold @ref _export_lock.
+        """
+
+        if "csv" in self._exports:
+            self._write_csv_raw(self._exports["csv"], frame)
+        if "json" in self._exports:
+            self._write_json_raw(self._exports["json"], frame)
+        if "pcap" in self._exports and msg is not None:
+            self._write_pcap_raw(self._exports["pcap"], msg)
+
+    def _write_csv_raw(self, rec: dict, frame: dict):
+        """! Append one raw-frame row to the CSV export record."""
+
+        try:
+            rec["writer"].writerow([
+                rec["serial"],
+                analyzer_defs.now_str(),
+                frame["type"],
+                f"0x{frame['cob']:03X}",
+                frame["error"],
+                analyzer_defs.bytes_to_hex(frame["raw"]),
+            ])
+            rec["serial"] += 1
+            # flush and fsync periodically
             try:
-                self.export_writer.writerow([
-                    self.export_serial_number,
-                    analyzer_defs.now_str(),
-                    frame["type"],
-                    f"0x{frame['cob']:03X}",
-                    frame["error"],
-                    analyzer_defs.bytes_to_hex(frame["raw"]),
-                ])
-                self.export_serial_number += 1
-                # flush and fsync periodically
-                try:
-                    self.export_file.flush()
-                    if (self.export_serial_number % analyzer_defs.FSYNC_EVERY) == 0:
-                        os.fsync(self.export_file.fileno())
-                except Exception:
-                    pass
-            except Exception as e:
-                self.log.error("CSV export failed: %s", e)
+                rec["file"].flush()
+                if (rec["serial"] % analyzer_defs.FSYNC_EVERY) == 0:
+                    os.fsync(rec["file"].fileno())
+            except Exception:
+                pass
+        except Exception as e:
+            self.log.error("CSV export failed: %s", e)
 
-        elif self.export == "json":
+    def _write_json_raw(self, rec: dict, frame: dict):
+        """! Append one raw-frame object to the JSON export record."""
+
+        try:
+            obj = self._json_safe_raw_frame(frame)
+
+            if not rec["json_first"]:
+                rec["file"].write(",\n")
+            rec["json_first"] = False
+
+            json.dump(obj, rec["file"], indent=2, ensure_ascii=False)
+
             try:
-                obj = self._json_safe_raw_frame(frame)
+                rec["file"].flush()
+            except Exception:
+                pass
+        except Exception as e:
+            self.log.error("JSON export failed: %s", e)
 
-                if not self._json_first:
-                    self.export_file.write(",\n")
-                self._json_first = False
+    def _write_pcap_raw(self, rec: dict, msg: can.Message):
+        """! Append one raw frame to the PCAP export record."""
 
-                json.dump(obj, self.export_file, indent=2, ensure_ascii=False)
+        try:
+            # --- CAN ID (29-bit, then flags) ---
+            can_id = msg.arbitration_id & 0x1FFFFFFF
 
-                try:
-                    self.export_file.flush()
-                except Exception:
-                    pass
+            if msg.is_extended_id:
+                can_id |= 0x80000000  # CAN_EFF_FLAG
+            if msg.is_remote_frame:
+                can_id |= 0x40000000  # CAN_RTR_FLAG
 
-            except Exception as e:
-                self.log.error("JSON export failed: %s", e)
+            # IMPORTANT:
+            # CANopen EMCY is NOT a SocketCAN error frame
+            if msg.is_error_frame and msg.arbitration_id == 0:
+                can_id |= 0x20000000  # CAN_ERR_FLAG
 
-        elif self.export == "pcap" and msg is not None and self.pcap_writer:
-            try:
-                # --- CAN ID (29-bit, then flags) ---
-                can_id = msg.arbitration_id & 0x1FFFFFFF
+            # --- DLC must be actual data length ---
+            data = bytes(msg.data)
+            can_dlc = len(data)
+            data = data.ljust(8, b"\x00")
 
-                if msg.is_extended_id:
-                    can_id |= 0x80000000  # CAN_EFF_FLAG
-                if msg.is_remote_frame:
-                    can_id |= 0x40000000  # CAN_RTR_FLAG
+            # --- MUST be network (big-endian) ---
+            packet = struct.pack(
+                "!IB3x8s",
+                can_id,
+                can_dlc,
+                data
+            )
 
-                # IMPORTANT:
-                # CANopen EMCY is NOT a SocketCAN error frame
-                if msg.is_error_frame and msg.arbitration_id == 0:
-                    can_id |= 0x20000000  # CAN_ERR_FLAG
+            rec["pcap_writer"].write(packet)
 
-                # --- DLC must be actual data length ---
-                data = bytes(msg.data)
-                can_dlc = len(data)
-                data = data.ljust(8, b"\x00")
-
-                # --- MUST be network (big-endian) ---
-                frame = struct.pack(
-                    "!IB3x8s",
-                    can_id,
-                    can_dlc,
-                    data
-                )
-
-                self.pcap_writer.write(frame)
-
-            except Exception as e:
-                self.log.error("PCAP export failed: %s", e)
+        except Exception as e:
+            self.log.error("PCAP export failed: %s", e)
 
     # --- Message handling ---
     def handle_received_message(self, msg: can.Message):
@@ -519,44 +622,9 @@ class canopen_sniffer(threading.Thread):
                         self.log.exception("Exception while handling message")
 
         finally:
-            # Always attempt to flush/close export (if any) and shutdown resources safely.
-            try:
-                export_file = getattr(self, "export_file", None)
-
-                if export_file:
-                    # Format-specific finalization
-                    if self.export == "json":
-                        try:
-                            export_file.write("\n]\n")
-                        except Exception:
-                            pass
-
-                    # Best-effort flush + fsync for file-based exports
-                    try:
-                        export_file.flush()
-                        os.fsync(export_file.fileno())
-                    except Exception:
-                        pass
-
-                    try:
-                        export_file.close()
-                    except Exception:
-                        pass
-
-                # PCAP writer has its own close semantics
-                pcap_writer = getattr(self, "pcap_writer", None)
-                if pcap_writer:
-                    try:
-                        pcap_writer.close()
-                        self.log.info("PCAP writer closed")
-                    except Exception as e:
-                        self.log.warning("Failed to close PCAP writer: %s", e)
-
-                if export_file or pcap_writer:
-                    self.log.info("Raw export resources closed")
-
-            except Exception:
-                self.log.exception("Failed during raw export cleanup")
+            # Always attempt to flush/close exports (if any) and shutdown resources safely.
+            with self._export_lock:
+                self._close_all_exports()
 
             # shutdown bus
             try:

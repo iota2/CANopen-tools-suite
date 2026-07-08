@@ -1,4 +1,4 @@
-.TH "analyzer_defs.py" 3 "Tue Jan 6 2026" "CANopen-Analyzer" \" -*- nroff -*-
+.TH "analyzer_defs.py" 3 "Tue Jul 7 2026" "CANopen-Analyzer" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,9 +33,17 @@ analyzer_defs.py
 .br
 .RI "Get value after splitting the string\&. "
 .ti -1c
+.RI "def \fBdisable_logging\fP ()"
+.br
+.RI "Disable file logging at runtime\&. "
+.ti -1c
 .RI "def \fBenable_logging\fP ()"
 .br
-.RI "Enable file-only logging, enabled through argument\&. "
+.RI "Enable file-only logging (via argument or at runtime)\&. "
+.ti -1c
+.RI "str \fBformat_error_frame\fP (raw)"
+.br
+.RI "Render an error / EMCY frame payload in a human-readable form\&. "
 .ti -1c
 .RI "str \fBnow_str\fP ()"
 .br
@@ -125,6 +133,34 @@ analyzer_defs.py
 .br
 .RI "Frequency of filesystem synchronization (every N rows)\&. "
 .ti -1c
+.RI "string \fBGUI_CLEAR_BTN_COLOR\fP = '#e74c3c'"
+.br
+.RI "Background color of the Clear button\&. "
+.ti -1c
+.RI "int \fBGUI_LEFT_DOCK_MAX_WIDTH\fP = 320"
+.br
+.RI "Maximum width (px) of the left 'Remote Node Control' dock\&. "
+.ti -1c
+.RI "int \fBGUI_LEFT_DOCK_MIN_WIDTH\fP = 280"
+.br
+.RI "Minimum width (px) of the left 'Remote Node Control' dock\&. "
+.ti -1c
+.RI "string \fBGUI_PAUSE_BTN_PAUSED_COLOR\fP = '#2ecc71'"
+.br
+.RI "Background color of the Pause button while the display is paused (button reads 'Resume')\&. "
+.ti -1c
+.RI "string \fBGUI_PAUSE_BTN_RUNNING_COLOR\fP = '#f1c40f'"
+.br
+.RI "Background color of the Pause button while the display is running (button reads 'Pause')\&. "
+.ti -1c
+.RI "int \fBGUI_RIGHT_DOCK_MAX_WIDTH\fP = 600"
+.br
+.RI "Maximum width (px) of the right 'Bus Stats' dock\&. "
+.ti -1c
+.RI "int \fBGUI_RIGHT_DOCK_MIN_WIDTH\fP = 360"
+.br
+.RI "Minimum width (px) of the right 'Bus Stats' dock\&. "
+.ti -1c
 .RI "\fBlog\fP = logging\&.getLogger(f'{APP_NAME}')"
 .br
 .RI "Module-level convenience logger (will propagate to root_logger handler)\&. "
@@ -132,6 +168,10 @@ analyzer_defs.py
 .RI "\fBLOG_LEVEL\fP = logging\&.DEBUG"
 .br
 .RI "Default Logging level\&. "
+.ti -1c
+.RI "bool \fBlogging_enabled\fP = False"
+.br
+.RI "Tracks whether debug/file logging is currently enabled\&. "
 .ti -1c
 .RI "int \fBMAX_CLI_CMD_HISTORY\fP = 5"
 .br
@@ -144,6 +184,10 @@ analyzer_defs.py
 .RI "int \fBMAX_STATS_SHOW\fP = 5"
 .br
 .RI "Maximum number of values to be shown in Bus stats window\&. "
+.ti -1c
+.RI "int \fBMIN_DATA_TABLE_HEIGHT\fP = 3"
+.br
+.RI "Minimum height of the data tables in the CLI interface (number of rows)\&. "
 .ti -1c
 .RI "int \fBMIN_STATS_SHOW\fP = 3"
 .br
